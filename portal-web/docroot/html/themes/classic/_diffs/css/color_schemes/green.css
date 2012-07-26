@@ -29,30 +29,13 @@ body.green, .green .portlet {
 
 	/* ---------- Application styling ---------- */
 
-	.results-header {
-		background-color: #D7DDD2;
+	.aui-autocomplete-results-content {
+		border-color: #C1F599;
 	}
 
-	.results-row {
-		&.alt td {
-			background-color: #E2E7DE;
-		}
-
-		&.hover td {
-			background-color: #C4CDBD;
-		}
-	}
-
-	.drop-area {
-		background-color: #DBDED4;
-	}
-
-	.aui-resizable-proxy {
-		border-color: #909683;
-	}
-
-	.aui-sortable-proxy {
-		background-color: #7C8272;
+	.aui-autocomplete-selected {
+		background-color: #E9F7E0;
+		border-color: #BBEAA4;
 	}
 
 	.aui-menugroup-content h4 {
@@ -64,19 +47,22 @@ body.green, .green .portlet {
 		color: #2F342C;
 	}
 
-	.my-sites-menu .current-site {
-		border-color: #42811D;
-
-		a {
-			background-color: #68BB30;
-			color: #FFF;
-		}
-	}
-
 	.aui-menu-content li a.aui-focus, .green .lfr-menu-list ul a.aui-focus, .green .lfr-menu-expanded li a:focus  {
 		background-color: #677D5B;
 		color: #FFF;
 		text-shadow: -1px -1px #2F342C;
+	}
+
+	.aui-portal-layout-drag-indicator {
+		background-color: #57B63C;
+	}
+
+	.aui-resizable-proxy {
+		border-color: #909683;
+	}
+
+	.aui-sortable-proxy {
+		background-color: #7C8272;
 	}
 
 	.aui-tab {
@@ -89,73 +75,6 @@ body.green, .green .portlet {
 
 	.aui-tab-active, .aui-tab-active a {
 		color: #FFF;
-	}
-
-	.portlet-communities .lfr-current-theme, .portlet-enterprise-admin .lfr-current-theme {
-		background-color: #F6F8F1;
-		border-color: #909683;
-	}
-
-	.portlet-communities .theme-entry, .portlet-communities .lfr-current-theme .theme-screenshot, .portlet-enterprise-admin .theme-entry, .portlet-enterprise-admin .lfr-current-theme .theme-screenshot {
-		border-color: #B9BDAF;
-	}
-
-	.portlet-communities .theme-entry .theme-title, .portlet-enterprise-admin .theme-entry .theme-title  {
-		background-color: #909488;
-		border-color: #909683;
-	}
-
-	.portlet-communities .lfr-theme-list h3, .portlet-enterprise-admin .lfr-theme-list h3 {
-		background-color: #DBDED4;
-	}
-
-	.portlet-communities .selected-color-scheme .theme-entry, .portlet-enterprise-admin .selected-color-scheme .theme-entry {
-		border-color: #669A33;
-	}
-
-	.portlet-communities .lfr-theme-list .theme-entry:hover, .portlet-enterprise-admin .lfr-theme-list .theme-entry:hover {
-		background-color: #F5FFE0;
-		border-color: #CFE0A8;
-		color: #BBC99F;
-	}
-
-	.portlet-communities .theme-entry:hover .theme-thumbnail, .portlet-enterprise-admin .theme-entry:hover .theme-thumbnail {
-		border-color: #CFE0A8;
-	}
-
-	.portlet-document-library .detail-column-last {
-		background-color: #F2FFD8;
-
-		.detail-column-content {
-			border-color: #C6DA89;
-		}
-	}
-
-	.dockbar {
-		background-color: #A2AF98;
-		background-image: url(@theme_image_path@/color_schemes/green/dockbar/dockbar_bg.png);
-
-		.menu-button-active {
-			background-color: #95DB5C;
-			background-image: url(@theme_image_path@/color_schemes/green/dockbar/button_active_bg.png);
-
-			a {
-				color: #FFF;
-			}
-		}
-	}
-
-	.aui-portal-layout-drag-indicator {
-		background-color: #57B63C;
-	}
-
-	.aui-autocomplete-results-content {
-		border-color: #C1F599;
-	}
-
-	.aui-autocomplete-selected {
-		background-color: #E9F7E0;
-		border-color: #BBEAA4;
 	}
 
 	.aui-textboxlistentry {
@@ -172,19 +91,96 @@ body.green, .green .portlet {
 		background-color: #BBEAA4;
 	}
 
-	/* ---------- Portlet wrapper and icons ---------- */
+	.dockbar {
+		background-color: #A2AF98;
+		background-image: url(@theme_image_path@/color_schemes/green/dockbar/dockbar_bg.png);
 
-	.portlet {
+		.menu-button-active {
+			background-color: #95DB5C;
+			background-image: url(@theme_image_path@/color_schemes/green/dockbar/button_active_bg.png);
+
+			a {
+				color: #FFF;
+			}
+		}
+	}
+
+	.drop-area {
+		background-color: #DBDED4;
+	}
+
+
+	.my-sites-menu .current-site {
+		border-color: #42811D;
+
+		a {
+			background-color: #68BB30;
+			color: #FFF;
+		}
+	}
+
+	.portlet-communities .lfr-current-theme, .portlet-enterprise-admin .lfr-current-theme {
+		background-color: #F6F8F1;
 		border-color: #909683;
 	}
 
-	.portlet-topper {
-		background-color: #D9DDD3;
-		border-bottom-color: #B7BCAE;
+	.portlet-communities .lfr-theme-list .theme-entry:hover, .portlet-enterprise-admin .lfr-theme-list .theme-entry:hover {
+		background-color: #F5FFE0;
+		border-color: #CFE0A8;
+		color: #BBC99F;
 	}
+
+	.portlet-communities .lfr-theme-list h3, .portlet-enterprise-admin .lfr-theme-list h3 {
+		background-color: #DBDED4;
+	}
+
+	.portlet-communities .selected-color-scheme .theme-entry, .portlet-enterprise-admin .selected-color-scheme .theme-entry {
+		border-color: #669A33;
+	}
+
+	.portlet-communities .theme-entry, .portlet-communities .lfr-current-theme .theme-screenshot, .portlet-enterprise-admin .theme-entry, .portlet-enterprise-admin .lfr-current-theme .theme-screenshot {
+		border-color: #B9BDAF;
+	}
+
+	.portlet-communities .theme-entry .theme-title, .portlet-enterprise-admin .theme-entry .theme-title  {
+		background-color: #909488;
+		border-color: #909683;
+	}
+
+	.portlet-communities .theme-entry:hover .theme-thumbnail, .portlet-enterprise-admin .theme-entry:hover .theme-thumbnail {
+		border-color: #CFE0A8;
+	}
+
+	.portlet-document-library .detail-column-last {
+		background-color: #F2FFD8;
+
+		.detail-column-content {
+			border-color: #C6DA89;
+		}
+	}
+
+	.results-header {
+		background-color: #D7DDD2;
+	}
+
+	.results-row {
+		&.alt td {
+			background-color: #E2E7DE;
+		}
+
+		&.hover td {
+			background-color: #C4CDBD;
+		}
+	}
+
+	/* ---------- Portlet wrapper and icons ---------- */
 
 	.panel-page .portlet-topper {
 		border-bottom-color: #909683;
+	}
+
+	.portlet {
+		border-color: #909683;
 	}
 
 	.portlet-section-selected, .portlet-section-selected a {
@@ -193,6 +189,11 @@ body.green, .green .portlet {
 
 	.portlet-section-selected a:hover, .portlet-section-selected a:focus {
 		background-color: #909683;
+	}
+
+	.portlet-topper {
+		background-color: #D9DDD3;
+		border-bottom-color: #B7BCAE;
 	}
 
 	/* ---------- Calendar portlet ---------- */
