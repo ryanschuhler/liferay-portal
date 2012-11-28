@@ -92,7 +92,10 @@ AUI.add(
 						if (navBlock) {
 							instance._updateURL = themeDisplay.getPathMain() + '/layouts_admin/update_page?p_auth=' + Liferay.authToken;
 
-							var items = navBlock.all('> ul > li');
+							var navItemSelector = Liferay.Data.NAV_ITEM_SELECTOR || '> ul > li';
+
+							var items = navBlock.all(navItemSelector);
+
 							var layoutIds = instance.get('layoutIds');
 
 							var cssClassBuffer = [];
@@ -102,7 +105,7 @@ AUI.add(
 									var layoutConfig = layoutIds[index];
 
 									if (layoutConfig) {
-										item._LFR_layoutId = layoutConfig.id;
+										item.attr('data-layoutId', layoutConfig.id);
 
 										if (layoutConfig.deletable) {
 											cssClassBuffer.push('lfr-nav-deletable');
@@ -120,6 +123,8 @@ AUI.add(
 									}
 								}
 							);
+
+							instance._navItemSelector = navItemSelector;
 
 							instance._makeAddable();
 							instance._makeDeletable();
@@ -238,7 +243,9 @@ AUI.add(
 						if (instance.get('isModifiable')) {
 							var navBlock = instance.get('navBlock');
 
-							var navItems = navBlock.all('> ul > li').filter(
+							var navItemSelector = instance._navItemSelector;
+
+							var navItems = navBlock.all(navItemSelector).filter(
 								function(item, index, collection) {
 									return !item.hasClass('selected');
 								}
@@ -253,7 +260,7 @@ AUI.add(
 							navBlock.delegate(
 								'keydown',
 								A.bind('_handleKeyDown', instance),
-								'> ul > li a'
+								navItemSelector
 							);
 
 							navBlock.delegate(
@@ -355,7 +362,7 @@ AUI.add(
 					_toggleDeleteButton: function(event, action) {
 						var instance = this;
 
-						var deleteTab = event.currentTarget.one('.delete-tab');
+						var deleteTab = event.currentTarget.one('> .delete-tab');
 
 						if (deleteTab) {
 							deleteTab[action]('aui-helper-hidden');
@@ -538,9 +545,11 @@ AUI.add(
 				if (instance.get('isSortable')) {
 					var navBlock = instance.get('navBlock');
 
+					var navItem = navBlock.one('.lfr-nav-updateable');
+
 					var sortable = new A.Sortable(
 						{
-							container: navBlock,
+							container: navItem && navItem.ancestor(),
 							moveType: 'move',
 							nodes: '.lfr-nav-updateable',
 							opacity: '.5',
@@ -596,7 +605,7 @@ AUI.add(
 						cmd: 'delete',
 						doAsUserId: themeDisplay.getDoAsUserIdEncoded(),
 						groupId: themeDisplay.getParentGroupId(),
-						layoutId: tab._LFR_layoutId,
+						layoutId: tab.attr('data-layoutId'),
 						layoutSetBranchId: instance.get('layoutSetBranchId'),
 						p_auth: Liferay.authToken,
 						privateLayout: themeDisplay.isPrivateLayout()
@@ -720,7 +729,7 @@ AUI.add(
 
 							newTab.setStyle('cursor', 'move');
 
-							listItem._LFR_layoutId = data.layoutId;
+							listItem.attr('data-layoutId', data.layoutId);
 
 							listItem.append(newTab);
 
@@ -768,13 +777,13 @@ AUI.add(
 			function(node) {
 				var instance = this;
 
-				var navItems = instance.get('navBlock').all('li');
+				var navItems = instance.get('navBlock').all(instance._navItemSelector);
 
 				var priority = -1;
 
 				navItems.some(
 					function(item, index, collection) {
-						if (!item.ancestor().hasClass('child-menu')) {
+						if (!item.ancestor('li')) {
 							priority++;
 						}
 
@@ -786,7 +795,7 @@ AUI.add(
 					cmd: 'priority',
 					doAsUserId: themeDisplay.getDoAsUserIdEncoded(),
 					groupId: themeDisplay.getParentGroupId(),
-					layoutId: node._LFR_layoutId,
+					layoutId: node.attr('data-layoutId'),
 					p_auth: Liferay.authToken,
 					priority: priority,
 					privateLayout: themeDisplay.isPrivateLayout()
