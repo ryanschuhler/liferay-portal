@@ -39,6 +39,7 @@
 		font-style: normal;
 		font-weight: 600;
 		line-height: 1rem;
+		width: 75px;
 	}
 
 	.bg-color-1 {
