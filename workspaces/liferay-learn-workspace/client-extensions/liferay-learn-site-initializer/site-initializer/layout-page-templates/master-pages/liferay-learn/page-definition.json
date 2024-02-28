@@ -1,240 +1,780 @@
 {
 	"pageElement": {
-		"pageElements": [
+	  "id": "130fe08d-6699-5c15-b0ba-7f32f5809e65",
+	  "pageElements": [
+		{
+		  "definition": {
+			"fragment": {
+			  "key": "public-sites-navigation",
+			  "siteKey": "Liferay Learn"
+			},
+			"fragmentConfig": {
+			  "darkNav": true,
+			  "searchBlueprintId": 33221,
+			  "showLanguageMenu": true,
+			  "siteNavigationMenuId": 0,
+			  "accountMenuId": 0,
+			  "showCta": false,
+			  "navigationDDMTemplateKey": "NAVIGATION_PRIMARY",
+			  "showSearch": true,
+			  "showAccountMenu": true,
+			  "showSiteName": true
+			},
+			"fragmentFields": [
+			  {
+				"id": "searchSeeAllResultsButton",
+				"value": {
+				  "fragmentLink": { "value": { "href": { "value": "/search" } } }
+				}
+			  },
+			  { "id": "siteName", "value": { "fragmentLink": {} } },
+			  {
+				"id": "suggestionsPopularItem4",
+				"value": { "fragmentLink": {} }
+			  },
+			  {
+				"id": "suggestionsPopularItem3",
+				"value": { "fragmentLink": {} }
+			  },
+			  {
+				"id": "suggestionsPopularItem2",
+				"value": { "fragmentLink": {} }
+			  },
+			  { "id": "suggestionsPopularItem1", "value": { "fragmentLink": {} } }
+			],
+			"indexed": true
+		  },
+		  "id": "2d92e3f6-ff16-1f34-ffa9-f24baa8c6fd3",
+		  "pageElements": [
 			{
-				"definition": {
+			  "definition": {},
+			  "id": "d3286e7e-2bc7-1f46-9e16-a7e37e0a17f7",
+			  "pageElements": [
+				{
+				  "definition": {
 					"fragment": {
-						"key": "public-sites-navigation",
-						"siteKey": "Guest"
+					  "key": "navigation-menu-item",
+					  "siteKey": "Liferay Learn"
 					},
 					"fragmentConfig": {
-						"darkNav": true,
-						"navigationDDMTemplateKey": "NAVIGATION_PRIMARY",
-						"searchBlueprintId": "[$SXP_BLUEPRINT_ID:blueprint$]",
-						"showAccountMenu": true,
-						"showCta": false,
-						"showLanguageMenu": true,
-						"showSearch": true,
-						"showSiteName": true,
-						"siteNavigationMenuName": "Learn Products"
+					  "iconBackgroundColor": "var(--color-action-primary-default, #0B5FFF)",
+					  "iconColor": "var(--color-neutral-0, #FFFFFF)",
+					  "menuItemUrl": "https://www.liferay.com/"
 					},
 					"fragmentFields": [
-						{
-							"id": "searchSeeAllResultsButton",
-							"value": {
-								"fragmentLink": {
-									"value": {
-										"href": {
-											"value": "/search"
-										}
-									}
-								}
-							}
-						},
-						{
-							"id": "siteName",
-							"value": {
-								"fragmentLink": {
-								}
-							}
-						},
-						{
-							"id": "suggestionsPopularItem4",
-							"value": {
-								"fragmentLink": {
-								}
-							}
-						},
-						{
-							"id": "suggestionsPopularItem3",
-							"value": {
-								"fragmentLink": {
-								}
-							}
-						},
-						{
-							"id": "suggestionsPopularItem2",
-							"value": {
-								"fragmentLink": {
-								}
-							}
-						},
-						{
-							"id": "suggestionsPopularItem1",
-							"value": {
-								"fragmentLink": {
-								}
-							}
+					  {
+						"id": "menuItemText",
+						"value": {
+						  "fragmentLink": {},
+						  "text": { "value_i18n": { "en_US": "Liferay.com" } }
 						}
+					  }
 					],
 					"indexed": true
+				  },
+				  "id": "99c91689-c018-7307-7154-fc6f8fcfb2ec",
+				  "type": "Fragment"
 				},
-				"pageElements": [
-					{
-						"definition": {
-						},
-						"pageElements": [
-							{
-								"definition": {
-									"fragment": {
-										"key": "navigation-menu-item",
-										"siteKey": "Guest"
-									},
-									"fragmentConfig": {
-										"iconBackgroundColor": "var(--color-action-primary-default, #0B5FFF)",
-										"iconColor": "var(--color-neutral-0, #FFFFFF)",
-										"menuItemUrl": "https://www.liferay.com/"
-									},
-									"fragmentFields": [
-										{
-											"id": "menuItemText",
-											"value": {
-												"fragmentLink": {
-												},
-												"text": {
-													"value_i18n": {
-														"en_US": "Liferay.com"
-													}
-												}
-											}
-										}
-									],
-									"indexed": true
-								},
-								"type": "Fragment"
-							},
-							{
-								"definition": {
-									"fragment": {
-										"key": "navigation-menu-item",
-										"siteKey": "Guest"
-									},
-									"fragmentConfig": {
-										"iconBackgroundColor": "var(--color-accent-4, #19AB4F)",
-										"iconColor": "var(--color-neutral-0, #FFFFFF)",
-										"menuItemUrl": "https://help.liferay.com/hc/"
-									},
-									"fragmentFields": [
-										{
-											"id": "menuItemText",
-											"value": {
-												"fragmentLink": {
-												},
-												"text": {
-													"value_i18n": {
-														"en_US": "Help Center"
-													}
-												}
-											}
-										}
-									],
-									"indexed": true
-								},
-								"type": "Fragment"
-							},
-							{
-								"definition": {
-									"fragment": {
-										"key": "navigation-menu-item",
-										"siteKey": "Guest"
-									},
-									"fragmentConfig": {
-										"iconBackgroundColor": "var(--color-accent-5, #503690)",
-										"iconColor": "var(--color-neutral-0, #FFFFFF)",
-										"menuItemUrl": "https://liferay.dev/"
-									},
-									"fragmentFields": [
-										{
-											"id": "menuItemText",
-											"value": {
-												"fragmentLink": {
-												},
-												"text": {
-													"value_i18n": {
-														"en_US": "Community"
-													}
-												}
-											}
-										}
-									],
-									"indexed": true
-								},
-								"type": "Fragment"
-							},
-							{
-								"definition": {
-									"fragment": {
-										"key": "navigation-menu-item",
-										"siteKey": "Guest"
-									},
-									"fragmentConfig": {
-										"iconBackgroundColor": "var(--color-accent-1, #1AA0E8)",
-										"iconColor": "var(--color-neutral-0, #FFFFFF)",
-										"menuItemUrl": "https://marketplace.liferay.com/"
-									},
-									"fragmentFields": [
-										{
-											"id": "menuItemText",
-											"value": {
-												"fragmentLink": {
-												},
-												"text": {
-													"value_i18n": {
-														"en_US": "Marketplace"
-													}
-												}
-											}
-										}
-									],
-									"indexed": true
-								},
-								"type": "Fragment"
-							}
-						],
-						"type": "FragmentDropZone"
-					}
-				],
-				"type": "Fragment"
-			},
-			{
-				"definition": {
-					"fragmentSettings": {
-						"unallowedFragments": [
-						]
-					}
+				{
+				  "definition": {
+					"fragment": {
+					  "key": "navigation-menu-item",
+					  "siteKey": "Liferay Learn"
+					},
+					"fragmentConfig": {
+					  "iconBackgroundColor": "var(--color-accent-4, #19AB4F)",
+					  "iconColor": "var(--color-neutral-0, #FFFFFF)",
+					  "menuItemUrl": "https://help.liferay.com/hc/"
+					},
+					"fragmentFields": [
+					  {
+						"id": "menuItemText",
+						"value": {
+						  "fragmentLink": {},
+						  "text": { "value_i18n": { "en_US": "Help Center" } }
+						}
+					  }
+					],
+					"indexed": true
+				  },
+				  "id": "2f621947-c169-1617-9588-6098bb32624e",
+				  "type": "Fragment"
 				},
-				"type": "DropZone"
+				{
+				  "definition": {
+					"fragment": {
+					  "key": "navigation-menu-item",
+					  "siteKey": "Liferay Learn"
+					},
+					"fragmentConfig": {
+					  "iconBackgroundColor": "var(--color-accent-5, #503690)",
+					  "iconColor": "var(--color-neutral-0, #FFFFFF)",
+					  "menuItemUrl": "https://liferay.dev/"
+					},
+					"fragmentFields": [
+					  {
+						"id": "menuItemText",
+						"value": {
+						  "fragmentLink": {},
+						  "text": { "value_i18n": { "en_US": "Community" } }
+						}
+					  }
+					],
+					"indexed": true
+				  },
+				  "id": "756092e3-78ef-c097-bf28-d45dbef5c223",
+				  "type": "Fragment"
+				},
+				{
+				  "definition": {
+					"fragment": {
+					  "key": "navigation-menu-item",
+					  "siteKey": "Liferay Learn"
+					},
+					"fragmentConfig": {
+					  "iconBackgroundColor": "var(--color-accent-1, #1AA0E8)",
+					  "iconColor": "var(--color-neutral-0, #FFFFFF)",
+					  "menuItemUrl": "https://marketplace.liferay.com/"
+					},
+					"fragmentFields": [
+					  {
+						"id": "menuItemText",
+						"value": {
+						  "fragmentLink": {},
+						  "text": { "value_i18n": { "en_US": "Marketplace" } }
+						}
+					  }
+					],
+					"indexed": true
+				  },
+				  "id": "87aa87a6-32b2-4d98-262d-7972226a8fef",
+				  "type": "Fragment"
+				}
+			  ],
+			  "type": "FragmentDropZone"
 			}
-		],
-		"type": "Root"
+		  ],
+		  "type": "Fragment"
+		},
+		{
+		  "definition": { "fragmentSettings": { "unallowedFragments": [] } },
+		  "id": "1d61c463-b942-bb0d-f995-aff6273efe85",
+		  "type": "DropZone"
+		},
+		{
+		  "definition": { "indexed": true, "layout": {}, "name": "Footer" },
+		  "id": "5c2f6c53-7600-8343-4273-26ba6ba7d09e",
+		  "pageElements": [
+			{
+			  "definition": {
+				"indexed": true,
+				"layout": {},
+				"name": "Footer-Contents"
+			  },
+			  "id": "24777c52-9fa3-f85e-c4c5-57c8257ba881",
+			  "pageElements": [
+				{
+				  "definition": {
+					"indexed": true,
+					"layout": {
+					  "contentDisplay": "FlexRow",
+					  "justify": "SpaceBetween"
+					},
+					"name": "Footer-Contents-Top"
+				  },
+				  "id": "dc63cf89-0bb4-b924-34e2-e616277f1641",
+				  "pageElements": [
+					{
+					  "definition": {
+						"indexed": true,
+						"layout": {
+						  "align": "Start",
+						  "contentDisplay": "FlexColumn"
+						},
+						"name": "Logo Info Section"
+					  },
+					  "id": "6159ff6f-9414-12e5-7f1d-7df96cb80b49",
+					  "pageElements": [
+						{
+						  "definition": {
+							"indexed": true,
+							"layout": {},
+							"name": "Logo-Info-Title"
+						  },
+						  "id": "fbc77483-1e81-3ef6-28bd-86a05a5b2016",
+						  "pageElements": [
+							{
+							  "definition": {
+								"fragment": { "key": "DIALECT-dialect-text" },
+								"fragmentConfig": {
+								  "textType": "h1",
+								  "truncateText": false
+								},
+								"fragmentFields": [
+								  {
+									"id": "element-text",
+									"value": {
+									  "fragmentLink": {},
+									  "text": {
+										"value_i18n": { "en_US": "Liferay" }
+									  }
+									}
+								  }
+								],
+								"indexed": true,
+								"name": "Liferay"
+							  },
+							  "id": "2e92f410-a85f-0633-05d5-ccfeb0198560",
+							  "type": "Fragment"
+							}
+						  ],
+						  "type": "Section"
+						},
+						{
+						  "definition": {
+							"indexed": true,
+							"layout": {},
+							"name": "Logo-Info-Links"
+						  },
+						  "id": "34029c4d-68c4-fafc-0b50-6de188f98c63",
+						  "pageElements": [
+							{
+							  "definition": {
+								"fragment": { "key": "DIALECT-dialect-text" },
+								"fragmentConfig": {
+								  "textType": "h1",
+								  "truncateText": false
+								},
+								"fragmentFields": [
+								  {
+									"id": "element-text",
+									"value": {
+									  "fragmentLink": {
+										"value": {
+										  "href": {
+											"value_i18n": {
+											  "en_US": "www.liferay.com"
+											}
+										  }
+										}
+									  },
+									  "text": {
+										"value_i18n": { "en_US": "Liferay.com" }
+									  }
+									}
+								  }
+								],
+								"indexed": true,
+								"name": "Liferay.com"
+							  },
+							  "id": "b5051ae6-e384-b9b3-ef2b-e955545620e3",
+							  "type": "Fragment"
+							},
+							{
+							  "definition": {
+								"fragment": { "key": "DIALECT-dialect-text" },
+								"fragmentConfig": {
+								  "textType": "h1",
+								  "truncateText": false
+								},
+								"fragmentFields": [
+								  {
+									"id": "element-text",
+									"value": {
+									  "fragmentLink": {},
+									  "text": { "value_i18n": { "en_US": "Ask" } }
+									}
+								  }
+								],
+								"indexed": true,
+								"name": "Ask"
+							  },
+							  "id": "ac5cf227-63b2-360b-01ce-bcf4d6c492c4",
+							  "type": "Fragment"
+							},
+							{
+							  "definition": {
+								"fragment": { "key": "DIALECT-dialect-text" },
+								"fragmentConfig": {
+								  "textType": "h1",
+								  "truncateText": false
+								},
+								"fragmentFields": [
+								  {
+									"id": "element-text",
+									"value": {
+									  "fragmentLink": {},
+									  "text": {
+										"value_i18n": { "en_US": "Events" }
+									  }
+									}
+								  }
+								],
+								"indexed": true,
+								"name": "Events"
+							  },
+							  "id": "bcc2452f-12f2-4911-bd12-804e5c7150f5",
+							  "type": "Fragment"
+							},
+							{
+							  "definition": {
+								"fragment": { "key": "DIALECT-dialect-text" },
+								"fragmentConfig": {
+								  "textType": "h1",
+								  "truncateText": false
+								},
+								"fragmentFields": [
+								  {
+									"id": "element-text",
+									"value": {
+									  "fragmentLink": {},
+									  "text": {
+										"value_i18n": { "en_US": "Meet" }
+									  }
+									}
+								  }
+								],
+								"indexed": true,
+								"name": "Meet"
+							  },
+							  "id": "ec661c42-ba01-fba1-31ef-180ed332305a",
+							  "type": "Fragment"
+							}
+						  ],
+						  "type": "Section"
+						}
+					  ],
+					  "type": "Section"
+					},
+					{
+					  "definition": {
+						"indexed": true,
+						"layout": {},
+						"name": "Capabilities Section"
+					  },
+					  "id": "df321bc4-89b0-bbd3-879f-7fd83de73bf7",
+					  "pageElements": [
+						{
+						  "definition": {
+							"indexed": true,
+							"layout": {},
+							"name": "Capabilities-Title"
+						  },
+						  "id": "9b86fad6-8191-3d53-5e66-9f97e871d172",
+						  "pageElements": [
+							{
+							  "definition": {
+								"fragment": { "key": "DIALECT-dialect-text" },
+								"fragmentConfig": {
+								  "textType": "h1",
+								  "truncateText": false
+								},
+								"fragmentFields": [
+								  {
+									"id": "element-text",
+									"value": {
+									  "fragmentLink": {},
+									  "text": {
+										"value_i18n": { "en_US": "Capabilities" }
+									  }
+									}
+								  }
+								],
+								"indexed": true,
+								"name": "Capabilities"
+							  },
+							  "id": "6cf74ddc-b0e9-eeaa-eef7-1e550fcf1964",
+							  "type": "Fragment"
+							}
+						  ],
+						  "type": "Section"
+						},
+						{
+						  "definition": {
+							"indexed": true,
+							"layout": {},
+							"name": "Capabailities-Links"
+						  },
+						  "id": "ed805a2d-ab42-daa9-5ba5-088bbb415ee5",
+						  "pageElements": [
+							{
+							  "definition": {
+								"fragment": { "key": "DIALECT-dialect-text" },
+								"fragmentConfig": {
+								  "textType": "h1",
+								  "truncateText": false
+								},
+								"fragmentFields": [
+								  {
+									"id": "element-text",
+									"value": {
+									  "fragmentLink": {},
+									  "text": {
+										"value_i18n": {
+										  "en_US": "View All Capabilities"
+										}
+									  }
+									}
+								  }
+								],
+								"indexed": true,
+								"name": "View All Capabilities"
+							  },
+							  "id": "314b3dc8-948f-2dfa-e720-2b318ce5c71b",
+							  "type": "Fragment"
+							}
+						  ],
+						  "type": "Section"
+						}
+					  ],
+					  "type": "Section"
+					},
+					{
+					  "definition": {
+						"indexed": true,
+						"layout": {},
+						"name": "Products Section"
+					  },
+					  "id": "8afafd7b-ed4b-e2a5-a860-f9d1dfe6cb41",
+					  "pageElements": [
+						{
+						  "definition": {
+							"indexed": true,
+							"layout": {},
+							"name": "Products-Title"
+						  },
+						  "id": "a851cace-126b-0ce4-4a9e-25b4bb527146",
+						  "pageElements": [
+							{
+							  "definition": {
+								"fragment": { "key": "DIALECT-dialect-text" },
+								"fragmentConfig": {
+								  "textType": "h1",
+								  "truncateText": false
+								},
+								"fragmentFields": [
+								  {
+									"id": "element-text",
+									"value": {
+									  "fragmentLink": {},
+									  "text": {
+										"value_i18n": { "en_US": "Product" }
+									  }
+									}
+								  }
+								],
+								"indexed": true,
+								"name": "Product"
+							  },
+							  "id": "fce23004-4544-8728-269f-27fd98427f63",
+							  "type": "Fragment"
+							}
+						  ],
+						  "type": "Section"
+						},
+						{
+						  "definition": {
+							"indexed": true,
+							"layout": {},
+							"name": "Products-Links"
+						  },
+						  "id": "f9792c7b-7674-2b1c-fee9-13af0a3c7abc",
+						  "pageElements": [
+							{
+							  "definition": {
+								"fragment": { "key": "DIALECT-dialect-text" },
+								"fragmentConfig": {
+								  "textType": "h1",
+								  "truncateText": false
+								},
+								"fragmentFields": [
+								  {
+									"id": "element-text",
+									"value": {
+									  "fragmentLink": {},
+									  "text": {
+										"value_i18n": {
+										  "en_US": "Analytics Cloud"
+										}
+									  }
+									}
+								  }
+								],
+								"indexed": true,
+								"name": "Analytics Cloud"
+							  },
+							  "id": "75e295db-de8b-f0ff-3e14-e04ff9bbc112",
+							  "type": "Fragment"
+							},
+							{
+							  "definition": {
+								"fragment": { "key": "DIALECT-dialect-text" },
+								"fragmentConfig": {
+								  "textType": "h1",
+								  "truncateText": false
+								},
+								"fragmentFields": [
+								  {
+									"id": "element-text",
+									"value": {
+									  "fragmentLink": {},
+									  "text": {
+										"value_i18n": { "en_US": "Commerce" }
+									  }
+									}
+								  }
+								],
+								"indexed": true,
+								"name": "Commerce"
+							  },
+							  "id": "f0f44f3d-71c2-2ef1-037f-7d179d793b30",
+							  "type": "Fragment"
+							},
+							{
+							  "definition": {
+								"fragment": { "key": "DIALECT-dialect-text" },
+								"fragmentConfig": {
+								  "textType": "h1",
+								  "truncateText": false
+								},
+								"fragmentFields": [
+								  {
+									"id": "element-text",
+									"value": {
+									  "fragmentLink": {},
+									  "text": { "value_i18n": { "en_US": "DXP" } }
+									}
+								  }
+								],
+								"indexed": true,
+								"name": "DXP"
+							  },
+							  "id": "848b3a81-3528-c626-ebf2-c229f0b3f1f7",
+							  "type": "Fragment"
+							},
+							{
+							  "definition": {
+								"fragment": { "key": "DIALECT-dialect-text" },
+								"fragmentConfig": {
+								  "textType": "h1",
+								  "truncateText": false
+								},
+								"fragmentFields": [
+								  {
+									"id": "element-text",
+									"value": {
+									  "fragmentLink": {},
+									  "text": {
+										"value_i18n": { "en_US": "Liferay Cloud" }
+									  }
+									}
+								  }
+								],
+								"indexed": true,
+								"name": "Liferay Cloud"
+							  },
+							  "id": "cda73fd9-04ea-84f0-45b5-9b366061f26d",
+							  "type": "Fragment"
+							},
+							{
+							  "definition": {
+								"fragment": { "key": "DIALECT-dialect-text" },
+								"fragmentConfig": {
+								  "textType": "h1",
+								  "truncateText": false
+								},
+								"fragmentFields": [
+								  {
+									"id": "element-text",
+									"value": {
+									  "fragmentLink": {},
+									  "text": {
+										"value_i18n": { "en_US": "Reference" }
+									  }
+									}
+								  }
+								],
+								"indexed": true,
+								"name": "Reference"
+							  },
+							  "id": "c4bf188c-e34e-6e61-9f87-a9f6d7dcddc2",
+							  "type": "Fragment"
+							}
+						  ],
+						  "type": "Section"
+						}
+					  ],
+					  "type": "Section"
+					},
+					{
+					  "definition": {
+						"indexed": true,
+						"layout": {},
+						"name": "Contact-Connect Section"
+					  },
+					  "id": "86b11d6e-29a6-2df7-31fc-79d9e2e96e4f",
+					  "pageElements": [
+						{
+						  "definition": {
+							"indexed": true,
+							"layout": {},
+							"name": "Contact Section"
+						  },
+						  "id": "ad6f8a52-d8ee-4e46-0848-68f812e68db3",
+						  "pageElements": [
+							{
+							  "definition": {
+								"indexed": true,
+								"layout": {},
+								"name": "Contact-Title"
+							  },
+							  "id": "edf87ef6-5ca5-a6b1-8c03-601f69ef3f9b",
+							  "pageElements": [
+								{
+								  "definition": {
+									"fragment": { "key": "DIALECT-dialect-text" },
+									"fragmentConfig": {
+									  "textType": "h1",
+									  "truncateText": false
+									},
+									"fragmentFields": [
+									  {
+										"id": "element-text",
+										"value": {
+										  "fragmentLink": {},
+										  "text": {
+											"value_i18n": {
+											  "en_US": "Contact Us"
+											}
+										  }
+										}
+									  }
+									],
+									"indexed": true,
+									"name": "Contact Us"
+								  },
+								  "id": "9d5536ac-fecd-7688-da92-eb2d635b9670",
+								  "type": "Fragment"
+								}
+							  ],
+							  "type": "Section"
+							},
+							{
+							  "definition": {
+								"indexed": true,
+								"layout": {},
+								"name": "Contact-Links"
+							  },
+							  "id": "b3b5ca37-2a89-b745-638c-9cfc30acc671",
+							  "type": "Section"
+							}
+						  ],
+						  "type": "Section"
+						},
+						{
+						  "definition": {
+							"indexed": true,
+							"layout": {},
+							"name": "Connect Section"
+						  },
+						  "id": "4c66b134-6307-338d-35f7-6b824e243653",
+						  "pageElements": [
+							{
+							  "definition": {
+								"indexed": true,
+								"layout": {},
+								"name": "Connect-Title"
+							  },
+							  "id": "c1696538-4bf2-2153-2125-eb7b81746ffa",
+							  "pageElements": [
+								{
+								  "definition": {
+									"fragment": { "key": "DIALECT-dialect-text" },
+									"fragmentConfig": {
+									  "textType": "h1",
+									  "truncateText": false
+									},
+									"fragmentFields": [
+									  {
+										"id": "element-text",
+										"value": {
+										  "fragmentLink": {},
+										  "text": {
+											"value_i18n": { "en_US": "Connect" }
+										  }
+										}
+									  }
+									],
+									"indexed": true,
+									"name": "Connect"
+								  },
+								  "id": "46c67d0c-5841-27e5-d2e8-71f70765c5f3",
+								  "type": "Fragment"
+								}
+							  ],
+							  "type": "Section"
+							},
+							{
+							  "definition": {
+								"indexed": true,
+								"layout": {},
+								"name": "Connect-Links"
+							  },
+							  "id": "1a3751ff-0089-b2c4-01a5-10d44d25ad58",
+							  "type": "Section"
+							}
+						  ],
+						  "type": "Section"
+						}
+					  ],
+					  "type": "Section"
+					}
+				  ],
+				  "type": "Section"
+				},
+				{
+				  "definition": {
+					"indexed": true,
+					"layout": {},
+					"name": "Footer-Contents-Bottom"
+				  },
+				  "id": "57478169-f503-7920-9301-6fed7917580a",
+				  "type": "Section"
+				}
+			  ],
+			  "type": "Section"
+			}
+		  ],
+		  "type": "Section"
+		}
+	  ],
+	  "type": "Root"
 	},
 	"settings": {
-		"colorSchemeName": "01",
-		"globalJSClientExtensions": [
-			{
-				"clientExtensionConfig": {
-					"loadType": "default",
-					"scriptLocation": "head"
-				},
-				"externalReferenceCode": "LXC:liferay-learn-global-js",
-				"name": "Liferay Learn Global JS"
-			}
-		],
-		"styleBook": {
-			"key": "learn",
-			"name": "Learn"
-		},
-		"themeCSSClientExtension": {
-			"externalReferenceCode": "LXC:liferay-learn-theme-css",
-			"name": "Liferay Learn Theme CSS"
-		},
-		"themeName": "Dialect",
-		"themeSettings": {
-			"lfr-theme:regular:show-footer": "false",
-			"lfr-theme:regular:show-header": "false",
-			"lfr-theme:regular:show-header-search": "false",
-			"lfr-theme:regular:wrap-widget-page-content": "false"
+	  "colorSchemeName": "01",
+	  "globalJSClientExtensions": [
+		{
+		  "clientExtensionConfig": {
+			"loadType": "default",
+			"scriptLocation": "head"
+		  },
+		  "externalReferenceCode": "LXC:liferay-learn-global-js",
+		  "name": "Liferay Learn Global JS"
 		}
+	  ],
+	  "styleBook": { "key": "learn", "name": "Learn" },
+	  "themeCSSClientExtension": {
+		"externalReferenceCode": "LXC:liferay-learn-theme-css",
+		"name": "Liferay Learn Theme CSS"
+	  },
+	  "themeName": "Dialect",
+	  "themeSettings": {
+		"lfr-theme:regular:show-header-search": "false",
+		"lfr-theme:regular:show-header": "false",
+		"lfr-theme:regular:show-footer": "false",
+		"lfr-theme:regular:wrap-widget-page-content": "false"
+	  }
 	},
 	"version": 1.1
-}
+  }
+  
