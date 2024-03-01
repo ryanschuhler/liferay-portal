@@ -292,3 +292,44 @@ function getBreadcrumbFromURL(url) {
 document.getElementById('searchIcon').addEventListener('click', changeFocus);
 
 fragmentElement.querySelector('.public-sites-navigation').style.zIndex = '4';
+
+const viewAllCapabilities = document.getElementsByClassName(
+	'view-all-capabilities'
+)[0];
+
+const capabilityTab = document.querySelectorAll(
+	'[data-lfr-editable-id="title1"]'
+)[0];
+
+viewAllCapabilities.addEventListener('click', ()=> capabilityTab.click());
+
+const getLearnProductsFromNavigationMenu = fetch(
+	`/o/headless-delivery/v1.0/sites/${themeDisplay.getSiteGroupId()}/navigation-menus/`,
+	{
+		method: 'GET',
+		headers: {
+			'x-csrf-token': Liferay.authToken,
+			'Content-Type': 'application/json',
+		},
+	}
+)
+	.then((response) => {
+		return response.json();
+	})
+	.then((data) => {
+		let products = data.items.filter(
+			(elem) => elem.name === 'Learn Products'
+		)[0].navigationMenuItems;
+		const productsDiv = document.getElementsByClassName('product-contents')[0];
+console.log(productsDiv)
+		const groupPathFriendlyURLPublic = document.querySelector(
+			'.groupPathFriendlyURLPublic'
+		).textContent;
+		products.forEach((prod) => {
+			let para = document.createElement('a');
+			para.innerText = prod.name;
+			para.href = `${groupPathFriendlyURLPublic}${prod.url}`;
+			para.id = "productLink";
+			productsDiv.append(para);
+		});
+	});
