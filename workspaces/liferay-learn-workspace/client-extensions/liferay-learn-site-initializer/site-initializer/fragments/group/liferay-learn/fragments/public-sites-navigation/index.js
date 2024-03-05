@@ -4,332 +4,331 @@
  */
 
 /* eslint-disable no-undef */
-
-const searchSubmitURL = fragmentElement.querySelector('.search-submit').href;
-
-window.addEventListener('load', () => {
-	const searchInput = fragmentElement.querySelector('.search-input');
-
-	searchInput.value = '';
-
-	new navigation.default.DropdownProvider(
-		'.account-info',
-		'.account-info',
-		'menu-open'
-	);
-
-	new navigation.default.DropdownProvider(
-		'.account-info',
-		'.account-dropdown',
-		'show',
-		true
-	);
-
-	new navigation.default.DropdownProvider(
-		'.sites',
-		'.liferay-sites-dropdown',
-		'show',
-		true
-	);
-
-	new navigation.default.DropdownProvider('.sites', '.sites', 'show', true);
-
-	new navigation.default.DropdownProvider(
-		'.menu-button-group',
-		'.menu-button-group',
-		'menu-open'
-	);
-
-	new navigation.default.DropdownProvider(
-		'.menu-button-group',
-		'.tablet-mobile-nav-section',
-		'menu-open',
-		true
-	);
-
-	new navigation.default.DropdownProvider(
-		'.adt-nav-text',
-		'.adt-submenu',
-		'dropdown-open',
-		false,
-		(menu) => {
-			adtSpatialNavigationProvider.addFocusableClasses(menu);
-		},
-		(menu) => {
-			adtSpatialNavigationProvider.removeFocusableClasses(menu);
-		}
-	);
-
-	new navigation.default.DropdownProvider(
-		'.language',
-		'.language-selector',
-		'list-open',
-		true
-	);
-
-	new navigation.default.DropdownProvider(
-		'.language',
-		'.language-dropdown-list-container',
-		'list-open',
-		true
-	);
-
-	new navigation.default.DropdownProvider(
-		'.search-icon, .close-search',
-		'.search-wrapper',
-		'search-open',
-		true
-	);
-});
-
-const searchSuggestionsInput = fragmentElement.querySelector(
-	'.search-suggestions-input'
-);
-const suggestions = fragmentElement.querySelector('.suggestions');
-const searchSuggestions = fragmentElement.querySelector('.search-suggestions');
-
-const searchSuggestionItemTemplate = suggestions.querySelector('template');
-
-const seeAllResultsLink = fragmentElement.querySelector(
-	'.search-suggestions-see-all-results-text'
-);
-
-const searchSubmitLink = fragmentElement.querySelector('.search-submit');
-
-const searchSuggestionItem = searchSuggestionItemTemplate.content.querySelector(
-	'a'
-);
-
-function changeFocus() {
-	document.getElementById('searchInput').focus();
-}
-
-function updateSearch() {
-	searchSuggestions.innerHTML = '';
-
-	const searchSuggestionsInputValue = searchSuggestionsInput.value;
-
-	if (searchSuggestionsInputValue) {
-		seeAllResultsLink.href =
-			searchSubmitURL + '?q=' + searchSuggestionsInputValue;
-		searchSubmitLink.href =
-			searchSubmitURL + '?q=' + searchSuggestionsInputValue;
-		suggestions.classList.add('performing-search');
-		performSearch(searchSuggestionsInputValue);
-	}
-	else {
-		suggestions.classList.remove(
-			'loading-search',
-			'performing-search',
-			'search-error',
-			'search-results-found'
+const groupPathFriendlyURLPublic = document.querySelector(
+	'.groupPathFriendlyURLPublic'
+	).textContent;
+	
+	const searchSubmitURL = fragmentElement.querySelector('.search-submit').href;
+	
+	window.addEventListener('load', () => {
+		const searchInput = fragmentElement.querySelector('.search-input');
+	
+		searchInput.value = '';
+	
+		new navigation.default.DropdownProvider(
+			'.account-info',
+			'.account-info',
+			'menu-open'
 		);
-	}
-}
-
-let debounceTimer;
-
-const debounce = (callback, time) => {
-	window.clearTimeout(debounceTimer);
-	debounceTimer = window.setTimeout(callback, time);
-};
-
-searchSuggestionsInput.addEventListener(
-	'input',
-	() => {
-		suggestions.classList.add('loading-search');
-		debounce(updateSearch, 250);
-	},
-	false
-);
-
-function performSearch(query) {
-	const postDataURL = `/o/portal-search-rest/v1.0/suggestions?currentURL=${
-		window.location.href
-	}&destinationFriendlyURL=/search&groupId=${Liferay.ThemeDisplay.getScopeGroupId()}&plid=${Liferay.ThemeDisplay.getPlid()}&scope=this-site&search=${query}`;
-
-	postData(postDataURL, [
-		{
-			attributes: {
-				includeAssetSearchSummary: true,
-				includeassetURL: true,
-				sxpBlueprintId: configuration.searchBlueprintId,
+	
+		new navigation.default.DropdownProvider(
+			'.account-info',
+			'.account-dropdown',
+			'show',
+			true
+		);
+	
+		new navigation.default.DropdownProvider(
+			'.sites',
+			'.liferay-sites-dropdown',
+			'show',
+			true
+		);
+	
+		new navigation.default.DropdownProvider('.sites', '.sites', 'show', true);
+	
+		new navigation.default.DropdownProvider(
+			'.menu-button-group',
+			'.menu-button-group',
+			'menu-open'
+		);
+	
+		new navigation.default.DropdownProvider(
+			'.menu-button-group',
+			'.tablet-mobile-nav-section',
+			'menu-open',
+			true
+		);
+	
+		new navigation.default.DropdownProvider(
+			'.adt-nav-text',
+			'.adt-submenu',
+			'dropdown-open',
+			false,
+			(menu) => {
+				adtSpatialNavigationProvider.addFocusableClasses(menu);
 			},
-			contributorName: 'sxpBlueprint',
-			displayGroupName: 'Public Nav Search Recommendations',
-			size: '3',
+			(menu) => {
+				adtSpatialNavigationProvider.removeFocusableClasses(menu);
+			}
+		);
+	
+		new navigation.default.DropdownProvider(
+			'.language',
+			'.language-selector',
+			'list-open',
+			true
+		);
+	
+		new navigation.default.DropdownProvider(
+			'.language',
+			'.language-dropdown-list-container',
+			'list-open',
+			true
+		);
+	
+		new navigation.default.DropdownProvider(
+			'.search-icon, .close-search',
+			'.search-wrapper',
+			'search-open',
+			true
+		);
+	});
+	
+	const searchSuggestionsInput = fragmentElement.querySelector(
+		'.search-suggestions-input'
+	);
+	const suggestions = fragmentElement.querySelector('.suggestions');
+	const searchSuggestions = fragmentElement.querySelector('.search-suggestions');
+	
+	const searchSuggestionItemTemplate = suggestions.querySelector('template');
+	
+	const seeAllResultsLink = fragmentElement.querySelector(
+		'.search-suggestions-see-all-results-text'
+	);
+	
+	const searchSubmitLink = fragmentElement.querySelector('.search-submit');
+	
+	const searchSuggestionItem = searchSuggestionItemTemplate.content.querySelector(
+		'a'
+	);
+	
+	function changeFocus() {
+		document.getElementById('searchInput').focus();
+	}
+	
+	function updateSearch() {
+		searchSuggestions.innerHTML = '';
+	
+		const searchSuggestionsInputValue = searchSuggestionsInput.value;
+	
+		if (searchSuggestionsInputValue) {
+			seeAllResultsLink.href =
+				searchSubmitURL + '?q=' + searchSuggestionsInputValue;
+			searchSubmitLink.href =
+				searchSubmitURL + '?q=' + searchSuggestionsInputValue;
+			suggestions.classList.add('performing-search');
+			performSearch(searchSuggestionsInputValue);
+		}
+		else {
+			suggestions.classList.remove(
+				'loading-search',
+				'performing-search',
+				'search-error',
+				'search-results-found'
+			);
+		}
+	}
+	
+	let debounceTimer;
+	
+	const debounce = (callback, time) => {
+		window.clearTimeout(debounceTimer);
+		debounceTimer = window.setTimeout(callback, time);
+	};
+	
+	searchSuggestionsInput.addEventListener(
+		'input',
+		() => {
+			suggestions.classList.add('loading-search');
+			debounce(updateSearch, 250);
 		},
-	])
-		.then((data) => {
-			if (data && data.items && data.items[0]) {
-				const items = JSON.parse(JSON.stringify(data.items[0]));
-				if (items) {
-					searchSuggestions.innerHTML = '';
-
-					const searchTermRegExp = new RegExp(
-						'(' + query + ')',
-						'gi'
-					);
-
-					for (const suggestion of items.suggestions) {
-						const suggestionLink = document.importNode(
-							searchSuggestionItem,
-							true
+		false
+	);
+	
+	function performSearch(query) {
+		const postDataURL = `/o/portal-search-rest/v1.0/suggestions?currentURL=${
+			window.location.href
+		}&destinationFriendlyURL=/search&groupId=${Liferay.ThemeDisplay.getScopeGroupId()}&plid=${Liferay.ThemeDisplay.getPlid()}&scope=this-site&search=${query}`;
+	
+		postData(postDataURL, [
+			{
+				attributes: {
+					includeAssetSearchSummary: true,
+					includeassetURL: true,
+					sxpBlueprintId: configuration.searchBlueprintId,
+				},
+				contributorName: 'sxpBlueprint',
+				displayGroupName: 'Public Nav Search Recommendations',
+				size: '3',
+			},
+		])
+			.then((data) => {
+				if (data && data.items && data.items[0]) {
+					const items = JSON.parse(JSON.stringify(data.items[0]));
+					if (items) {
+						searchSuggestions.innerHTML = '';
+	
+						const searchTermRegExp = new RegExp(
+							'(' + query + ')',
+							'gi'
 						);
-
-						const assetURL = suggestion.attributes.assetURL.replace(
-							/\?.*$/,
-							''
-						);
-
-						suggestionLink.href = assetURL;
-
-						const suggestionTitle = suggestionLink.querySelector(
-							'.search-suggestion-item-title'
-						);
-
-						suggestionTitle.appendChild(
-							document.createTextNode(suggestion.text)
-						);
-
-						const suggestionContent = suggestionLink.querySelector(
-							'.search-suggestion-item-content'
-						);
-
-						let suggestionContentTextValue =
-							suggestion.attributes.assetSearchSummary;
-
-						if (suggestionContentTextValue) {
-							suggestionContentTextValue = suggestionContentTextValue.substring(
-								0,
-								500
+	
+						for (const suggestion of items.suggestions) {
+							const suggestionLink = document.importNode(
+								searchSuggestionItem,
+								true
 							);
-
-							suggestionContent.innerHTML = suggestionContentTextValue.replace(
-								searchTermRegExp,
-								`<b>$1</b>`
+	
+							const assetURL = suggestion.attributes.assetURL.replace(
+								/\?.*$/,
+								''
 							);
+	
+							suggestionLink.href = assetURL;
+	
+							const suggestionTitle = suggestionLink.querySelector(
+								'.search-suggestion-item-title'
+							);
+	
+							suggestionTitle.appendChild(
+								document.createTextNode(suggestion.text)
+							);
+	
+							const suggestionContent = suggestionLink.querySelector(
+								'.search-suggestion-item-content'
+							);
+	
+							let suggestionContentTextValue =
+								suggestion.attributes.assetSearchSummary;
+	
+							if (suggestionContentTextValue) {
+								suggestionContentTextValue = suggestionContentTextValue.substring(
+									0,
+									500
+								);
+	
+								suggestionContent.innerHTML = suggestionContentTextValue.replace(
+									searchTermRegExp,
+									`<b>$1</b>`
+								);
+							}
+	
+							const suggestionURL = suggestionLink.querySelector(
+								'.search-suggestion-item-link'
+							);
+	
+							suggestionURL.appendChild(
+								document.createTextNode(
+									getBreadcrumbFromURL(assetURL)
+								)
+							);
+	
+							searchSuggestions.appendChild(suggestionLink);
+	
+							suggestions.classList.add('search-results-found');
+							suggestions.classList.remove('loading-search');
 						}
-
-						const suggestionURL = suggestionLink.querySelector(
-							'.search-suggestion-item-link'
-						);
-
-						suggestionURL.appendChild(
-							document.createTextNode(
-								getBreadcrumbFromURL(assetURL)
-							)
-						);
-
-						searchSuggestions.appendChild(suggestionLink);
-
-						suggestions.classList.add('search-results-found');
-						suggestions.classList.remove('loading-search');
 					}
 				}
-			}
-			else {
-				suggestions.classList.remove('search-results-found');
+				else {
+					suggestions.classList.remove('search-results-found');
+					suggestions.classList.remove('loading-search');
+				}
+				suggestions.classList.remove('search-error');
+			})
+			.catch(() => {
 				suggestions.classList.remove('loading-search');
-			}
-			suggestions.classList.remove('search-error');
-		})
-		.catch(() => {
-			suggestions.classList.remove('loading-search');
-			suggestions.classList.add('search-error');
+				suggestions.classList.add('search-error');
+			});
+	}
+	
+	async function postData(url = '', data = {}) {
+		const response = await Liferay.Util.fetch(url, {
+			body: JSON.stringify(data),
+			credentials: 'include',
+			headers: {
+				'Accept': 'application/json',
+				'Accept-Language': Liferay.ThemeDisplay.getBCP47LanguageId(),
+				'Content-Type': 'application/json',
+				'x-csrf-token': Liferay.authToken,
+			},
+			method: 'POST',
 		});
-}
-
-async function postData(url = '', data = {}) {
-	const response = await Liferay.Util.fetch(url, {
-		body: JSON.stringify(data),
-		credentials: 'include',
-		headers: {
-			'Accept': 'application/json',
-			'Accept-Language': Liferay.ThemeDisplay.getBCP47LanguageId(),
-			'Content-Type': 'application/json',
-			'x-csrf-token': Liferay.authToken,
-		},
-		method: 'POST',
-	});
-
-	return response.json();
-}
-
-function getBreadcrumbFromURL(url) {
-	if (!url) {
-		return '';
-	}
-
-	url = url
-		.replaceAll('/web/guest/w/', 'home/')
-		.replaceAll('/web/guest/', 'home/')
-		.replaceAll('/', ' / ')
-		.replaceAll('-', ' ');
-
-	const ancronymList = ['api', 'ccr', 'dxp', 'mvc', ' ui ', 'url'];
-
-	ancronymList.forEach((word) => {
-		if (url.includes(word)) {
-			const regEx = new RegExp(word, 'ig');
-			url = url.replace(regEx, word.toUpperCase());
-		}
-	});
-
-	let breadcrumbs = [];
-	const excludeWords = ['a', 'and', 'of', 'the', 'to', 'via'];
-	breadcrumbs = url.split(' ');
-
-	return breadcrumbs
-		.map((word, i) => {
-			return excludeWords.includes(word) && i !== 0
-				? [word]
-				: word.charAt(0).toUpperCase() + word.slice(1);
-		})
-		.join(' ');
-}
-
-document.getElementById('searchIcon').addEventListener('click', changeFocus);
-
-fragmentElement.querySelector('.public-sites-navigation').style.zIndex = '4';
-
-const viewAllCapabilities = document.getElementsByClassName(
-	'view-all-capabilities'
-)[0];
-
-const capabilityTab = document.querySelectorAll(
-	'[data-lfr-editable-id="title1"]'
-)[0];
-
-viewAllCapabilities.addEventListener('click', ()=> capabilityTab.click());
-
-const getLearnProductsFromNavigationMenu = fetch(
-	`/o/headless-delivery/v1.0/sites/${themeDisplay.getSiteGroupId()}/navigation-menus/`,
-	{
-		method: 'GET',
-		headers: {
-			'x-csrf-token': Liferay.authToken,
-			'Content-Type': 'application/json',
-		},
-	}
-)
-	.then((response) => {
+	
 		return response.json();
-	})
-	.then((data) => {
-		let products = data.items.filter(
-			(elem) => elem.name === 'Learn Products'
-		)[0].navigationMenuItems;
-		const productsDiv = document.getElementsByClassName('product-contents')[0];
-console.log(productsDiv)
-		const groupPathFriendlyURLPublic = document.querySelector(
-			'.groupPathFriendlyURLPublic'
-		).textContent;
-		products.forEach((prod) => {
-			let para = document.createElement('a');
-			para.innerText = prod.name;
-			para.href = `${groupPathFriendlyURLPublic}${prod.url}`;
-			para.id = "productLink";
-			productsDiv.append(para);
+	}
+	
+	function getBreadcrumbFromURL(url) {
+		if (!url) {
+			return '';
+		}
+	
+		url = url
+			.replaceAll('/web/guest/w/', 'home/')
+			.replaceAll('/web/guest/', 'home/')
+			.replaceAll('/', ' / ')
+			.replaceAll('-', ' ');
+	
+		const ancronymList = ['api', 'ccr', 'dxp', 'mvc', ' ui ', 'url'];
+	
+		ancronymList.forEach((word) => {
+			if (url.includes(word)) {
+				const regEx = new RegExp(word, 'ig');
+				url = url.replace(regEx, word.toUpperCase());
+			}
 		});
-	});
+	
+		let breadcrumbs = [];
+		const excludeWords = ['a', 'and', 'of', 'the', 'to', 'via'];
+		breadcrumbs = url.split(' ');
+	
+		return breadcrumbs
+			.map((word, i) => {
+				return excludeWords.includes(word) && i !== 0
+					? [word]
+					: word.charAt(0).toUpperCase() + word.slice(1);
+			})
+			.join(' ');
+	}
+	
+	document.getElementById('searchIcon').addEventListener('click', changeFocus);
+	
+	fragmentElement.querySelector('.public-sites-navigation').style.zIndex = '4';
+	
+	const capabilitiesLinkContainer = document.getElementsByClassName(
+		'capabilities-link-container'
+	)[0];
+	
+	let paragraph = document.createElement('a');
+	paragraph.innerText = "View All Capabilities";
+	paragraph.href = groupPathFriendlyURLPublic;
+	paragraph.id = "viewAllCapabilitiesLink";
+	capabilitiesLinkContainer.append(paragraph);
+	
+	const getLearnProductsFromNavigationMenu = fetch(
+		`/o/headless-delivery/v1.0/sites/${themeDisplay.getSiteGroupId()}/navigation-menus/`,
+		{
+			method: 'GET',
+			headers: {
+				'x-csrf-token': Liferay.authToken,
+				'Content-Type': 'application/json',
+			},
+		}
+	)
+		.then((response) => {
+			return response.json();
+		})
+		.then((data) => {
+			let products = data.items.filter(
+				(elem) => elem.name === 'Learn Products'
+			)[0].navigationMenuItems;
+			const productsDiv = document.getElementsByClassName('product-contents')[0];
+			products.forEach((prod) => {
+				let paragraph = document.createElement('a');
+				paragraph.innerText = prod.name;
+				paragraph.href = `${groupPathFriendlyURLPublic}${prod.url}`;
+				paragraph.id = "productLink";
+				productsDiv.append(paragraph);
+			});
+		});
