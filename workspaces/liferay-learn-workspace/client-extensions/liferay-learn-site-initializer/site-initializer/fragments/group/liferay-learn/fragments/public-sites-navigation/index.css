@@ -1725,14 +1725,13 @@ html body:not(.has-edit-mode-menu) .content #main-content.layout-content {
 	display: none;
 }
 
-#productLink {
+#productLink, #viewAllCapabilitiesLink {
 	color: var(--Neutral-10, #282934);
   font-family: "Source Sans 3";
   font-style: normal;
 }
 
-#productLink:hover {
+#productLink:hover, #viewAllCapabilitiesLink:hover {
   color:  var(--color-action-primary-hover, #0053F0);
   text-decoration: none;
 }
-
