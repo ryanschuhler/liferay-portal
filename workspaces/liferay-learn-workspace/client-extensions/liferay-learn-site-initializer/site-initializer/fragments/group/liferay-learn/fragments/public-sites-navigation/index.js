@@ -5,6 +5,10 @@
 
 /* eslint-disable no-undef */
 
+const groupPathFriendlyURLPublic = document.querySelector(
+	'.groupPathFriendlyURLPublic'
+).textContent;
+
 const searchSubmitURL = fragmentElement.querySelector('.search-submit').href;
 
 window.addEventListener('load', () => {
@@ -96,9 +100,8 @@ const seeAllResultsLink = fragmentElement.querySelector(
 
 const searchSubmitLink = fragmentElement.querySelector('.search-submit');
 
-const searchSuggestionItem = searchSuggestionItemTemplate.content.querySelector(
-	'a'
-);
+const searchSuggestionItem =
+	searchSuggestionItemTemplate.content.querySelector('a');
 
 function updateSearch() {
 	searchSuggestions.innerHTML = '';
@@ -112,8 +115,7 @@ function updateSearch() {
 			searchSubmitURL + '?q=' + searchSuggestionsInputValue;
 		suggestions.classList.add('performing-search');
 		performSearch(searchSuggestionsInputValue);
-	}
-	else {
+	} else {
 		suggestions.classList.remove(
 			'loading-search',
 			'performing-search',
@@ -196,15 +198,14 @@ function performSearch(query) {
 							suggestion.attributes.assetSearchSummary;
 
 						if (suggestionContentTextValue) {
-							suggestionContentTextValue = suggestionContentTextValue.substring(
-								0,
-								500
-							);
+							suggestionContentTextValue =
+								suggestionContentTextValue.substring(0, 500);
 
-							suggestionContent.innerHTML = suggestionContentTextValue.replace(
-								searchTermRegExp,
-								`<b>$1</b>`
-							);
+							suggestionContent.innerHTML =
+								suggestionContentTextValue.replace(
+									searchTermRegExp,
+									`<b>$1</b>`
+								);
 						}
 
 						const suggestionURL = suggestionLink.querySelector(
@@ -223,8 +224,7 @@ function performSearch(query) {
 						suggestions.classList.remove('loading-search');
 					}
 				}
-			}
-			else {
+			} else {
 				suggestions.classList.remove('search-results-found');
 				suggestions.classList.remove('loading-search');
 			}
@@ -314,3 +314,41 @@ window.addEventListener('keyup', (event) => {
 		siteSearchWrapper.classList.add('search-open');
 	}
 });
+
+const capabilitiesLinkContainer = document.getElementsByClassName(
+	'capabilities-link-container'
+)[0];
+
+let paragraph = document.createElement('a');
+paragraph.innerText = 'View All Capabilities';
+paragraph.href = groupPathFriendlyURLPublic;
+paragraph.id = 'viewAllCapabilitiesLink';
+capabilitiesLinkContainer.append(paragraph);
+
+const getLearnProductsFromNavigationMenu = fetch(
+	`/o/headless-delivery/v1.0/sites/${themeDisplay.getSiteGroupId()}/navigation-menus/`,
+	{
+		method: 'GET',
+		headers: {
+			'x-csrf-token': Liferay.authToken,
+			'Content-Type': 'application/json',
+		},
+	}
+)
+	.then((response) => {
+		return response.json();
+	})
+	.then((data) => {
+		let products = data.items.filter(
+			(elem) => elem.name === 'Learn Products'
+		)[0].navigationMenuItems;
+		const productsDiv =
+			document.getElementsByClassName('product-contents')[0];
+		products.forEach((prod) => {
+			let paragraph = document.createElement('a');
+			paragraph.innerText = prod.name;
+			paragraph.href = `${groupPathFriendlyURLPublic}${prod.url}`;
+			paragraph.id = 'productLink';
+			productsDiv.append(paragraph);
+		});
+	});
