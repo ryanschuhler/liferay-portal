@@ -1724,14 +1724,3 @@ html body:not(.has-edit-mode-menu) .content #main-content.layout-content {
 	color: var(--white);
 	display: none;
 }
-
-#productLink, #viewAllCapabilitiesLink {
-	color: var(--Neutral-10, #282934);
-  font-family: "Source Sans 3";
-  font-style: normal;
-}
-
-#productLink:hover, #viewAllCapabilitiesLink:hover {
-  color:  var(--color-action-primary-hover, #0053F0);
-  text-decoration: none;
-}
