@@ -1,6 +1,6 @@
 {
 	"pageElement": {
-	  "id": "719e5bb4-3eda-b507-f133-e0b8c73da7d3",
+	  "id": "86b0022d-872c-c6d3-00e7-dda075eecc6c",
 	  "pageElements": [
 		{
 		  "definition": {
@@ -140,7 +140,7 @@
 			{
 			  "definition": {
 				"cssClasses": ["tab"],
-				"customCSS": ".[$FRAGMENT_CLASS$] {\n}",
+				"customCSS": ".[$FRAGMENT_CLASS$] {\n.navbar-collapse{\njustify-content: center;\n}\n}",
 				"fragment": { "key": "dialect-tabs", "siteKey": "Liferay Learn" },
 				"fragmentConfig": {
 				  "iconAlignment": "none",
@@ -209,8 +209,9 @@
 					  "pageElements": [
 						{
 						  "definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 							"fragmentStyle": {
-							  "backgroundColor": "colorNeutral1",
+							  "backgroundColor": "colorNeutral0",
 							  "borderRadius": "borderRadiusLg",
 							  "borderWidth": "1px",
 							  "marginBottom": "2",
@@ -342,8 +343,9 @@
 						},
 						{
 						  "definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 							"fragmentStyle": {
-							  "backgroundColor": "colorNeutral1",
+							  "backgroundColor": "colorNeutral0",
 							  "borderRadius": "borderRadiusLg",
 							  "borderWidth": "1px",
 							  "marginBottom": "2",
@@ -472,8 +474,9 @@
 						},
 						{
 						  "definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 							"fragmentStyle": {
-							  "backgroundColor": "colorNeutral1",
+							  "backgroundColor": "#fff",
 							  "borderRadius": "borderRadiusLg",
 							  "borderWidth": "1px",
 							  "marginBottom": "2",
@@ -604,8 +607,9 @@
 						},
 						{
 						  "definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 							"fragmentStyle": {
-							  "backgroundColor": "colorNeutral1",
+							  "backgroundColor": "colorNeutral0",
 							  "borderRadius": "borderRadiusLg",
 							  "borderWidth": "1px",
 							  "marginBottom": "2",
@@ -735,8 +739,9 @@
 						},
 						{
 						  "definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 							"fragmentStyle": {
-							  "backgroundColor": "colorNeutral1",
+							  "backgroundColor": "colorNeutral0",
 							  "borderRadius": "borderRadiusLg",
 							  "borderWidth": "1px",
 							  "marginBottom": "2",
@@ -866,8 +871,9 @@
 						},
 						{
 						  "definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 							"fragmentStyle": {
-							  "backgroundColor": "colorNeutral1",
+							  "backgroundColor": "colorNeutral0",
 							  "borderRadius": "borderRadiusLg",
 							  "borderWidth": "1px",
 							  "marginBottom": "2",
@@ -997,8 +1003,9 @@
 						},
 						{
 						  "definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 							"fragmentStyle": {
-							  "backgroundColor": "colorNeutral1",
+							  "backgroundColor": "colorNeutral0",
 							  "borderRadius": "borderRadiusLg",
 							  "borderWidth": "1px",
 							  "marginBottom": "2",
@@ -1128,8 +1135,9 @@
 						},
 						{
 						  "definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 							"fragmentStyle": {
-							  "backgroundColor": "colorNeutral1",
+							  "backgroundColor": "colorNeutral0",
 							  "borderRadius": "borderRadiusLg",
 							  "borderWidth": "1px",
 							  "marginBottom": "2",
@@ -1259,8 +1267,9 @@
 						},
 						{
 						  "definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 							"fragmentStyle": {
-							  "backgroundColor": "colorNeutral1",
+							  "backgroundColor": "colorNeutral0",
 							  "borderRadius": "borderRadiusLg",
 							  "borderWidth": "1px",
 							  "marginBottom": "2",
@@ -1388,8 +1397,9 @@
 						},
 						{
 						  "definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 							"fragmentStyle": {
-							  "backgroundColor": "colorNeutral1",
+							  "backgroundColor": "colorNeutral0",
 							  "borderRadius": "borderRadiusLg",
 							  "borderWidth": "1px",
 							  "marginBottom": "2",
@@ -1517,8 +1527,9 @@
 						},
 						{
 						  "definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 							"fragmentStyle": {
-							  "backgroundColor": "colorNeutral1",
+							  "backgroundColor": "colorNeutral0",
 							  "borderRadius": "borderRadiusLg",
 							  "borderWidth": "1px",
 							  "marginBottom": "2",
@@ -1646,8 +1657,9 @@
 						},
 						{
 						  "definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 							"fragmentStyle": {
-							  "backgroundColor": "colorNeutral1",
+							  "backgroundColor": "colorNeutral0",
 							  "borderRadius": "borderRadiusLg",
 							  "borderWidth": "1px",
 							  "marginBottom": "2",
@@ -1814,8 +1826,9 @@
 						  "pageElements": [
 							{
 							  "definition": {
+								"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 								"fragmentStyle": {
-								  "backgroundColor": "colorNeutral1",
+								  "backgroundColor": "colorNeutral0",
 								  "borderRadius": "borderRadiusLg",
 								  "borderWidth": "1px",
 								  "marginBottom": "2",
@@ -1947,8 +1960,9 @@
 							},
 							{
 							  "definition": {
+								"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 								"fragmentStyle": {
-								  "backgroundColor": "colorNeutral1",
+								  "backgroundColor": "colorNeutral0",
 								  "borderRadius": "borderRadiusLg",
 								  "borderWidth": "1px",
 								  "marginBottom": "2",
@@ -2080,8 +2094,9 @@
 							},
 							{
 							  "definition": {
+								"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 								"fragmentStyle": {
-								  "backgroundColor": "colorNeutral1",
+								  "backgroundColor": "colorNeutral0",
 								  "borderRadius": "borderRadiusLg",
 								  "borderWidth": "1px",
 								  "marginBottom": "2",
@@ -2226,8 +2241,9 @@
 						  "pageElements": [
 							{
 							  "definition": {
+								"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 								"fragmentStyle": {
-								  "backgroundColor": "colorNeutral1",
+								  "backgroundColor": "colorNeutral0",
 								  "borderRadius": "borderRadiusLg",
 								  "borderWidth": "1px",
 								  "marginBottom": "2",
@@ -2359,8 +2375,9 @@
 							},
 							{
 							  "definition": {
+								"customCSS": ".[$FRAGMENT_CLASS$] {\nborder: 1px solid rgba(9, 16, 24, 0.12);\nbox-shadow: 0 6px 15px -6px rgba(9, 16, 29, 0.06);\n}\n\n.[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\nborder-color: var(--color-brand-primary-lighten-5, #E7EFFF) !important;\n    border-radius: 10px !important;\n    border-width: 1px !important;\n}",
 								"fragmentStyle": {
-								  "backgroundColor": "colorNeutral1",
+								  "backgroundColor": "colorNeutral0",
 								  "borderRadius": "borderRadiusLg",
 								  "borderWidth": "1px",
 								  "marginBottom": "2",
