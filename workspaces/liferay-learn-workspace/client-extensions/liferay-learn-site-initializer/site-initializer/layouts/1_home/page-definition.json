@@ -8,16 +8,10 @@
 			"fragmentStyle": {
 			  "paddingBottom": "4",
 			  "paddingLeft": "4",
-			  "paddingRight": "4",
-			  "paddingTop": "3"
+			  "paddingRight": "4"
 			},
 			"indexed": true,
-			"layout": {
-			  "paddingBottom": 2,
-			  "paddingLeft": 2,
-			  "paddingRight": 2,
-			  "paddingTop": 1
-			},
+			"layout": { "paddingBottom": 2, "paddingLeft": 2, "paddingRight": 2 },
 			"name": "Home Page Search"
 		  },
 		  "id": "ced4338c-5cec-d2b1-8253-345bfcf83857",
