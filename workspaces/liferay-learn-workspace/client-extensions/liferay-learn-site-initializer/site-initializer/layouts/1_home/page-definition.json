@@ -1,11 +1,129 @@
 {
 	"pageElement": {
-	  "id": "99d45efe-2996-5d9f-f27a-9bdeccc253bd",
+	  "id": "719e5bb4-3eda-b507-f133-e0b8c73da7d3",
 	  "pageElements": [
 		{
 		  "definition": {
+			"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground: linear-gradient(180deg, #00256C 0%, #6399FF 100%);\n\nbackground-image: <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"348\" height=\"184\" viewBox=\"0 0 348 184\" fill=\"none\" element-id=\"360\"><path d=\"M154.177 86.5742C-201.648 163.477 140.917 681.17 361.932 657.517C582.977 633.941 776.843 274.589 613.272 94.549C449.592 -85.53 376.161 40.082 154.177 86.5742Z\" fill=\"url(#paint0_linear_569_4074)\" element-id=\"359\"></path> <defs element-id=\"358\">\n        <linearGradient id=\"paint0_linear_569_4074\" x1=\"689.702\" y1=\"38.7335\" x2=\"26.9456\" y2=\"563.695\" gradientUnits=\"userSpaceOnUse\" element-id=\"357\">\n         <stop stop-color=\"white\" element-id=\"356\"></stop>\n         <stop offset=\"0.01\" stop-color=\"white\" stop-opacity=\"0.97\" element-id=\"355\"></stop>\n         <stop offset=\"0.13\" stop-color=\"white\" stop-opacity=\"0.75\" element-id=\"354\"></stop>\n         <stop offset=\"0.25\" stop-color=\"white\" stop-opacity=\"0.55\" element-id=\"353\"></stop>\n         <stop offset=\"0.37\" stop-color=\"white\" stop-opacity=\"0.38\" element-id=\"352\"></stop>\n         <stop offset=\"0.49\" stop-color=\"white\" stop-opacity=\"0.24\" element-id=\"351\"></stop>\n         <stop offset=\"0.62\" stop-color=\"white\" stop-opacity=\"0.14\" element-id=\"350\"></stop>\n         <stop offset=\"0.74\" stop-color=\"white\" stop-opacity=\"0.06\" element-id=\"349\"></stop>\n         <stop offset=\"0.87\" stop-color=\"white\" stop-opacity=\"0.01\" element-id=\"348\"></stop>\n         <stop offset=\"1\" stop-color=\"white\" stop-opacity=\"0\" element-id=\"347\"></stop> \n        </linearGradient> \n       </defs>\n      </svg>\n}",
+			"fragmentStyle": {
+			  "paddingBottom": "4",
+			  "paddingLeft": "4",
+			  "paddingRight": "4",
+			  "paddingTop": "3"
+			},
+			"indexed": true,
+			"layout": {
+			  "paddingBottom": 2,
+			  "paddingLeft": 2,
+			  "paddingRight": 2,
+			  "paddingTop": 1
+			},
+			"name": "Home Page Search"
+		  },
+		  "id": "ced4338c-5cec-d2b1-8253-345bfcf83857",
+		  "pageElements": [
+			{
+			  "definition": {
+				"fragmentStyle": {
+				  "maxWidth": "var(--container-max-md)",
+				  "textAlign": "center",
+				  "textColor": "colorNeutral0"
+				},
+				"indexed": true,
+				"layout": { "widthType": "Fixed" }
+			  },
+			  "id": "969a4419-5a53-27c4-9270-41e7189616d9",
+			  "pageElements": [
+				{
+				  "definition": {
+					"fragment": {
+					  "key": "dialect-text",
+					  "siteKey": "Liferay Learn"
+					},
+					"fragmentConfig": { "textType": "h1", "truncateText": false },
+					"fragmentFields": [
+					  {
+						"id": "element-text",
+						"value": {
+						  "fragmentLink": {},
+						  "text": {
+							"value_i18n": { "en_US": "Welcome to Liferay Learn" }
+						  }
+						}
+					  }
+					],
+					"fragmentStyle": {
+					  "backgroundColor": "",
+					  "fontWeight": "fontWeightBolder",
+					  "paddingBottom": "5",
+					  "paddingLeft": "5",
+					  "paddingRight": "5",
+					  "paddingTop": "5"
+					},
+					"indexed": true
+				  },
+				  "id": "070f27ce-f3c5-1565-65da-8f72e0007b55",
+				  "type": "Fragment"
+				},
+				{
+				  "definition": {
+					"fragment": {
+					  "key": "dialect-text",
+					  "siteKey": "Liferay Learn"
+					},
+					"fragmentConfig": {
+					  "textType": "text-paragraph-sm",
+					  "truncateText": false
+					},
+					"fragmentFields": [
+					  {
+						"id": "element-text",
+						"value": {
+						  "fragmentLink": {},
+						  "text": {
+							"value_i18n": {
+							  "en_US": "Practical resources for learning Liferay"
+							}
+						  }
+						}
+					  }
+					],
+					"fragmentStyle": {
+					  "backgroundColor": "",
+					  "paddingBottom": "4",
+					  "paddingLeft": "4",
+					  "paddingRight": "4"
+					},
+					"indexed": true
+				  },
+				  "id": "b4282cc0-c3b2-1053-0352-1629e5a8e0c4",
+				  "type": "Fragment"
+				},
+				{
+				  "definition": {
+					"fragmentStyle": { "borderRadius": "100px" },
+					"widgetInstance": {
+					  "widgetConfig": {},
+					  "widgetName": "com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet"
+					}
+				  },
+				  "id": "e040acf8-866e-b9ab-0171-2563d5f40520",
+				  "type": "Widget"
+				}
+			  ],
+			  "type": "Section"
+			}
+		  ],
+		  "type": "Section"
+		},
+		{
+		  "definition": {
 			"customCSS": ".[$FRAGMENT_CLASS$] {\ntext-align: left !important;\n}\n\n",
-			"fragmentStyle": { "marginLeft": "10", "marginRight": "10" },
+			"fragmentStyle": {
+			  "marginLeft": "10",
+			  "marginRight": "10",
+			  "paddingTop": "5"
+			},
 			"fragmentViewports": [
 			  {
 				"fragmentViewportStyle": {
@@ -17,7 +135,11 @@
 			  }
 			],
 			"indexed": true,
-			"layout": { "align": "Start", "contentDisplay": "FlexRow" }
+			"layout": {
+			  "align": "Start",
+			  "contentDisplay": "FlexRow",
+			  "paddingTop": 4
+			}
 		  },
 		  "id": "80c5d588-5312-a696-245e-611798990a3d",
 		  "pageElements": [
