@@ -11,6 +11,7 @@ const tabItems = [].slice.call(
 	)
 );
 let tabIndex = 0;
+const tabPanel = fragmentElement.querySelector('.tab-panel');
 const tabPanelItems = [].slice.call(
 	fragmentElement.querySelectorAll(
 		'[data-fragment-namespace="' + fragmentNamespace + '"].tab-panel-item'
@@ -22,6 +23,11 @@ function activeTab(item) {
 		tabItem.setAttribute('aria-selected', false);
 		tabItem.classList.remove('active');
 	});
+
+	if (item === null) {
+		return;
+	}
+
 	item.setAttribute('aria-selected', true);
 	item.classList.add('active');
 }
@@ -32,6 +38,11 @@ function activeTabPanel(item) {
 			tabPanelItem.classList.add('d-none');
 		}
 	});
+
+	if (item === null) {
+		return;
+	}
+
 	item.classList.remove('d-none');
 }
 
@@ -51,6 +62,10 @@ function handleDropdown(event, item) {
 }
 
 function handleDropdownButtonName(item) {
+	if (item === null) {
+		return;
+	}
+
 	const tabText =
 		item.querySelector('lfr-editable') ||
 		item.querySelector('.navbar-text-truncate');
@@ -83,11 +98,32 @@ function openTabPanel(event, i) {
 
 		tabIndex = i;
 	}
+
+	if (!configuration.defaultShowPanel) {
+		const outsideClickListener = e => {
+			if (!tabPanel.contains(e.target)) {
+	console.log(e.target);
+				activeTab(null);
+				removeClickListener();
+			}
+		}
+	
+		const removeClickListener = () => {
+			document.removeEventListener('click', outsideClickListener);
+		}
+	
+		document.addEventListener('click', outsideClickListener);
+	}
 }
 
 function main() {
 	const initialState = !tabIndex || tabIndex >= tabItems.length;
-	let tabItemSelected = tabItems[0];
+
+	let tabItemSelected = null;
+
+	if (configuration.defaultShowPanel) {
+		tabItemSelected = tabItems[0];
+	}
 
 	if (initialState) {
 		tabItems.forEach((item, i) => {

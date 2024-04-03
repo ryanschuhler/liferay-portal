@@ -109,6 +109,14 @@
 							}
 						]
 					}
+				},
+				{
+					"dataType": "string",
+					"defaultValue": true,
+					"description": "Default Show Panel",
+					"label": "Default Show Panel",
+					"name": "defaultShowPanel",
+					"type": "checkbox"
 				}
 			],
 			"label": "tabs-options"
