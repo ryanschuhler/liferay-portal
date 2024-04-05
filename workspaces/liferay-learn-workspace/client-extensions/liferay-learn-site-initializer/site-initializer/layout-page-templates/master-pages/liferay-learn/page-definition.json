@@ -282,24 +282,30 @@
 												"definition": {
 													"customCSS": ".[$FRAGMENT_CLASS$] {\n  text-align: left !important;\n  position: absolute;\n  background-color: white;\n  left: 0;\n  z-index: 1;\n\nborder: none;\n    border-radius: 0px 0px 8px 8px;\n    box-shadow: 0px 10px 5px rgba(0, 0, 0, 0.15);\n\n}",
 													"fragmentStyle": {
-														"backgroundColor": "colorNeutral0",
-														"width": "100%"
+														"paddingBottom": "4",
+														"paddingLeft": "5",
+														"paddingRight": "5",
+														"paddingTop": "4"
 													},
 													"indexed": true,
 													"layout": {
+														"align": "Center",
 														"contentDisplay": "FlexRow",
 														"flexWrap": "Wrap",
-														"justify": "SpaceBetween"
+														"paddingBottom": 2,
+														"paddingLeft": 4,
+														"paddingRight": 4,
+														"paddingTop": 2
 													}
 												},
 												"id": "4068b69d-f50a-5014-e272-2f944b02c96e",
 												"pageElements": [
 													{
 														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 															"fragmentStyle": {
-																"backgroundColor": "colorNeutral1",
+																"backgroundColor": "colorNeutral0",
 																"borderRadius": "borderRadiusLg",
-																"borderWidth": "1px",
 																"marginBottom": "2",
 																"marginTop": "3",
 																"paddingBottom": "3",
@@ -434,10 +440,10 @@
 													},
 													{
 														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 															"fragmentStyle": {
-																"backgroundColor": "colorNeutral1",
+																"backgroundColor": "colorNeutral0",
 																"borderRadius": "borderRadiusLg",
-																"borderWidth": "1px",
 																"marginBottom": "2",
 																"marginTop": "3",
 																"paddingBottom": "3",
@@ -572,10 +578,10 @@
 													},
 													{
 														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 															"fragmentStyle": {
-																"backgroundColor": "colorNeutral1",
+																"backgroundColor": "colorNeutral0",
 																"borderRadius": "borderRadiusLg",
-																"borderWidth": "1px",
 																"marginBottom": "2",
 																"marginTop": "3",
 																"paddingBottom": "3",
@@ -710,10 +716,10 @@
 													},
 													{
 														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 															"fragmentStyle": {
-																"backgroundColor": "colorNeutral1",
+																"backgroundColor": "colorNeutral0",
 																"borderRadius": "borderRadiusLg",
-																"borderWidth": "1px",
 																"marginBottom": "2",
 																"marginTop": "2",
 																"paddingBottom": "3",
@@ -847,10 +853,10 @@
 													},
 													{
 														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 															"fragmentStyle": {
-																"backgroundColor": "colorNeutral1",
+																"backgroundColor": "colorNeutral0",
 																"borderRadius": "borderRadiusLg",
-																"borderWidth": "1px",
 																"marginBottom": "2",
 																"marginTop": "2",
 																"paddingBottom": "3",
@@ -984,10 +990,10 @@
 													},
 													{
 														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 															"fragmentStyle": {
-																"backgroundColor": "colorNeutral1",
+																"backgroundColor": "colorNeutral0",
 																"borderRadius": "borderRadiusLg",
-																"borderWidth": "1px",
 																"marginBottom": "2",
 																"marginTop": "2",
 																"paddingBottom": "3",
@@ -1121,10 +1127,10 @@
 													},
 													{
 														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 															"fragmentStyle": {
-																"backgroundColor": "colorNeutral1",
+																"backgroundColor": "colorNeutral0",
 																"borderRadius": "borderRadiusLg",
-																"borderWidth": "1px",
 																"marginBottom": "2",
 																"marginTop": "2",
 																"paddingBottom": "3",
@@ -1258,10 +1264,10 @@
 													},
 													{
 														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 															"fragmentStyle": {
-																"backgroundColor": "colorNeutral1",
+																"backgroundColor": "colorNeutral0",
 																"borderRadius": "borderRadiusLg",
-																"borderWidth": "1px",
 																"marginBottom": "2",
 																"marginTop": "2",
 																"paddingBottom": "3",
@@ -1395,10 +1401,10 @@
 													},
 													{
 														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 															"fragmentStyle": {
-																"backgroundColor": "colorNeutral1",
+																"backgroundColor": "colorNeutral0",
 																"borderRadius": "borderRadiusLg",
-																"borderWidth": "1px",
 																"marginBottom": "2",
 																"marginTop": "2",
 																"paddingBottom": "3",
@@ -1532,10 +1538,10 @@
 													},
 													{
 														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 															"fragmentStyle": {
-																"backgroundColor": "colorNeutral1",
+																"backgroundColor": "colorNeutral0",
 																"borderRadius": "borderRadiusLg",
-																"borderWidth": "1px",
 																"marginBottom": "2",
 																"marginTop": "2",
 																"paddingBottom": "3",
@@ -1669,10 +1675,10 @@
 													},
 													{
 														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 															"fragmentStyle": {
-																"backgroundColor": "colorNeutral1",
+																"backgroundColor": "colorNeutral0",
 																"borderRadius": "borderRadiusLg",
-																"borderWidth": "1px",
 																"marginBottom": "2",
 																"marginTop": "2",
 																"paddingBottom": "3",
@@ -1806,10 +1812,10 @@
 													},
 													{
 														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 															"fragmentStyle": {
-																"backgroundColor": "colorNeutral1",
+																"backgroundColor": "colorNeutral0",
 																"borderRadius": "borderRadiusLg",
-																"borderWidth": "1px",
 																"marginBottom": "2",
 																"marginTop": "2",
 																"paddingBottom": "3",
@@ -1956,9 +1962,12 @@
 										"pageElements": [
 											{
 												"definition": {
-													"customCSS": ".[$FRAGMENT_CLASS$] {\ntext-align: left !important;\nposition: absolute;\nleft: 0;\nz-index: 1;\n\n\nborder: none;\n    border-radius: 0px 0px 8px 8px;\n    box-shadow: 0px 10px 5px rgba(0, 0, 0, 0.15);\n}\nimg {\nwidth: 50px;\nheight: 50px;\n}",
+													"customCSS": ".[$FRAGMENT_CLASS$] {\ntext-align: left !important;\nposition: absolute;\nleft: 0;\nz-index: 1;\n\n\nborder: none;\n    border-radius: 0px 0px 8px 8px;\n    box-shadow: 0px 10px 5px rgba(0, 0, 0, 0.15);\n}\nimg {\nwidth: 50px;\nheight: 50px;\n}\n\n\n\n",
 													"fragmentStyle": {
+														"backgroundColor": "colorNeutral0",
 														"minWidth": "100vw",
+														"paddingBottom": "4",
+														"paddingTop": "4",
 														"textAlign": "center",
 														"textColor": "#282934"
 													},
@@ -1966,7 +1975,9 @@
 													"layout": {
 														"contentDisplay": "FlexRow",
 														"flexWrap": "Wrap",
-														"justify": "SpaceBetween"
+														"justify": "SpaceBetween",
+														"paddingBottom": 2,
+														"paddingTop": 2
 													}
 												},
 												"id": "e9ee71b0-a177-9e07-4f13-11c4c32da37d",
@@ -1985,10 +1996,10 @@
 														"pageElements": [
 															{
 																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 																	"fragmentStyle": {
-																		"backgroundColor": "colorNeutral1",
+																		"backgroundColor": "colorNeutral0",
 																		"borderRadius": "borderRadiusLg",
-																		"borderWidth": "1px",
 																		"marginBottom": "2",
 																		"marginTop": "2",
 																		"paddingBottom": "3",
@@ -2122,10 +2133,10 @@
 															},
 															{
 																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 																	"fragmentStyle": {
-																		"backgroundColor": "colorNeutral1",
+																		"backgroundColor": "colorNeutral0",
 																		"borderRadius": "borderRadiusLg",
-																		"borderWidth": "1px",
 																		"marginBottom": "2",
 																		"marginTop": "2",
 																		"paddingBottom": "3",
@@ -2259,10 +2270,10 @@
 															},
 															{
 																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 																	"fragmentStyle": {
-																		"backgroundColor": "colorNeutral1",
+																		"backgroundColor": "colorNeutral0",
 																		"borderRadius": "borderRadiusLg",
-																		"borderWidth": "1px",
 																		"marginBottom": "2",
 																		"marginTop": "2",
 																		"paddingBottom": "3",
@@ -2411,10 +2422,10 @@
 														"pageElements": [
 															{
 																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 																	"fragmentStyle": {
-																		"backgroundColor": "colorNeutral1",
+																		"backgroundColor": "colorNeutral0",
 																		"borderRadius": "borderRadiusLg",
-																		"borderWidth": "1px",
 																		"marginBottom": "2",
 																		"marginTop": "2",
 																		"paddingBottom": "3",
@@ -2548,10 +2559,10 @@
 															},
 															{
 																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$]:hover{\nbackground-color: var(--color-action-primary-hover-10, #EDF3FE) !important;\n}",
 																	"fragmentStyle": {
-																		"backgroundColor": "colorNeutral1",
+																		"backgroundColor": "colorNeutral0",
 																		"borderRadius": "borderRadiusLg",
-																		"borderWidth": "1px",
 																		"marginBottom": "2",
 																		"marginTop": "2",
 																		"paddingBottom": "3",
