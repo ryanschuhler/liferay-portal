@@ -1,7 +1,6 @@
 {
 	"pageElement": {
 		"id": "0a3fb99f-612f-a1ce-4ea0-63fc90ce2fb5",
-		"id": "0a3fb99f-612f-a1ce-4ea0-63fc90ce2fb5",
 		"pageElements": [
 			{
 				"definition": {
@@ -38,7 +37,6 @@
 					],
 					"indexed": true
 				},
-				"id": "45bf882d-e463-8051-9b02-8007a00c938b",
 				"id": "45bf882d-e463-8051-9b02-8007a00c938b",
 				"pageElements": [
 					{
@@ -79,7 +77,6 @@
 									"indexed": true
 								},
 								"id": "f27c3b83-e9df-8752-8122-c21ca907aebd",
-								"id": "f27c3b83-e9df-8752-8122-c21ca907aebd",
 								"type": "Fragment"
 							},
 							{
@@ -115,7 +112,6 @@
 									],
 									"indexed": true
 								},
-								"id": "2d9053c5-0aa8-da1f-54d1-629f6648e7e8",
 								"id": "2d9053c5-0aa8-da1f-54d1-629f6648e7e8",
 								"type": "Fragment"
 							},
@@ -153,7 +149,6 @@
 									"indexed": true
 								},
 								"id": "f4cca2b4-fa7d-e9dc-b776-55c64e96906c",
-								"id": "f4cca2b4-fa7d-e9dc-b776-55c64e96906c",
 								"type": "Fragment"
 							},
 							{
@@ -190,7 +185,6 @@
 									"indexed": true
 								},
 								"id": "b7642611-3aab-8f4c-5ba8-1223d92e9061",
-								"id": "b7642611-3aab-8f4c-5ba8-1223d92e9061",
 								"type": "Fragment"
 							}
 						],
@@ -207,7 +201,6 @@
 						"pageElements": [
 							{
 								"definition": {
-									"customCSS": ".[$FRAGMENT_CLASS$] {\n#navigationBarCollapse-snax {\njustify-content: end;\n}\nbutton {\nborder: none !important;\n}\n.navbar-nav, .navbar-collapse{\nbackground-color: var(--color-brand-primary-darken-5, #00256C) !important;\njustify-content: right;\n}\nspan {\ncolor: #FBFCFE;\ntext-decoration: none !important;\n}\nspan:hover {\ntext-decoration: none !important;\n}\n}",
 									"customCSS": ".[$FRAGMENT_CLASS$] {\n#navigationBarCollapse-snax {\njustify-content: end;\n}\nbutton {\nborder: none !important;\n}\n.navbar-nav, .navbar-collapse{\nbackground-color: var(--color-brand-primary-darken-5, #00256C) !important;\njustify-content: right;\n}\nspan {\ncolor: #FBFCFE;\ntext-decoration: none !important;\n}\nspan:hover {\ntext-decoration: none !important;\n}\n}",
 									"fragment": {
 										"key": "dialect-tabs",
@@ -269,13 +262,11 @@
 									"indexed": true
 								},
 								"id": "7126b400-907f-caa4-48e9-1ff841723561",
-								"id": "7126b400-907f-caa4-48e9-1ff841723561",
 								"pageElements": [
 									{
 										"definition": {
 											"fragmentDropZoneId": "1"
 										},
-										"id": "148eb346-52f0-6af0-03f2-17035060c66c",
 										"id": "148eb346-52f0-6af0-03f2-17035060c66c",
 										"pageElements": [
 											{
@@ -1958,7 +1949,6 @@
 											"fragmentDropZoneId": "2"
 										},
 										"id": "1c080508-649b-9654-f130-6dee1ef0ac4d",
-										"id": "1c080508-649b-9654-f130-6dee1ef0ac4d",
 										"pageElements": [
 											{
 												"definition": {
@@ -2708,7 +2698,6 @@
 											"fragmentDropZoneId": "3"
 										},
 										"id": "14253dbd-f265-82ae-2931-e2ba4923388c",
-										"id": "14253dbd-f265-82ae-2931-e2ba4923388c",
 										"type": "FragmentDropZone"
 									}
 								],
@@ -2753,7 +2742,6 @@
 					"name": "Footer"
 				},
 				"id": "cab69f52-e36b-1407-89f7-706c8f107b8f",
-				"id": "cab69f52-e36b-1407-89f7-706c8f107b8f",
 				"pageElements": [
 					{
 						"definition": {
@@ -2787,7 +2775,6 @@
 							"name": "Footer-Contents"
 						},
 						"id": "abac19fb-71b7-0fb1-f49f-080167f5b55b",
-						"id": "abac19fb-71b7-0fb1-f49f-080167f5b55b",
 						"pageElements": [
 							{
 								"definition": {
@@ -2802,7 +2789,6 @@
 									"layout": {"contentDisplay": "FlexRow"},
 									"name": "Footer-Contents-Top"
 								},
-								"id": "19741e3c-4d9d-6c6c-cd9e-82f5d510ae56",
 								"id": "19741e3c-4d9d-6c6c-cd9e-82f5d510ae56",
 								"pageElements": [
 									{
@@ -2830,7 +2816,6 @@
 											"name": "Logo Info Section"
 										},
 										"id": "48f9a916-f340-bc25-2dea-f0d29a3d3549",
-										"id": "48f9a916-f340-bc25-2dea-f0d29a3d3549",
 										"pageElements": [
 											{
 												"definition": {
@@ -2841,7 +2826,6 @@
 													},
 													"name": "Logo-Info-Title"
 												},
-												"id": "006bedd4-abe6-d7f3-9771-f16236f296b6",
 												"id": "006bedd4-abe6-d7f3-9771-f16236f296b6",
 												"pageElements": [
 													{
@@ -2866,7 +2850,6 @@
 															"name": "Liferay-logo"
 														},
 														"id": "0fbdfac8-59f6-8f9c-d15d-dfd92f308e3c",
-														"id": "0fbdfac8-59f6-8f9c-d15d-dfd92f308e3c",
 														"type": "Fragment"
 													}
 												],
@@ -2882,7 +2865,6 @@
 													},
 													"name": "Logo-Info-Links"
 												},
-												"id": "8f58584f-c695-63fb-e1df-6283fde61a2f",
 												"id": "8f58584f-c695-63fb-e1df-6283fde61a2f",
 												"pageElements": [
 													{
@@ -2919,7 +2901,6 @@
 															"indexed": true,
 															"name": "Liferay.com"
 														},
-														"id": "00246e75-c413-57f4-095a-8ec838ab9b2c",
 														"id": "00246e75-c413-57f4-095a-8ec838ab9b2c",
 														"type": "Fragment"
 													},
@@ -2958,7 +2939,6 @@
 															"name": "Ask"
 														},
 														"id": "18952fc7-1733-630e-867b-337110280630",
-														"id": "18952fc7-1733-630e-867b-337110280630",
 														"type": "Fragment"
 													},
 													{
@@ -2996,7 +2976,6 @@
 															"name": "Events"
 														},
 														"id": "8620f27f-8d78-fae8-a00b-a18575bbd6f0",
-														"id": "8620f27f-8d78-fae8-a00b-a18575bbd6f0",
 														"type": "Fragment"
 													},
 													{
@@ -3033,7 +3012,6 @@
 															"indexed": true,
 															"name": "Meet"
 														},
-														"id": "abd1dd23-4659-24ef-23e1-fc435f0d3cc9",
 														"id": "abd1dd23-4659-24ef-23e1-fc435f0d3cc9",
 														"type": "Fragment"
 													}
@@ -3082,7 +3060,6 @@
 											"name": "Other Sections"
 										},
 										"id": "39d82912-edb0-50aa-5d4d-f64888bbdcef",
-										"id": "39d82912-edb0-50aa-5d4d-f64888bbdcef",
 										"pageElements": [
 											{
 												"definition": {
@@ -3094,7 +3071,6 @@
 													"name": "Capabilities Section"
 												},
 												"id": "ddc54da4-182b-0e4c-fced-6a0d75ae5147",
-												"id": "ddc54da4-182b-0e4c-fced-6a0d75ae5147",
 												"pageElements": [
 													{
 														"definition": {
@@ -3102,7 +3078,6 @@
 															"layout": {},
 															"name": "Capabilities-Title"
 														},
-														"id": "aadb323b-de1e-9757-1f8a-5609290fba35",
 														"id": "aadb323b-de1e-9757-1f8a-5609290fba35",
 														"pageElements": [
 															{
@@ -3136,7 +3111,6 @@
 																	"name": "Capabilities"
 																},
 																"id": "51bde076-56af-05ce-ba38-8f23ea0a3112",
-																"id": "51bde076-56af-05ce-ba38-8f23ea0a3112",
 																"type": "Fragment"
 															}
 														],
@@ -3151,7 +3125,6 @@
 															"layout": {},
 															"name": "Capabalities-Links"
 														},
-														"id": "3e9c171b-8ae9-2dcd-1645-e3682e4b5cf7",
 														"id": "3e9c171b-8ae9-2dcd-1645-e3682e4b5cf7",
 														"pageElements": [
 															{
@@ -3189,7 +3162,6 @@
 																	"name": "View All Capabilities"
 																},
 																"id": "88077a92-b15c-4395-83a8-73359746fdad",
-																"id": "88077a92-b15c-4395-83a8-73359746fdad",
 																"type": "Fragment"
 															}
 														],
@@ -3209,7 +3181,6 @@
 													"name": "Products Section"
 												},
 												"id": "44205992-3a58-9c8c-9f1a-1395f9c2ea49",
-												"id": "44205992-3a58-9c8c-9f1a-1395f9c2ea49",
 												"pageElements": [
 													{
 														"definition": {
@@ -3217,7 +3188,6 @@
 															"layout": {},
 															"name": "Products-Title"
 														},
-														"id": "76bca64f-1498-dfdb-7eca-705806df4b9c",
 														"id": "76bca64f-1498-dfdb-7eca-705806df4b9c",
 														"pageElements": [
 															{
@@ -3252,7 +3222,6 @@
 																	"name": "Product"
 																},
 																"id": "3e146314-9fb6-83de-4743-76360fa8e95e",
-																"id": "3e146314-9fb6-83de-4743-76360fa8e95e",
 																"type": "Fragment"
 															}
 														],
@@ -3272,7 +3241,6 @@
 															},
 															"name": "Products-Links"
 														},
-														"id": "0bfbb743-fc9b-82c7-9bf9-5264cb5b8e43",
 														"id": "0bfbb743-fc9b-82c7-9bf9-5264cb5b8e43",
 														"pageElements": [
 															{
@@ -3309,7 +3277,6 @@
 																	"indexed": true,
 																	"name": "Analytics Cloud"
 																},
-																"id": "3a7d8eee-7070-5c68-47ca-51ad642ead8f",
 																"id": "3a7d8eee-7070-5c68-47ca-51ad642ead8f",
 																"type": "Fragment"
 															},
@@ -3348,7 +3315,6 @@
 																	"name": "Commerce"
 																},
 																"id": "0ba79b87-5677-46c9-9d3f-691a034b38a9",
-																"id": "0ba79b87-5677-46c9-9d3f-691a034b38a9",
 																"type": "Fragment"
 															},
 															{
@@ -3385,7 +3351,6 @@
 																	"indexed": true,
 																	"name": "DXP"
 																},
-																"id": "45e012bb-9fff-1f8a-8d76-f78251fc7ffc",
 																"id": "45e012bb-9fff-1f8a-8d76-f78251fc7ffc",
 																"type": "Fragment"
 															},
@@ -3424,7 +3389,6 @@
 																	"name": "Liferay Cloud"
 																},
 																"id": "91c23ce4-d641-00a6-f392-2f0e1c21f67d",
-																"id": "91c23ce4-d641-00a6-f392-2f0e1c21f67d",
 																"type": "Fragment"
 															},
 															{
@@ -3462,7 +3426,6 @@
 																	"name": "Reference"
 																},
 																"id": "66cfa775-3931-d203-2850-d740960dcf05",
-																"id": "66cfa775-3931-d203-2850-d740960dcf05",
 																"type": "Fragment"
 															}
 														],
@@ -3487,7 +3450,6 @@
 													"name": "Contact-Connect Section"
 												},
 												"id": "5056d182-6fc7-3cac-a5bc-6c69ed6c0f63",
-												"id": "5056d182-6fc7-3cac-a5bc-6c69ed6c0f63",
 												"pageElements": [
 													{
 														"definition": {
@@ -3500,7 +3462,6 @@
 															"name": "Contact Section"
 														},
 														"id": "c9c479ac-8740-8d1d-b064-a99e407ba423",
-														"id": "c9c479ac-8740-8d1d-b064-a99e407ba423",
 														"pageElements": [
 															{
 																"definition": {
@@ -3508,7 +3469,6 @@
 																	"layout": {},
 																	"name": "Contact-Title"
 																},
-																"id": "8ba742f0-5477-1aa4-d433-2e47f328347b",
 																"id": "8ba742f0-5477-1aa4-d433-2e47f328347b",
 																"pageElements": [
 																	{
@@ -3543,7 +3503,6 @@
 																			"name": "Contact Us"
 																		},
 																		"id": "7932a61e-5a4d-5c21-40c2-07296321bf80",
-																		"id": "7932a61e-5a4d-5c21-40c2-07296321bf80",
 																		"type": "Fragment"
 																	}
 																],
@@ -3555,7 +3514,6 @@
 																	"layout": {},
 																	"name": "Contact-Links"
 																},
-																"id": "e2ff9ebc-8159-cf3d-aeec-76a3e3e126f1",
 																"id": "e2ff9ebc-8159-cf3d-aeec-76a3e3e126f1",
 																"pageElements": [
 																	{
@@ -3593,7 +3551,6 @@
 																			"name": "Submit Feedback"
 																		},
 																		"id": "7995fc62-950b-a150-d3ac-74ae7a254122",
-																		"id": "7995fc62-950b-a150-d3ac-74ae7a254122",
 																		"type": "Fragment"
 																	}
 																],
@@ -3613,7 +3570,6 @@
 															"name": "Connect Section"
 														},
 														"id": "380329f1-1fd5-58db-b634-c26a4ef28042",
-														"id": "380329f1-1fd5-58db-b634-c26a4ef28042",
 														"pageElements": [
 															{
 																"definition": {
@@ -3621,7 +3577,6 @@
 																	"layout": {},
 																	"name": "Connect-Title"
 																},
-																"id": "4381333a-f43e-2c60-0047-7b70ea646531",
 																"id": "4381333a-f43e-2c60-0047-7b70ea646531",
 																"pageElements": [
 																	{
@@ -3656,7 +3611,6 @@
 																			"name": "Connect"
 																		},
 																		"id": "9436ee33-42b8-5fd8-d6e5-f9838dc30622",
-																		"id": "9436ee33-42b8-5fd8-d6e5-f9838dc30622",
 																		"type": "Fragment"
 																	}
 																],
@@ -3671,7 +3625,6 @@
 																	},
 																	"name": "Connect-Links"
 																},
-																"id": "246d9d54-8076-9e68-4d6e-69cf89df3de4",
 																"id": "246d9d54-8076-9e68-4d6e-69cf89df3de4",
 																"pageElements": [
 																	{
@@ -3695,7 +3648,6 @@
 																			"indexed": true,
 																			"name": "Github-Logo"
 																		},
-																		"id": "46a4e56c-f843-d753-b130-8d4c56edff7f",
 																		"id": "46a4e56c-f843-d753-b130-8d4c56edff7f",
 																		"type": "Fragment"
 																	},
@@ -3721,7 +3673,6 @@
 																			"name": "Linkedin-Logo"
 																		},
 																		"id": "7f52ff9f-4e24-04e2-88a1-2530d2fcb347",
-																		"id": "7f52ff9f-4e24-04e2-88a1-2530d2fcb347",
 																		"type": "Fragment"
 																	},
 																	{
@@ -3745,7 +3696,6 @@
 																			"indexed": true,
 																			"name": "Youtube-Logo"
 																		},
-																		"id": "a0d7ad97-834a-422c-e3bb-5c68a3f39af2",
 																		"id": "a0d7ad97-834a-422c-e3bb-5c68a3f39af2",
 																		"type": "Fragment"
 																	},
@@ -3771,7 +3721,6 @@
 																			"name": "Facebook-Logo"
 																		},
 																		"id": "a233dc1a-af4e-748f-049a-3e51aeb4d54d",
-																		"id": "a233dc1a-af4e-748f-049a-3e51aeb4d54d",
 																		"type": "Fragment"
 																	},
 																	{
@@ -3796,7 +3745,6 @@
 																			"name": "Instagram-Logo"
 																		},
 																		"id": "d12dcf86-ead3-2993-1e2b-e0ad55fa5f81",
-																		"id": "d12dcf86-ead3-2993-1e2b-e0ad55fa5f81",
 																		"type": "Fragment"
 																	},
 																	{
@@ -3820,7 +3768,6 @@
 																			"indexed": true,
 																			"name": "Twitter-Logo"
 																		},
-																		"id": "ffe99ade-415c-d680-adf3-56a25d1d4448",
 																		"id": "ffe99ade-415c-d680-adf3-56a25d1d4448",
 																		"type": "Fragment"
 																	}
@@ -3861,7 +3808,6 @@
 									"name": "Footer-Contents-Bottom"
 								},
 								"id": "1053d711-53d5-8cd6-638a-afd88f547e98",
-								"id": "1053d711-53d5-8cd6-638a-afd88f547e98",
 								"pageElements": [
 									{
 										"definition": {
@@ -3883,7 +3829,6 @@
 											],
 											"indexed": true
 										},
-										"id": "ad90a688-6a0a-f250-c312-16cb17313539",
 										"id": "ad90a688-6a0a-f250-c312-16cb17313539",
 										"type": "Fragment"
 									},
@@ -3907,7 +3852,6 @@
 											],
 											"indexed": true
 										},
-										"id": "50e02f88-b72b-52a1-78fd-cf80cd9cc9f4",
 										"id": "50e02f88-b72b-52a1-78fd-cf80cd9cc9f4",
 										"type": "Fragment"
 									}
