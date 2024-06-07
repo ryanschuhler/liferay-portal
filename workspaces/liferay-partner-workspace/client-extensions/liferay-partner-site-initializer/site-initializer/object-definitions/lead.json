@@ -1,0 +1,30 @@
+{
+	"accountEntryRestricted": true,
+	"accountEntryRestrictedObjectFieldName": "accountExternalReferenceCode",
+	"externalReferenceCode": "LeadObject",
+	"label": {
+		"en_US": "Lead"
+	},
+	"name": "Lead",
+	"objectFields": [
+		{
+			"DBType": "String",
+			"businessType": "Text",
+			"indexed": true,
+			"indexedAsKeyword": false,
+			"label": {
+				"en_US": "Partner First Name"
+			},
+			"name": "partnerFirstName",
+			"required": false,
+			"type": "String"
+		}
+	],
+	"panelCategoryKey": "control_panel.object",
+	"pluralLabel": {
+		"en_US": "Leads"
+	},
+	"portlet": true,
+	"scope": "company",
+	"storageType": "function#liferay-partner-etc-spring-boot-object-entry-manager-salesforce"
+}
