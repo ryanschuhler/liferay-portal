@@ -2,12 +2,12 @@
 definition {
 
 	property custom.properties = "feature.flag.LPS-135430=true";
-	property osgi.modules.includes = "osb-site-initializer-partner-portal";
 	property portal.release = "false";
 	property portal.upstream = "true";
 	property release.feature.flags.disable.DISABLE_PRIVATE_LAYOUTS = "true";
 	property test.liferay.virtual.instance = "true";
 	property testray.main.component.name = "OSB Site Initializer Partner Portal";
+	property workspaces.client.extension.names = "liferay-partner-site-initializer";
 
 	setUp {
 		task ("Set up instance and sign in") {
