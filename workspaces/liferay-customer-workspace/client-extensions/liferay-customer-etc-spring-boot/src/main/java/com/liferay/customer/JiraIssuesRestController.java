@@ -41,10 +41,13 @@ public class JiraIssuesRestController extends BaseRestController {
 
 	@RequestMapping(path = "/jira/issue/{issueKey}", method = RequestMethod.GET)
 	public ResponseEntity<String> get(
+			@AuthenticationPrincipal Jwt jwt,
 			@PathVariable("issueKey") String issueKey)
 		throws Exception {
 
 		try {
+			_hasPermission(jwt);
+
 			return new ResponseEntity<>(
 				_jiraWebService.getJiraIssue(issueKey),
 				HttpStatus.OK);
@@ -57,12 +60,17 @@ public class JiraIssuesRestController extends BaseRestController {
 		}
 	}
 
-	@RequestMapping(path = "/jira/search/customer/{jql}", method = RequestMethod.GET)
+	@RequestMapping(path = {"/jira/search/customer", "/jira/search/customer/{jql}"}, method = RequestMethod.GET)
 	public ResponseEntity<String> searchCustomer(
-			@PathVariable("jql") String jql)
+			@AuthenticationPrincipal Jwt jwt,
+			@PathVariable(value = "jql", required = false) String jql)
 		throws Exception {
 
 		try {
+			_hasPermission(jwt);
+
+			System.out.println(jql);
+
 			return new ResponseEntity<>(
 				_jiraWebService.getJiraSearch(jql, "customer"),
 				HttpStatus.OK);
@@ -75,12 +83,17 @@ public class JiraIssuesRestController extends BaseRestController {
 		}
 	}
 
-	@RequestMapping(path = "/jira/search/partner/{jql}", method = RequestMethod.GET)
+	@RequestMapping(path = {"/jira/search/partner", "/jira/search/partner/{jql}"}, method = RequestMethod.GET)
 	public ResponseEntity<String> searchPartner(
-			@PathVariable("jql") String jql)
+			@AuthenticationPrincipal Jwt jwt,
+			@PathVariable(value = "jql", required = false) String jql)
 		throws Exception {
 
 		try {
+			_hasPermission(jwt);
+
+			System.out.println(jql);
+
 			return new ResponseEntity<>(
 				_jiraWebService.getJiraSearch(jql, "partner"),
 				HttpStatus.OK);
@@ -91,6 +104,42 @@ public class JiraIssuesRestController extends BaseRestController {
 			return new ResponseEntity(
 				exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	private boolean _hasPermission(Jwt jwt) throws Exception {
+		UserAccountResource userAccountResource =
+			_getUserAccountResource(jwt);
+
+		String emailAddress = jwt.getClaimAsString("username");
+
+		System.out.println(emailAddress);
+
+		UserAccount userAccount =
+			userAccountResource.getUserAccountByEmailAddress(emailAddress);
+
+		System.out.println(userAccount.toString());
+
+		AccountBrief[] accountBriefs = userAccount.getAccountBriefs();
+		RoleBrief[] roleBriefs = userAccount.getRoleBriefs();
+
+		for (AccountBrief accountBrief : accountBriefs) {
+			System.out.println(accountBrief);
+		}
+
+		for (RoleBrief roleBrief : roleBriefs) {
+			System.out.println(roleBrief);
+		}
+
+		return false;
+	}
+
+	private UserAccountResource _getUserAccountResource(Jwt jwt) throws Exception {
+		return UserAccountResource.builder(
+		).header(
+			HttpHeaders.AUTHORIZATION, "Bearer " + jwt.getTokenValue()
+		).endpoint(
+			new URL(lxcDXPServerProtocol + "://" + lxcDXPMainDomain)
+		).build();
 	}
 
 	private static final Log _log = LogFactory.getLog(

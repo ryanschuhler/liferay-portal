@@ -74,12 +74,17 @@ public class JiraWebService {
 
 		StringBundler sb = new StringBundler(3);
 
-		sb.append(_URL_REST_API_2);
-		sb.append("/search?jql=");
+		if (jql == null) {
+			sb.append("project in (LSV)");
+		}
+		else {
+			sb.append(jql);
+			sb.append("and project in (LSV)");
+		}
 
-		jql = UriUtils.encodeQueryParam(jql, StandardCharsets.UTF_8);
-
-		sb.append(jql);
+		System.out.println("jiraSearch");
+		System.out.println(jql);
+		System.out.println(sb.toString());
 
 		try {
 			JSONObject jsonObject = new JSONObject(
@@ -87,7 +92,10 @@ public class JiraWebService {
 					_jiraURL
 				).get(
 				).uri(
-					sb.toString()
+					uriBuilder -> uriBuilder
+						.path(_URL_REST_API_2 + "/search")
+						.queryParam("jql", sb.toString())
+					.build()
 				).accept(
 					MediaType.APPLICATION_JSON
 				).header(
@@ -122,6 +130,15 @@ public class JiraWebService {
 		JiraWebService.class);
 
 	private static final String _URL_REST_API_2 = "/rest/api/2";
+
+	@Value("${liferay.customer.jira.max.results}")
+	private int _jiraMaxResults;
+
+	@Value("${liferay.customer.jira.security.fields}")
+	private String _jiraSecurityFields;
+
+	@Value("${liferay.customer.jira.security.projects}")
+	private String _jiraSecurityProjects;
 
 	@Value("${liferay.customer.jira.api.email.address}")
 	private String _jiraAPIEmailAddress;
