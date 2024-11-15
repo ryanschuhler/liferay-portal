@@ -4,10 +4,11 @@
  */
 
 export interface ITicket {
-	category?: string[];
+	category?: string;
 	classification?: string;
 	date?: string;
 	id?: number;
+	key?: string;
 	name?: string;
 	severity?: string;
 	summary?: string;
