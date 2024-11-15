@@ -10,6 +10,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.Base64;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,7 +31,7 @@ import org.springframework.web.util.UriUtils;
 @Component
 public class JiraWebService {
 
-	public String getJiraIssue(String issueKey)
+	public String getJiraIssue(String issueKey, List<String> roles)
 		throws Exception {
 
 		StringBundler sb = new StringBundler(3);
@@ -69,7 +70,7 @@ public class JiraWebService {
 		return null;
 	}
 
-	public String getJiraSearch(String jql, String role)
+	public String getJiraSearch(String jql, List<String> roles)
 		throws Exception {
 
 		StringBundler sb = new StringBundler(3);
@@ -82,9 +83,14 @@ public class JiraWebService {
 			sb.append("and project in (LSV)");
 		}
 
-		System.out.println("jiraSearch");
-		System.out.println(jql);
-		System.out.println(sb.toString());
+		sb.append("and 'Publishing Status' = 'Ready for Publishing'");
+
+		if (roles.contains("Partner"))	{
+			sb.append("and 'Partner Publishing Date' is not empty");
+		}
+		else {
+			sb.append("and 'Customer Publishing Date' is not empty");
+		}
 
 		try {
 			JSONObject jsonObject = new JSONObject(
@@ -95,6 +101,7 @@ public class JiraWebService {
 					uriBuilder -> uriBuilder
 						.path(_URL_REST_API_2 + "/search")
 						.queryParam("jql", sb.toString())
+						.queryParam("fields", _jiraFeilds)
 					.build()
 				).accept(
 					MediaType.APPLICATION_JSON
@@ -131,6 +138,15 @@ public class JiraWebService {
 
 	private static final String _URL_REST_API_2 = "/rest/api/2";
 
+	@Value("${liferay.customer.jira.api.email.address}")
+	private String _jiraAPIEmailAddress;
+
+	@Value("${liferay.customer.jira.api.token}")
+	private String _jiraAPIToken;
+
+	@Value("${liferay.customer.jira.fields}")
+	private String _jiraFeilds;
+
 	@Value("${liferay.customer.jira.max.results}")
 	private int _jiraMaxResults;
 
@@ -139,12 +155,6 @@ public class JiraWebService {
 
 	@Value("${liferay.customer.jira.security.projects}")
 	private String _jiraSecurityProjects;
-
-	@Value("${liferay.customer.jira.api.email.address}")
-	private String _jiraAPIEmailAddress;
-
-	@Value("${liferay.customer.jira.api.token}")
-	private String _jiraAPIToken;
 
 	@Value("${liferay.customer.jira.url}")
 	private String _jiraURL;

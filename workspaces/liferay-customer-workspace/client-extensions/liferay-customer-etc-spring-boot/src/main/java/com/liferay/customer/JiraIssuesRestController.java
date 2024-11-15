@@ -5,6 +5,7 @@
 
 package com.liferay.customer;
 
+import com.liferay.client.extension.util.spring.boot.BaseRestController;
 import com.liferay.customer.service.JiraWebService;
 import com.liferay.headless.admin.user.client.dto.v1_0.AccountBrief;
 import com.liferay.headless.admin.user.client.dto.v1_0.RoleBrief;
@@ -23,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,8 +32,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONObject;
+
 
 /**
  * @author Jenny Chen
@@ -46,10 +51,8 @@ public class JiraIssuesRestController extends BaseRestController {
 		throws Exception {
 
 		try {
-			_hasPermission(jwt);
-
 			return new ResponseEntity<>(
-				_jiraWebService.getJiraIssue(issueKey),
+				_jiraWebService.getJiraIssue(issueKey, _getRoles(jwt)),
 				HttpStatus.OK);
 		}
 		catch (Exception exception) {
@@ -60,20 +63,17 @@ public class JiraIssuesRestController extends BaseRestController {
 		}
 	}
 
-	@RequestMapping(path = {"/jira/search/customer", "/jira/search/customer/{jql}"}, method = RequestMethod.GET)
-	public ResponseEntity<String> searchCustomer(
+	@RequestMapping(path = {"/jira/search", "/jira/search/{jql}"}, method = RequestMethod.GET)
+	public ResponseEntity<String> search(
 			@AuthenticationPrincipal Jwt jwt,
 			@PathVariable(value = "jql", required = false) String jql)
 		throws Exception {
 
 		try {
-			_hasPermission(jwt);
-
-			System.out.println(jql);
-
 			return new ResponseEntity<>(
-				_jiraWebService.getJiraSearch(jql, "customer"),
+				_jiraWebService.getJiraSearch(jql, _getRoles(jwt)),
 				HttpStatus.OK);
+
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -83,54 +83,24 @@ public class JiraIssuesRestController extends BaseRestController {
 		}
 	}
 
-	@RequestMapping(path = {"/jira/search/partner", "/jira/search/partner/{jql}"}, method = RequestMethod.GET)
-	public ResponseEntity<String> searchPartner(
-			@AuthenticationPrincipal Jwt jwt,
-			@PathVariable(value = "jql", required = false) String jql)
-		throws Exception {
-
-		try {
-			_hasPermission(jwt);
-
-			System.out.println(jql);
-
-			return new ResponseEntity<>(
-				_jiraWebService.getJiraSearch(jql, "partner"),
-				HttpStatus.OK);
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			return new ResponseEntity(
-				exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	private boolean _hasPermission(Jwt jwt) throws Exception {
+	private List<String> _getRoles(Jwt jwt) throws Exception {
 		UserAccountResource userAccountResource =
 			_getUserAccountResource(jwt);
 
 		String emailAddress = jwt.getClaimAsString("username");
 
-		System.out.println(emailAddress);
-
 		UserAccount userAccount =
 			userAccountResource.getUserAccountByEmailAddress(emailAddress);
 
-		System.out.println(userAccount.toString());
-
-		AccountBrief[] accountBriefs = userAccount.getAccountBriefs();
 		RoleBrief[] roleBriefs = userAccount.getRoleBriefs();
 
-		for (AccountBrief accountBrief : accountBriefs) {
-			System.out.println(accountBrief);
-		}
+		List<String> roles = new ArrayList<>();
 
 		for (RoleBrief roleBrief : roleBriefs) {
-			System.out.println(roleBrief);
+			roles.add(roleBrief.getName());
 		}
 
-		return false;
+		return roles;
 	}
 
 	private UserAccountResource _getUserAccountResource(Jwt jwt) throws Exception {
@@ -138,7 +108,7 @@ public class JiraIssuesRestController extends BaseRestController {
 		).header(
 			HttpHeaders.AUTHORIZATION, "Bearer " + jwt.getTokenValue()
 		).endpoint(
-			new URL(lxcDXPServerProtocol + "://" + lxcDXPMainDomain)
+			new URL(getWebClientBaseURL())
 		).build();
 	}
 
