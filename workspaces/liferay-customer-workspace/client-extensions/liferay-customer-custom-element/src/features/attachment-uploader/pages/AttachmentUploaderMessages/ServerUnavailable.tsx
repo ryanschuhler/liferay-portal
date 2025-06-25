@@ -22,10 +22,10 @@ const ServerUnavailable = () => {
 			subtitle="try-again-later"
 			title="unable-to-connect-to-file-server"
 		>
-			{state?.uploadAccountKey && (
+			{state?.accountKey && (
 				<a
 					className="btn btn-secondary mr-2 uploader-secondary-button"
-					href={`${pageRoutes.project(state.uploadAccountKey)}/attachments`}
+					href={`${pageRoutes.project(state.accountKey)}/attachments`}
 				>
 					{i18n.translate('return-to-attachments')}
 				</a>

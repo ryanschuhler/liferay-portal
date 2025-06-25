@@ -21,10 +21,10 @@ const CommentPostFailed = () => {
 			subtitle="please-check-again-later"
 			title="your-attachment-is-uploaded-however-we-encountered-a-problem-posting-your-comment-the-system-is-automatically-retrying-to-send-it"
 		>
-			{state?.uploadAccountKey && (
+			{state?.accountKey && (
 				<a
 					className="btn btn-secondary mr-2 uploader-secondary-button"
-					href={`${pageRoutes.project(state.uploadAccountKey)}/attachments`}
+					href={`${pageRoutes.project(state.accountKey)}/attachments`}
 				>
 					{i18n.translate('return-to-attachments')}
 				</a>

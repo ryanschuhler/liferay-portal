@@ -55,6 +55,12 @@ const useTicketAttachmentsInitiateUpload = (): IProps => {
 
 				const responseJSON = await response.json();
 
+				if (!response.ok) {
+					throw new Error(
+						response.text() as unknown as string
+					);
+				}
+
 				sessionStorage.setItem(
 					'gcsSessionURL',
 					responseJSON.gcsSessionURL
@@ -69,22 +75,22 @@ const useTicketAttachmentsInitiateUpload = (): IProps => {
 				};
 			}
 			catch (uploadError) {
-				if ((uploadError as any).status === 409) {
-					navigate(`/${ticketId}/attachment-already-exists`, {
-						state: {
-							attachmentName: fileName,
-							ticketId,
-						},
-					});
-
-					return null;
+				if (uploadError === "ATTACHMENT_ALREADY_EXISTS") {
+					navigate(`/${ticketId}/attachement-already-exists`);
 				}
-
-				navigate(`/${ticketId}/unexpected-error`, {
-					state: {
-						message: String(uploadError),
-					},
-				});
+				else if (uploadError === "FORBIDDEN_ACCESS" || uploadError === "ZENDESK_ORGANIZATION_ERROR") {
+					navigate(`/${ticketId}/forbidden-access`);
+				}
+				else if (uploadError === "INVALID_TICKET_NUMBER") {
+					navigate(`/${ticketId}/invalid-ticket-number`);
+				}
+				else {
+					navigate(`/${ticketId}/unexpected-error`, {
+						state: {
+							message: String(uploadError),
+						}
+					});
+				}
 
 				return null;
 			}

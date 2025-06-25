@@ -4,28 +4,29 @@
  */
 
 import {useCallback, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import {Liferay} from '~/services/liferay';
 
 interface IParams {
+	accountKey: string;
 	comment: string;
 	ticketAttachmentId: string;
+	ticketId: string;
 }
 
 interface IProps {
 	completeUpload: (params: IParams) => Promise<void>;
-	error: Error | null;
 	loading: boolean;
 }
 
 const useTicketAttachmentsCompleteUpload = (): IProps => {
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState<Error | null>(null);
+	const navigate = useNavigate();
 
 	const completeUpload = useCallback(async (params: IParams) => {
 		setLoading(true);
-		setError(null);
 
-		const {comment, ticketAttachmentId} = params;
+		const {accountKey, comment, ticketAttachmentId, ticketId} = params;
 
 		try {
 			const response: Response =
@@ -43,26 +44,45 @@ const useTicketAttachmentsCompleteUpload = (): IProps => {
 
 			if (!response.ok) {
 				throw new Error(
-					`Failed to complete upload: ${response.text()}`
+					response.text() as unknown as string
 				);
 			}
 
 			sessionStorage.removeItem('gcsSessionURL');
 		}
 		catch (uploadError) {
-			console.error('Complete upload error:', uploadError);
-			setError(
-				uploadError instanceof Error
-					? uploadError
-					: new Error(String(uploadError))
-			);
+			console.log(uploadError);
+
+			if (uploadError === "COMMENT_POST_FAILED_RETRYING") {
+				navigate(`/${ticketId}/comment-post-failed`, {
+					state: {
+						accountKey,
+						ticketId
+					}
+				});
+			}
+			else if (uploadError === "FILE_SERVER_UNAVAILABLE") {
+				navigate(`/${ticketId}/server-unavailable`, {
+					state: {
+						accountKey,
+						ticketId
+					}
+				});
+			}
+			else {
+				navigate(`/${ticketId}/unexpected-error`, {
+					state: {
+						message: String(uploadError),
+					}
+				});
+			}
 		}
 		finally {
 			setLoading(false);
 		}
 	}, []);
 
-	return {completeUpload, error, loading};
+	return {completeUpload, loading};
 };
 
 export default useTicketAttachmentsCompleteUpload;

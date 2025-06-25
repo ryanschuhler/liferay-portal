@@ -40,7 +40,6 @@ const useGCSUploadFile = (): IProps => {
 
 	const {
 		completeUpload,
-		error: completeUploadError,
 		loading: completeUploadLoading,
 	} = useTicketAttachmentsCompleteUpload();
 
@@ -176,20 +175,24 @@ const useGCSUploadFile = (): IProps => {
 
 				setAbortController(null);
 
-				if (uploadFailed || controller.signal.aborted) {
+				if (controller.signal.aborted) {
 					return false;
 				}
 
-				await completeUpload({
-					comment,
-					ticketAttachmentId: String(ticketAttachmentId),
-				});
-
-				if (completeUploadError) {
-					throw completeUploadError;
+				if (uploadFailed) {
+					throw new Error(
+						'Upload failed. Please try again.'
+					);
 				}
 
-				if (!gcsGetUploadOffsetLoading && !completeUploadLoading) {
+				await completeUpload({
+					accountKey,
+					comment,
+					ticketAttachmentId: String(ticketAttachmentId),
+					ticketId
+				});
+
+				if (!completeUploadLoading) {
 					navigate(`/${ticketId}/upload-confirmation`, {
 						state: {
 							attachmentName: file.name,
@@ -200,11 +203,10 @@ const useGCSUploadFile = (): IProps => {
 
 					return true;
 				}
-				else {
-					navigate(`/${ticketId}/unexpected-error`);
 
-					return false;
-				}
+				throw new Error(
+					'Upload failed. Please try again.'
+				);
 			}
 			catch (uploadError) {
 				navigate(`/${ticketId}/unexpected-error`, {
@@ -224,7 +226,6 @@ const useGCSUploadFile = (): IProps => {
 		},
 		[
 			completeUpload,
-			completeUploadError,
 			completeUploadLoading,
 			gcsGetUploadOffsetError,
 			getUploadOffset,
