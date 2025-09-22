@@ -1,0 +1,34 @@
+clientExtensionConfig:
+    configJsons:
+        -   |
+                {
+                    "com.liferay.oauth2.provider.configuration.OAuth2ProviderApplicationHeadlessServerConfiguration~liferay-customer-batch-oahs" : {
+                        ".serviceAddress" : "localhost:8080",
+                        ".serviceScheme" : "http",
+                        ":configurator:policy" : "force",
+                        "baseURL" : "${portalURL}/o/liferay-customer-batch",
+                        "buildTimestamp" : 1763072423901,
+                        "description" : "",
+                        "dxp.lxc.liferay.com.virtualInstanceId" : "default",
+                        "homePageURL" : "$[conf:.serviceScheme]://$[conf:.serviceAddress]",
+                        "name" : "Liferay Customer Batch OAuth Application Headless Server",
+                        "projectId" : "liferaycustomerbatch",
+                        "projectName" : "liferay-customer-batch",
+                        "properties" : [],
+                        "scopes" : ["Liferay.Headless.Admin.Content.everything", "Liferay.Headless.Admin.List.Type.everything", "Liferay.Headless.Admin.Site.everything", "Liferay.Headless.Admin.Taxonomy.everything", "Liferay.Headless.Admin.User.everything", "Liferay.Headless.Admin.Workflow.everything", "Liferay.Headless.Batch.Engine.everything", "Liferay.Headless.Commerce.Admin.Catalog.everything", "Liferay.Headless.Commerce.Admin.Channel.everything", "Liferay.Headless.Commerce.Admin.Order.everything", "Liferay.Headless.Delivery.everything", "Liferay.Headless.Object.everything", "Liferay.Headless.Site.everything", "Liferay.Headless.Site.everything", "Liferay.Object.Admin.REST.everything"],
+                        "sourceCodeURL" : "",
+                        "type" : "oAuthApplicationHeadlessServer",
+                        "typeSettings" : [".serviceScheme=http", "scopes=Liferay.Headless.Admin.Content.everything\nLiferay.Headless.Admin.List.Type.everything\nLiferay.Headless.Admin.Site.everything\nLiferay.Headless.Admin.Taxonomy.everything\nLiferay.Headless.Admin.User.everything\nLiferay.Headless.Admin.Workflow.everything\nLiferay.Headless.Batch.Engine.everything\nLiferay.Headless.Commerce.Admin.Catalog.everything\nLiferay.Headless.Commerce.Admin.Channel.everything\nLiferay.Headless.Commerce.Admin.Order.everything\nLiferay.Headless.Delivery.everything\nLiferay.Headless.Object.everything\nLiferay.Headless.Site.everything\nLiferay.Headless.Site.everything\nLiferay.Object.Admin.REST.everything", ".serviceAddress=localhost:8080"],
+                        "webContextPath" : /liferay-customer-batch
+                    }
+                }
+    kind: Job
+    mainDomain: batch.localtest.me
+    mountInitConfig: true
+    setupMainDomainOnCoreDNS: true
+    virtualInstanceId: cp.dxp.localtest.me
+env:
+    LIFERAY_BATCH_CURL_OPTIONS: -v
+    LIFERAY_BATCH_OAUTH_APP_ERC: liferay-customer-batch-oauth-application-headless-server
+image:
+    repository: liferay-customer-batch

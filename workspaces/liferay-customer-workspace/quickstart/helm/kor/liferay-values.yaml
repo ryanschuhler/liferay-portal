@@ -1,0 +1,67 @@
+customVolumeMounts:
+    x-liferay-customer-workspace:
+        -   mountPath: /etc/liferay/mount/patching
+            name: mount-local
+            subPath: liferay/patching
+image:
+    repository: liferay/dxp
+    tag: 7.2.10-dxp-19-d5.0.0-20220831081705
+initContainers:
+    -   containerTemplate: |
+            -   command:
+                    -   bash
+                    -   -c
+                    -   "echo 'Liferay prepopulate data script disabled by override.'"
+                image: bash:5.2
+                imagePullPolicy: IfNotPresent
+                name: liferay-prepopulate-data
+                volumeMounts:
+                    -   mountPath: /temp
+                        name: liferay-persistent-volume
+    -   containerTemplate: |
+            -   command:
+                    -   bash
+                    -   -c
+                    -   |
+                            trap "echo 'Received signal to terminate.'; exit 0" SIGINT SIGTERM
+
+                            {{- $liferayname := .liferayname }}
+                            {{- range $k, $v := .dependencies }}
+                                {{- if eq $v.source "statefulset" }}
+                                    until nc -vz -w 2 {{ $liferayname }}-{{ $k }} {{ (index $v.statefulset.service.ports 0).port }}
+                                    do
+                                        echo "Waiting for {{ $liferayname }}-{{ $k }}..."
+
+                                        sleep 2
+                                    done
+                                {{- end }}
+                            {{- end }}
+                image: bash:5.2
+                imagePullPolicy: IfNotPresent
+                name: liferay-wait-on-services
+portalProperties: |
+    include-and-override=portal-developer.properties
+    javascript.single.page.application.enabled=false
+    login.dialog.disabled=true
+    mail.send.blacklist=
+    mail.session.mail.smtp.auth=false
+    mail.session.mail.smtp.host=mail
+    mail.session.mail.smtp.password=
+    mail.session.mail.smtp.port=1025
+    mail.session.mail.smtp.starttls.enable=false
+    mail.session.mail.smtp.user=
+    mail.session.mail=true
+    passwords.default.policy.change.required=false
+    session.timeout=600s
+    terms.of.use.required=false
+    users.reminder.queries.enabled=false
+    virtual.hosts.valid.hosts=*
+    web.server.protocol=http
+replicaCount: 1
+resources:
+    limits:
+        cpu: 8000m
+        memory: 12Gi
+    requests:
+        cpu: 4000m
+        memory: 8Gi
