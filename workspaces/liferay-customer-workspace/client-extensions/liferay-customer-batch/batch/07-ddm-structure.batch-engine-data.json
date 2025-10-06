@@ -1,0 +1,1120 @@
+{
+	"configuration": {
+		"className": "com.liferay.dynamic.data.mapping.rest.dto.v1_0.Structure",
+		"parameters": {
+			"createStrategy": "UPSERT",
+			"importStrategy": "ON_ERROR_CONTINUE"
+		}
+	},
+	"items": [
+		{
+			"availableLanguageIds": [
+				"en_US"
+			],
+			"contentType": "journal",
+			"dataDefinitionFields": [
+				{
+					"customProperties": {
+						"dataType": "string",
+						"editorConfig": null,
+						"fieldNamespace": "",
+						"fieldReference": "content",
+						"visibilityExpression": ""
+					},
+					"defaultValue": {
+						"en_US": ""
+					},
+					"fieldType": "rich_text",
+					"indexType": "text",
+					"indexable": true,
+					"label": {
+						"en_US": "Content"
+					},
+					"localizable": true,
+					"name": "content",
+					"nestedDataDefinitionFields": [
+					],
+					"readOnly": false,
+					"repeatable": false,
+					"required": false,
+					"showLabel": true,
+					"tip": {
+						"en_US": ""
+					}
+				},
+				{
+					"customProperties": {
+						"collapsible": true,
+						"ddmStructureId": "",
+						"ddmStructureKey": "",
+						"ddmStructureLayoutId": "",
+						"externalReferenceCode": "",
+						"fieldReference": "button",
+						"labelAtStructureLevel": true,
+						"normalizedStructure": false,
+						"rows": [
+							{
+								"columns": [
+									{
+										"fields": [
+											"buttonText"
+										],
+										"size": 12
+									}
+								]
+							},
+							{
+								"columns": [
+									{
+										"fields": [
+											"buttonURL"
+										],
+										"size": 12
+									}
+								]
+							}
+						],
+						"upgradedStructure": false
+					},
+					"defaultValue": {
+						"en_US": ""
+					},
+					"fieldType": "fieldset",
+					"indexable": false,
+					"label": {
+						"en_US": "Button"
+					},
+					"localizable": false,
+					"name": "button",
+					"nestedDataDefinitionFields": [
+						{
+							"customProperties": {
+								"confirmationErrorMessage": {
+									"en_US": ""
+								},
+								"confirmationLabel": {
+									"en_US": ""
+								},
+								"dataType": "string",
+								"direction": [
+									"vertical"
+								],
+								"displayStyle": "singleline",
+								"fieldNamespace": "",
+								"fieldReference": "buttonText",
+								"hideField": false,
+								"htmlAutocompleteAttribute": "",
+								"labelAtStructureLevel": true,
+								"nativeField": false,
+								"objectFieldName": "",
+								"options": {
+								},
+								"placeholder": {
+									"en_US": ""
+								},
+								"requireConfirmation": false,
+								"requiredErrorMessage": {
+									"en_US": ""
+								},
+								"tooltip": {
+									"en_US": ""
+								},
+								"visibilityExpression": ""
+							},
+							"defaultValue": {
+								"en_US": ""
+							},
+							"fieldType": "text",
+							"indexType": "keyword",
+							"indexable": true,
+							"label": {
+								"en_US": "Button Text"
+							},
+							"localizable": true,
+							"name": "buttonText",
+							"nestedDataDefinitionFields": [
+							],
+							"readOnly": false,
+							"repeatable": false,
+							"required": false,
+							"showLabel": true,
+							"tip": {
+								"en_US": ""
+							}
+						},
+						{
+							"customProperties": {
+								"confirmationErrorMessage": {
+									"en_US": ""
+								},
+								"confirmationLabel": {
+									"en_US": ""
+								},
+								"dataType": "string",
+								"direction": [
+									"vertical"
+								],
+								"displayStyle": "singleline",
+								"fieldNamespace": "",
+								"fieldReference": "buttonURL",
+								"hideField": false,
+								"htmlAutocompleteAttribute": "",
+								"labelAtStructureLevel": true,
+								"nativeField": false,
+								"objectFieldName": "",
+								"options": {
+								},
+								"placeholder": {
+									"en_US": ""
+								},
+								"requireConfirmation": false,
+								"requiredErrorMessage": {
+									"en_US": ""
+								},
+								"tooltip": {
+									"en_US": ""
+								},
+								"visibilityExpression": ""
+							},
+							"defaultValue": {
+								"en_US": ""
+							},
+							"fieldType": "text",
+							"indexType": "keyword",
+							"indexable": true,
+							"label": {
+								"en_US": "Button URL"
+							},
+							"localizable": true,
+							"name": "buttonURL",
+							"nestedDataDefinitionFields": [
+							],
+							"readOnly": false,
+							"repeatable": false,
+							"required": false,
+							"showLabel": true,
+							"tip": {
+								"en_US": ""
+							}
+						}
+					],
+					"readOnly": false,
+					"repeatable": false,
+					"required": false,
+					"showLabel": true,
+					"tip": {
+						"en_US": ""
+					}
+				}
+			],
+			"dataDefinitionKey": "ANNOUNCEMENT",
+			"defaultDataLayout": {
+				"dataLayoutFields": {
+				},
+				"dataLayoutPages": [
+					{
+						"dataLayoutRows": [
+							{
+								"dataLayoutColumns": [
+									{
+										"columnSize": 12,
+										"fieldNames": [
+											"content"
+										]
+									}
+								]
+							},
+							{
+								"dataLayoutColumns": [
+									{
+										"columnSize": 12,
+										"fieldNames": [
+											"button"
+										]
+									}
+								]
+							}
+						],
+						"description": {
+							"en_US": ""
+						},
+						"title": {
+							"en_US": ""
+						}
+					}
+				],
+				"dataRules": [
+				],
+				"description": {
+				},
+				"name": {
+					"en_US": "Announcement"
+				},
+				"paginationMode": "single-page"
+			},
+			"description": {
+			},
+			"externalReferenceCode": "a05af329-1ac7-bc3e-b251-490bae54d768",
+			"name": {
+				"en_US": "Announcement"
+			},
+			"storageType": "default"
+		},
+		{
+			"availableLanguageIds": [
+				"en_US"
+			],
+			"contentType": "journal",
+			"dataDefinitionFields": [
+				{
+					"customProperties": {
+						"dataType": "string",
+						"editorConfig": null,
+						"fieldNamespace": "",
+						"fieldReference": "content",
+						"visibilityExpression": ""
+					},
+					"defaultValue": {
+						"en_US": ""
+					},
+					"fieldType": "rich_text",
+					"indexType": "text",
+					"indexable": true,
+					"label": {
+						"en_US": "Content"
+					},
+					"localizable": true,
+					"name": "content",
+					"nestedDataDefinitionFields": [
+					],
+					"readOnly": false,
+					"repeatable": false,
+					"required": false,
+					"showLabel": true,
+					"tip": {
+						"en_US": ""
+					}
+				},
+				{
+					"customProperties": {
+						"confirmationErrorMessage": {
+							"en_US": ""
+						},
+						"confirmationLabel": {
+							"en_US": ""
+						},
+						"dataType": "string",
+						"direction": [
+							"vertical"
+						],
+						"displayStyle": "singleline",
+						"fieldNamespace": "",
+						"fieldReference": "category",
+						"hideField": false,
+						"htmlAutocompleteAttribute": "",
+						"labelAtStructureLevel": true,
+						"nativeField": false,
+						"objectFieldName": "",
+						"options": {
+						},
+						"placeholder": {
+							"en_US": ""
+						},
+						"requireConfirmation": false,
+						"requiredErrorMessage": {
+							"en_US": ""
+						},
+						"tooltip": {
+							"en_US": ""
+						},
+						"visibilityExpression": ""
+					},
+					"defaultValue": {
+						"en_US": ""
+					},
+					"fieldType": "text",
+					"indexType": "keyword",
+					"indexable": true,
+					"label": {
+						"en_US": "Category"
+					},
+					"localizable": false,
+					"name": "category",
+					"nestedDataDefinitionFields": [
+					],
+					"readOnly": false,
+					"repeatable": false,
+					"required": false,
+					"showLabel": true,
+					"tip": {
+						"en_US": ""
+					}
+				}
+			],
+			"dataDefinitionKey": "ARTICLE",
+			"defaultDataLayout": {
+				"dataLayoutFields": {
+				},
+				"dataLayoutPages": [
+					{
+						"dataLayoutRows": [
+							{
+								"dataLayoutColumns": [
+									{
+										"columnSize": 12,
+										"fieldNames": [
+											"content"
+										]
+									}
+								]
+							},
+							{
+								"dataLayoutColumns": [
+									{
+										"columnSize": 12,
+										"fieldNames": [
+											"category"
+										]
+									}
+								]
+							}
+						],
+						"description": {
+							"en_US": ""
+						},
+						"title": {
+							"en_US": ""
+						}
+					}
+				],
+				"dataRules": [
+				],
+				"description": {
+				},
+				"name": {
+					"en_US": "Article"
+				},
+				"paginationMode": "single-page"
+			},
+			"description": {
+			},
+			"externalReferenceCode": "ARTICLE_STRUCTURE",
+			"name": {
+				"en_US": "Article"
+			},
+			"storageType": "default"
+		},
+		{
+			"definition": {
+				"availableLanguageIds": [
+					"en_US"
+				],
+				"defaultLanguageId": "en_US",
+				"fields": [
+					{
+						"dataType": "string",
+						"indexType": "keyword",
+						"label": {
+							"en_US": "Action Title"
+						},
+						"localizable": true,
+						"name": "ActionTitle",
+						"predefinedValue": {
+							"en_US": ""
+						},
+						"readOnly": false,
+						"repeatable": false,
+						"required": false,
+						"showLabel": true,
+						"tip": {
+							"en_US": ""
+						},
+						"type": "text"
+					},
+					{
+						"dataType": "string",
+						"indexType": "keyword",
+						"label": {
+							"en_US": "Action text"
+						},
+						"localizable": true,
+						"name": "ActionText",
+						"predefinedValue": {
+							"en_US": ""
+						},
+						"readOnly": false,
+						"repeatable": false,
+						"required": false,
+						"showLabel": true,
+						"tip": {
+							"en_US": ""
+						},
+						"type": "text"
+					},
+					{
+						"dataType": "string",
+						"indexType": "keyword",
+						"label": {
+							"en_US": "Action Url"
+						},
+						"localizable": true,
+						"name": "ActionUrl",
+						"predefinedValue": {
+							"en_US": ""
+						},
+						"readOnly": false,
+						"repeatable": false,
+						"required": false,
+						"showLabel": true,
+						"tip": {
+							"en_US": ""
+						},
+						"type": "text"
+					}
+				],
+				"successPage": {
+					"body": {
+					},
+					"enabled": false,
+					"title": {
+					}
+				}
+			},
+			"description": "",
+			"name": "Action"
+		},
+		{
+			"definition": {
+				"availableLanguageIds": [
+					"en_US"
+				],
+				"defaultLanguageId": "en_US",
+				"fields": [
+					{
+						"dataType": "string",
+						"indexType": "keyword",
+						"label": {
+							"en_US": "DXP Version"
+						},
+						"localizable": true,
+						"name": "DXPVersion",
+						"predefinedValue": {
+							"en_US": ""
+						},
+						"readOnly": false,
+						"repeatable": false,
+						"required": false,
+						"showLabel": true,
+						"tip": {
+							"en_US": ""
+						},
+						"type": "text"
+					},
+					{
+						"dataType": "string",
+						"indexType": "keyword",
+						"label": {
+							"en_US": "Commerce Description"
+						},
+						"localizable": true,
+						"name": "CommerceDescription",
+						"predefinedValue": {
+							"en_US": ""
+						},
+						"readOnly": false,
+						"repeatable": false,
+						"required": false,
+						"showLabel": true,
+						"tip": {
+							"en_US": ""
+						},
+						"type": "text"
+					},
+					{
+						"dataType": "string",
+						"indexType": "keyword",
+						"label": {
+							"en_US": "More Details"
+						},
+						"localizable": true,
+						"name": "MoreDetails",
+						"predefinedValue": {
+							"en_US": ""
+						},
+						"readOnly": false,
+						"repeatable": false,
+						"required": false,
+						"showLabel": true,
+						"tip": {
+							"en_US": ""
+						},
+						"type": "text"
+					},
+					{
+						"dataType": "string",
+						"indexType": "keyword",
+						"label": {
+							"en_US": "Commerce Url"
+						},
+						"localizable": true,
+						"name": "CommerceUrl",
+						"predefinedValue": {
+							"en_US": ""
+						},
+						"readOnly": false,
+						"repeatable": false,
+						"required": false,
+						"showLabel": true,
+						"tip": {
+							"en_US": ""
+						},
+						"type": "text"
+					},
+					{
+						"dataType": "string",
+						"indexType": "keyword",
+						"label": {
+							"en_US": "Commerce Title Url"
+						},
+						"localizable": true,
+						"name": "CommerceTitleUrl",
+						"predefinedValue": {
+							"en_US": ""
+						},
+						"readOnly": false,
+						"repeatable": false,
+						"required": false,
+						"showLabel": true,
+						"tip": {
+							"en_US": ""
+						},
+						"type": "text"
+					}
+				],
+				"successPage": {
+					"body": {
+					},
+					"enabled": false,
+					"title": {
+					}
+				}
+			},
+			"description": "",
+			"name": "COMMERCE-ACTIVATION-STRUCTURE"
+		},
+		{
+			"definition": {
+				"availableLanguageIds": [
+					"en_US"
+				],
+				"defaultLanguageId": "en_US",
+				"definitionSchemaVersion": "2.0",
+				"fields": [
+					{
+						"dataType": "string",
+						"fieldReference": "Name",
+						"indexType": "keyword",
+						"label": {
+							"en_US": "Name"
+						},
+						"localizable": true,
+						"name": "Name",
+						"predefinedValue": {
+							"en_US": ""
+						},
+						"readOnly": false,
+						"repeatable": false,
+						"required": false,
+						"showLabel": true,
+						"tip": {
+							"en_US": ""
+						},
+						"type": "text"
+					},
+					{
+						"dataType": "string",
+						"fieldReference": "Description",
+						"indexType": "text",
+						"label": {
+							"en_US": "Description"
+						},
+						"localizable": true,
+						"name": "Description",
+						"predefinedValue": {
+							"en_US": ""
+						},
+						"readOnly": false,
+						"repeatable": false,
+						"required": true,
+						"showLabel": true,
+						"tip": {
+							"en_US": ""
+						},
+						"type": "rich_text"
+					},
+					{
+						"dataType": "",
+						"fieldReference": "Ticket",
+						"label": {
+							"en_US": "Ticket"
+						},
+						"localizable": false,
+						"multiple": false,
+						"name": "Ticket",
+						"nestedFields": [
+							{
+								"dataType": "string",
+								"fieldReference": "TicketURLTitle",
+								"indexType": "keyword",
+								"label": {
+									"en_US": "URL Title"
+								},
+								"localizable": true,
+								"name": "TicketURLTitle",
+								"predefinedValue": {
+									"en_US": ""
+								},
+								"readOnly": false,
+								"repeatable": false,
+								"required": true,
+								"showLabel": true,
+								"tip": {
+									"en_US": ""
+								},
+								"type": "text"
+							},
+							{
+								"dataType": "string",
+								"fieldReference": "TicketURL",
+								"indexType": "keyword",
+								"label": {
+									"en_US": "URL"
+								},
+								"localizable": true,
+								"name": "TicketURL",
+								"predefinedValue": {
+									"en_US": ""
+								},
+								"readOnly": false,
+								"repeatable": false,
+								"required": true,
+								"showLabel": true,
+								"tip": {
+									"en_US": ""
+								},
+								"type": "text"
+							}
+						],
+						"options": [
+						],
+						"repeatable": true,
+						"required": false,
+						"rows": [
+							{
+								"columns": [
+									{
+										"fields": [
+											"TicketURLTitle"
+										],
+										"size": 12
+									}
+								]
+							},
+							{
+								"columns": [
+									{
+										"fields": [
+											"TicketURL"
+										],
+										"size": 12
+									}
+								]
+							}
+						],
+						"showLabel": true,
+						"type": "fieldset"
+					},
+					{
+						"dataType": "",
+						"fieldReference": "MoreInfo",
+						"label": {
+							"en_US": "More Info"
+						},
+						"localizable": false,
+						"multiple": false,
+						"name": "MoreInfo",
+						"nestedFields": [
+							{
+								"dataType": "string",
+								"fieldReference": "MoreInfoURLTitle",
+								"indexType": "keyword",
+								"label": {
+									"en_US": "URL Title"
+								},
+								"localizable": true,
+								"name": "MoreInfoURLTitle",
+								"predefinedValue": {
+									"en_US": ""
+								},
+								"readOnly": false,
+								"repeatable": false,
+								"required": false,
+								"showLabel": true,
+								"tip": {
+									"en_US": ""
+								},
+								"type": "text"
+							},
+							{
+								"dataType": "string",
+								"fieldReference": "MoreInfoURL",
+								"indexType": "keyword",
+								"label": {
+									"en_US": "URL"
+								},
+								"localizable": true,
+								"name": "MoreInfoURL",
+								"predefinedValue": {
+									"en_US": ""
+								},
+								"readOnly": false,
+								"repeatable": false,
+								"required": false,
+								"showLabel": true,
+								"tip": {
+									"en_US": ""
+								},
+								"type": "text"
+							}
+						],
+						"options": [
+						],
+						"repeatable": true,
+						"required": false,
+						"rows": [
+							{
+								"columns": [
+									{
+										"fields": [
+											"MoreInfoURLTitle"
+										],
+										"size": 12
+									}
+								]
+							},
+							{
+								"columns": [
+									{
+										"fields": [
+											"MoreInfoURL"
+										],
+										"size": 12
+									}
+								]
+							}
+						],
+						"showLabel": true,
+						"type": "fieldset"
+					}
+				],
+				"successPage": {
+					"body": {
+					},
+					"enabled": false,
+					"title": {
+					}
+				}
+			},
+			"description": "",
+			"name": "RELEASE-NOTES-BREAKING-CHANGE-STRUCTURE"
+		},
+		{
+			"definition": {
+				"availableLanguageIds": [
+					"en_US"
+				],
+				"defaultLanguageId": "en_US",
+				"definitionSchemaVersion": "2.0",
+				"fields": [
+					{
+						"dataType": "string",
+						"fieldReference": "Name",
+						"indexType": "keyword",
+						"label": {
+							"en_US": "Name"
+						},
+						"localizable": true,
+						"name": "Name",
+						"predefinedValue": {
+							"en_US": ""
+						},
+						"readOnly": false,
+						"repeatable": false,
+						"required": false,
+						"showLabel": true,
+						"tip": {
+							"en_US": ""
+						},
+						"type": "text"
+					},
+					{
+						"dataType": "string",
+						"fieldReference": "Description",
+						"indexType": "text",
+						"label": {
+							"en_US": "Description"
+						},
+						"localizable": true,
+						"name": "Description",
+						"predefinedValue": {
+							"en_US": ""
+						},
+						"readOnly": false,
+						"repeatable": false,
+						"required": true,
+						"showLabel": true,
+						"tip": {
+							"en_US": ""
+						},
+						"type": "rich_text"
+					},
+					{
+						"dataType": "",
+						"fieldReference": "Ticket",
+						"label": {
+							"en_US": "Ticket"
+						},
+						"localizable": false,
+						"multiple": false,
+						"name": "Ticket",
+						"nestedFields": [
+							{
+								"dataType": "string",
+								"fieldReference": "TicketURLTitle",
+								"indexType": "keyword",
+								"label": {
+									"en_US": "URL Title"
+								},
+								"localizable": true,
+								"name": "TicketURLTitle",
+								"predefinedValue": {
+									"en_US": ""
+								},
+								"readOnly": false,
+								"repeatable": false,
+								"required": true,
+								"showLabel": true,
+								"tip": {
+									"en_US": ""
+								},
+								"type": "text"
+							},
+							{
+								"dataType": "string",
+								"fieldReference": "TicketURL",
+								"indexType": "keyword",
+								"label": {
+									"en_US": "URL"
+								},
+								"localizable": true,
+								"name": "TicketURL",
+								"predefinedValue": {
+									"en_US": ""
+								},
+								"readOnly": false,
+								"repeatable": false,
+								"required": true,
+								"showLabel": true,
+								"tip": {
+									"en_US": ""
+								},
+								"type": "text"
+							}
+						],
+						"options": [
+						],
+						"repeatable": true,
+						"required": false,
+						"rows": [
+							{
+								"columns": [
+									{
+										"fields": [
+											"TicketURLTitle"
+										],
+										"size": 12
+									}
+								]
+							},
+							{
+								"columns": [
+									{
+										"fields": [
+											"TicketURL"
+										],
+										"size": 12
+									}
+								]
+							}
+						],
+						"showLabel": true,
+						"type": "fieldset"
+					},
+					{
+						"dataType": "",
+						"fieldReference": "MoreInfo",
+						"label": {
+							"en_US": "More Info"
+						},
+						"localizable": false,
+						"multiple": false,
+						"name": "MoreInfo",
+						"nestedFields": [
+							{
+								"dataType": "string",
+								"fieldReference": "MoreInfoURLTitle",
+								"indexType": "keyword",
+								"label": {
+									"en_US": "URL Title"
+								},
+								"localizable": true,
+								"name": "MoreInfoURLTitle",
+								"predefinedValue": {
+									"en_US": ""
+								},
+								"readOnly": false,
+								"repeatable": false,
+								"required": false,
+								"showLabel": true,
+								"tip": {
+									"en_US": ""
+								},
+								"type": "text"
+							},
+							{
+								"dataType": "string",
+								"fieldReference": "MoreInfoURL",
+								"indexType": "keyword",
+								"label": {
+									"en_US": "URL"
+								},
+								"localizable": true,
+								"name": "MoreInfoURL",
+								"predefinedValue": {
+									"en_US": ""
+								},
+								"readOnly": false,
+								"repeatable": false,
+								"required": false,
+								"showLabel": true,
+								"tip": {
+									"en_US": ""
+								},
+								"type": "text"
+							}
+						],
+						"options": [
+						],
+						"repeatable": true,
+						"required": false,
+						"rows": [
+							{
+								"columns": [
+									{
+										"fields": [
+											"MoreInfoURLTitle"
+										],
+										"size": 12
+									}
+								]
+							},
+							{
+								"columns": [
+									{
+										"fields": [
+											"MoreInfoURL"
+										],
+										"size": 12
+									}
+								]
+							}
+						],
+						"showLabel": true,
+						"type": "fieldset"
+					}
+				],
+				"successPage": {
+					"body": {
+					},
+					"enabled": false,
+					"title": {
+					}
+				}
+			},
+			"description": "",
+			"name": "RELEASE-NOTES-FEATURE-STRUCTURE"
+		},
+		{
+			"definition": {
+				"availableLanguageIds": [
+					"en_US"
+				],
+				"defaultLanguageId": "en_US",
+				"definitionSchemaVersion": "2.0",
+				"fields": [
+					{
+						"dataType": "string",
+						"fieldReference": "Name",
+						"indexType": "keyword",
+						"label": {
+							"en_US": "Name"
+						},
+						"localizable": true,
+						"name": "Name",
+						"predefinedValue": {
+							"en_US": ""
+						},
+						"readOnly": false,
+						"repeatable": false,
+						"required": false,
+						"showLabel": true,
+						"tip": {
+							"en_US": ""
+						},
+						"type": "text"
+					},
+					{
+						"dataType": "string",
+						"fieldReference": "Description",
+						"indexType": "text",
+						"label": {
+							"en_US": "Description"
+						},
+						"localizable": true,
+						"name": "Description",
+						"predefinedValue": {
+							"en_US": ""
+						},
+						"readOnly": false,
+						"repeatable": false,
+						"required": true,
+						"showLabel": true,
+						"tip": {
+							"en_US": ""
+						},
+						"type": "rich_text"
+					}
+				],
+				"successPage": {
+					"body": {
+					},
+					"enabled": false,
+					"title": {
+					}
+				}
+			},
+			"description": "",
+			"name": "RELEASE-NOTES-HIGHLIGHT-STRUCTURE"
+		}
+	]
+}

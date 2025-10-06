@@ -1,0 +1,2507 @@
+{
+	"configuration": {
+		"className": "com.liferay.object.admin.rest.dto.v1_0.ObjectDefinition",
+		"parameters": {
+			"containsHeaders": "true",
+			"createStrategy": "UPSERT",
+			"importStrategy": "ON_ERROR_CONTINUE",
+			"updateStrategy": "UPDATE"
+		},
+		"taskItemDelegateName": "DEFAULT"
+	},
+	"items": [
+		{
+			"externalReferenceCode": "L_ACCOUNT",
+			"objectRelationships": [
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account to Account Flag"
+					},
+					"name": "accountToAccountFlag",
+					"objectDefinitionExternalReferenceCode1": "L_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "ACCOUNT_FLAG",
+					"objectDefinitionName1": "Account",
+					"objectDefinitionName2": "AccountFlag",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account to Account Subscription Group"
+					},
+					"name": "accountToAccountSubscriptionGroup",
+					"objectDefinitionExternalReferenceCode1": "L_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "ACCOUNT_SUBSCRIPTION_GROUP",
+					"objectDefinitionName1": "Account",
+					"objectDefinitionName2": "AccountSubscriptionGroup",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account to Account Subscription Term"
+					},
+					"name": "accountToAccountSubscriptionTerm",
+					"objectDefinitionExternalReferenceCode1": "L_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "ACCOUNT_SUBSCRIPTION_TERM",
+					"objectDefinitionName1": "Account",
+					"objectDefinitionName2": "AccountSubscriptionTerm",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account to Account Subscription"
+					},
+					"name": "accountToAccountSubscription",
+					"objectDefinitionExternalReferenceCode1": "L_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "ACCOUNT_SUBSCRIPTION",
+					"objectDefinitionName1": "Account",
+					"objectDefinitionName2": "AccountSubscription",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account to Admin DXP Cloud"
+					},
+					"name": "accountToAdminDXPCloud",
+					"objectDefinitionExternalReferenceCode1": "L_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "ADMIN_DXP_CLOUD",
+					"objectDefinitionName1": "Account",
+					"objectDefinitionName2": "AdminDXPCloud",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account to Admin Liferay Experience Cloud"
+					},
+					"name": "accountToAdminLiferayExperienceCloud",
+					"objectDefinitionExternalReferenceCode1": "L_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "ADMIN_LIFERAY_EXPERIENCE_CLOUD",
+					"objectDefinitionName1": "Account",
+					"objectDefinitionName2": "AdminLiferayExperienceCloud",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account to Analytics Cloud Workspace"
+					},
+					"name": "accountToAnalyticsCloudWorkspace",
+					"objectDefinitionExternalReferenceCode1": "L_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "ANALYTICS_CLOUD_WORKSPACE",
+					"objectDefinitionName1": "Account",
+					"objectDefinitionName2": "AnalyticsCloudWorkspace",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account to Business Event Version"
+					},
+					"name": "accountToBusinessEventVersion",
+					"objectDefinitionExternalReferenceCode1": "L_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "C_BUSINESS_EVENT_VERSION",
+					"objectDefinitionName1": "Account",
+					"objectDefinitionName2": "BusinessEventVersion",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account to Business Event"
+					},
+					"name": "accountToBusinessEvent",
+					"objectDefinitionExternalReferenceCode1": "L_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "C_BUSINESS_EVENT",
+					"objectDefinitionName1": "Account",
+					"objectDefinitionName2": "BusinessEvent",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account to DXP Cloud Environment"
+					},
+					"name": "accountToDXPCloudEnvironment",
+					"objectDefinitionExternalReferenceCode1": "L_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "DXP_CLOUD_ENVIRONMENT",
+					"objectDefinitionName1": "Account",
+					"objectDefinitionName2": "DXPCloudEnvironment",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account to Incident Report Contact Analytics Cloud"
+					},
+					"name": "accountToIncidentReportContactAnalyticsCloud",
+					"objectDefinitionExternalReferenceCode1": "L_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "INCIDENT_REPORT_CONTACT_ANALYTICS_CLOUD",
+					"objectDefinitionName1": "Account",
+					"objectDefinitionName2": "IncidentReportContactAnalyticsCloud",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account to Koroneiki Account"
+					},
+					"name": "accountToKoroneikiAccount",
+					"objectDefinitionExternalReferenceCode1": "L_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "KORONEIKI_ACCOUNT",
+					"objectDefinitionName1": "Account",
+					"objectDefinitionName2": "KoroneikiAccount",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account to Liferay Experience Cloud Environment"
+					},
+					"name": "accountToLiferayExperienceCloudEnvironment",
+					"objectDefinitionExternalReferenceCode1": "L_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "LXC_ENVIRONMENT",
+					"objectDefinitionName1": "Account",
+					"objectDefinitionName2": "LiferayExperienceCloudEnvironment",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account to Ticket Attachment"
+					},
+					"name": "accountToTicketAttachment",
+					"objectDefinitionExternalReferenceCode1": "L_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "TICKET_ATTACHMENT",
+					"objectDefinitionName1": "Account",
+					"objectDefinitionName2": "TicketAttachment",
+					"type": "oneToMany"
+				}
+			]
+		},
+		{
+			"accountEntryRestricted": true,
+			"accountEntryRestrictedObjectFieldName": "r_accountEntryToAccountFlag_accountEntryId",
+			"active": true,
+			"externalReferenceCode": "ACCOUNT_FLAG",
+			"label": {
+				"en_US": "Account Flag"
+			},
+			"name": "AccountFlag",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Account Key"
+					},
+					"name": "accountKey",
+					"required": true
+				},
+				{
+					"DBType": "Boolean",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Finished"
+					},
+					"name": "finished",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Name"
+					},
+					"name": "name",
+					"required": true
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Account Flags"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"accountEntryRestricted": true,
+			"accountEntryRestrictedObjectFieldName": "r_accountEntryToAccountSubscriptionGroup_accountEntryId",
+			"active": true,
+			"externalReferenceCode": "ACCOUNT_SUBSCRIPTION_GROUP",
+			"label": {
+				"en_US": "Account Subscription Group"
+			},
+			"name": "AccountSubscriptionGroup",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Account Key"
+					},
+					"name": "accountKey",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Activation Product Name"
+					},
+					"name": "activationProductName",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Activation Status"
+					},
+					"name": "activationStatus",
+					"required": false
+				},
+				{
+					"DBType": "Boolean",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Has Activation"
+					},
+					"name": "hasActivation",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Manage Contacts URL"
+					},
+					"name": "manageContactsURL",
+					"required": false
+				},
+				{
+					"DBType": "Integer",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Menu Order"
+					},
+					"name": "menuOrder",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Name"
+					},
+					"name": "name",
+					"required": false
+				},
+				{
+					"DBType": "Integer",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Tab Order"
+					},
+					"name": "tabOrder",
+					"required": false
+				}
+			],
+			"objectRelationships": [
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account Subscription Group To Account Subscription"
+					},
+					"name": "accountSubscriptionGroupToAccountSubscription",
+					"objectDefinitionExternalReferenceCode1": "ACCOUNT_SUBSCRIPTION_GROUP",
+					"objectDefinitionExternalReferenceCode2": "ACCOUNT_SUBSCRIPTION",
+					"objectDefinitionName1": "AccountSubscriptionGroup",
+					"objectDefinitionName2": "AccountSubscription",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account Subscription Group To Account Subscription Term"
+					},
+					"name": "accountSubscriptionGroupToAccountSubscriptionTerm",
+					"objectDefinitionExternalReferenceCode1": "ACCOUNT_SUBSCRIPTION_GROUP",
+					"objectDefinitionExternalReferenceCode2": "ACCOUNT_SUBSCRIPTION_TERM",
+					"objectDefinitionName1": "AccountSubscriptionGroup",
+					"objectDefinitionName2": "AccountSubscriptionTerm",
+					"type": "oneToMany"
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Account Subscription Groups"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"accountEntryRestricted": true,
+			"accountEntryRestrictedObjectFieldName": "r_accountEntryToAccountSubscriptionTerm_accountEntryId",
+			"active": true,
+			"externalReferenceCode": "ACCOUNT_SUBSCRIPTION_TERM",
+			"label": {
+				"en_US": "Account Subscription Term"
+			},
+			"name": "AccountSubscriptionTerm",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Account Key"
+					},
+					"name": "accountKey",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Account Subscription ERC"
+					},
+					"name": "accountSubscriptionERC",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Account Subscription Group ERC"
+					},
+					"name": "accountSubscriptionGroupERC",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "End Date"
+					},
+					"name": "endDate",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Instance Size"
+					},
+					"name": "instanceSize",
+					"required": false
+				},
+				{
+					"DBType": "Integer",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Provisioned"
+					},
+					"name": "provisioned",
+					"required": false
+				},
+				{
+					"DBType": "Integer",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Quantity"
+					},
+					"name": "quantity",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Start Date"
+					},
+					"name": "startDate",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Status"
+					},
+					"name": "subscriptionTermStatus",
+					"required": false
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Account Subscription Terms"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"accountEntryRestricted": true,
+			"accountEntryRestrictedObjectFieldName": "r_accountEntryToAccountSubscription_accountEntryId",
+			"active": true,
+			"externalReferenceCode": "ACCOUNT_SUBSCRIPTION",
+			"label": {
+				"en_US": "Account Subscription"
+			},
+			"name": "AccountSubscription",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Account Key"
+					},
+					"name": "accountKey",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Account Subscription Group ERC"
+					},
+					"name": "accountSubscriptionGroupERC",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "End Date"
+					},
+					"name": "endDate",
+					"required": false
+				},
+				{
+					"DBType": "Boolean",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Has Disaster Data Center Region"
+					},
+					"listTypeDefinitionId": 0,
+					"name": "hasDisasterDataCenterRegion",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "",
+					"label": {
+						"en_US": "Instance Size"
+					},
+					"name": "instanceSize",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Name"
+					},
+					"name": "name",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Product Key"
+					},
+					"name": "productKey",
+					"required": false
+				},
+				{
+					"DBType": "Integer",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Quantity"
+					},
+					"name": "quantity",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Start Date"
+					},
+					"name": "startDate",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Status"
+					},
+					"name": "subscriptionStatus",
+					"required": false
+				}
+			],
+			"objectRelationships": [
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Account Subscription To Account Subscription Term"
+					},
+					"name": "accountSubscriptionToAccountSubscriptionTerm",
+					"objectDefinitionExternalReferenceCode1": "ACCOUNT_SUBSCRIPTION",
+					"objectDefinitionExternalReferenceCode2": "ACCOUNT_SUBSCRIPTION_TERM",
+					"objectDefinitionName1": "AccountSubscription",
+					"objectDefinitionName2": "AccountSubscriptionTerm",
+					"type": "oneToMany"
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Account Subscriptions"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"accountEntryRestricted": true,
+			"accountEntryRestrictedObjectFieldName": "r_accountEntryToAdminDXPCloud_accountEntryId",
+			"active": true,
+			"externalReferenceCode": "ADMIN_DXP_CLOUD",
+			"label": {
+				"en_US": "Admin DXP Cloud"
+			},
+			"name": "AdminDXPCloud",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "DXP Cloud Environment"
+					},
+					"name": "dxpCloudEnvironmentId",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Email Address"
+					},
+					"name": "emailAddress",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "First Name"
+					},
+					"name": "firstName",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Github Username"
+					},
+					"name": "githubUsername",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Last Name"
+					},
+					"name": "lastName",
+					"required": true
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Admins DXP Cloud"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"accountEntryRestricted": true,
+			"accountEntryRestrictedObjectFieldName": "r_accountEntryToAdminLiferayExperienceCloud_accountEntryId",
+			"active": true,
+			"externalReferenceCode": "ADMIN_LIFERAY_EXPERIENCE_CLOUD",
+			"label": {
+				"en_US": "Admin Liferay Experience Cloud"
+			},
+			"name": "AdminLiferayExperienceCloud",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Email Address"
+					},
+					"name": "emailAddress",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Full Name"
+					},
+					"name": "fullName",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Github Username"
+					},
+					"name": "githubUsername",
+					"required": true
+				},
+				{
+					"DBType": "Long",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Liferay Experience Cloud Environment"
+					},
+					"name": "liferayExperienceCloudEnvironmentId",
+					"required": true
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Admins Liferay Experience Cloud"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"active": true,
+			"externalReferenceCode": "ANALYTICS_CLOUD_DATA_CENTER_LOCATION",
+			"label": {
+				"en_US": "Analytics Cloud Data Center Location"
+			},
+			"name": "AnalyticsCloudDataCenterLocation",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Name"
+					},
+					"name": "name",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Value"
+					},
+					"name": "value",
+					"required": true
+				}
+			],
+			"pluralLabel": {
+				"en_US": "Analytics Cloud Data Center Locations"
+			},
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"accountEntryRestricted": true,
+			"accountEntryRestrictedObjectFieldName": "r_accountEntryToAnalyticsCloudWorkspace_accountEntryId",
+			"active": true,
+			"externalReferenceCode": "ANALYTICS_CLOUD_WORKSPACE",
+			"label": {
+				"en_US": "Analytics Cloud Workspace"
+			},
+			"name": "AnalyticsCloudWorkspace",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Account Key"
+					},
+					"name": "accountKey",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Allowed Email Domains"
+					},
+					"name": "allowedEmailDomains",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Data Center Location"
+					},
+					"name": "dataCenterLocation",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Owner Email Address"
+					},
+					"name": "ownerEmailAddress",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Time Zone"
+					},
+					"name": "timeZone",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Workspace Friendly URL"
+					},
+					"name": "workspaceFriendlyUrl",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Workspace Group ID"
+					},
+					"name": "workspaceGroupId",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Workspace Name"
+					},
+					"name": "workspaceName",
+					"required": false
+				}
+			],
+			"objectRelationships": [
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Analytics Cloud Workspace To Incident Report Contact Analytics Cloud"
+					},
+					"name": "analyticsCloudWorkspaceToIncidentReportContactAnalyticsCloud",
+					"objectDefinitionExternalReferenceCode1": "ANALYTICS_CLOUD_WORKSPACE",
+					"objectDefinitionExternalReferenceCode2": "INCIDENT_REPORT_CONTACT_ANALYTICS_CLOUD",
+					"objectDefinitionName1": "AnalyticsCloudWorkspace",
+					"objectDefinitionName2": "IncidentReportContactAnalyticsCloud",
+					"type": "oneToMany"
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Analytics Cloud Workspaces"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"active": true,
+			"externalReferenceCode": "BANNED_EMAIL_DOMAIN",
+			"label": {
+				"en_US": "Banned Email Domain"
+			},
+			"name": "BannedEmailDomain",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Domain"
+					},
+					"name": "domain",
+					"required": true
+				}
+			],
+			"pluralLabel": {
+				"en_US": "Banned Email Domains"
+			},
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"accountEntryRestricted": true,
+			"accountEntryRestrictedObjectFieldName": "r_accountEntryToBusinessEventVersions_accountEntryId",
+			"active": true,
+			"externalReferenceCode": "C_BUSINESS_EVENT_VERSION",
+			"label": {
+				"en_US": "Business Event Version"
+			},
+			"name": "BusinessEventVersion",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"businessType": "Picklist",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Change"
+					},
+					"listTypeDefinitionExternalReferenceCode": "C_BUSINESS_EVENT_VERSION_CHANGES",
+					"localized": false,
+					"name": "change",
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": false,
+					"type": "String",
+					"unique": false
+				},
+				{
+					"DBType": "String",
+					"businessType": "Text",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Comment"
+					},
+					"localized": false,
+					"name": "comment",
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": false,
+					"type": "String",
+					"unique": false
+				}
+			],
+			"objectFolderExternalReferenceCode": "C_BUSINESS_EVENTS_FOLDER",
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Business Event Versions"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"accountEntryRestricted": true,
+			"accountEntryRestrictedObjectFieldName": "r_accountEntryToBusinessEvents_accountEntryId",
+			"active": true,
+			"externalReferenceCode": "C_BUSINESS_EVENT",
+			"label": {
+				"en_US": "Business Event"
+			},
+			"name": "BusinessEvent",
+			"objectActions": [
+				{
+					"active": true,
+					"externalReferenceCode": "BUSINESS_EVENT_ADD",
+					"label": {
+						"en_US": "Business Event Add"
+					},
+					"name": "businessEventAdd",
+					"objectActionExecutorKey": "function#liferay-customer-etc-spring-boot-object-action-business-event",
+					"objectActionTriggerKey": "onAfterAdd",
+					"parameters": {
+					}
+				},
+				{
+					"active": true,
+					"externalReferenceCode": "BUSINESS_EVENT_UPDATE",
+					"label": {
+						"en_US": "Business Event Update"
+					},
+					"name": "businessEventUpdate",
+					"objectActionExecutorKey": "function#liferay-customer-etc-spring-boot-object-action-business-event",
+					"objectActionTriggerKey": "onAfterUpdate",
+					"parameters": {
+					}
+				}
+			],
+			"objectFields": [
+				{
+					"DBType": "DateTime",
+					"businessType": "DateTime",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "",
+					"label": {
+						"en_US": "Actual Go Live Date Time"
+					},
+					"localized": false,
+					"name": "actualGoLiveDateTime",
+					"objectFieldSettings": [
+						{
+							"name": "timeStorage",
+							"value": "useInputAsEntered"
+						}
+					],
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": false,
+					"type": "DateTime",
+					"unique": false
+				},
+				{
+					"DBType": "String",
+					"businessType": "Text",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Associated Tickets"
+					},
+					"localized": false,
+					"name": "associatedTickets",
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": false,
+					"type": "String",
+					"unique": false
+				},
+				{
+					"DBType": "String",
+					"businessType": "Picklist",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Current Liferay Version"
+					},
+					"listTypeDefinitionExternalReferenceCode": "DXP_MINOR_VERSION_AND_PORTAL_MAJOR_VERSION",
+					"localized": false,
+					"name": "currentLiferayVersion",
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": false,
+					"type": "String",
+					"unique": false
+				},
+				{
+					"DBType": "String",
+					"businessType": "Text",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Description"
+					},
+					"localized": false,
+					"name": "description",
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": false,
+					"type": "String",
+					"unique": false
+				},
+				{
+					"DBType": "String",
+					"businessType": "Picklist",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Event Status"
+					},
+					"listTypeDefinitionExternalReferenceCode": "C_BUSINESS_EVENT_STATUSES",
+					"localized": false,
+					"name": "eventStatus",
+					"objectFieldSettings": [
+						{
+							"name": "defaultValueType",
+							"value": "inputAsValue"
+						}
+					],
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": false,
+					"type": "String",
+					"unique": false
+				},
+				{
+					"DBType": "String",
+					"businessType": "Picklist",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Event Type"
+					},
+					"listTypeDefinitionExternalReferenceCode": "C_BUSINESS_EVENT_TYPES",
+					"localized": false,
+					"name": "eventType",
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": false,
+					"type": "String",
+					"unique": false
+				},
+				{
+					"DBType": "String",
+					"businessType": "Text",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Last Comment"
+					},
+					"localized": false,
+					"name": "lastComment",
+					"objectFieldSettings": [
+					],
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": false,
+					"type": "String",
+					"unique": false
+				},
+				{
+					"DBType": "String",
+					"businessType": "Text",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Name"
+					},
+					"localized": false,
+					"name": "name",
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": false,
+					"type": "String",
+					"unique": false
+				},
+				{
+					"DBType": "String",
+					"businessType": "Picklist",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "New Liferay Version"
+					},
+					"listTypeDefinitionExternalReferenceCode": "DXP_MINOR_VERSION_AND_PORTAL_MAJOR_VERSION",
+					"localized": false,
+					"name": "newLiferayVersion",
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": false,
+					"type": "String",
+					"unique": false
+				},
+				{
+					"DBType": "DateTime",
+					"businessType": "DateTime",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "",
+					"label": {
+						"en_US": "Target Go Live Date Time"
+					},
+					"localized": false,
+					"name": "targetGoLiveDateTime",
+					"objectFieldSettings": [
+						{
+							"name": "timeStorage",
+							"value": "useInputAsEntered"
+						}
+					],
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": false,
+					"type": "DateTime",
+					"unique": false
+				},
+				{
+					"DBType": "String",
+					"businessType": "Picklist",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Time Zone"
+					},
+					"listTypeDefinitionExternalReferenceCode": "UTC_TIME_ZONES",
+					"localized": false,
+					"name": "timeZone",
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": false,
+					"type": "String",
+					"unique": false
+				}
+			],
+			"objectFolderExternalReferenceCode": "C_BUSINESS_EVENTS_FOLDER",
+			"objectRelationships": [
+				{
+					"deletionType": "cascade",
+					"label": {
+						"en_US": "Business Event to Business Event Versions"
+					},
+					"name": "businessEventToBusinessEventVersions",
+					"objectDefinitionExternalReferenceCode1": "C_BUSINESS_EVENT",
+					"objectDefinitionExternalReferenceCode2": "C_BUSINESS_EVENT_VERSION",
+					"objectDefinitionName1": "BusinessEvent",
+					"objectDefinitionName2": "BusinessEventVersion",
+					"type": "oneToMany"
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Business Events"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"active": true,
+			"externalReferenceCode": "CALLBACK_REQUEST",
+			"label": {
+				"en_US": "Callback Request"
+			},
+			"name": "CallbackRequest",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Country Code"
+					},
+					"name": "countryCode",
+					"required": true
+				},
+				{
+					"DBType": "Clob",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Description"
+					},
+					"name": "description",
+					"objectFieldSettings": [
+						{
+							"name": "maxLength",
+							"value": 2000
+						},
+						{
+							"name": "showCounter",
+							"value": true
+						}
+					],
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Email Address"
+					},
+					"name": "emailAddress",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Name"
+					},
+					"name": "name",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Phone Number"
+					},
+					"name": "phoneNumber",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Related Ticket IDs"
+					},
+					"name": "relatedTicketIDs",
+					"required": false
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Callback Requests"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"accountEntryRestricted": true,
+			"accountEntryRestrictedObjectFieldName": "r_accountEntryToDXPCloudEnvironment_accountEntryId",
+			"active": true,
+			"externalReferenceCode": "DXP_CLOUD_ENVIRONMENT",
+			"label": {
+				"en_US": "DXP Cloud Environment"
+			},
+			"name": "DXPCloudEnvironment",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Account Key"
+					},
+					"name": "accountKey",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Data Center Region"
+					},
+					"name": "dataCenterRegion",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Disaster Data Center Region"
+					},
+					"name": "disasterDataCenterRegion",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Project ID"
+					},
+					"name": "projectId",
+					"required": false
+				}
+			],
+			"objectRelationships": [
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "DXP Cloud Environment To Admin DXP Cloud"
+					},
+					"name": "dxpCloudEnvironmentToAdminDXPCloud",
+					"objectDefinitionExternalReferenceCode1": "DXP_CLOUD_ENVIRONMENT",
+					"objectDefinitionExternalReferenceCode2": "ADMIN_DXP_CLOUD",
+					"objectDefinitionName1": "DXPCloudEnvironment",
+					"objectDefinitionName2": "AdminDXPCloud",
+					"type": "oneToMany"
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "DXP Cloud Environments"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"active": true,
+			"externalReferenceCode": "DXPC_DATA_CENTER_REGION",
+			"label": {
+				"en_US": "DXPC Data Center Region"
+			},
+			"name": "DXPCDataCenterRegion",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Name"
+					},
+					"name": "name",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Value"
+					},
+					"name": "value",
+					"required": true
+				}
+			],
+			"pluralLabel": {
+				"en_US": "DXPC Data Center Regions"
+			},
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"active": true,
+			"externalReferenceCode": "HIGH_PRIORITY_CONTACTS",
+			"label": {
+				"en_US": "High Priority Contacts"
+			},
+			"name": "HighPriorityContacts",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"businessType": "Picklist",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Contacts Category"
+					},
+					"listTypeDefinitionExternalReferenceCode": "HIGH_PRIORITY_CONTACTS_CATEGORY",
+					"name": "contactsCategory",
+					"required": true,
+					"type": "String"
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "High Priority Contacts"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"accountEntryRestricted": true,
+			"accountEntryRestrictedObjectFieldName": "r_accountEntryToIncidentReportContactAC_accountEntryId",
+			"active": true,
+			"externalReferenceCode": "INCIDENT_REPORT_CONTACT_ANALYTICS_CLOUD",
+			"label": {
+				"en_US": "Incident Report Contact Analytics Cloud"
+			},
+			"name": "IncidentReportContactAnalyticsCloud",
+			"objectFields": [
+				{
+					"DBType": "Long",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Analytics Cloud Workspace"
+					},
+					"name": "analyticsCloudWorkspaceId",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Email Address"
+					},
+					"name": "emailAddress",
+					"required": true
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Incident Report Contacts Analytics Cloud"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"accountEntryRestricted": true,
+			"accountEntryRestrictedObjectFieldName": "r_accountEntryToKoroneikiAccount_accountEntryId",
+			"active": true,
+			"externalReferenceCode": "KORONEIKI_ACCOUNT",
+			"label": {
+				"en_US": "Koroneiki Account"
+			},
+			"name": "KoroneikiAccount",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Account Key"
+					},
+					"name": "accountKey",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "AC Workspace Group ID"
+					},
+					"name": "acWorkspaceGroupId",
+					"required": false
+				},
+				{
+					"DBType": "Boolean",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Allow Self Provisioning"
+					},
+					"name": "allowSelfProvisioning",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Code"
+					},
+					"name": "code",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Data Region"
+					},
+					"name": "dataRegion",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "DXP Version"
+					},
+					"name": "dxpVersion",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Liferay Contact Email Address"
+					},
+					"name": "liferayContactEmailAddress",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Liferay Contact Name"
+					},
+					"name": "liferayContactName",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Liferay Contact Role"
+					},
+					"name": "liferayContactRole",
+					"required": false
+				},
+				{
+					"DBType": "Integer",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Max Requestors"
+					},
+					"name": "maxRequestors",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Name"
+					},
+					"name": "name",
+					"required": false
+				},
+				{
+					"DBType": "Boolean",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Partner"
+					},
+					"name": "partner",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Partnership Current"
+					},
+					"name": "partnershipCurrent",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Partnership Current End Date"
+					},
+					"name": "partnershipCurrentEndDate",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Partnership Current Start Date"
+					},
+					"name": "partnershipCurrentStartDate",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Partnership Expired"
+					},
+					"name": "partnershipExpired",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Partnership Expired End Date"
+					},
+					"name": "partnershipExpiredEndDate",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Partnership Expired Start Date"
+					},
+					"name": "partnershipExpiredStartDate",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Partnership Future"
+					},
+					"name": "partnershipFuture",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Partnership Future End Date"
+					},
+					"name": "partnershipFutureEndDate",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Partnership Future Start Date"
+					},
+					"name": "partnershipFutureStartDate",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Region"
+					},
+					"name": "region",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Salesforce Account Key"
+					},
+					"name": "salesforceAccountKey",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Salesforce Project Key"
+					},
+					"name": "salesforceProjectKey",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "SLA Current"
+					},
+					"name": "slaCurrent",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "SLA Current End Date"
+					},
+					"name": "slaCurrentEndDate",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "SLA Current Start Date"
+					},
+					"name": "slaCurrentStartDate",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "SLA Expired"
+					},
+					"name": "slaExpired",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "SLA Expired End Date"
+					},
+					"name": "slaExpiredEndDate",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "SLA Expired Start Date"
+					},
+					"name": "slaExpiredStartDate",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "SLA Future"
+					},
+					"name": "slaFuture",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "SLA Future End Date"
+					},
+					"name": "slaFutureEndDate",
+					"required": false
+				},
+				{
+					"DBType": "Date",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "SLA Future Start Date"
+					},
+					"name": "slaFutureStartDate",
+					"required": false
+				}
+			],
+			"objectRelationships": [
+				{
+					"deletionType": "cascade",
+					"label": {
+						"en_US": "Koroneiki Account to Callback Request"
+					},
+					"name": "koroneikiAccountToCallbackRequest",
+					"objectDefinitionExternalReferenceCode1": "KORONEIKI_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "CALLBACK_REQUEST",
+					"objectDefinitionName1": "KoroneikiAccount",
+					"objectDefinitionName2": "CallbackRequest",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Koroneiki Account to High Priority Contacts"
+					},
+					"name": "koroneikiAccountToHighPriorityContacts",
+					"objectDefinitionExternalReferenceCode1": "KORONEIKI_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "HIGH_PRIORITY_CONTACTS",
+					"objectDefinitionName1": "KoroneikiAccount",
+					"objectDefinitionName2": "HighPriorityContacts",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Koroneiki Account to Replacement Activation Key Request"
+					},
+					"name": "koroneikiAccountToReplacementActivationKeyRequest",
+					"objectDefinitionExternalReferenceCode1": "KORONEIKI_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "REPLACEMENT_ACTIVATION_KEY_REQUEST",
+					"objectDefinitionName1": "KoroneikiAccount",
+					"objectDefinitionName2": "ReplacementActivationKeyRequest",
+					"type": "oneToMany"
+				},
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Koroneiki Account to Support Ticket Escalation"
+					},
+					"name": "koroneikiAccountToSupportTicketEscalation",
+					"objectDefinitionExternalReferenceCode1": "KORONEIKI_ACCOUNT",
+					"objectDefinitionExternalReferenceCode2": "SUPPORT_TICKET_ESCALATION",
+					"objectDefinitionName1": "KoroneikiAccount",
+					"objectDefinitionName2": "SupportTicketEscalation",
+					"type": "oneToMany"
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Koroneiki Accounts"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false,
+			"titleObjectFieldName": "name"
+		},
+		{
+			"accountEntryRestricted": true,
+			"accountEntryRestrictedObjectFieldName": "r_liferayExperienceCloudEnvironment_accountEntryId",
+			"active": true,
+			"externalReferenceCode": "LXC_ENVIRONMENT",
+			"label": {
+				"en_US": "Liferay Experience Cloud Environment"
+			},
+			"name": "LiferayExperienceCloudEnvironment",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Account Key"
+					},
+					"name": "accountKey",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Analytics Cloud Owner"
+					},
+					"name": "analyticsCloudOwner",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Incident Management Email Address"
+					},
+					"name": "incidentManagementEmailAddress",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Incident Management Full Name"
+					},
+					"name": "incidentManagementFullName",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Primary Region"
+					},
+					"name": "primaryRegion",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Project ID"
+					},
+					"name": "projectId",
+					"required": true
+				}
+			],
+			"objectRelationships": [
+				{
+					"deletionType": "prevent",
+					"label": {
+						"en_US": "Liferay Experience Cloud Environment To Admin Liferay Experience Cloud"
+					},
+					"name": "liferayExperienceCloudEnvironmentToAdminLiferayExperienceCloud",
+					"objectDefinitionExternalReferenceCode1": "LXC_ENVIRONMENT",
+					"objectDefinitionExternalReferenceCode2": "ADMIN_LIFERAY_EXPERIENCE_CLOUD",
+					"objectDefinitionName1": "LiferayExperienceCloudEnvironment",
+					"objectDefinitionName2": "AdminLiferayExperienceCloud",
+					"type": "oneToMany"
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Liferay Experience Cloud Environments"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"active": true,
+			"externalReferenceCode": "REPLACEMENT_ACTIVATION_KEY_REQUEST",
+			"label": {
+				"en_US": "Replacement Activation Key Request"
+			},
+			"name": "ReplacementActivationKeyRequest",
+			"objectFields": [
+				{
+					"DBType": "Boolean",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Acknowledgement"
+					},
+					"name": "acknowledgement",
+					"required": true
+				},
+				{
+					"DBType": "Boolean",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Active Liferay Subscription?"
+					},
+					"name": "activeLiferaySubscription",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"businessType": "Picklist",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Clustered?"
+					},
+					"listTypeDefinitionExternalReferenceCode": "CLUSTERED",
+					"name": "clustered",
+					"required": true,
+					"type": "String"
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Company Name"
+					},
+					"name": "companyName",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Contact Email Address"
+					},
+					"name": "contactEmailAddress",
+					"required": true
+				},
+				{
+					"DBType": "Clob",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Please explain why you need a replacement activation key"
+					},
+					"name": "explainReplacementActivationKey",
+					"required": true
+				},
+				{
+					"DBType": "Clob",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Please provide the server information, as applicable, depending on your version of Liferay Portal or Liferay DXP"
+					},
+					"name": "serverInformation",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"businessType": "Picklist",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Support Region"
+					},
+					"listTypeDefinitionExternalReferenceCode": "SUPPORT_REGION",
+					"name": "supportRegion",
+					"required": true,
+					"type": "String"
+				},
+				{
+					"DBType": "String",
+					"businessType": "Picklist",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Type of Server"
+					},
+					"listTypeDefinitionExternalReferenceCode": "TYPE_OF_SERVER",
+					"name": "typeOfServer",
+					"required": true,
+					"type": "String"
+				},
+				{
+					"DBType": "String",
+					"businessType": "Picklist",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Version of Liferay Software"
+					},
+					"listTypeDefinitionExternalReferenceCode": "VERSION_OF_LIFERAY_SOFTWARE",
+					"name": "versionOfLiferaySoftware",
+					"required": false,
+					"type": "String"
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Replacement Activation Key Requests"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"active": true,
+			"externalReferenceCode": "SUPPORT_TICKET_ESCALATION",
+			"label": {
+				"en_US": "Support Ticket Escalation"
+			},
+			"name": "SupportTicketEscalation",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "If opening on behalf of another user, please share the appropriate email address to contact:"
+					},
+					"name": "customerEmailAddress",
+					"required": false,
+					"type": "String"
+				},
+				{
+					"DBType": "Clob",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Description"
+					},
+					"name": "description",
+					"objectFieldSettings": [
+						{
+							"name": "showCounter",
+							"value": false
+						}
+					],
+					"required": true,
+					"type": "Clob"
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Phone Number"
+					},
+					"name": "phoneNumber",
+					"required": false,
+					"type": "String"
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Tickets ID's"
+					},
+					"name": "ticketsIDs",
+					"required": true,
+					"type": "String"
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Support Ticket Escalations"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"active": true,
+			"externalReferenceCode": "TEAM_MEMBERS_INVITATION",
+			"label": {
+				"en_US": "Team Members Invitation"
+			},
+			"name": "TeamMembersInvitation",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Email"
+					},
+					"name": "email",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Family Name"
+					},
+					"name": "familyName",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Given Name"
+					},
+					"name": "givenName",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Role"
+					},
+					"name": "role",
+					"required": false
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Team Members Invitation"
+			},
+			"portlet": true,
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		},
+		{
+			"accountEntryRestricted": true,
+			"accountEntryRestrictedObjectFieldName": "r_accountEntryToTicketAttachment_accountEntryId",
+			"active": true,
+			"enableObjectEntryDraft": true,
+			"externalReferenceCode": "TICKET_ATTACHMENT",
+			"label": {
+				"en_US": "Ticket Attachment"
+			},
+			"name": "TicketAttachment",
+			"objectFields": [
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Account Key"
+					},
+					"name": "accountKey",
+					"required": true
+				},
+				{
+					"DBType": "Clob",
+					"businessType": "LongText",
+					"indexed": false,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Draft Comment Body"
+					},
+					"name": "draftCommentBody"
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "File Name"
+					},
+					"name": "fileName",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "File Size"
+					},
+					"name": "fileSize",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Google Cloud Storage Bucket Name"
+					},
+					"name": "gcsBucketName",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Jira Issue"
+					},
+					"name": "jiraIssueKey",
+					"required": false
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "MD5 Checksum"
+					},
+					"name": "md5Checksum",
+					"required": false
+				},
+				{
+					"DBType": "Long",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "State"
+					},
+					"name": "state"
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Storage Provider"
+					},
+					"name": "storageProvider",
+					"required": true
+				},
+				{
+					"DBType": "String",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Type"
+					},
+					"name": "type",
+					"required": false
+				},
+				{
+					"DBType": "Long",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Zendesk Ticket"
+					},
+					"name": "zendeskTicketId",
+					"required": false
+				}
+			],
+			"panelCategoryKey": "applications_menu.applications.content",
+			"pluralLabel": {
+				"en_US": "Ticket Attachments"
+			},
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false
+		}
+	]
+}

@@ -1,0 +1,28 @@
+assemble:
+    -   from: batch
+        into: batch
+liferay-customer-batch:
+    name: Liferay Customer Batch
+    oAuthApplicationHeadlessServer: liferay-customer-batch-oahs
+    type: batch
+liferay-customer-batch-oahs:
+    .serviceAddress: localhost:8080
+    .serviceScheme: http
+    name: Liferay Customer Batch OAuth Application Headless Server
+    scopes:
+        -   Liferay.Headless.Admin.Content.everything
+        -   Liferay.Headless.Admin.List.Type.everything
+        -   Liferay.Headless.Admin.Site.everything
+        -   Liferay.Headless.Admin.Taxonomy.everything
+        -   Liferay.Headless.Admin.User.everything
+        -   Liferay.Headless.Admin.Workflow.everything
+        -   Liferay.Headless.Batch.Engine.everything
+        -   Liferay.Headless.Commerce.Admin.Catalog.everything
+        -   Liferay.Headless.Commerce.Admin.Channel.everything
+        -   Liferay.Headless.Commerce.Admin.Order.everything
+        -   Liferay.Headless.Delivery.everything
+        -   Liferay.Headless.Object.everything
+        -   Liferay.Headless.Site.everything
+        -   Liferay.Headless.Site.everything
+        -   Liferay.Object.Admin.REST.everything
+    type: oAuthApplicationHeadlessServer

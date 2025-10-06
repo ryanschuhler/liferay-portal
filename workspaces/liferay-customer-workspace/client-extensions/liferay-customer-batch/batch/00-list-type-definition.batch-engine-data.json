@@ -1,0 +1,795 @@
+{
+	"configuration": {
+		"className": "com.liferay.headless.admin.list.type.dto.v1_0.ListTypeDefinition",
+		"parameters": {
+			"createStrategy": "UPSERT",
+			"importStrategy": "ON_ERROR_CONTINUE"
+		}
+	},
+	"items": [
+		{
+			"externalReferenceCode": "C_BUSINESS_EVENT_STATUSES",
+			"listTypeEntries": [
+				{
+					"externalReferenceCode": "CANCELED",
+					"key": "canceled",
+					"name": "Canceled",
+					"name_i18n": {
+						"en-US": "Canceled",
+						"es-ES": "Cancelado",
+						"ja-JP": "キャンセル",
+						"pt-BR": "Cancelado"
+					}
+				},
+				{
+					"externalReferenceCode": "COMPLETED",
+					"key": "completed",
+					"name": "Completed",
+					"name_i18n": {
+						"en-US": "Completed",
+						"es-ES": "Completado",
+						"ja-JP": "完了",
+						"pt-BR": "Concluído"
+					}
+				},
+				{
+					"externalReferenceCode": "OPEN",
+					"key": "open",
+					"name": "Open",
+					"name_i18n": {
+						"en-US": "Open",
+						"es-ES": "Abierto",
+						"ja-JP": "オープン",
+						"pt-BR": "Aberto"
+					}
+				},
+				{
+					"externalReferenceCode": "OVERDUE",
+					"key": "overdue",
+					"name": "Overdue",
+					"name_i18n": {
+						"en-US": "Overdue",
+						"es-ES": "Atrasado",
+						"ja-JP": "期限切れ",
+						"pt-BR": "Atrasado"
+					}
+				}
+			],
+			"name": "Business Event Statuses"
+		},
+		{
+			"externalReferenceCode": "C_BUSINESS_EVENT_TYPES",
+			"listTypeEntries": [
+				{
+					"externalReferenceCode": "GO_LIVE",
+					"key": "goLive",
+					"name": "Go Live",
+					"name_i18n": {
+						"en-US": "Go Live",
+						"es-ES": "Go Live",
+						"ja-JP": "Go Live",
+						"pt-BR": "Go Live"
+					}
+				},
+				{
+					"externalReferenceCode": "MIGRATION",
+					"key": "migration",
+					"name": "Migration",
+					"name_i18n": {
+						"en-US": "Migration",
+						"es-ES": "Migración",
+						"ja-JP": "マイグレーション",
+						"pt-BR": "Migração"
+					}
+				},
+				{
+					"externalReferenceCode": "OTHER_EVENT",
+					"key": "otherEvent",
+					"name": "Other Event",
+					"name_i18n": {
+						"en-US": "Other Event",
+						"es-ES": "Otro evento",
+						"ja-JP": "その他のイベント",
+						"pt-BR": "Outro Evento"
+					}
+				},
+				{
+					"externalReferenceCode": "UPGRADE",
+					"key": "upgrade",
+					"name": "Upgrade",
+					"name_i18n": {
+						"en-US": "Upgrade",
+						"es-ES": "Actualización",
+						"ja-JP": "アップグレード",
+						"pt-BR": "Atualização"
+					}
+				}
+			],
+			"name": "Business Event Types"
+		},
+		{
+			"externalReferenceCode": "C_BUSINESS_EVENT_VERSION_CHANGES",
+			"listTypeEntries": [
+				{
+					"externalReferenceCode": "CREATED",
+					"key": "created",
+					"name": "Created",
+					"name_i18n": {
+						"en-US": "Event Created",
+						"es-ES": "Evento Creado",
+						"ja-JP": "イベントの作成",
+						"pt-BR": "Evento Criado"
+					}
+				},
+				{
+					"externalReferenceCode": "EDITED",
+					"key": "edited",
+					"name": "Edited",
+					"name_i18n": {
+						"en-US": "Edited",
+						"es-ES": "Editado",
+						"ja-JP": "編集済み",
+						"pt-BR": "Editado"
+					}
+				},
+				{
+					"externalReferenceCode": "EVENT_CANCELED",
+					"key": "eventCanceled",
+					"name": "Event Canceled",
+					"name_i18n": {
+						"en-US": "Event Canceled",
+						"es-ES": "Evento Cancelado",
+						"ja-JP": "イベントのキャンセル",
+						"pt-BR": "Evento Cancelado"
+					}
+				},
+				{
+					"externalReferenceCode": "GO_LIVE",
+					"key": "goLive",
+					"name": "Go Live",
+					"name_i18n": {
+						"en-US": "Go Live",
+						"es-ES": "Go Live",
+						"ja-JP": "Go Live",
+						"pt-BR": "Go Live"
+					}
+				}
+			],
+			"name": "Business Event Version Changes"
+		},
+		{
+			"externalReferenceCode": "CLUSTERED",
+			"listTypeEntries": [
+				{
+					"externalReferenceCode": "SINGLE_INSTANCE",
+					"key": "singleInstance",
+					"name": "Single instance",
+					"name_i18n": {
+						"en-US": "Single instance"
+					}
+				},
+				{
+					"externalReferenceCode": "CLUSTERED",
+					"key": "clustered",
+					"name": "Clustered",
+					"name_i18n": {
+						"en-US": "Clustered"
+					}
+				}
+			],
+			"name": "Clustered"
+		},
+		{
+			"externalReferenceCode": "DEVELOPER_KEY_DXP_VERSION",
+			"listTypeEntries": [
+				{
+					"externalReferenceCode": "74",
+					"key": "74",
+					"name": "7.4",
+					"name_i18n": {
+						"en-US": "7.4"
+					}
+				},
+				{
+					"externalReferenceCode": "73",
+					"key": "73",
+					"name": "7.3",
+					"name_i18n": {
+						"en-US": "7.3"
+					}
+				},
+				{
+					"externalReferenceCode": "72",
+					"key": "72",
+					"name": "7.2",
+					"name_i18n": {
+						"en-US": "7.2"
+					}
+				},
+				{
+					"externalReferenceCode": "71",
+					"key": "71",
+					"name": "7.1",
+					"name_i18n": {
+						"en-US": "7.1"
+					}
+				},
+				{
+					"externalReferenceCode": "70",
+					"key": "70",
+					"name": "7.0",
+					"name_i18n": {
+						"en-US": "7.0"
+					}
+				}
+			],
+			"name": "Developer Key DXP Version"
+		},
+		{
+			"externalReferenceCode": "DEVELOPER_KEY_PORTAL_VERSION",
+			"listTypeEntries": [
+				{
+					"externalReferenceCode": "62",
+					"key": "62",
+					"name": "6.2",
+					"name_i18n": {
+						"en-US": "6.2"
+					}
+				},
+				{
+					"externalReferenceCode": "61_GA3",
+					"key": "61GA3",
+					"name": "6.1 GA3",
+					"name_i18n": {
+						"en-US": "6.1 GA3"
+					}
+				},
+				{
+					"externalReferenceCode": "61_GA2",
+					"key": "61GA2",
+					"name": "6.1 GA2",
+					"name_i18n": {
+						"en-US": "6.1 GA2"
+					}
+				},
+				{
+					"externalReferenceCode": "61_GA1",
+					"key": "61GA1",
+					"name": "6.1 GA1",
+					"name_i18n": {
+						"en-US": "6.1 GA1"
+					}
+				}
+			],
+			"name": "Developer Key Portal Version"
+		},
+		{
+			"externalReferenceCode": "DXP_MAJOR_VERSION",
+			"name": "DXP Major Version"
+		},
+		{
+			"externalReferenceCode": "DXP_MINOR_VERSION_AND_PORTAL_MAJOR_VERSION",
+			"name": "DXP Minor Version and Portal Major Version"
+		},
+		{
+			"externalReferenceCode": "DXP_MINOR_VERSION",
+			"name": "DXP Minor Version"
+		},
+		{
+			"externalReferenceCode": "HIGH_PRIORITY_CONTACTS_CATEGORY",
+			"listTypeEntries": [
+				{
+					"externalReferenceCode": "CRITICAL_INCIDENT",
+					"key": "criticalIncident",
+					"name": "Critical Incident",
+					"name_i18n": {
+						"en-US": "Critical Incident"
+					}
+				},
+				{
+					"externalReferenceCode": "PRIVACY_BREACH",
+					"key": "privacyBreach",
+					"name": "Privacy Breach",
+					"name_i18n": {
+						"en-US": "Privacy Breach"
+					}
+				},
+				{
+					"externalReferenceCode": "SECURITY_BREACH",
+					"key": "securityBreach",
+					"name": "Security Breach",
+					"name_i18n": {
+						"en-US": "Security Breach"
+					}
+				}
+			],
+			"name": "High Priority Contacts Category"
+		},
+		{
+			"externalReferenceCode": "LXC_PRIMARY_REGION",
+			"listTypeEntries": [
+				{
+					"externalReferenceCode": "ASIA_PACIFIC",
+					"key": "asiaPacific",
+					"name": "Asia Pacific",
+					"name_i18n": {
+						"en-US": "Asia Pacific",
+						"es-ES": "Asia-Pacífico",
+						"ja-JP": "アジア太平洋",
+						"pt-BR": "Ásia-Pacífico"
+					}
+				},
+				{
+					"externalReferenceCode": "EAST_ASIA",
+					"key": "eastAsia",
+					"name": "East Asia",
+					"name_i18n": {
+						"en-US": "East Asia",
+						"es-ES": "Asia Oriental",
+						"ja-JP": "東アジア",
+						"pt-BR": "Leste Asiático"
+					}
+				},
+				{
+					"externalReferenceCode": "EUROPE",
+					"key": "europe",
+					"name": "Europe",
+					"name_i18n": {
+						"en-US": "Europe",
+						"es-ES": "Europa",
+						"ja-JP": "欧州",
+						"pt-BR": "Europa"
+					}
+				},
+				{
+					"externalReferenceCode": "NORTH_AMERICA",
+					"key": "northAmerica",
+					"name": "North America",
+					"name_i18n": {
+						"en-US": "North America",
+						"es-ES": "América del Norte",
+						"ja-JP": "北米",
+						"pt-BR": "América do Norte"
+					}
+				},
+				{
+					"externalReferenceCode": "SAUDI_ARABIA",
+					"key": "saudiArabia",
+					"name": "Saudi Arabia",
+					"name_i18n": {
+						"en-US": "Saudi Arabia",
+						"es-ES": "Arabia Saudí",
+						"ja-JP": "サウジアラビア",
+						"pt-BR": "Arábia Saudita"
+					}
+				},
+				{
+					"externalReferenceCode": "SOUTH_AMERICA",
+					"key": "southAmerica",
+					"name": "South America",
+					"name_i18n": {
+						"en-US": "South America",
+						"es-ES": "América del Sur",
+						"ja-JP": "南米",
+						"pt-BR": "América do Sul"
+					}
+				}
+			],
+			"name": "LXC Primary Region"
+		},
+		{
+			"externalReferenceCode": "PURPOSE_OF_COMPLIMENTARY_KEY",
+			"listTypeEntries": [
+				{
+					"externalReferenceCode": "UPGRADE_TESTING",
+					"key": "upgradeTesting",
+					"name": "Upgrade testing",
+					"name_i18n": {
+						"en-US": "Upgrade testing"
+					}
+				},
+				{
+					"externalReferenceCode": "LOAD_TESTING",
+					"key": "loadTesting",
+					"name": "Load testing",
+					"name_i18n": {
+						"en-US": "Load testing"
+					}
+				},
+				{
+					"externalReferenceCode": "INSTANCE_SIZING_INCREASE",
+					"key": "instanceSizingIncrease",
+					"name": "Instance sizing increase",
+					"name_i18n": {
+						"en-US": "Instance sizing increase"
+					}
+				}
+			],
+			"name": "Purpose of Complimentary Key"
+		},
+		{
+			"externalReferenceCode": "SUPPORT_REGION",
+			"listTypeEntries": [
+				{
+					"externalReferenceCode": "ASIA_PACIFIC",
+					"key": "asiaPacific",
+					"name": "Asia Pacific",
+					"name_i18n": {
+						"en-US": "Asia Pacific"
+					}
+				},
+				{
+					"externalReferenceCode": "AUSTRALIA_NEW_ZEALAND",
+					"key": "australiaNewZealand",
+					"name": "Australia & New Zealand",
+					"name_i18n": {
+						"en-US": "Australia & New Zealand"
+					}
+				},
+				{
+					"externalReferenceCode": "EUROPE_MIDDLE_EAST_AFRICA",
+					"key": "europeMiddleEastAfrica",
+					"name": "Europe, Middle East & Africa",
+					"name_i18n": {
+						"en-US": "Europe, Middle East & Africa"
+					}
+				},
+				{
+					"externalReferenceCode": "LATIN_AMERICA",
+					"key": "latinAmerica",
+					"name": "Latin America",
+					"name_i18n": {
+						"en-US": "Latin America"
+					}
+				},
+				{
+					"externalReferenceCode": "NORTH_AMERICA",
+					"key": "northAmerica",
+					"name": "North America",
+					"name_i18n": {
+						"en-US": "North America"
+					}
+				},
+				{
+					"externalReferenceCode": "SOUTH_ASIA",
+					"key": "southAsia",
+					"name": "South Asia",
+					"name_i18n": {
+						"en-US": "South Asia"
+					}
+				},
+				{
+					"externalReferenceCode": "SPAIN_PORTUGAL",
+					"key": "spainPortugal",
+					"name": "Spain & Portugal",
+					"name_i18n": {
+						"en-US": "Spain & Portugal"
+					}
+				}
+			],
+			"name": "Support Region"
+		},
+		{
+			"externalReferenceCode": "TYPE_OF_SERVER",
+			"listTypeEntries": [
+				{
+					"externalReferenceCode": "BACKUP",
+					"key": "backup",
+					"name": "Backup",
+					"name_i18n": {
+						"en-US": "Backup"
+					}
+				},
+				{
+					"externalReferenceCode": "NON_PRODUCTION",
+					"key": "nonProduction",
+					"name": "Non-Production",
+					"name_i18n": {
+						"en-US": "Non-Production"
+					}
+				},
+				{
+					"externalReferenceCode": "PRODUCTION",
+					"key": "production",
+					"name": "Production",
+					"name_i18n": {
+						"en-US": "Production"
+					}
+				}
+			],
+			"name": "Type of Server"
+		},
+		{
+			"externalReferenceCode": "UTC_TIME_ZONES",
+			"listTypeEntries": [
+				{
+					"externalReferenceCode": "UTC_MINUS12",
+					"key": "utcMinus12",
+					"name": "UTC-12",
+					"name_i18n": {
+						"en-US": "UTC-12"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_MINUS11",
+					"key": "utcMinus11",
+					"name": "UTC-11",
+					"name_i18n": {
+						"en-US": "UTC-11"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_MINUS10",
+					"key": "utcMinus10",
+					"name": "UTC-10",
+					"name_i18n": {
+						"en-US": "UTC-10"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_MINUS9",
+					"key": "utcMinus9",
+					"name": "UTC-9",
+					"name_i18n": {
+						"en-US": "UTC-9"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_MINUS8",
+					"key": "utcMinus8",
+					"name": "UTC-8",
+					"name_i18n": {
+						"en-US": "UTC-8"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_MINUS7",
+					"key": "utcMinus7",
+					"name": "UTC-7",
+					"name_i18n": {
+						"en-US": "UTC-7"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_MINUS6",
+					"key": "utcMinus6",
+					"name": "UTC-6",
+					"name_i18n": {
+						"en-US": "UTC-6"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_MINUS5",
+					"key": "utcMinus5",
+					"name": "UTC-5",
+					"name_i18n": {
+						"en-US": "UTC-5"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_MINUS4",
+					"key": "utcMinus4",
+					"name": "UTC-4",
+					"name_i18n": {
+						"en-US": "UTC-4"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_MINUS3",
+					"key": "utcMinus3",
+					"name": "UTC-3",
+					"name_i18n": {
+						"en-US": "UTC-3"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_MINUS2",
+					"key": "utcMinus2",
+					"name": "UTC-2",
+					"name_i18n": {
+						"en-US": "UTC-2"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_MINUS1",
+					"key": "utcMinus1",
+					"name": "UTC-1",
+					"name_i18n": {
+						"en-US": "UTC-1"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_PLUS0",
+					"key": "utcPlus0",
+					"name": "UTC+0",
+					"name_i18n": {
+						"en-US": "UTC+0"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_PLUS1",
+					"key": "utcPlus1",
+					"name": "UTC+1",
+					"name_i18n": {
+						"en-US": "UTC+1"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_PLUS2",
+					"key": "utcPlus2",
+					"name": "UTC+2",
+					"name_i18n": {
+						"en-US": "UTC+2"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_PLUS3",
+					"key": "utcPlus3",
+					"name": "UTC+3",
+					"name_i18n": {
+						"en-US": "UTC+3"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_PLUS4",
+					"key": "utcPlus4",
+					"name": "UTC+4",
+					"name_i18n": {
+						"en-US": "UTC+4"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_PLUS5",
+					"key": "utcPlus5",
+					"name": "UTC+5",
+					"name_i18n": {
+						"en-US": "UTC+5"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_PLUS6",
+					"key": "utcPlus6",
+					"name": "UTC+6",
+					"name_i18n": {
+						"en-US": "UTC+6"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_PLUS7",
+					"key": "utcPlus7",
+					"name": "UTC+7",
+					"name_i18n": {
+						"en-US": "UTC+7"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_PLUS8",
+					"key": "utcPlus8",
+					"name": "UTC+8",
+					"name_i18n": {
+						"en-US": "UTC+8"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_PLUS9",
+					"key": "utcPlus9",
+					"name": "UTC+9",
+					"name_i18n": {
+						"en-US": "UTC+9"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_PLUS10",
+					"key": "utcPlus10",
+					"name": "UTC+10",
+					"name_i18n": {
+						"en-US": "UTC+10"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_PLUS11",
+					"key": "utcPlus11",
+					"name": "UTC+11",
+					"name_i18n": {
+						"en-US": "UTC+11"
+					}
+				},
+				{
+					"externalReferenceCode": "UTC_PLUS12",
+					"key": "utcPlus12",
+					"name": "UTC+12",
+					"name_i18n": {
+						"en-US": "UTC+12"
+					}
+				}
+			],
+			"name": "UTC Time Zones"
+		},
+		{
+			"externalReferenceCode": "VERSION_OF_LIFERAY_SOFTWARE",
+			"listTypeEntries": [
+				{
+					"externalReferenceCode": "LIFERAY_PORTAL51",
+					"key": "liferayPortal51",
+					"name": "Liferay Portal 5.1",
+					"name_i18n": {
+						"en-US": "Liferay Portal 5.1"
+					}
+				},
+				{
+					"externalReferenceCode": "LIFERAY_PORTAL52",
+					"key": "liferayPortal52",
+					"name": "Liferay Portal 5.2",
+					"name_i18n": {
+						"en-US": "Liferay Portal 5.2"
+					}
+				},
+				{
+					"externalReferenceCode": "LIFERAY_PORTAL60",
+					"key": "liferayPortal60",
+					"name": "Liferay Portal 6.0",
+					"name_i18n": {
+						"en-US": "Liferay Portal 6.0"
+					}
+				},
+				{
+					"externalReferenceCode": "LIFERAY_PORTAL61",
+					"key": "liferayPortal61",
+					"name": "Liferay Portal 6.1",
+					"name_i18n": {
+						"en-US": "Liferay Portal 6.1"
+					}
+				},
+				{
+					"externalReferenceCode": "LIFERAY_PORTAL62",
+					"key": "liferayPortal62",
+					"name": "Liferay Portal 6.2",
+					"name_i18n": {
+						"en-US": "Liferay Portal 6.2"
+					}
+				},
+				{
+					"externalReferenceCode": "LIFERAY_DXP70",
+					"key": "liferayDXP70",
+					"name": "Liferay DXP 7.0",
+					"name_i18n": {
+						"en-US": "Liferay DXP 7.0"
+					}
+				},
+				{
+					"externalReferenceCode": "LIFERAY_DXP71",
+					"key": "liferayDXP71",
+					"name": "Liferay DXP 7.1",
+					"name_i18n": {
+						"en-US": "Liferay DXP 7.1"
+					}
+				},
+				{
+					"externalReferenceCode": "LIFERAY_DXP72",
+					"key": "liferayDXP72",
+					"name": "Liferay DXP 7.2",
+					"name_i18n": {
+						"en-US": "Liferay DXP 7.2"
+					}
+				},
+				{
+					"externalReferenceCode": "LIFERAY_DXP73",
+					"key": "liferayDXP73",
+					"name": "Liferay DXP 7.3",
+					"name_i18n": {
+						"en-US": "Liferay DXP 7.3"
+					}
+				},
+				{
+					"externalReferenceCode": "LIFERAY_DXP74",
+					"key": "liferayDXP74",
+					"name": "Liferay DXP 7.4",
+					"name_i18n": {
+						"en-US": "Liferay DXP 7.4"
+					}
+				}
+			],
+			"name": "Version of Liferay Software"
+		}
+	]
+}

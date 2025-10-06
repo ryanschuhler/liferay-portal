@@ -1,0 +1,79 @@
+{
+	"configuration": {
+		"className": "com.liferay.headless.admin.user.dto.v1_0.Role",
+		"parameters": {
+			"createStrategy": "UPSERT",
+			"importStrategy": "ON_ERROR_CONTINUE"
+		}
+	},
+	"items": [
+		{
+			"name": "Article Admin",
+			"type": 2
+		},
+		{
+			"name": "Critical Incident Contact",
+			"type": 6
+		},
+		{
+			"name": "Customer",
+			"type": 1
+		},
+		{
+			"name": "Data Breach Contact",
+			"type": 6
+		},
+		{
+			"name": "Documentation Admin",
+			"type": 2
+		},
+		{
+			"name": "Liferay Staff",
+			"type": 1
+		},
+		{
+			"name": "Partner",
+			"type": 1
+		},
+		{
+			"name": "Partner Manager",
+			"type": 6
+		},
+		{
+			"name": "Partner Marketing User",
+			"type": 6
+		},
+		{
+			"name": "Partner Member",
+			"type": 6
+		},
+		{
+			"name": "Partner Sales User",
+			"type": 6
+		},
+		{
+			"name": "Partner Technical User",
+			"type": 6
+		},
+		{
+			"name": "Provisioning",
+			"type": 6
+		},
+		{
+			"name": "Provisioning Admin",
+			"type": 1
+		},
+		{
+			"name": "Provisioning Member",
+			"type": 1
+		},
+		{
+			"name": "Requester",
+			"type": 6
+		},
+		{
+			"name": "Security Incident Contact",
+			"type": 6
+		}
+	]
+}

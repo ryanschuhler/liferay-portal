@@ -1,0 +1,714 @@
+{
+	"configuration": {
+		"className": "com.liferay.headless.admin.taxonomy.rest.dto.v1_0.TaxonomyCategory",
+		"parameters": {
+			"createStrategy": "UPSERT",
+			"importStrategy": "ON_ERROR_CONTINUE"
+		}
+	},
+	"items": [
+		{
+			"name": "Customer Portal Help",
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Administration",
+			"parentTaxonomyCategory": {
+				"name": "Customer Portal Help"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Cloud Activation",
+			"parentTaxonomyCategory": {
+				"name": "Customer Portal Help"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "visible",
+					"value": "false"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "DXP Activation",
+			"parentTaxonomyCategory": {
+				"name": "Customer Portal Help"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"description_i18n": {
+				"en_US": "<p>Whether you are part of a brand new project which is just starting or you are now joining an already existing project, this article is for you! Follow along to learn how to access, activate and make the most of your Liferay Support resources.</p>",
+				"es_ES": "<p>Tanto si eres parte de un proyecto que acaba de empezar como si te has unido a uno ya existente, este artículo es para ti. Continúa para saber cómo acceder, activar y sacar lo máximo de los recursos de Soporte de Liferay.</p>",
+				"ja_JP": "<p>開始したばかりの新しいプロジェクトに参加している方も、既存のプロジェクトに参加している方も、こちらの記事をぜひご覧ください。Liferayサポートリソースへのアクセス、アクティベーション、ベストな活用方法などをご紹介します。</p>",
+				"pt_BR": "<p>Quer você esteja participando de um projeto totalmente novo que está apenas começando, ou esteja ingressando agora em um projeto já existente, este artigo é para você! Acompanhe para aprender como acessar, ativar e aproveitar ao máximo os seus recursos do Liferay Support.</p>"
+			},
+			"name": "Getting Started",
+			"parentTaxonomyCategory": {
+				"name": "Customer Portal Help"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Admin",
+			"parentTaxonomyCategory": {
+				"name": "Getting Started"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "subtitle",
+					"value": "a-setup-guide-to-empower-yourself-and-your-team"
+				},
+				{
+					"key": "thumbnail",
+					"value": "[$DOCUMENT_URL:/site-initializer/documents/group/assets/admin.svg$]"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "New Users",
+			"parentTaxonomyCategory": {
+				"name": "Getting Started"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "subtitle",
+					"value": "customer-portal-first-steps-for-non-admin-and-non-partner-users"
+				},
+				{
+					"key": "thumbnail",
+					"value": "[$DOCUMENT_URL:/site-initializer/documents/group/assets/new_users.svg$]"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Partners",
+			"parentTaxonomyCategory": {
+				"name": "Getting Started"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "subtitle",
+					"value": "team-setup-and-activation-management-for-you-and-your-customers"
+				},
+				{
+					"key": "thumbnail",
+					"value": "[$DOCUMENT_URL:/site-initializer/documents/group/assets/partners.svg$]"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Team Members",
+			"parentTaxonomyCategory": {
+				"name": "Customer Portal Help"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Customer Portal Updates",
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Events",
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Liferay Enterprise Search",
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Release Notes",
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Liferay Cloud Infrastructure",
+			"parentTaxonomyCategory": {
+				"name": "Release Notes"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Platform Changelog",
+			"parentTaxonomyCategory": {
+				"name": "Liferay Cloud Infrastructure"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Services Changelog",
+			"parentTaxonomyCategory": {
+				"name": "Liferay Cloud Infrastructure"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Security",
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Security Alert",
+			"parentTaxonomyCategory": {
+				"name": "Security"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Services and Compatibility",
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Compatibility Matrix",
+			"parentTaxonomyCategory": {
+				"name": "Services and Compatibility"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "subtitle",
+					"value": "supported-configurations-for-major-liferay-products-and-releases"
+				},
+				{
+					"key": "thumbnail",
+					"value": "[$DOCUMENT_URL:/site-initializer/documents/group/assets/compatibility_matrix.svg$]"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Patching and Release",
+			"parentTaxonomyCategory": {
+				"name": "Services and Compatibility"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "visible",
+					"value": "false"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Search Compatibility",
+			"parentTaxonomyCategory": {
+				"name": "Services and Compatibility"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "subtitle",
+					"value": "search-engine-compatibility-by-product-and-version"
+				},
+				{
+					"key": "thumbnail",
+					"value": "[$DOCUMENT_URL:/site-initializer/documents/group/assets/search_compatibility.svg$]"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Service Levels",
+			"parentTaxonomyCategory": {
+				"name": "Services and Compatibility"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "subtitle",
+					"value": "benefits-included-with-each-subscription-service-level"
+				},
+				{
+					"key": "thumbnail",
+					"value": "[$DOCUMENT_URL:/site-initializer/documents/group/assets/service_levels.svg$]"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Support FAQs",
+			"parentTaxonomyCategory": {
+				"name": "Services and Compatibility"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "subtitle",
+					"value": "quick-answers-and-resources-to-common-support-questions"
+				},
+				{
+					"key": "thumbnail",
+					"value": "[$DOCUMENT_URL:/site-initializer/documents/group/assets/support_faq.svg$]"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Before Opening",
+			"parentTaxonomyCategory": {
+				"name": "Support FAQs"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "General",
+			"parentTaxonomyCategory": {
+				"name": "Support FAQs"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Product Delivery",
+			"parentTaxonomyCategory": {
+				"name": "Support FAQs"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Support Language Matrix",
+			"parentTaxonomyCategory": {
+				"name": "Services and Compatibility"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "subtitle",
+					"value": "designated-languages-and-channels-for-liferay-support"
+				},
+				{
+					"key": "thumbnail",
+					"value": "[$DOCUMENT_URL:/site-initializer/documents/group/assets/support_language_matrix.svg$]"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "DXP Support Coverage",
+			"parentTaxonomyCategory": {
+				"name": "Support Coverage"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "display-layout",
+					"value": "list"
+				},
+				{
+					"key": "thumbnail",
+					"value": "[$DOCUMENT_URL:/site-initializer/documents/group/assets/dxp_support_coverage.svg$]"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Not Supported",
+			"parentTaxonomyCategory": {
+				"name": "DXP Support Coverage"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "background-image",
+					"value": "[$DOCUMENT_URL:/site-initializer/documents/group/assets/not_supported.png$]"
+				},
+				{
+					"key": "icon-name",
+					"value": "times-circle"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Architectural Assistance",
+			"parentTaxonomyCategory": {
+				"name": "Not Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Beta Feature",
+			"parentTaxonomyCategory": {
+				"name": "Not Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Code Development",
+			"parentTaxonomyCategory": {
+				"name": "Not Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Customization",
+			"parentTaxonomyCategory": {
+				"name": "Not Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Hardware and Performance",
+			"parentTaxonomyCategory": {
+				"name": "Not Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Interoperable Technologies",
+			"parentTaxonomyCategory": {
+				"name": "Not Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "New Feature Implementation",
+			"parentTaxonomyCategory": {
+				"name": "Not Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Third-Party Technology",
+			"parentTaxonomyCategory": {
+				"name": "Not Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Supported",
+			"parentTaxonomyCategory": {
+				"name": "DXP Support Coverage"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "background-image",
+					"value": "[$DOCUMENT_URL:/site-initializer/documents/group/assets/supported.png$]"
+				},
+				{
+					"key": "icon-name",
+					"value": "check-circle"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Application Servers",
+			"parentTaxonomyCategory": {
+				"name": "Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Configuration",
+			"parentTaxonomyCategory": {
+				"name": "Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Databases",
+			"parentTaxonomyCategory": {
+				"name": "Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Installation",
+			"parentTaxonomyCategory": {
+				"name": "Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Liferay Docker Images",
+			"parentTaxonomyCategory": {
+				"name": "Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Liferay Documentation",
+			"parentTaxonomyCategory": {
+				"name": "Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Maintenance Mode and Deprecation",
+			"parentTaxonomyCategory": {
+				"name": "Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Operating Systems",
+			"parentTaxonomyCategory": {
+				"name": "Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Product Defects",
+			"parentTaxonomyCategory": {
+				"name": "Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Upgrades",
+			"parentTaxonomyCategory": {
+				"name": "Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Usage",
+			"parentTaxonomyCategory": {
+				"name": "Supported"
+			},
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Liferay Cloud Platform",
+			"parentTaxonomyCategory": {
+				"name": "Support Coverage"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "visible",
+					"value": "false"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "PaaS Support Coverage",
+			"parentTaxonomyCategory": {
+				"name": "Support Coverage"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "thumbnail",
+					"value": "[$DOCUMENT_URL:/site-initializer/documents/group/assets/paas_support_coverage.svg$]"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "SaaS Support Coverage",
+			"parentTaxonomyCategory": {
+				"name": "Support Coverage"
+			},
+			"taxonomyCategoryProperties": [
+				{
+					"key": "thumbnail",
+					"value": "[$DOCUMENT_URL:/site-initializer/documents/group/assets/saas_support_coverage.svg$]"
+				}
+			],
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Support Policy Knowledge Base",
+			"taxonomyVocabularyExternalReferenceCode": "ARTICLE-CATEGORIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"description": "Non supported, experimental feature, that may be disabled by default, so that customers can activate it proactively.",
+			"name": "Beta",
+			"taxonomyVocabularyExternalReferenceCode": "FEATURE-AVAILABILITY",
+			"viewableBy": "Anyone"
+		},
+		{
+			"description": "Partially supported, enabled for existing customers, disabled by default for new customers and users.",
+			"name": "Deprecated",
+			"taxonomyVocabularyExternalReferenceCode": "FEATURE-AVAILABILITY",
+			"viewableBy": "Anyone"
+		},
+		{
+			"description": "OOTB, Enabled by default, can't be disabled",
+			"name": "Generally Available (aka OOTB)",
+			"taxonomyVocabularyExternalReferenceCode": "FEATURE-AVAILABILITY",
+			"viewableBy": "Anyone"
+		},
+		{
+			"description": "Supported feature, available OOTB, that is not being actively evolved or improved.",
+			"name": "Maintenance",
+			"taxonomyVocabularyExternalReferenceCode": "FEATURE-AVAILABILITY",
+			"viewableBy": "Anyone"
+		},
+		{
+			"description": "Non supported, experimental feature, that can be activated upon request for specific customers and scenarios.",
+			"name": "Private Beta",
+			"taxonomyVocabularyExternalReferenceCode": "FEATURE-AVAILABILITY",
+			"viewableBy": "Anyone"
+		},
+		{
+			"description": "Fully supported feature, disabled by default. Customers can activate it proactively.",
+			"name": "Release Flag (opt-in)",
+			"taxonomyVocabularyExternalReferenceCode": "FEATURE-AVAILABILITY",
+			"viewableBy": "Anyone"
+		},
+		{
+			"description": "Not included in product.",
+			"name": "Removed",
+			"taxonomyVocabularyExternalReferenceCode": "FEATURE-AVAILABILITY",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Cloud",
+			"taxonomyVocabularyExternalReferenceCode": "PRODUCT-CAPABILITIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Commerce",
+			"taxonomyVocabularyExternalReferenceCode": "PRODUCT-CAPABILITIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Content Management System (CMS)",
+			"taxonomyVocabularyExternalReferenceCode": "PRODUCT-CAPABILITIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Dev Tools",
+			"taxonomyVocabularyExternalReferenceCode": "PRODUCT-CAPABILITIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Digital Asset Management (DAM)",
+			"taxonomyVocabularyExternalReferenceCode": "PRODUCT-CAPABILITIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Integration",
+			"taxonomyVocabularyExternalReferenceCode": "PRODUCT-CAPABILITIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Personalization",
+			"taxonomyVocabularyExternalReferenceCode": "PRODUCT-CAPABILITIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Platform",
+			"taxonomyVocabularyExternalReferenceCode": "PRODUCT-CAPABILITIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Search",
+			"taxonomyVocabularyExternalReferenceCode": "PRODUCT-CAPABILITIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Security",
+			"taxonomyVocabularyExternalReferenceCode": "PRODUCT-CAPABILITIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "Sites",
+			"taxonomyVocabularyExternalReferenceCode": "PRODUCT-CAPABILITIES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "2024.Q1 Release",
+			"taxonomyVocabularyExternalReferenceCode": "QUARTERLY-RELEASES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"name": "2024.Q2 Release",
+			"taxonomyVocabularyExternalReferenceCode": "QUARTERLY-RELEASES",
+			"viewableBy": "Anyone"
+		},
+		{
+			"description": "Non supported, experimental feature, that may be disabled by default, so that customers can activate it proactively.",
+			"name": "Beta",
+			"taxonomyVocabularyExternalReferenceCode": "RELEASES-STATUS-PREVIOUS",
+			"viewableBy": "Anyone"
+		},
+		{
+			"description": "Partially supported, enabled for existing customers, disabled by default for new customers and users.",
+			"name": "Deprecated",
+			"taxonomyVocabularyExternalReferenceCode": "RELEASES-STATUS-PREVIOUS",
+			"viewableBy": "Anyone"
+		},
+		{
+			"description": "OOTB, Enabled by default, can't be disabled",
+			"name": "Generally Available (aka OOTB)",
+			"taxonomyVocabularyExternalReferenceCode": "RELEASES-STATUS-PREVIOUS",
+			"viewableBy": "Anyone"
+		},
+		{
+			"description": "Supported feature, available OOTB, that is not being actively evolved or improved.",
+			"name": "Maintenance",
+			"taxonomyVocabularyExternalReferenceCode": "RELEASES-STATUS-PREVIOUS",
+			"viewableBy": "Anyone"
+		},
+		{
+			"description": "Non supported, experimental feature, that can be activated upon request for specific customers and scenarios.",
+			"name": "Private Beta",
+			"taxonomyVocabularyExternalReferenceCode": "RELEASES-STATUS-PREVIOUS",
+			"viewableBy": "Anyone"
+		},
+		{
+			"description": "Fully supported feature, disabled by default. Customers can activate it proactively.",
+			"name": "Release Flag (opt-in)",
+			"taxonomyVocabularyExternalReferenceCode": "RELEASES-STATUS-PREVIOUS",
+			"viewableBy": "Anyone"
+		},
+		{
+			"description": "Not included in product.",
+			"name": "Removed",
+			"taxonomyVocabularyExternalReferenceCode": "RELEASES-STATUS-PREVIOUS",
+			"viewableBy": "Anyone"
+		}
+	]
+}
