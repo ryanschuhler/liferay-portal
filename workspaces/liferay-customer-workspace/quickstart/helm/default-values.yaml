@@ -1,0 +1,20 @@
+cx:
+    liferay-customer-custom-element:
+        enabled: true
+    liferay-customer-etc-spring-boot:
+        enabled: true
+    liferay-customer-global-css:
+        enabled: true
+    liferay-customer-instance-settings:
+        enabled: true
+    maildev:
+        enabled: true
+dxp:
+    elasticsearch:
+        enabled: true
+    ingress:
+        enabled: true
+    liferay:
+        enabled: true
+    postgresql:
+        enabled: true

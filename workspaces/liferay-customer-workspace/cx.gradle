@@ -1,0 +1,98 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
+
+project(':client-extensions').subprojects {
+	afterEvaluate {
+		project.tasks.named('createClientExtensionConfig').configure {
+			doLast {
+				def jsonConfigFile = project.layout.buildDirectory.file("liferay-client-extension-build/${project.name}.client-extension-config.json").get().asFile
+
+				if (!jsonConfigFile.exists()) {
+					def clientExtensionYaml = project.file("client-extension.yaml")
+					if (clientExtensionYaml.exists()) {
+						println "Generating JSON config from client-extension.yaml for ${project.name}"
+						def yamlContent = clientExtensionYaml.text
+
+						def json = new groovy.json.JsonBuilder(new org.yaml.snakeyaml.Yaml().load(yamlContent)).toPrettyString()
+
+						jsonConfigFile.parentFile.mkdirs()
+						jsonConfigFile.text = json
+					} else {
+						println "Warning: Neither generated JSON config nor client-extension.yaml found for ${project.name}. Skipping config generation."
+						return
+					}
+				}
+
+				if (jsonConfigFile.exists()) {
+					def jsonContent = jsonConfigFile.text
+					def yamlOutputFile = rootProject.file("quickstart/helm/cx/${project.name}-config-values.yaml")
+
+					def indentedJsonContent = jsonContent.lines().collect { "\s\s\s\s\s\s\s\s\s\s\s\s" + it }.join("\n")
+					def finalYamlContent = "clientExtensionConfig:\n"
+					finalYamlContent += "\s\s\s\sconfigJsons:\n"
+					finalYamlContent += "\s\s\s\s\s\s\s\s- |\n"
+					finalYamlContent += "${indentedJsonContent}"
+
+					yamlOutputFile.text = finalYamlContent
+					println "Generated ${yamlOutputFile.name} for ${project.name}"
+				} else {
+					println "Warning: JSON config file not found after generation attempt for ${project.name}. Skipping YAML conversion."
+				}
+			}
+		}
+
+		if (project.tasks.findByName('buildDockerImage')) {
+			buildDockerImage {
+				images.add("${project.name}:latest")
+			}
+
+			task tagDockerImage(type: DockerTagImage) {
+				imageId = "${project.name}"
+				tag = "latest"
+				repository = "localhost:5000/${project.name}"
+				dependsOn tasks["buildDockerImage"]
+			}
+
+			task pushDockerImage(type: DockerPushImage) {
+				images = ["localhost:5000/${project.name}:latest"]
+				dependsOn tasks["tagDockerImage"]
+			}
+
+			def generatedFileName = "cx-values.yaml"
+			def generatedFilePath = layout.buildDirectory.file("liferay-client-extension-build/${generatedFileName}").get().asFile
+
+			task helmDeploy(type: Exec) {
+				commandLine(
+					'helm',
+					'upgrade',
+					'--install',
+					'--namespace',
+					'liferay-system',
+					project.name + "-cx",
+					'-f',
+					project.layout.buildDirectory.file("./liferay-client-extension-build/cx-values.yaml").get(),
+					'--set',
+					"image.repository=registry:5000/${project.name}",
+					'--set',
+					"image.tag=latest}",
+					rootProject.file('../../../resources/charts/client-extension')
+				)
+				ignoreExitValue = true
+
+				dependsOn tasks["pushDockerImage"]
+			}
+
+			task helmUndeploy(type: Exec) {
+				commandLine(
+					'helm',
+					'uninstall',
+					'--namespace',
+					'liferay-system',
+					'--ignore-not-found',
+					project.name + "-cx",
+				)
+				ignoreExitValue = true
+			}
+		}
+	}
+}
