@@ -1,0 +1,34 @@
+clientExtensionConfig:
+    configJsons:
+        - |
+            {
+                "com.liferay.oauth2.provider.configuration.OAuth2ProviderApplicationHeadlessServerConfiguration~liferay-customer-site-initializer-oahs" : {
+                    ".serviceAddress" : "localhost:8080",
+                    ".serviceScheme" : "http",
+                    ":configurator:policy" : "force",
+                    "baseURL" : "${portalURL}/o/liferay-customer-site-initializer",
+                    "buildTimestamp" : 1764003654004,
+                    "description" : "",
+                    "dxp.lxc.liferay.com.virtualInstanceId" : "default",
+                    "homePageURL" : "$[conf:.serviceScheme]://$[conf:.serviceAddress]",
+                    "name" : "Liferay Customer Site Initializer OAuth Application Headless Server",
+                    "projectId" : "liferaycustomersiteinitializer",
+                    "projectName" : "liferay-customer-site-initializer",
+                    "properties" : [ ],
+                    "scopes" : [ "c_accountflag.everything", "c_accountsubscription.everything", "c_accountsubscriptiongroup.everything", "c_accountsubscriptionterm.everything", "c_admindxpcloud.everything", "c_adminliferayexperiencecloud.everything", "c_analyticscloudworkspace.everything", "c_bannedemaildomain.everything", "c_dxpcloudenvironment.everything", "c_incidentreportcontactanalyticscloud.everything", "c_koroneikiaccount.everything", "c_liferayexperiencecloudenvironment.everything", "Liferay.Headless.Admin.User.everything", "Liferay.Headless.Commerce.Admin.Catalog.everything", "Liferay.Headless.Commerce.Admin.Channel.everything", "Liferay.Headless.Commerce.Admin.Order.everything", "Liferay.Headless.Site.everything" ],
+                    "sourceCodeURL" : "",
+                    "type" : "oAuthApplicationHeadlessServer",
+                    "typeSettings" : [ ".serviceScheme=http", "scopes=c_accountflag.everything\nc_accountsubscription.everything\nc_accountsubscriptiongroup.everything\nc_accountsubscriptionterm.everything\nc_admindxpcloud.everything\nc_adminliferayexperiencecloud.everything\nc_analyticscloudworkspace.everything\nc_bannedemaildomain.everything\nc_dxpcloudenvironment.everything\nc_incidentreportcontactanalyticscloud.everything\nc_koroneikiaccount.everything\nc_liferayexperiencecloudenvironment.everything\nLiferay.Headless.Admin.User.everything\nLiferay.Headless.Commerce.Admin.Catalog.everything\nLiferay.Headless.Commerce.Admin.Channel.everything\nLiferay.Headless.Commerce.Admin.Order.everything\nLiferay.Headless.Site.everything", ".serviceAddress=localhost:8080" ],
+                    "webContextPath" : "/liferay-customer-site-initializer"
+                }
+            }
+    kind: Job
+    mainDomain: "siteinitializer.localtest.me"
+    mountInitConfig: true
+    setupMainDomainOnCoreDNS: true
+    virtualInstanceId: "cp.dxp.localtest.me"
+env:
+    LIFERAY_BATCH_CURL_OPTIONS: "-v"
+    LIFERAY_BATCH_OAUTH_APP_ERC: liferay-customer-site-initializer-oahs
+image:
+    repository: liferay-customer-site-initializer

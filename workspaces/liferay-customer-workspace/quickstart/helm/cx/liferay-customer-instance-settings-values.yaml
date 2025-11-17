@@ -1,0 +1,22 @@
+clientExtensionConfig:
+    configJsons:
+        -   |
+                {
+                    "com.liferay.fragment.configuration.FragmentServiceConfiguration.scoped~liferay-customer-instance-settings-a1u6w3" : {
+                        ":configurator:policy" : "force",
+                        "baseURL" : "${portalURL}/o/liferay-customer-instance-settings",
+                        "buildTimestamp" : 1758929838169,
+                        "description" : "",
+                        "dxp.lxc.liferay.com.virtualInstanceId" : "default",
+                        "name" : "Liferay Customer Instance Settings Fragment Service",
+                        "projectId" : "liferaycustomerinstancesettings",
+                        "projectName" : "liferay-customer-instance-settings",
+                        "propagateChanges" : true,
+                        "properties" : [],
+                        "sourceCodeURL" : "",
+                        "type" : "instanceSettings",
+                        "typeSettings" : ["propagateChanges=true"],
+                        "webContextPath" : "/liferay-customer-instance-settings"
+                    }
+                }
+    virtualInstanceId: cp.dxp.localtest.me

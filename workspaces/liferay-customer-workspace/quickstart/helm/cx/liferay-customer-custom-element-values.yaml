@@ -1,0 +1,31 @@
+clientExtensionConfig:
+    configJsons:
+        -   |
+            {
+                "com.liferay.client.extension.type.configuration.CETConfiguration~liferay-customer-custom-element" : {
+                    ":configurator:policy" : "force",
+                    "baseURL" : "${portalURL}/o/liferay-customer-custom-element",
+                    "buildTimestamp" : 1759177300959,
+                    "description" : "",
+                    "dxp.lxc.liferay.com.virtualInstanceId" : "default",
+                    "name" : "Liferay Customer Custom Element",
+                    "projectId" : "liferaycustomercustomelement",
+                    "projectName" : "liferay-customer-custom-element",
+                    "properties" : ["about-the-overview-page-url=https://support.liferay.com/w/about-the-overview-page-video-tutorial", "account-settings-url=https://liferay.okta.com/enduser/settings", "article-deactivate-key-url=https://support.liferay.com/w/how-do-i-manage-my-activation-keys-when-upgrading-or-replacing-servers", "article-deploying-activation-keys-url=https://learn.liferay.com/w/dxp/installation-and-upgrades/setting-up-liferay/activating-liferay-dxp", "article-getting-started-with-liferay-enterprise-search-url=https://support.liferay.com/w/les-getting-started-with-liferay-enterprise-search", "article-notified-when-my-activation-key-is-about-to-expire-url=https://support.liferay.com/w/how-do-i-receive-notifications-when-my-activation-keys-are-about-to-expire", "article-what-is-my-instance-sizing-value-url=https://support.liferay.com/w/activation-keys-faq-for-liferay-dxp-and-liferay-commerce#h_01H3YAFQ7B5H1ZHCXZX7E64SJ1", "create-ticket-url=https://liferay-sandbox-424.atlassian.net/servicedesk/customer/portals", "feature-flags=ISSD-100,ISSD-119,ISSD-78,LPS-148342,LPS-148366,LPS-159127,LPS-159359,LPS-180001,LPS-181031,LPS-185004,LPS-185063,LPS-186175,LPS-187767,LPS-191380,LPS-192494,LPS-194304,LPS-194304,LRSD-5119,LRSD-6322,LRSD-7805,LRSD-8280,LRSD-8459", "gravatar-api=https://www.gravatar.com/avatar", "import-date=2022/11/17", "jira-fls-portal-url=https://liferay-sandbox-424.atlassian.net/servicedesk/customer/portal/204", "jira-fls-project=LRFLS", "jira-hc-portal-url=https://liferay-sandbox-424.atlassian.net/servicedesk/customer/portal/105", "provisioning-server-api=https://webserver-lrprovisioning-uat.lfr.cloud/o/provisioning-rest/v1.0"],
+                    "sourceCodeURL" : "",
+                    "type" : "customElement",
+                    "typeSettings" : ["friendlyURLMapping=liferay-customer-custom-element", "instanceable=false", "urls=index.0b1c030a.js", "useESM=true", "htmlElementName=liferay-customer-custom-element", "cssURLs=index.8f7f0d98.css", "portletCategoryName=category.client-extensions"],
+                    "webContextPath" : "/liferay-customer-custom-element"
+                }
+            }
+    kind: Deployment
+    mainDomain: customelement.localtest.me
+    setupMainDomainOnCoreDNS: true
+    virtualInstanceId: cp.dxp.localtest.me
+image:
+    repository: liferay-customer-custom-element
+ingress:
+    enabled: true
+service:
+    enabled: true
+    port: 80
