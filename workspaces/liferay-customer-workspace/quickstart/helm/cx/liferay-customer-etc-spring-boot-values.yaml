@@ -1,63 +1,4 @@
 clientExtensionConfig:
-    configJsons:
-        -   |
-            {
-                "com.liferay.oauth2.provider.configuration.OAuth2ProviderApplicationHeadlessServerConfiguration~liferay-customer-etc-spring-boot-oahs" : {
-                    ".serviceAddress" : "localhost:58081",
-                    ".serviceScheme" : "http",
-                    ":configurator:policy" : "force",
-                    "baseURL" : "${portalURL}/o/liferay-customer-etc-spring-boot",
-                    "buildTimestamp" : 1759167716272,
-                    "description" : "",
-                    "dxp.lxc.liferay.com.virtualInstanceId" : "default",
-                    "homePageURL" : "$[conf:.serviceScheme]://$[conf:.serviceAddress]",
-                    "name" : "Liferay Customer Etc Spring Boot OAuth Application Headless Server",
-                    "projectId" : "liferaycustomeretcspringboot",
-                    "projectName" : "liferay-customer-etc-spring-boot",
-                    "properties" : [],
-                    "scopes" : ["Liferay.Headless.Admin.List.Type.everything.read", "Liferay.Headless.Admin.User.everything.read", "Liferay.Notification.REST.everything", "c_accountsubscription.everything.read", "c_businessevent.everything", "c_businesseventversion.everything", "c_koroneikiaccount.everything.read", "c_ticketattachment.everything"],
-                    "sourceCodeURL" : "",
-                    "type" : "oAuthApplicationHeadlessServer",
-                    "typeSettings" : [".serviceScheme=http", "scopes=Liferay.Headless.Admin.List.Type.everything.read\nLiferay.Headless.Admin.User.everything.read\nLiferay.Notification.REST.everything\nc_accountsubscription.everything.read\nc_businessevent.everything\nc_businesseventversion.everything\nc_koroneikiaccount.everything.read\nc_ticketattachment.everything", ".serviceAddress=localhost:58081"],
-                    "webContextPath" : "/liferay-customer-etc-spring-boot"
-                },
-                "com.liferay.oauth2.provider.configuration.OAuth2ProviderApplicationUserAgentConfiguration~liferay-customer-etc-spring-boot-oaua" : {
-                    ".serviceAddress" : "localhost:58081",
-                    ".serviceScheme" : "http",
-                    ":configurator:policy" : "force",
-                    "baseURL" : "${portalURL}/o/liferay-customer-etc-spring-boot",
-                    "buildTimestamp" : 1759167716272,
-                    "description" : "",
-                    "dxp.lxc.liferay.com.virtualInstanceId" : "default",
-                    "homePageURL" : "$[conf:.serviceScheme]://$[conf:.serviceAddress]",
-                    "name" : "Liferay Customer Etc Spring Boot OAuth Application User Agent",
-                    "projectId" : "liferaycustomeretcspringboot",
-                    "projectName" : "liferay-customer-etc-spring-boot",
-                    "properties" : [],
-                    "scopes" : ["Liferay.Headless.Admin.User.everything.read", "c_businesseventversion.everything", "c_ticketattachment.everything"],
-                    "sourceCodeURL" : "",
-                    "type" : "oAuthApplicationUserAgent",
-                    "typeSettings" : [".serviceScheme=http", "scopes=Liferay.Headless.Admin.User.everything.read\nc_businesseventversion.everything\nc_ticketattachment.everything", ".serviceAddress=localhost:58081"],
-                    "webContextPath" : "/liferay-customer-etc-spring-boot"
-                },
-                "com.liferay.object.internal.configuration.FunctionObjectActionExecutorImplConfiguration~liferay-customer-etc-spring-boot-object-action-business-event" : {
-                    ":configurator:policy" : "force",
-                    "baseURL" : "${portalURL}/o/liferay-customer-etc-spring-boot",
-                    "buildTimestamp" : 1759167716272,
-                    "description" : "",
-                    "dxp.lxc.liferay.com.virtualInstanceId" : "default",
-                    "name" : "Liferay Customer Etc Spring Boot Object Action Business Event",
-                    "oAuth2ApplicationExternalReferenceCode" : "liferay-customer-etc-spring-boot-oaua",
-                    "projectId" : "liferaycustomeretcspringboot",
-                    "projectName" : "liferay-customer-etc-spring-boot",
-                    "properties" : [],
-                    "resourcePath" : "/object/action/business/event",
-                    "sourceCodeURL" : "",
-                    "type" : "objectAction",
-                    "typeSettings" : ["oAuth2ApplicationExternalReferenceCode=liferay-customer-etc-spring-boot-oaua", "resourcePath=/object/action/business/event"],
-                    "webContextPath" : "/liferay-customer-etc-spring-boot"
-                }
-            }
     kind: Deployment
     mainDomain: springboot.localtest.me
     mountInitConfig: true
@@ -68,7 +9,7 @@ env:
     COM_LIFERAY_LXC_DXP_MAINDOMAIN: ""
     COM_LIFERAY_LXC_DXP_SERVER_PROTOCOL: ""
     LIFERAY_CUSTOMER_GCF_BASE_URL: ""
-    LIFERAY_CUSTOMER_GCF_SERVICE_ACCOUNT_KEY: "
+    LIFERAY_CUSTOMER_GCF_SERVICE_ACCOUNT_KEY: ""
     LIFERAY_CUSTOMER_GCS_BUCKET_NAME: ""
     LIFERAY_CUSTOMER_GCS_SERVICE_ACCOUNT_KEY: ""
     LIFERAY_CUSTOMER_JIRA_API_EMAIL_ADDRESS: ""

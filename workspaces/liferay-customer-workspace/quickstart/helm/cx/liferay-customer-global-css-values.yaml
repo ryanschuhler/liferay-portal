@@ -1,23 +1,4 @@
 clientExtensionConfig:
-    configJsons:
-        -   |
-            {
-                "com.liferay.client.extension.type.configuration.CETConfiguration~liferay-customer-global-css" : {
-                    ":configurator:policy" : "force",
-                    "baseURL" : "${portalURL}/o/liferay-customer-global-css",
-                    "buildTimestamp" : 1758929838148,
-                    "description" : "",
-                    "dxp.lxc.liferay.com.virtualInstanceId" : "default",
-                    "name" : "Liferay Customer Global CSS",
-                    "projectId" : "liferaycustomerglobalcss",
-                    "projectName" : "liferay-customer-global-css",
-                    "properties" : [],
-                    "sourceCodeURL" : "",
-                    "type" : "globalCSS",
-                    "typeSettings" : ["url=global.css"],
-                    "webContextPath" : "/liferay-customer-global-css"
-                }
-            }
     kind: Deployment
     mainDomain: globalcss.localtest.me
     setupMainDomainOnCoreDNS: true
