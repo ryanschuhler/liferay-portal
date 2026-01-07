@@ -1,15 +1,209 @@
 import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
+import groovy.json.JsonOutput
+
+ext.parseFlatYamlToMap = { yamlString ->
+    def result = [:]
+    def stack = [] // Stores [map, indent] pairs
+
+    yamlString.split('\n').each { line ->
+        def trimmedLine = line.trim()
+        if (trimmedLine.isEmpty() || trimmedLine.startsWith('#')) {
+            return // Skip empty lines and comments
+        }
+
+        def indent = line.indexOf(trimmedLine)
+
+        def currentMap = result
+        if (!stack.isEmpty()) {
+            // Find the correct parent map based on indentation
+            while (!stack.isEmpty() && indent <= stack.last().indent) {
+                stack.pop()
+            }
+            if (!stack.isEmpty()) {
+                currentMap = stack.last().map
+            }
+        }
+
+        def parts = trimmedLine.split(':', 2)
+        if (parts.size() == 2) {
+            def key = parts[0].trim()
+            def value = parts[1].trim()
+
+            if (value.isEmpty()) {
+                // Nested map
+                def newMap = [:]
+                currentMap[key] = newMap
+                stack.push([map: newMap, indent: indent])
+            } else {
+                // Scalar value
+                if (value == 'true') value = true
+                else if (value == 'false') value = false
+                else if (value.isInteger()) value = value.toInteger()
+                else if (value == 'null') value = null
+                else if (value.startsWith("\"") && value.endsWith("\"")) value = value.substring(1, value.length() - 1)
+                else if (value.startsWith("'" ) && value.endsWith("'" )) value = value.substring(1, value.length() - 1)
+                
+                currentMap[key] = value
+            }
+        }
+        // This simple parser does not support lists directly, assuming they are handled as part of the JSON strings.
+    }
+    return result
+}
+
+ext.dumpMapToYamlString = { Map data, int indentLevel = 0 ->
+    def yamlLines = []
+    def indentStr = '    ' * indentLevel
+
+    data.each { key, value ->
+        if (value instanceof Map) {
+            yamlLines << "${indentStr}${key}:"
+            yamlLines << dumpMapToYamlString(value, indentLevel + 1)
+        } else if (value instanceof List) {
+            yamlLines << "${indentStr}${key}:"
+            value.each {
+                listItem ->
+                // Assuming list items are strings (e.g., JSON strings)
+                yamlLines << "${indentStr}    -   ${listItem}"
+            }
+        } else {
+            // Scalar value
+            def formattedValue = value
+            if (value instanceof String && (value.contains(' ') || value.contains(':') || value.contains('#') || value.contains('- ') || value.isEmpty())) {
+                formattedValue = "'${value.replace("'", "''")}'" // Simple single quote escaping
+            }
+            yamlLines << "${indentStr}${key}: ${formattedValue}"
+        }
+    }
+    return yamlLines.join('\n')
+}
+
+
+task aggregateClientExtensionConfigs(type: DefaultTask) {
+    def generatedFileName = "cx-values.yaml"
+    def rootGeneratedDir = project.layout.buildDirectory.dir("helm").get().asFile
+    def aggregatedFilePath = new File(rootGeneratedDir, generatedFileName)
+
+    outputs.file(aggregatedFilePath)
+
+    def clientExtensionConfigsToProcess = []
+
+    project.gradle.projectsEvaluated {
+        dependsOn subprojects.findAll { new File(it.projectDir, "client-extension.yaml").exists() }.collect {
+            def individualConfigFile = it.layout.buildDirectory.file("liferay-client-extension-build/${it.name}.client-extension-config.json").get().asFile
+            if (individualConfigFile.exists()) {
+                clientExtensionConfigsToProcess.add([name: it.name, configFile: individualConfigFile])
+            } else {
+                println "Warning: Individual JSON config not found for ${it.name} during configuration phase."
+            }
+            it.tasks.findByName("generateClientExtensionJsonConfig")
+        }.findAll { it != null }
+    }
+
+    doLast {
+        rootGeneratedDir.mkdirs()
+
+        def finalValuesMap = [:] as Map
+
+        // Collect and structure client extension JSON configs
+        clientExtensionConfigsToProcess.each { configEntry ->
+            def subprojectName = configEntry.name
+            def individualConfigFile = configEntry.configFile
+
+            if (individualConfigFile.exists()) {
+                def jsonContent = individualConfigFile.text.replaceAll(/[
+]+/, "").trim()
+                finalValuesMap[subprojectName] = [configJsons: [jsonContent]]
+            } else {
+                println "Warning: Individual JSON config not found for ${subprojectName}: ${individualConfigFile.absolutePath}"
+            }
+        }
+
+        // Merge liferay-customer-*-values.yaml files from subprojects' cx directories
+        rootProject.subprojects.each { subproject ->
+            def cxDir = new File(subproject.projectDir, "cx")
+            if (cxDir.exists() && cxDir.isDirectory()) {
+                cxDir.eachFileMatch(~/liferay-customer-.*-values\.yaml/) { valuesFile ->
+                    def subprojectValues = parseFlatYamlToMap(valuesFile.text)
+                    
+                    // Deep merge subprojectValues into finalValuesMap
+                    subprojectValues.each { k, v ->
+                        if (finalValuesMap.containsKey(k) && finalValuesMap[k] instanceof Map && v instanceof Map) {
+                            finalValuesMap[k].putAll(v) // Deep merge for maps
+                        } else if (finalValuesMap.containsKey(k) && finalValuesMap[k] instanceof List && v instanceof List) {
+                            finalValuesMap[k].addAll(v) // Append lists
+                        } else {
+                            finalValuesMap[k] = v // Overwrite for scalars or non-map types
+                        }
+                    }
+                    println "Merged ${valuesFile.name} from ${subproject.name}"
+                }
+            }
+        }
+        
+        aggregatedFilePath.text = dumpMapToYamlString(finalValuesMap)
+        println "Generated aggregated config: ${aggregatedFilePath}"
+    }
+}
+
 
 subprojects {
 	afterEvaluate {
 		if (project.tasks.findByName('buildDockerImage')) {
+            task generateClientExtensionJsonConfig(type: DefaultTask) {
+                def generatedFileName = "${project.name}.client-extension-config.json"
+                def generatedDir = project.layout.buildDirectory.dir("liferay-client-extension-build").get().asFile
+                def generatedFile = new File(generatedDir, generatedFileName)
+
+                outputs.file(generatedFile)
+
+                doLast {
+                    generatedDir.mkdirs()
+
+                    def clientExtensionName = project.name
+                    def clientExtensionYamlFile = new File(project.projectDir, "client-extension.yaml")
+                    def clientExtensionDevYamlFile = new File(project.projectDir, "client-extension.dev.yaml")
+
+                    if (!clientExtensionYamlFile.exists()) {
+                        println "Warning: client-extension.yaml not found in ${project.projectDir.absolutePath} for client extension ${clientExtensionName}"
+                        return
+                    }
+
+                    def mainConfigMap = parseFlatYamlToMap(clientExtensionYamlFile.text)
+                    def devConfigMap = [:]
+
+                    if (clientExtensionDevYamlFile.exists()) {
+                        devConfigMap = parseFlatYamlToMap(clientExtensionDevYamlFile.text)
+                    }
+
+                    // Deep merge devConfigMap into mainConfigMap
+                    def mergedConfigMap = mainConfigMap.clone()
+                    devConfigMap.each { k, v ->
+                        if (mergedConfigMap.containsKey(k) && mergedConfigMap[k] instanceof Map && v instanceof Map) {
+                            mergedConfigMap[k].putAll(v) // Deep merge for maps
+                        } else if (mergedConfigMap.containsKey(k) && mergedConfigMap[k] instanceof List && v instanceof List) {
+                            // Append lists from dev config to main config
+                            mergedConfigMap[k].addAll(v)
+                        }
+                        else {
+                            mergedConfigMap[k] = v // Overwrite for scalars or non-map types
+                        }
+                    }
+
+                    generatedFile.text = JsonOutput.toJson(
+                        mergedConfigMap
+                    )
+                    println "Generated individual config for ${clientExtensionName}: ${generatedFile}"
+                }
+            }
+
+
 			buildDockerImage {
 				images.add("${project.name}:latest")
 			}
 
 			task tagDockerImage(type: DockerTagImage) {
-				description = "Tags the Docker image for the client extension."
 				imageId = "${project.name}"
 				tag = "latest"
 				repository = "localhost:5000/${project.name}"
@@ -17,7 +211,6 @@ subprojects {
 			}
 
 			task pushDockerImage(type: DockerPushImage) {
-				description = "Pushes the Docker image to the registry."
 				images = ["localhost:5000/${project.name}:latest"]
 				dependsOn tasks["tagDockerImage"]
 			}
@@ -26,7 +219,6 @@ subprojects {
 			def generatedFilePath = layout.buildDirectory.file("liferay-client-extension-build/${generatedFileName}").get().asFile
 
 			task helmDeploy(type: Exec) {
-				description = "Deploys the client extension using Helm."
 				commandLine(
 					'helm',
 					'upgrade',
@@ -45,10 +237,10 @@ subprojects {
 				ignoreExitValue = true
 
 				dependsOn tasks["pushDockerImage"]
+                dependsOn rootProject.tasks.aggregateClientExtensionConfigs
 			}
 
 			task helmUndeploy(type: Exec) {
-				description = "Undeployed the client extension using Helm."
 				commandLine(
 					'helm',
 					'uninstall',
