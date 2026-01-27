@@ -8,19 +8,19 @@ import {useModal} from '@clayui/core';
 import {ClayCheckbox} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import {useCallback, useEffect, useState} from 'react';
-import useProvisioningLicenseKeys from '~/hooks/useProvisioningLicenseKeys';
-import {assignUserAccountWithAccountAndAccountRole} from '~/services/liferay/graphql/queries';
-import {getRolesFiltered} from '~/utils/getProjectRoles';
-import isSupportSeatRole from '~/utils/isSupportSeatRole';
-import {rolesHighPriorityContact} from '~/features/project/utils/getHighPriorityContacts';
-
-import i18n from '~/utils/I18n';
-import StatusTag from '~/components/StatusTag';
 import ActionTable from '~/components/ActionTable';
+import StatusTag from '~/components/StatusTag';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
 import {useAppContext} from '~/features/project/context';
-import {STATUS_TAG_TYPES} from '~/features/project/utils/constants/statusTag';
+import {STATUS_TAG_TYPE_NAMES} from '~/features/project/utils/constants/statusTag';
+import {rolesHighPriorityContact} from '~/features/project/utils/getHighPriorityContacts';
+import useProvisioningLicenseKeys from '~/hooks/useProvisioningLicenseKeys';
+import {assignUserAccountWithAccountAndAccountRole} from '~/services/liferay/graphql/queries';
 import {getOrRequestToken} from '~/services/liferay/security/auth/getOrRequestToken';
+import i18n from '~/utils/I18n';
+import {getRolesFiltered} from '~/utils/getProjectRoles';
+import isSupportSeatRole from '~/utils/isSupportSeatRole';
+
 import RemoveUserModal from './components/RemoveUserModal/RemoveUserModal';
 import TeamMembersTableHeader from './components/TeamMembersTableHeader/TeamMembersTableHeader';
 import NameColumn from './components/columns/NameColumn';
@@ -35,22 +35,41 @@ import getFilteredRoleBriefsByName from './utils/getFilteredRoleBriefsByName';
 
 import './TeamMembersTable.css';
 
+import {IKoroneikiAccount, IRoleBrief, IUserAccount} from '~/utils/types';
+
+interface IProps {
+	koroneikiAccount: IKoroneikiAccount;
+	koroneikiAccountLoading: boolean;
+}
+
+interface IAppPropertiesContext {
+	articleAccountSupportURL: string;
+	articleNotifiedWhenMyActivationKeyIsAboutToExpireURL: string;
+	importDate: string | null;
+	provisioningServerAPI: string;
+}
+
+interface IMyUserAccount {
+	myUserAccount: IUserAccount;
+}
+
 const MAXIMUM_SUPPORT_SEATS_DEFAULT = -1;
-const UNLIMITED_SUPPORT_SEATS = 9999;
+const UNLIMITED_SUPPORT_SEATS = 'Unlimited';
 
 const TeamMembersTable = ({
 	koroneikiAccount,
 	koroneikiAccountLoading,
-}) => {
+}: IProps) => {
 	const {
 		articleAccountSupportURL,
 		articleNotifiedWhenMyActivationKeyIsAboutToExpireURL,
 		importDate,
 		provisioningServerAPI,
-	} = useAppPropertiesContext();
+	} = useAppPropertiesContext() as IAppPropertiesContext;
 
-	const [oAuthToken, setOAuthToken] = useState();
-	const provisioningKeys = useProvisioningLicenseKeys();
+	const [oAuthToken, setOAuthToken] = useState<string | undefined>();
+	const {provisioningLicenseKeys: provisioningService} =
+		useProvisioningLicenseKeys('', '', true);
 
 	const [{project}] = useAppContext();
 
@@ -74,16 +93,25 @@ const TeamMembersTable = ({
 
 	const {observer, onOpenChange, open} = useModal();
 
-	const [currentUserEditing, setCurrentUserEditing] = useState();
-	const [currentUserRemoving, setCurrentUserRemoving] = useState();
-	const [selectedAccountRoleItem, setSelectedAccountRoleItem] = useState();
-	const [highPriorityContactsNames, setHighPriorityContactsNames] = useState(
+	const [currentUserEditing, setCurrentUserEditing] = useState<
+		IUserAccount | undefined
+	>(undefined);
+	const [currentUserRemoving, setCurrentUserRemoving] = useState<
+		IUserAccount | undefined
+	>(undefined);
+	const [selectedAccountRoleItem, setSelectedAccountRoleItem] =
+		useState<any>(undefined);
+	const [highPriorityContactsNames, setHighPriorityContactsNames] = useState<
+		string[]
+	>([]);
+	const [checkedBoxSubscription, setCheckedBoxSubscription] =
+		useState<boolean>(false);
+	const [isSingleSubscribedUser, setIsSingleSubscribedUser] = useState<any[]>(
 		[]
 	);
-	const [checkedBoxSubscription, setCheckedBoxSubscription] = useState(false);
-	const [isSingleSubscribedUser, setIsSingleSubscribedUser] = useState([]);
-	const [singleSubscribedKeys, setSingleSubscribedKeys] = useState('');
-	const [loadingModal, setLoadingModal] = useState(false);
+	const [singleSubscribedKeys, setSingleSubscribedKeys] =
+		useState<string>('');
+	const [loadingModal, setLoadingModal] = useState<boolean>(false);
 
 	const {data: myUserAccountData, loading: myUserAccountLoading} =
 		useMyUserAccountByAccountExternalReferenceCode(
@@ -91,7 +119,8 @@ const TeamMembersTable = ({
 			koroneikiAccountLoading
 		);
 
-	const loggedUserAccount = myUserAccountData?.myUserAccount;
+	const loggedUserAccount: IMyUserAccount['myUserAccount'] | undefined =
+		myUserAccountData?.myUserAccount;
 
 	const isUnlimitedSupportSeats =
 		koroneikiAccount?.maxRequestors === MAXIMUM_SUPPORT_SEATS_DEFAULT;
@@ -113,43 +142,48 @@ const TeamMembersTable = ({
 	);
 
 	const [availableSupportSeatsCount, setAvailableSupportSeatsCount] =
-		useState(1);
+		useState<number>(1);
 
 	useEffect(() => {
-		let availableSupportSeats =
-			koroneikiAccount?.maxRequestors - supportSeatsCount;
+		let availableSupportSeats: number =
+			(koroneikiAccount?.maxRequestors ?? 0) -
+			(supportSeatsCount as number);
 		availableSupportSeats =
 			availableSupportSeats < 0 ? 0 : availableSupportSeats;
 
 		setAvailableSupportSeatsCount(
 			isUnlimitedSupportSeats
-				? UNLIMITED_SUPPORT_SEATS
+				? (UNLIMITED_SUPPORT_SEATS as any)
 				: availableSupportSeats
 		);
 	}, [koroneikiAccount, supportSeatsCount, isUnlimitedSupportSeats]);
 
-	const userAccounts =
-		userAccountsData?.accountUserAccountsByExternalReferenceCode?.items;
+	const userAccounts: IUserAccount[] =
+		(userAccountsData as any)?.accountUserAccountsByExternalReferenceCode
+			?.items ?? [];
 
-	const totalUserAccounts =
-		userAccountsData?.accountUserAccountsByExternalReferenceCode?.totalCount;
+	const totalUserAccounts: number =
+		(userAccountsData as any)?.accountUserAccountsByExternalReferenceCode
+			?.totalCount ?? 0;
 
 	const {paginationConfig, teamMembersByStatusPaginated} =
 		usePagination(userAccounts);
 
 	const getHighPriorityContactsByFilter = useCallback(
-		(filter) => {
-			return userAccountsData?.accountUserAccountsByExternalReferenceCode?.items
-				.filter((account) =>
-					account?.selectedAccountSummary?.roleBriefs?.some(
-						(role) => role?.name === filter
+		(filter: string) => {
+			return (
+				userAccountsData as any
+			)?.accountUserAccountsByExternalReferenceCode?.items
+				.filter((account: IUserAccount) =>
+					(account as any)?.selectedAccountSummary?.roleBriefs?.some(
+						(role: any) => role?.name === filter
 					)
 				)
-				.map((account) => ({
+				.map((account: IUserAccount) => ({
 					email: account.emailAddress,
 				}));
 		},
-		[userAccountsData?.accountUserAccountsByExternalReferenceCode?.items]
+		[userAccountsData]
 	);
 
 	useEffect(() => {
@@ -170,7 +204,7 @@ const TeamMembersTable = ({
 					(contact) => contact.email
 				);
 
-				setHighPriorityContactsNames(highPriorityEmails);
+				setHighPriorityContactsNames(highPriorityEmails as string[]);
 			}
 			catch (error) {
 				console.error('Error:', error);
@@ -184,87 +218,103 @@ const TeamMembersTable = ({
 		useAccountRolesByAccountExternalReferenceCode(
 			koroneikiAccount,
 			koroneikiAccountLoading || myUserAccountLoading,
-			!loggedUserAccount?.selectedAccountSummary?.hasAdministratorRole
+			!(loggedUserAccount as any)?.selectedAccountSummary
+				?.hasAdministratorRole
 		);
 
 	const availableAccountRoles = getRolesFiltered(
-		accountRolesData?.accountAccountRolesByExternalReferenceCode.items,
-		koroneikiAccount
+		(accountRolesData as any)?.accountAccountRolesByExternalReferenceCode
+			?.items,
+		{
+			partner: koroneikiAccount.partnershipCurrent,
+			slaCurrent: koroneikiAccount.slaCurrent,
+		}
 	);
 
 	const loading =
 		myUserAccountLoading || userAccountsLoading || accountRolesLoading;
 
 	const handleProvisioningKeys = useCallback(
-		async (userAccount) => {
+		async (userAccount: IUserAccount) => {
 			try {
 				setLoadingModal(true);
 
-				const {items} =
-					await provisioningKeys.getSingleUserSubscriptions(
-						koroneikiAccount?.accountKey,
-						userAccount?.emailAddress
-					);
+				if (!provisioningService) {
+					throw new Error('Provisioning service not available.');
+				}
 
-				const getLicensesKeyIds = items.map((licenseKey) => {
-					return licenseKey.id;
-				});
+				// @ts-ignore
+
+				const {items} =
+					await provisioningService.getSingleUserSubscriptions(
+						(koroneikiAccount as any)?.accountKey ?? '',
+						userAccount?.emailAddress ?? ''
+					);
+				const getLicensesKeyIds = items.map(
+					(licenseKey: {id: string}) => {
+						return licenseKey.id;
+					}
+				);
 
 				setIsSingleSubscribedUser(items);
-				setSingleSubscribedKeys(getLicensesKeyIds);
+				setSingleSubscribedKeys(getLicensesKeyIds.join(','));
 			}
 			catch (error) {
 				console.error('Error:', error);
 			}
 			setLoadingModal(false);
 		},
-		[koroneikiAccount?.accountKey, provisioningKeys]
+		[koroneikiAccount, provisioningService]
 	);
 
 	useEffect(() => {
 		if (!updating) {
 			onOpenChange(false);
 
-			setCurrentUserRemoving();
+			setCurrentUserRemoving(undefined);
 		}
 	}, [onOpenChange, updating]);
 
 	useEffect(() => {
 		if (!updating) {
-			setCurrentUserEditing();
-			setSelectedAccountRoleItem();
+			setCurrentUserEditing(undefined);
+			setSelectedAccountRoleItem(undefined);
 		}
 	}, [onOpenChange, updating]);
 
 	useEffect(() => {
 		if (currentUserEditing?.id) {
-			setSelectedAccountRoleItem();
+			setSelectedAccountRoleItem(undefined);
 		}
 	}, [currentUserEditing]);
 
 	const getCurrentRoleBriefs = useCallback(
-		(accountBrief) =>
+		(accountBrief: any) =>
 			getFilteredRoleBriefsByName(accountBrief?.roleBriefs, 'User'),
 		[]
 	);
 
-	const checkIsValidRole = (userAccount) => {
-		const isIncidentContactRole = (role) => {
+	const checkIsValidRole = (userAccount: IUserAccount): string[] => {
+		const isIncidentContactRole = (role: IRoleBrief) => {
 			const incidentRoles = ['Security', 'Data', 'Critical'];
 
-			return incidentRoles.some((keyword) => role?.name?.includes(keyword));
+			return incidentRoles.some((keyword) =>
+				role?.name?.includes(keyword)
+			);
 		};
 
-		const roles = getCurrentRoleBriefs(userAccount?.selectedAccountSummary);
+		const roles = getCurrentRoleBriefs(
+			(userAccount as any)?.selectedAccountSummary
+		);
 
 		if (!roles?.length) {
 			return ['User'];
 		}
 
-		const memberRoles = [];
+		const memberRoles: string[] = [];
 
 		roles.forEach((role) => {
-			let roleName = role?.name;
+			let roleName: string = role?.name ?? '';
 
 			if (isIncidentContactRole(role)) {
 				roleName = 'Incident Contact';
@@ -279,10 +329,10 @@ const TeamMembersTable = ({
 	};
 
 	const handleEdit = () => {
-		const currentAccountRoles =
-			currentUserEditing?.selectedAccountSummary?.roleBriefs;
+		const currentAccountRoles = (currentUserEditing as any)
+			?.selectedAccountSummary?.roleBriefs;
 
-		update(
+		(update as any)(
 			currentUserEditing,
 			currentAccountRoles,
 			selectedAccountRoleItem,
@@ -294,10 +344,15 @@ const TeamMembersTable = ({
 		);
 	};
 
-	const saveSubscriptionKey = (singleSubscribedKeys) => {
-		singleSubscribedKeys?.forEach(async (singleSubscribeKey) => {
+	const saveSubscriptionKey = (singleSubscribedKeys: string) => {
+		singleSubscribedKeys?.split(',').forEach(async (singleSubscribeKey) => {
 			try {
-				await provisioningKeys.putSubscriptionInKey(singleSubscribeKey);
+				if (!provisioningService) {
+					throw new Error('Provisioning service not available.');
+				}
+				await provisioningService.putSubscriptionInKey(
+					singleSubscribeKey
+				);
 			}
 			catch (error) {
 				console.error('Error:', error);
@@ -305,7 +360,7 @@ const TeamMembersTable = ({
 		});
 	};
 
-	const handleSaveDisabled = () => {
+	const handleSaveDisabled = (): boolean => {
 		if (!selectedAccountRoleItem || updating) {
 			return true;
 		}
@@ -318,11 +373,11 @@ const TeamMembersTable = ({
 		const selectedSupportSeatRole = isSupportSeatRole(
 			selectedAccountRoleItem?.label
 		);
-		const currentAccountRoles =
-			currentUserEditing?.selectedAccountSummary?.roleBriefs;
+		const currentAccountRoles = (currentUserEditing as any)
+			?.selectedAccountSummary?.roleBriefs;
 
 		if (noSupportSeatsAvailable) {
-			for (const role of currentAccountRoles) {
+			for (const role of currentAccountRoles ?? []) {
 				if (isSupportSeatRole(role.name)) {
 					return false;
 				}
@@ -345,19 +400,19 @@ const TeamMembersTable = ({
 					onRemove={async () => {
 						if (checkedBoxSubscription) {
 							await saveSubscriptionKey(singleSubscribedKeys);
-							await remove(currentUserRemoving);
+							await (remove as any)(currentUserRemoving);
 
 							return;
 						}
 
-						remove(currentUserRemoving);
+						(remove as any)(currentUserRemoving);
 					}}
 					removing={updating}
 				>
 					<p className="my-0 text-neutral-10">
 						<span className="d-block font-weight-bold my-1">
 							{`${i18n.translate('team-member')}: ${
-								currentUserRemoving?.name
+								(currentUserRemoving as any)?.name
 							}`}
 						</span>
 
@@ -420,13 +475,14 @@ const TeamMembersTable = ({
 				availableSupportSeatsCount={availableSupportSeatsCount}
 				count={totalUserAccounts}
 				hasAdministratorRole={
-					loggedUserAccount?.selectedAccountSummary
-						?.hasAdministratorRole
+					(loggedUserAccount as any)?.selectedAccountSummary
+						?.hasAdministratorRole ?? false
 				}
 				koroneikiAccount={koroneikiAccount}
 				loading={loading}
+				mutateUserData={() => {}}
 				oAuthToken={oAuthToken}
-				onSearch={(term) => search(term)}
+				onSearch={(term: string) => (search as any)(term)}
 				searching={searching}
 			/>
 
@@ -442,23 +498,27 @@ const TeamMembersTable = ({
 						<ActionTable
 							className="border-0"
 							columns={getColumns(
-								loggedUserAccount?.selectedAccountSummary
-									?.hasAdministratorRole,
+								(loggedUserAccount as any)
+									?.selectedAccountSummary
+									?.hasAdministratorRole ?? false,
 								articleAccountSupportURL
 							)}
+							handleSortChange={() => {}}
+							hasCheckbox={false}
 							hasPagination
 							isLoading={loading || searching}
 							paginationConfig={paginationConfig}
 							rows={teamMembersByStatusPaginated?.map(
-								(userAccount) => ({
+								(userAccount: IUserAccount) => ({
 									email: (
 										<p className="m-0 text-truncate">
 											{userAccount.emailAddress}
 										</p>
 									),
+									id: userAccount.id?.toString() ?? '',
 									name: (
 										<NameColumn
-											userAccount={userAccount}
+											userAccount={userAccount as any}
 										/>
 									),
 									options: (
@@ -471,8 +531,12 @@ const TeamMembersTable = ({
 												highPriorityContactsNames
 											}
 											onCancel={() => {
-												setCurrentUserEditing();
-												setSelectedAccountRoleItem();
+												setCurrentUserEditing(
+													undefined
+												);
+												setSelectedAccountRoleItem(
+													undefined
+												);
 											}}
 											onEdit={() =>
 												setCurrentUserEditing(
@@ -490,12 +554,14 @@ const TeamMembersTable = ({
 											}}
 											onSave={() => handleEdit()}
 											saveDisabled={handleSaveDisabled()}
-											userAccount={userAccount}
+											userAccount={userAccount as any}
 										/>
 									),
 									role: (
 										<RolesColumn
-											accountRoles={availableAccountRoles}
+											accountRoles={
+												availableAccountRoles as any
+											}
 											availableSupportSeatsCount={
 												availableSupportSeatsCount
 											}
@@ -507,37 +573,39 @@ const TeamMembersTable = ({
 												currentUserEditing?.id
 											}
 											hasAccountSupportSeatRole={
-												userAccount
+												(userAccount as any)
 													?.selectedAccountSummary
-													?.hasSupportSeatRole
+													?.hasSupportSeatRole ??
+												false
 											}
 											onClick={(
-												selectedAccountRoleItem
+												selectedAccountRoleItem: any
 											) =>
 												setSelectedAccountRoleItem(
 													selectedAccountRoleItem
 												)
 											}
 											supportSeatsCount={
-												supportSeatsCount
+												supportSeatsCount as number
 											}
 										/>
 									),
 									status: (
 										<StatusTag
 											currentStatus={
-												userAccount.lastLoginDate ||
-												userAccount.dateCreated <=
-													importDate
-													? STATUS_TAG_TYPES.active
-													: STATUS_TAG_TYPES.invited
+												(userAccount.lastLoginDate ||
+													(userAccount.dateCreated as any)) <=
+												(importDate ?? '')
+													? STATUS_TAG_TYPE_NAMES.active
+													: STATUS_TAG_TYPE_NAMES.invited
 											}
 										/>
 									),
-									supportSeat: userAccount
+									supportSeat: (userAccount as any)
 										?.selectedAccountSummary
 										?.hasSupportSeatRole &&
-										!userAccount.isLiferayStaff && (
+										!(userAccount as any)
+											.isLiferayStaff && (
 											<ClayIcon
 												className="text-brand-primary-darken-2"
 												symbol="check-circle-full"

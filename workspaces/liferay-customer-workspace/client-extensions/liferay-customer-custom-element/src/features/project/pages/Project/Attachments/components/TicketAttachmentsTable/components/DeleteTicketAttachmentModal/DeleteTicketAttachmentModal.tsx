@@ -6,8 +6,17 @@
 import {Button} from '@clayui/core';
 import ClayModal from '@clayui/modal';
 import classNames from 'classnames';
-import {memo} from 'react';
+import {ReactNode, memo} from 'react';
 import i18n from '~/utils/I18n';
+
+interface IProps {
+	children: ReactNode;
+	modalTitle: string;
+	observer: any;
+	onClose: () => void;
+	onDelete: () => void;
+	removing: boolean;
+}
 
 const DeleteTicketAttachmentModal = ({
 	children,
@@ -16,7 +25,7 @@ const DeleteTicketAttachmentModal = ({
 	onClose,
 	onDelete,
 	removing,
-}) => (
+}: IProps) => (
 	<ClayModal
 		center
 		className="delete-ticket-attachment-modal"

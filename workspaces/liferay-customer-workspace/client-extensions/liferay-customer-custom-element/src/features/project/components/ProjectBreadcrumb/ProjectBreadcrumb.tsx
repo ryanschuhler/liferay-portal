@@ -7,42 +7,52 @@ import {NetworkStatus} from '@apollo/client';
 import classNames from 'classnames';
 import {useCallback, useEffect, useState} from 'react';
 import {IconBreadcrumbs} from '~/assets';
-import i18n from '~/utils/I18n';
 import Skeleton from '~/components/Skeleton';
 import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
 import useKoroneikiAccounts from '~/hooks/useKoroneikiAccounts';
+import SearchBuilder from '~/lib/SearchBuilder';
+import i18n from '~/utils/I18n';
+
 import PopoverIcon from '../../containers/ActivationStatus/DXPCloud/components/PopoverIcon';
 import Dropdown from './components/Dropdown';
-import SearchBuilder from '~/lib/SearchBuilder';
 
-import './ProjectBreadcrumb.css';
+interface IKoroneikiAccount {
+	accountKey: string;
+	code: string;
+	dxpVersion: string;
+	externalReferenceCode: string;
+	id: string;
+	maxRequestors: string;
+	name: string;
+	slaCurrent: boolean;
+	slaExpired: boolean;
+	slaFuture: boolean;
+	status: string;
+}
 
 const ProjectBreadcrumb = () => {
-	const [filter, setFilter] = useState('');
-	const [initialTotalCount, setInitialTotalCount] = useState(0);
-	const [projectStatus, setProjectStatus] = useState('');
+	const [filter, setFilter] = useState<string>('');
+	const [initialTotalCount, setInitialTotalCount] = useState<number>(0);
+	const [projectStatus, setProjectStatus] = useState<string>('');
 
-	const getFilter = useCallback(
-		(searchTerm) => {
-			let searchBuilder = new SearchBuilder();
+	const getFilter = useCallback((searchTerm: string): string => {
+		const searchBuilder = new SearchBuilder();
 
-			if (searchTerm) {
-				searchBuilder.contains('name', searchTerm);
-				searchBuilder.or();
-				searchBuilder.contains('code', searchTerm);
-			}
+		if (searchTerm) {
+			searchBuilder.contains('name', searchTerm);
+			searchBuilder.or();
+			searchBuilder.contains('code', searchTerm);
+		}
 
-			return searchBuilder.build();
-		},
-		[]
-	);
+		return searchBuilder.build();
+	}, []);
 
 	const {
 		data: currentKoroneikiAccountData,
 		loading: currentKoroneikiAccountLoading,
 	} = useCurrentKoroneikiAccount();
 
-	const selectedKoroneikiAccount =
+	const selectedKoroneikiAccount: IKoroneikiAccount | undefined =
 		currentKoroneikiAccountData?.koroneikiAccountByExternalReferenceCode;
 
 	const {data, fetchMore, networkStatus, refetch} = useKoroneikiAccounts({
@@ -51,7 +61,7 @@ const ProjectBreadcrumb = () => {
 	});
 
 	const handleSearch = useCallback(
-		(searchTerm) => {
+		(searchTerm: string) => {
 			setFilter(getFilter(searchTerm));
 		},
 		[getFilter]
@@ -62,18 +72,24 @@ const ProjectBreadcrumb = () => {
 	}, [filter, refetch]);
 
 	useEffect(() => {
-		if (data?.c.koroneikiAccounts.totalCount > initialTotalCount) {
+		if (
+			data?.c.koroneikiAccounts.totalCount &&
+			data?.c.koroneikiAccounts.totalCount > initialTotalCount
+		) {
 			setInitialTotalCount(data.c.koroneikiAccounts.totalCount);
 		}
 
-		setProjectStatus(selectedKoroneikiAccount?.status);
+		setProjectStatus(selectedKoroneikiAccount?.status || '');
 	}, [
 		data?.c.koroneikiAccounts.totalCount,
 		initialTotalCount,
 		selectedKoroneikiAccount?.status,
 	]);
 
-	if (currentKoroneikiAccountLoading || networkStatus === NetworkStatus.loading) {
+	if (
+		currentKoroneikiAccountLoading ||
+		networkStatus === NetworkStatus.loading
+	) {
 		return <Skeleton height={30} width={264} />;
 	}
 
@@ -91,18 +107,21 @@ const ProjectBreadcrumb = () => {
 					onIntersecting={() =>
 						fetchMore({
 							variables: {
-								page: data?.c.koroneikiAccounts.page + 1,
+								page: (data?.c.koroneikiAccounts.page || 0) + 1,
 							},
 						})
 					}
 					onSearch={handleSearch}
 					searching={networkStatus === NetworkStatus.refetch}
-					selectedKoroneikiAccount={selectedKoroneikiAccount}
+					selectedKoroneikiAccount={
+						selectedKoroneikiAccount as IKoroneikiAccount
+					}
 				/>
 
 				<div
 					className={classNames('cp-breadcrumbs-popover', {
-						[`cp-breadcrumbs-popover-${projectStatus?.toLowerCase()}`]: projectStatus,
+						[`cp-breadcrumbs-popover-${projectStatus?.toLowerCase()}`]:
+							projectStatus,
 					})}
 				>
 					<PopoverIcon

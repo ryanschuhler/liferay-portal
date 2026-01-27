@@ -11,8 +11,8 @@ export const INITIAL_FILTER = {
 	expirationDate: {
 		name: 'Exp. Date',
 		value: {
-			onOrAfter: undefined,
-			onOrBefore: undefined,
+			onOrAfter: false,
+			onOrBefore: false,
 		},
 	},
 	hasValue: false,
@@ -38,8 +38,8 @@ export const INITIAL_FILTER = {
 	startDate: {
 		name: 'Start Date',
 		value: {
-			onOrAfter: undefined,
-			onOrBefore: undefined,
+			onOrAfter: false,
+			onOrBefore: false,
 		},
 	},
 	status: {

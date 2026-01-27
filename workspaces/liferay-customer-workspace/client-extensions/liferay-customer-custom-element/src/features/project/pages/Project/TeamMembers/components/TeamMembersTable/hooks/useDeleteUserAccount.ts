@@ -7,10 +7,10 @@ import {useDeleteUserAccountByEmailAddress} from '~/services/liferay/graphql/use
 import {useDeleteRolesByContactEmailAddress} from '~/services/raysource/graphql/roles';
 
 export default function useDeleteUserAccount() {
-	const [deleteUserAccount, {loading: deleteUserAccountLoading}] =
+	const [deleteUserAccount, {loading: deleteUserAccountLoading}]: any =
 		useDeleteUserAccountByEmailAddress();
 
-	const [deleteContactRoles, {loading: deleteContactRolesLoading}] =
+	const [deleteContactRoles, {loading: deleteContactRolesLoading}]: any =
 		useDeleteRolesByContactEmailAddress();
 
 	const loading = deleteUserAccountLoading || deleteContactRolesLoading;

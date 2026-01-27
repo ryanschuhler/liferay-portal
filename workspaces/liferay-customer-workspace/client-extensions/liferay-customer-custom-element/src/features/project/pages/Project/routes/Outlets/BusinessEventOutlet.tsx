@@ -57,7 +57,7 @@ const BusinessEventOutlet: React.FC<BusinessEventOutletProps> = ({
 				if (
 					data?.businessEvent
 						?.r_accountEntryToBusinessEvents_accountEntryId ===
-					project.id
+					parseInt(project.id, 10)
 				) {
 					setIsValidBusinessEvent(true);
 				}

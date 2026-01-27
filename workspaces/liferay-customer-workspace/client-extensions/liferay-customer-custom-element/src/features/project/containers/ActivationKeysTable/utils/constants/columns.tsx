@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /**
  * SPDX-FileCopyrightText: (c) 2000 Liferay, Inc. https://liferay.com
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
@@ -7,7 +6,26 @@
 import ClayIcon from '@clayui/icon';
 import i18n from '~/utils/I18n';
 
-export const ACTIVATE_COLUMNS = [
+interface HeaderDefinition {
+	description?: string;
+	name: string | JSX.Element;
+	noWrap?: boolean;
+	styles?: string;
+}
+
+interface ColumnDefinition {
+	accessor: string;
+	align?: 'center' | 'left' | 'right' | undefined;
+	bodyClass: string;
+	disableCustomClickOnRow?: boolean;
+	expanded?: boolean;
+	filterIdentifier?: string;
+	header: HeaderDefinition;
+	noWrap?: boolean;
+	truncate?: boolean;
+}
+
+export const ACTIVATE_COLUMNS: ColumnDefinition[] = [
 	{
 		accessor: 'envName',
 		bodyClass: 'border-0 cursor-pointer',
@@ -42,12 +60,10 @@ export const ACTIVATE_COLUMNS = [
 		accessor: 'expirationDate',
 		bodyClass: 'border-0 cursor-pointer',
 		header: {
-			name: `${i18n.translate('start-date')} - \n ${i18n.translate(
-				'exp-date'
-			)}`,
+			name: `${i18n.translate('start-date')} - 
+ ${i18n.translate('exp-date')}`,
 
-			styles:
-				'bg-transparent text-neutral-10 font-weight-bold white-space',
+			styles: 'bg-transparent text-neutral-10 font-weight-bold white-space',
 		},
 		noWrap: true,
 	},

@@ -8,24 +8,24 @@ import classNames from 'classnames';
 import {useState} from 'react';
 import i18n from '~/utils/I18n';
 
-interface GroupButton {
+interface GroupButton<T> {
 	label: string;
-	value: string;
+	value: T;
 }
 
-interface RoundedGroupButtonsProps {
-	groupButtons: GroupButton[];
-	handleOnChange: (value: string) => void;
+interface RoundedGroupButtonsProps<T> {
+	groupButtons: GroupButton<T>[];
+	handleOnChange: (value: T) => void;
 	id?: string;
 }
 
-const RoundedGroupButtons: React.FC<RoundedGroupButtonsProps> = ({
+const RoundedGroupButtons = <T extends string>({
 	groupButtons,
 	handleOnChange,
 	id,
 	...props
-}) => {
-	const [selectedButton, setSelectedButton] = useState(
+}: RoundedGroupButtonsProps<T>) => {
+	const [selectedButton, setSelectedButton] = useState<T>(
 		groupButtons[0]?.value
 	);
 
@@ -37,19 +37,19 @@ const RoundedGroupButtons: React.FC<RoundedGroupButtonsProps> = ({
 		>
 			{groupButtons?.map(({label, value}, index) => (
 				<Button
-					aria-label={i18n.sub('select-x', [value])}
+					aria-label={i18n.sub('select-x', [value as string])}
 					className={classNames('btn px-4 py-1 rounded-pill', {
 						'bg-transparent text-neutral-4':
 							selectedButton !== value,
 						'bg-white border border-primary label-primary text-brand-primary':
 							selectedButton === value,
 					})}
-					key={`${index}-${value}`}
+					key={`${index}-${value as string}`}
 					onClick={() => {
 						setSelectedButton(value);
 						handleOnChange(value);
 					}}
-					value={value}
+					value={value as string}
 					{...props}
 				>
 					{label}

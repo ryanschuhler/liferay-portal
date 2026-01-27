@@ -5,7 +5,7 @@
 
 import {hasVirtualCluster} from '.';
 
-export function getKeyType(licenseEntryType) {
+export function getKeyType(licenseEntryType: string) {
 	const hasVirtualClusterForActivationKeys =
 		hasVirtualCluster(licenseEntryType);
 

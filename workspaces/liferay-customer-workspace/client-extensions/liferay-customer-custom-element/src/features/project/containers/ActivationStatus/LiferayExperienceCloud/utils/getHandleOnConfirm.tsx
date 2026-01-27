@@ -5,7 +5,10 @@
 
 import {isLowercaseAndNumbers} from '~/utils/validations.form';
 
-export default function getHandleOnConfirm(projectIdValue, handleError) {
+export default function getHandleOnConfirm(
+	projectIdValue: string,
+	handleError: (error: string) => void
+): void {
 	const errorMessageProductId = isLowercaseAndNumbers(projectIdValue);
 
 	if (errorMessageProductId) {

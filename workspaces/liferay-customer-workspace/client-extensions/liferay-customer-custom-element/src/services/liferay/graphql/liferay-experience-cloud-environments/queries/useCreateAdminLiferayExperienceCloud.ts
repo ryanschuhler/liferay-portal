@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {OperationVariables, gql, useMutation} from '@apollo/client';
+import {gql, useMutation} from '@apollo/client';
 
 export const CREATE_ADMIN_LIFERAY_EXPERIENCE_CLOUD = gql`
 	mutation createAdminLiferayExperienceCloud(
@@ -24,7 +24,6 @@ export const CREATE_ADMIN_LIFERAY_EXPERIENCE_CLOUD = gql`
 `;
 
 export function useCreateAdminLiferayExperienceCloud(
-	variables: OperationVariables,
 	options = {displaySuccess: false}
 ) {
 	return useMutation(CREATE_ADMIN_LIFERAY_EXPERIENCE_CLOUD, {
@@ -32,6 +31,5 @@ export function useCreateAdminLiferayExperienceCloud(
 			displaySuccess: options.displaySuccess,
 			type: 'liferay-rest',
 		},
-		variables,
 	});
 }

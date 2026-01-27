@@ -8,11 +8,25 @@ import ClayIcon from '@clayui/icon';
 import ClayModal from '@clayui/modal';
 import classNames from 'classnames';
 import {useState} from 'react';
-import PopoverIconButton from '~/features/project/components/PopoverIconButton';
-import i18n from '~/utils/I18n';
 import {Skeleton} from '~/components';
-import InviteTeamMembersForm from '~/features/project/containers/InviteTeamMembersForm';
 import SearchBar from '~/components/SearchBar';
+import PopoverIconButton from '~/features/project/components/PopoverIconButton';
+import InviteTeamMembersForm from '~/features/project/containers/InviteTeamMembersForm';
+import i18n from '~/utils/I18n';
+import {IKoroneikiAccount, IProject} from '~/utils/types';
+
+interface IProps {
+	articleAccountSupportURL: string;
+	availableSupportSeatsCount: number;
+	count: number;
+	hasAdministratorRole: boolean;
+	koroneikiAccount?: IKoroneikiAccount;
+	loading: boolean;
+	mutateUserData: () => void;
+	oAuthToken?: string;
+	onSearch: (term: string) => void;
+	searching: boolean;
+}
 
 const TeamMembersTableHeader = ({
 	articleAccountSupportURL,
@@ -21,12 +35,12 @@ const TeamMembersTableHeader = ({
 	hasAdministratorRole,
 	koroneikiAccount,
 	loading,
+	mutateUserData,
 	oAuthToken,
 	onSearch,
 	searching,
-}) => {
-	const [searchTerm, setSearchTerm] = useState('');
-	const [clearSearchTerm, setClearSearchTerm] = useState(false);
+}: IProps) => {
+	const [searchTerm, setSearchTerm] = useState<string>('');
 
 	const {observer, onOpenChange, open} = useModal();
 
@@ -38,11 +52,22 @@ const TeamMembersTableHeader = ({
 						availableSupportSeatsCount={availableSupportSeatsCount}
 						handlePage={() => onOpenChange(false)}
 						leftButton={i18n.translate('cancel')}
-						oAuthToken={oAuthToken}
-						project={{
-							...koroneikiAccount,
-							id: koroneikiAccount?.r_accountEntryToKoroneikiAccount_accountEntryId,
-						}}
+						mutateUserData={mutateUserData}
+						oAuthToken={oAuthToken ?? ''}
+						project={
+							{
+								acWorkspaceGroupId:
+									koroneikiAccount?.code ?? '',
+								accountKey: koroneikiAccount?.accountKey ?? '',
+								code: koroneikiAccount?.code ?? '',
+								dxpVersion:
+									koroneikiAccount?.dxpVersion ?? '7.4',
+								id: koroneikiAccount?.id?.toString() ?? '', // Use koroneikiAccount.id and convert to string
+								maxRequestors:
+									koroneikiAccount?.maxRequestors ?? 0,
+								name: koroneikiAccount?.name ?? '',
+							} as IProject
+						}
 					/>
 				</ClayModal>
 			)}
@@ -51,17 +76,15 @@ const TeamMembersTableHeader = ({
 				<div className="d-flex">
 					<div>
 						<SearchBar
-							clearSearchTerm={clearSearchTerm}
 							onSearchSubmit={(term) => {
 								setSearchTerm(term);
 								onSearch(term);
-								setClearSearchTerm(false);
 							}}
 						/>
 					</div>
 
 					<div className="align-items-center d-flex ml-auto">
-						{koroneikiAccount?.maxRequestors > 0 && (
+						{(koroneikiAccount?.maxRequestors ?? 0) > 0 && (
 							<>
 								<PopoverIconButton
 									alignPosition="top"
@@ -93,8 +116,11 @@ const TeamMembersTableHeader = ({
 										)}
 									>
 										{i18n.sub('x-of-x-available', [
-											availableSupportSeatsCount,
-											koroneikiAccount.maxRequestors,
+											availableSupportSeatsCount.toString(),
+											(
+												koroneikiAccount?.maxRequestors ??
+												0
+											).toString(),
 										])}
 									</p>
 								)}
@@ -108,7 +134,6 @@ const TeamMembersTableHeader = ({
 								displayType="primary"
 								onClick={() => {
 									onOpenChange(true);
-									setClearSearchTerm(true);
 								}}
 								outline
 							>
@@ -127,11 +152,11 @@ const TeamMembersTableHeader = ({
 						<p className="font-weight-semi-bold m-0 mt-3 text-paragraph-sm">
 							{count > 1
 								? i18n.sub('x-results-for-x', [
-										count,
+										count.toString(),
 										searchTerm,
 									])
 								: i18n.sub('x-result-for-x', [
-										count,
+										count.toString(),
 										searchTerm,
 									])}
 						</p>

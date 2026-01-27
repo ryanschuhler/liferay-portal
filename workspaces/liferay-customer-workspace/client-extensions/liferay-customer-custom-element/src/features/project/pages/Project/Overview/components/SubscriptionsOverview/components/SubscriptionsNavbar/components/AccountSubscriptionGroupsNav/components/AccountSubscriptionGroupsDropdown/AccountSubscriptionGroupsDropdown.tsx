@@ -10,13 +10,28 @@ import {useState} from 'react';
 import Skeleton from '~/components/Skeleton';
 import i18n from '~/utils/I18n';
 
+interface IAccountSubscriptionGroup {
+	name: string;
+
+	// Add other properties as they are used in the component
+
+}
+
+interface IProps {
+	accountSubscriptionGroups: IAccountSubscriptionGroup[];
+	disabled: boolean;
+	loading: boolean;
+	onSelect: (index: number) => void;
+	selectedIndex: number;
+}
+
 const AccountSubscriptionGroupsDropdown = ({
 	accountSubscriptionGroups,
 	disabled,
 	loading,
 	onSelect,
 	selectedIndex,
-}) => {
+}: IProps) => {
 	const [active, setActive] = useState(false);
 
 	return (
@@ -26,7 +41,7 @@ const AccountSubscriptionGroupsDropdown = ({
 			menuWidth="shrink"
 			onActiveChange={setActive}
 			trigger={
-				<ClayButton 
+				<ClayButton
 					aria-label={i18n.translate('select-subscription')}
 					borderless
 					className="align-items-center d-flex px-2"
@@ -56,7 +71,9 @@ const AccountSubscriptionGroupsDropdown = ({
 							onSelect(index);
 							setActive(false);
 						}}
-						symbolRight={index === selectedIndex && 'check'}
+						symbolRight={
+							index === selectedIndex ? 'check' : undefined
+						}
 					>
 						{accountSubscriptionGroup.name}
 					</DropDown.Item>

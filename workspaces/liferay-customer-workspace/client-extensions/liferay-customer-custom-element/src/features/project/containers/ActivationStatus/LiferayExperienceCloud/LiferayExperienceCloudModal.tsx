@@ -7,16 +7,31 @@ import ClayForm, {ClayInput} from '@clayui/form';
 import ClayModal from '@clayui/modal';
 import classNames from 'classnames';
 import {useState} from 'react';
-import i18n from '~/utils/I18n';
 import {Badge, Button} from '~/components';
+import {IAction} from '~/features/project/context/reducer';
+import {ILiferayExperienceCloudEnvironment} from '~/features/project/pages/Project/LiferayExperienceCloud/LiferayExperienceCloud';
 import {useUpdateAccountSubscriptionGroup} from '~/services/liferay/graphql/account-subscription-groups/queries/useUpdateAccountSubscriptionGroup';
 import {useUpdateLiferayExperienceCloudEnvironment} from '~/services/liferay/graphql/liferay-experience-cloud-environments/queries/useUpdateLiferayExperienceCloudEnvironment';
+import i18n from '~/utils/I18n';
+import {IAccountSubscriptionGroup, IProject} from '~/utils/types';
+
 import getHandleOnConfirm from './utils/getHandleOnConfirm';
-import getUpdateProjectId from './utils/getUpdateProjectId';
 import getUpdateSubscriptionGroupsStatus from './utils/getUpdateSubscriptionGroupsStatus';
 
+interface LiferayExperienceCloudModalProps {
+	accountKey: string;
+	dispatch: React.Dispatch<IAction>;
+	handleFinishUpdate: () => void;
+	handleStatusLxcActivation: () => void;
+	lxcEnvironment: ILiferayExperienceCloudEnvironment;
+	observer: any;
+	onClose: () => void;
+	project: IProject;
+	subscriptionGroupLxcEnvironment: IAccountSubscriptionGroup;
+	subscriptionGroups: IAccountSubscriptionGroup[];
+}
+
 const LiferayExperienceCloudModal = ({
-	accountKey,
 	dispatch,
 	handleFinishUpdate,
 	handleStatusLxcActivation,
@@ -26,33 +41,18 @@ const LiferayExperienceCloudModal = ({
 	project,
 	subscriptionGroupLxcEnvironment,
 	subscriptionGroups,
-}) => {
+}: LiferayExperienceCloudModalProps) => {
 	const [hasError, setHasError] = useState();
-	const handleError = (error) => setHasError(error);
+	const handleError = (error: any) => setHasError(error);
 	const projectId = lxcEnvironment?.projectId;
 
 	const [projectIdValue, setProjectIdValue] = useState('');
 
-	const [
-		updateLiferayExperienceCloudEnvironment,
-	] = useUpdateLiferayExperienceCloudEnvironment();
+	const [updateLiferayExperienceCloudEnvironment] =
+		useUpdateLiferayExperienceCloudEnvironment();
 
-	const [
-		updateAccountSubscriptionGroup,
-	] = useUpdateAccountSubscriptionGroup();
-
-	const handleOnConfirm = () => {
-		getHandleOnConfirm(
-			updateSubscriptionGroupsStatus,
-			handleError,
-			projectIdValue,
-			onClose
-		);
-
-		updateSubscriptionGroupsStatus();
-		updateProjectId(accountKey);
-		onClose();
-	};
+	const [updateAccountSubscriptionGroup] =
+		useUpdateAccountSubscriptionGroup();
 
 	const updateSubscriptionGroupsStatus = async () => {
 		getUpdateSubscriptionGroupsStatus(
@@ -68,12 +68,22 @@ const LiferayExperienceCloudModal = ({
 	};
 
 	const updateProjectId = async () => {
-		getUpdateProjectId(
-			projectIdValue,
-			project.id,
-			lxcEnvironment,
-			updateLiferayExperienceCloudEnvironment
-		);
+		await updateLiferayExperienceCloudEnvironment({
+			variables: {
+				LiferayExperienceCloudEnvironment: {
+					projectId: projectIdValue,
+				},
+				liferayExperienceCloudEnvironmentId: lxcEnvironment.uuid,
+			},
+		});
+	};
+
+	const handleOnConfirm = () => {
+		getHandleOnConfirm(projectIdValue, handleError);
+
+		updateSubscriptionGroupsStatus();
+		updateProjectId();
+		onClose();
 	};
 
 	return (
@@ -82,9 +92,7 @@ const LiferayExperienceCloudModal = ({
 				<div className="bg-neutral-1 cp-liferay-experience-cloud-status-modal">
 					<div className="d-flex justify-content-between">
 						<h4 className="ml-4 mt-4 text-brand-primary text-paragraph">
-							{i18n
-								.translate('liferay-saas-setup')
-								.toUpperCase()}
+							{i18n.translate('liferay-saas-setup').toUpperCase()}
 						</h4>
 
 						<div className="mr-4 mt-3">
@@ -135,15 +143,17 @@ const LiferayExperienceCloudModal = ({
 
 					<div className="d-flex my-4 px-4">
 						<Button
-							displayType="secondary ml-auto mt-2"
+							className="ml-auto mt-2"
+							displayType="secondary"
 							onClick={onClose}
 						>
 							{i18n.translate('cancel')}
 						</Button>
 
 						<Button
+							className="ml-3 mt-2"
 							disabled={!projectIdValue}
-							displayType="primary ml-3 mt-2"
+							displayType="primary"
 							onClick={handleOnConfirm}
 						>
 							{i18n.translate('confirm')}

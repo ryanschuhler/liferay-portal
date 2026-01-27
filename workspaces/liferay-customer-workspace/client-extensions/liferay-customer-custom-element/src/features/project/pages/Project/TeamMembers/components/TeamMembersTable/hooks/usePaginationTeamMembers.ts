@@ -5,10 +5,10 @@
 
 import {useMemo, useState} from 'react';
 import i18n from '~/utils/I18n';
-export default function usePagination(teamMembers) {
+export default function usePagination(teamMembers: any[]) {
 	const [activePage, setActivePage] = useState(1);
 	const [itemsPerPage, setItemsPerPage] = useState(5);
-	const paginationConfig = useMemo(
+	const paginationConfig: any = useMemo(
 		() => ({
 			activePage,
 			itemsPerPage,
@@ -30,7 +30,7 @@ export default function usePagination(teamMembers) {
 		}),
 		[activePage, itemsPerPage, teamMembers?.length]
 	);
-	const teamMembersByStatusPaginated = useMemo(() => {
+	const teamMembersByStatusPaginated: any[] = useMemo(() => {
 		const teamMembersFilteredByStatus = teamMembers;
 		if (teamMembersFilteredByStatus) {
 			const teamMembersFilteredByStatusPerPage =

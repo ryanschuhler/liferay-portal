@@ -25,7 +25,7 @@ type DropdownProps = {
 	initialTotalCount: number;
 	koroneikiAccounts: KoroneikiAccountsType;
 	onIntersecting: () => void;
-	onSearch: () => void;
+	onSearch: (searchTerm: string) => void;
 	searching: boolean;
 	selectedKoroneikiAccount: any;
 };

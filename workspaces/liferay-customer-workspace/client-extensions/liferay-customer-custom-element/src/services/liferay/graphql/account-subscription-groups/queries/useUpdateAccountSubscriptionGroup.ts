@@ -8,7 +8,7 @@ import {OperationVariables, useMutation} from '@apollo/client';
 import {patchAccountSubscriptionGroups} from './patchAccountSubscriptionGroups';
 
 export function useUpdateAccountSubscriptionGroup(
-	variables: OperationVariables,
+	variables: OperationVariables = {},
 	options = {displaySuccess: false}
 ) {
 	return useMutation(patchAccountSubscriptionGroups, {

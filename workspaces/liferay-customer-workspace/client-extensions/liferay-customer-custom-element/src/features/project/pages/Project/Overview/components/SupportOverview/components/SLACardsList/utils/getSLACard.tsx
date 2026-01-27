@@ -6,17 +6,29 @@
 import {FORMAT_DATE_TYPES} from '~/utils/constants';
 import getDateCustomFormat from '~/utils/getDateCustomFormat';
 
-export default function getSLACard(endDate, startDate, title, label) {
+interface ISLACardData {
+	endDate: string;
+	label: string;
+	startDate: string;
+	title: string;
+}
+
+export default function getSLACard(
+	endDate: string,
+	startDate: string,
+	title: string,
+	label: string
+): ISLACardData {
 	return {
-		endDate: getDateCustomFormat(
-			FORMAT_DATE_TYPES.day2DMonth2DYearN,
-			endDate
-		),
+		endDate:
+			getDateCustomFormat(FORMAT_DATE_TYPES.day2DMonth2DYearN, endDate) ||
+			'',
 		label,
-		startDate: getDateCustomFormat(
-			FORMAT_DATE_TYPES.day2DMonth2DYearN,
-			startDate
-		),
+		startDate:
+			getDateCustomFormat(
+				FORMAT_DATE_TYPES.day2DMonth2DYearN,
+				startDate
+			) || '',
 		title: title.includes('/')
 			? `${title.split(' ')[0]} ${title.split(' ')[1]}`
 			: title.split(' ')[0],

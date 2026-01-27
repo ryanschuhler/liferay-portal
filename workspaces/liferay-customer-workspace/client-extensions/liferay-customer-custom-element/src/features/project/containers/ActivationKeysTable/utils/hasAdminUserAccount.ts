@@ -3,8 +3,14 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-export function hasAdminUserAccount(myAccount) {
-	return myAccount?.myUserAccount?.roleBriefs?.some(
-		(roleBrief) => roleBrief.name === 'Administrator'
+import {IMyAccountApollo} from '~/utils/types';
+
+export function hasAdminUserAccount(
+	myAccount: IMyAccountApollo | undefined
+): boolean {
+	return (
+		myAccount?.myUserAccount?.roleBriefs?.some(
+			(roleBrief) => roleBrief.name === 'Administrator'
+		) || false
 	);
 }

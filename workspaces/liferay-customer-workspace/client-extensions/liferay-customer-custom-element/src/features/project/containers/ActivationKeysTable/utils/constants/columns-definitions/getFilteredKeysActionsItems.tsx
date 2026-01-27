@@ -5,15 +5,22 @@
 
 import ClayIcon from '@clayui/icon';
 import i18n from '~/utils/I18n';
+
 import {downloadAllKeysDetails} from '../../downloadActivationLicenseKey';
 
+interface ActionItem {
+	icon: JSX.Element;
+	label: string;
+	onClick: () => Promise<void>;
+}
+
 export function getFilteredKeysActionsItems(
-	accountKey,
-	oAuthToken,
-	provisioningServerAPI,
-	handleAlertStatus,
-	productName
-) {
+	accountKey: string,
+	oAuthToken: string,
+	provisioningServerAPI: string,
+	handleAlertStatus: (downloaded: boolean) => void,
+	productName: string
+): ActionItem[] {
 	return [
 		{
 			icon: (
@@ -28,7 +35,7 @@ export function getFilteredKeysActionsItems(
 					productName
 				);
 
-				return handleAlertStatus(downloadedAggregated);
+				return handleAlertStatus(downloadedAggregated ?? false);
 			},
 		},
 	];

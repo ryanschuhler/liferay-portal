@@ -5,21 +5,28 @@
 
 import ClayIcon from '@clayui/icon';
 import i18n from '~/utils/I18n';
+
 import {downloadAllKeysDetails} from './downloadActivationLicenseKey';
 
+interface ActionItem {
+	icon: JSX.Element;
+	label: string;
+	onClick: () => void | Promise<void | boolean>;
+}
+
 export function getActivationKeysActionsItems(
-	accountKey,
-	oAuthToken,
-	provisioningServerAPI,
-	handleAlertStatus,
-	handleRedirectPage,
-	handleDeactivatePage,
-	productName,
-	allowSelfProvisioning,
-	hasRenewalSubscription,
-	handleRedirectRenewPage
-) {
-	const dropdownItems = [];
+	accountKey: string,
+	oAuthToken: string,
+	provisioningServerAPI: string,
+	handleAlertStatus: (downloaded: boolean) => void,
+	handleRedirectPage: () => void,
+	handleDeactivatePage: () => void,
+	productName: string,
+	allowSelfProvisioning: boolean,
+	hasRenewalSubscription: boolean,
+	handleRedirectRenewPage: () => void
+): ActionItem[] {
+	const dropdownItems: ActionItem[] = [];
 
 	if (allowSelfProvisioning) {
 		dropdownItems.push({
@@ -69,7 +76,7 @@ export function getActivationKeysActionsItems(
 				productName
 			);
 
-			return handleAlertStatus(downloadedAggregated);
+			return handleAlertStatus(!!downloadedAggregated);
 		},
 	});
 

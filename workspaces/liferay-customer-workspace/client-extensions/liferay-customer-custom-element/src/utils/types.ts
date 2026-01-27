@@ -3,6 +3,12 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {
+	PRODUCT_DISPLAY_EXCEPTION,
+	PRODUCT_DISPLAY_EXCEPTION_INSTANCE_SIZE,
+	SUBSCRIPTION_TYPES,
+} from '~/utils/constants/subscriptionCardsCount';
+
 export interface IAccountBrief {
 	externalReferenceCode: string;
 	id: number;
@@ -18,14 +24,26 @@ export interface IAccountRole {
 }
 
 export interface IAccountSubscription {
-	name?: string;
+	accountKey: string;
+	accountSubscriptionGroupERC: string;
+	accountSubscriptionId: number;
+	endDate: string;
+	externalReferenceCode: string;
+	instanceSize: string;
+	name: string;
+	productKey: string;
+	quantity: number;
+	startDate: string;
 }
 
 export interface IAccountSubscriptionGroup {
 	accountSubscriptionGroupId?: number;
 	activationProductName?: string;
 	activationStatus: string;
-	name?: string;
+	externalReferenceCode?: string;
+	hasActivation?: boolean;
+	hasPartnership?: boolean;
+	name: string;
 }
 
 export interface IBusinessEvent {
@@ -109,26 +127,116 @@ export interface IOption {
 }
 
 export interface IOrganizationBrief {
+	id: string;
 	name: string;
 }
 
 export interface IProject {
-	acWorkspaceGroupId?: string;
-	accountKey?: string;
-	code?: string;
-	dxpVersion?: string;
+	acWorkspaceGroupId: string;
+	accountKey: string;
+	allowSelfProvisioning?: boolean;
+	code: string;
+	dxpVersion: string;
 	externalReferenceCode?: string;
-	id?: number;
+	id: string;
 	liferayContactEmailAddress?: string;
 	liferayContactName?: string;
-	maxRequestors?: number;
+	maxRequestors: number;
 	name: string;
 	partner?: any;
 	slaCurrent?: string;
 }
 
-export interface IRoleBrief {
+export interface IRole {
+	id: string;
 	name: string;
+	raysourceName: string;
+	[key: string]: any;
+}
+
+export interface IInvite {
+	email: string;
+	familyName: string;
+	givenName: string;
+	role: IAccountRole[];
+	[key: string]: any;
+}
+
+export interface IActivationKey {
+	active?: boolean;
+	complimentary: boolean;
+	createDate?: string;
+	description: string;
+	expirationDate: string | Date;
+	hostName: string;
+	id: string;
+	ipAddresses: string;
+	isLiferayManaged?: boolean;
+	keyType?: string;
+	licenseEntryType: string;
+	licenseVersion?: number;
+	macAddresses: string;
+	maxClusterNodes: number;
+	name: string;
+	productName: string;
+	productVersion: string;
+	sizing: string;
+	startDate: string | Date;
+	status: string;
+	version?: string;
+}
+
+export interface IRoleBrief {
+	id: string;
+	name: string;
+}
+
+export interface IGraphQLUserAccount {
+	accountBriefs?: {
+		externalReferenceCode: string;
+		id: string;
+		name: string;
+		roleBriefs?: IRoleBrief[];
+	}[];
+	dateCreated?: string;
+	emailAddress?: string;
+	id: string;
+	isLiferayStaff?: boolean;
+	isLoggedUser?: boolean;
+	isPartner?: boolean;
+	lastLoginDate?: string;
+	name?: string;
+	organizationBriefs?: {
+		id: string;
+		name: string;
+	}[];
+	roleBriefs?: IRoleBrief[];
+	uuid?: string;
+}
+
+export interface IMyAccountApollo {
+	myUserAccount: IGraphQLUserAccount;
+}
+
+export interface ISelectedSubscription {
+	complimentary?: boolean;
+	endDate?: string;
+	instanceSize?: number;
+	perpetual?: boolean;
+	productKey?: string;
+	productPurchaseKey?: string;
+	provisionedCount?: number;
+	quantity?: number;
+	startDate?: string;
+}
+
+export interface ISelectedKeyData {
+	hasNotPermanentLicense?: boolean;
+	licenseEntryType?: string;
+	productType?: string;
+	productVersion?: string;
+	selectedSubscription?: ISelectedSubscription;
+	[key: string]: any;
 }
 
 export interface ITicket {
@@ -146,6 +254,7 @@ export interface ITicketAttachment {
 		name: string;
 	};
 	dateCreated: string;
+	downloadUrl?: string;
 	fileName: string;
 	fileSize: string;
 	id: number;
@@ -172,6 +281,7 @@ export interface IUserAccount {
 	accountBriefs?: IAccountBrief[];
 	accountKey?: string;
 	code?: string;
+	dateCreated?: string;
 	email?: string;
 	emailAddress?: string;
 	familyName?: string;
@@ -179,9 +289,12 @@ export interface IUserAccount {
 	givenName?: string;
 	id?: number;
 	isAccountAdmin: boolean;
+	isLoggedUser?: boolean;
 	isOmniAdmin: boolean;
+	isPartner?: boolean;
 	isProvisioning: boolean;
 	isStaff: boolean;
+	lastLoginDate?: string;
 	lastName?: string;
 	organizationBriefs?: IOrganizationBrief[];
 	partnershipCurrent?: string;
@@ -203,4 +316,65 @@ export interface IUserAccount {
 	userId?: number;
 	userName?: string;
 	uuid?: string;
+}
+
+export interface FilterValue<T> {
+	name: string;
+	value: T;
+}
+
+export interface DateFilterValue {
+	onOrAfter: Date | boolean;
+	onOrBefore: Date | boolean;
+}
+
+export interface KeyTypeFilterValue {
+	hasCluster?: boolean;
+	hasOnPremise?: boolean;
+	hasVirtualCluster?: boolean;
+	maxNodes?: string;
+	minNodes?: string;
+}
+
+export interface IFilters {
+	environmentTypes: FilterValue<string[]>;
+	expirationDate: FilterValue<DateFilterValue>;
+	hasValue: boolean;
+	instanceSizes: FilterValue<string[]>;
+	keyType: FilterValue<KeyTypeFilterValue>;
+	productVersions: FilterValue<string[]>;
+	searchTerm: string;
+	startDate: FilterValue<DateFilterValue>;
+	status: FilterValue<string[]>;
+}
+
+// Types for SUBSCRIPTION_TYPES
+
+export type BlankSubscriptionType = (typeof SUBSCRIPTION_TYPES.Blank)[number];
+export type PurchasedSubscriptionType =
+	(typeof SUBSCRIPTION_TYPES.Purchased)[number];
+export type PurchasedAndProvisionedSubscriptionType =
+	(typeof SUBSCRIPTION_TYPES.PurchasedAndProvisioned)[number];
+
+// Types for PRODUCT_DISPLAY_EXCEPTION
+
+export type ProductDisplayExceptionBlankProducts =
+	(typeof PRODUCT_DISPLAY_EXCEPTION.blankProducts)[number];
+export type ProductDisplayExceptionNonBlankProducts =
+	(typeof PRODUCT_DISPLAY_EXCEPTION.nonBlankProducts)[number];
+export type ProductDisplayExceptionPurchasedProduct =
+	(typeof PRODUCT_DISPLAY_EXCEPTION.purchasedProduct)[number];
+
+// Types for PRODUCT_DISPLAY_EXCEPTION_INSTANCE_SIZE
+
+export type ProductDisplayExceptionInstanceSizePurchasedProduct =
+	(typeof PRODUCT_DISPLAY_EXCEPTION_INSTANCE_SIZE.purchasedProductInstanceSize)[number];
+
+export interface ISelectedKey {
+	expirationDate: string | Date;
+	licenseEntryType: string;
+	licenseVersion: number;
+	productVersion: string;
+	sizing: string;
+	startDate: string | Date;
 }

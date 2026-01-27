@@ -9,16 +9,16 @@ import {actionTypes} from '~/features/project/context/reducer';
 import {STATUS_TAG_TYPE_NAMES} from '~/features/project/utils/constants';
 
 export default function useOnCloseSetupModal(
-	dataSubscriptionGroups,
-	handleOncloseSetupModal,
-	setStatusLxcActivation
+	dataSubscriptionGroups: any,
+	handleOncloseSetupModal: () => void,
+	setStatusLxcActivation: (status: string) => void
 ) {
-	const [, dispatch] = useAppContext();
-	const {observer, onClose} = useModal({
+	const [, dispatch]: [any, any] = useAppContext();
+	const {observer, onClose}: any = useModal({
 		onClose: () => handleOncloseSetupModal(),
 	});
 
-	const handleSubmitLxcEnvironment = (isSuccess) => {
+	const handleSubmitLxcEnvironment = (isSuccess?: boolean) => {
 		onClose();
 		if (isSuccess && dataSubscriptionGroups) {
 			const items =

@@ -15,7 +15,13 @@ const getCurrentRoleType = (roleKey: string) => {
 	return roleValues.find((roleType) => roleType.key === roleKey);
 };
 
-export function getRolesFiltered(items: any[], project: IProject) {
+export function getRolesFiltered(
+	items: any[],
+	project: {
+		partner?: any;
+		slaCurrent?: string;
+	}
+) {
 	const hasPrioritySLA =
 		project?.slaCurrent?.includes(SLA_TYPES.global) ||
 		project?.slaCurrent?.includes(SLA_TYPES.gold) ||

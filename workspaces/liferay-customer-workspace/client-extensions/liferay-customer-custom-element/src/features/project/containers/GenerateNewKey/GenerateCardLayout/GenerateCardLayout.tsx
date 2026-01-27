@@ -7,37 +7,47 @@ import ClayCard from '@clayui/card';
 import i18n from '~/utils/I18n';
 import {FORMAT_DATE_TYPES} from '~/utils/constants';
 import getDateCustomFormat from '~/utils/getDateCustomFormat';
+import {ISelectedKeyData} from '~/utils/types';
+
 import {getLicenseKeyEndDatesByLicenseType} from '../utils/licenseKeyEndDate';
+
+interface GenerateCardLayoutProps {
+	expirationRenewDate: string;
+	isRenew: boolean;
+	licenseEntryTypeName: string;
+	selectedKeyData: ISelectedKeyData;
+}
 
 const GenerateCardLayout = ({
 	expirationRenewDate,
 	isRenew,
 	licenseEntryTypeName,
 	selectedKeyData,
-}) => {
+}: GenerateCardLayoutProps) => {
 	const endDate = selectedKeyData?.selectedSubscription?.endDate;
-	const isComplimentaryKey = selectedKeyData?.selectedSubscription?.complimentary;
+	const isComplimentaryKey =
+		selectedKeyData?.selectedSubscription?.complimentary;
 	const licenseEndDate = getLicenseKeyEndDatesByLicenseType(selectedKeyData);
 	const startDate = selectedKeyData?.selectedSubscription?.startDate;
 
 	const formatDate = (
-		date,
+		date: string | Date,
 		formatType = FORMAT_DATE_TYPES.day2DMonthSYearN
 	) => getDateCustomFormat(formatType, date);
 
-	const currentDate = `${formatDate(startDate)} - ${formatDate(
-		licenseEndDate ?? endDate
+	const currentDate = `${formatDate(startDate || '')} - ${formatDate(
+		(licenseEndDate ?? endDate) || ''
 	)}`;
-	const renewalDates = `${formatDate(startDate)} - ${formatDate(
-		expirationRenewDate
+	const renewalDates = `${formatDate(startDate || '')} - ${formatDate(
+		expirationRenewDate || ''
 	)}`;
 
 	const HandleSelectedDates = () => {
-		if (selectedKeyData?.selectedSubscription.perpetual) {
+		if (selectedKeyData?.selectedSubscription?.perpetual) {
 			return i18n.translate('not-applicable');
 		}
 
-		if (!isComplimentaryKey && isRenew) {
+		if (selectedKeyData?.selectedSubscription?.complimentary && isRenew) {
 			return renewalDates;
 		}
 
@@ -74,34 +84,40 @@ const GenerateCardLayout = ({
 						</p>
 
 						<p className="font-weight-normal">
-							<HandleSelectedDates />
+							{HandleSelectedDates()}
 						</p>
 
-						{!(isComplimentaryKey && isRenew) && (						
-							<>
+						{!(isComplimentaryKey && isRenew) && (
+							<div>
 								<p className="m-0">
-									{i18n.translate('key-activations-available')}
+									{i18n.translate(
+										'key-activations-available'
+									)}
 								</p>
 
 								<p className="font-weight-normal">
-									{selectedKeyData?.selectedSubscription?.quantity -
-										selectedKeyData?.selectedSubscription
-											?.provisionedCount}
+									{(selectedKeyData?.selectedSubscription
+										?.quantity ?? 0) -
+										(selectedKeyData?.selectedSubscription
+											?.provisionedCount ?? 0)}
 
 									{' of '}
 
-									{selectedKeyData?.selectedSubscription?.quantity}
+									{selectedKeyData?.selectedSubscription
+										?.quantity ?? 0}
 								</p>
 
-								<p className="m-0">{i18n.translate('instance-size')}</p>
+								<p className="m-0">
+									{i18n.translate('instance-size')}
+								</p>
 
 								<p className="font-weight-normal m-0">
 									{selectedKeyData?.selectedSubscription
 										?.instanceSize || 1}
 								</p>
-							</>
-						)}						
-					</div>
+							</div>
+						)}
+					</div>{' '}
 				</ClayCard.Description>
 			</ClayCard.Body>
 		</ClayCard>

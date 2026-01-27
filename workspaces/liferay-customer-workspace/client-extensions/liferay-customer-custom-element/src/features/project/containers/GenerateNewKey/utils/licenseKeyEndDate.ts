@@ -3,12 +3,14 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-const getLicenseKeyEndDateSelected = (selectedKeyData) => (licenseEntryType) =>
-	selectedKeyData?.selectedSubscription?.licenseKeyEndDates?.find(
-		(licenseKey) => licenseKey?.licenseEntryType.includes(licenseEntryType)
-	)?.endDate;
+const getLicenseKeyEndDateSelected =
+	(selectedKeyData: any) => (licenseEntryType: string) =>
+		selectedKeyData?.selectedSubscription?.licenseKeyEndDates?.find(
+			(licenseKey: any) =>
+				licenseKey?.licenseEntryType.includes(licenseEntryType)
+		)?.endDate;
 
-const getLicenseKeyEndDatesByLicenseType = (selectedKeyData) => {
+const getLicenseKeyEndDatesByLicenseType = (selectedKeyData: any) => {
 	const licenseEntryType = selectedKeyData?.licenseEntryType;
 
 	const _getLicenseKeyEndDateSelected =

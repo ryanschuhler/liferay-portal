@@ -10,6 +10,12 @@ import ClayModal from '@clayui/modal';
 import {useEffect, useState} from 'react';
 import Button from '~/components/Button';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
+import RenewButton from '~/features/project/containers/ActivationKeysTable/components/RenewButton';
+import TableKeyDetails from '~/features/project/containers/ActivationKeysTable/components/TableKeyDetails';
+import {ALERT_ACTIVATION_AGGREGATED_KEYS_DOWNLOAD_TEXT} from '~/features/project/containers/ActivationKeysTable/utils/constants/alertAggregateKeysDownloadText';
+import {downloadActivationLicenseKey} from '~/features/project/containers/ActivationKeysTable/utils/downloadActivationLicenseKey';
+import {hasAdminOrPartnerManager} from '~/features/project/containers/ActivationKeysTable/utils/hasAdminOrPartnerManager';
+import {hasAdminUserAccount} from '~/features/project/containers/ActivationKeysTable/utils/hasAdminUserAccount';
 import {ALERT_DOWNLOAD_TYPE} from '~/features/project/utils/constants/alertDownloadType';
 import {AUTO_CLOSE_ALERT_TIME} from '~/features/project/utils/constants/autoCloseAlertTime';
 import {Liferay} from '~/services/liferay';
@@ -20,51 +26,55 @@ import {
 	putSubscriptionInKey,
 } from '~/services/liferay/rest/raysource/LicenseKeys';
 import i18n from '~/utils/I18n';
+import {IActivationKey, IProject} from '~/utils/types';
 
-import {ALERT_ACTIVATION_AGGREGATED_KEYS_DOWNLOAD_TEXT} from '../../utils/constants/alertAggregateKeysDownloadText';
-import {downloadActivationLicenseKey} from '../../utils/downloadActivationLicenseKey';
-import {hasAdminOrPartnerManager} from '../../utils/hasAdminOrPartnerManager';
-import {hasAdminUserAccount} from '../../utils/hasAdminUserAccount';
-import RenewButton from '../RenewButton';
-import TableKeyDetails from '../TableKeyDetails';
+const YEAR_FOR_PERMANENT_KEYS = 2099;
 
-const openToast = (title, message, {type = 'success'} = {}) =>
-	Liferay.Util.openToast({
-		message: i18n.translate(message),
-		title: i18n.translate(title),
-		type,
-	});
+interface IModalKeyDetailsProps {
+	currentActivationKey: IActivationKey;
+	oAuthToken: string | undefined;
+	observer: any;
+	onClose: () => void;
+	productName: string;
+	project: IProject;
+	provisioningServerAPI: string;
+}
 
-const YEAR_FOR_PERMANENT_KEYS = 2100;
+interface IMyUserAccount {
+	myUserAccount: {
+		id: string;
+		roles: string[];
+	};
+}
 
 const ModalKeyDetails = ({
 	currentActivationKey,
-	isVisibleModal,
 	oAuthToken,
 	observer,
 	onClose,
 	productName,
 	project,
-}) => {
-	const {provisioningServerAPI} = useAppPropertiesContext();
-	const [clipboardValue, setClipboardValue] = useState('');
-	const [isLoading, setIsLoading] = useState(false);
+}: IModalKeyDetailsProps) => {
+	const {featureFlags, provisioningServerAPI} = useAppPropertiesContext();
+	const [clipboardValue, setClipboardValue] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [
 		activationKeysDownloadStatusModal,
 		setActivationKeysDownloadStatusModal,
-	] = useState('');
-	const [toggledSubscription, setToggleSubscription] = useState(false);
-	const [hasErrorSubscription, setHasErrorSubscription] = useState(false);
+	] = useState<'success' | 'danger' | ''>('');
+	const [toggledSubscription, setToggleSubscription] =
+		useState<boolean>(false);
+	const [hasErrorSubscription, setHasErrorSubscription] =
+		useState<boolean>(false);
 
 	const {data: myAccount} = useGetMyUserAccount();
 
-	const isAdminOrPartnerManager = hasAdminOrPartnerManager(
-		project,
-		myAccount?.myUserAccount
-	);
-	const isAdminUserAccount = hasAdminUserAccount(myAccount);
+	const isAdminOrPartnerManager =
+		myAccount?.myUserAccount &&
+		hasAdminOrPartnerManager(project, myAccount.myUserAccount);
+	const isAdminUserAccount = hasAdminUserAccount(myAccount as IMyUserAccount);
 
-	const handleAlertStatus = (hasSuccessfullyDownloadedKeys) => {
+	const handleAlertStatus = (hasSuccessfullyDownloadedKeys: boolean) => {
 		setActivationKeysDownloadStatusModal(
 			hasSuccessfullyDownloadedKeys
 				? ALERT_DOWNLOAD_TYPE.success
@@ -76,13 +86,11 @@ const ModalKeyDetails = ({
 		new Date(currentActivationKey.expirationDate).getFullYear() >
 		YEAR_FOR_PERMANENT_KEYS;
 
-	const {featureFlags} = useAppPropertiesContext();
-
 	useEffect(() => {
 		setIsLoading(true);
 
 		getSubscriptionInKey(
-			oAuthToken,
+			oAuthToken as string,
 			provisioningServerAPI,
 			currentActivationKey.id
 		)
@@ -91,7 +99,9 @@ const ModalKeyDetails = ({
 				setHasErrorSubscription(false);
 			})
 			.catch(() => {
-				openToast('error', 'get-subscription-failed', {type: 'danger'});
+				Liferay.Util.openToast('error', 'get-subscription-failed', {
+					type: 'danger',
+				});
 
 				setHasErrorSubscription(true);
 			})
@@ -102,33 +112,37 @@ const ModalKeyDetails = ({
 
 	const handleToggle = () => setToggleSubscription((toggled) => !toggled);
 
-	const handleSubscriptionInKey = async (status) => {
+	const handleSubscriptionInKey = async (status: boolean) => {
 		handleToggle();
 
 		const fn = status ? deleteSubscriptionInKey : putSubscriptionInKey;
 
 		try {
 			await fn(
-				oAuthToken,
+				oAuthToken as string,
 				provisioningServerAPI,
 				currentActivationKey.id
 			);
 
-			openToast('success', 'your-request-completed-successfully', {
-				type: 'success',
-			});
+			Liferay.Util.openToast(
+				'success',
+				'your-request-completed-successfully',
+				{
+					type: 'success',
+				}
+			);
 		}
 		catch {
 			setTimeout(() => {
 				handleToggle();
-				openToast('error', 'subscription-failed', {type: 'danger'});
+				Liferay.Util.openToast('error', 'subscription-failed', {
+					type: 'danger',
+				});
 			}, 500);
 		}
 	};
 
-	const isComplimentaryKey = currentActivationKey?.complimentary
-		? true
-		: false;
+	const isComplimentaryKey = currentActivationKey?.complimentary;
 
 	return (
 		<ClayModal center observer={observer} size="lg">
@@ -156,7 +170,7 @@ const ModalKeyDetails = ({
 				</div>
 
 				<TableKeyDetails
-					currentActivationKey={currentActivationKey}
+					activationKeys={currentActivationKey}
 					setValueToCopyToClipboard={setClipboardValue}
 				/>
 			</div>
@@ -172,11 +186,9 @@ const ModalKeyDetails = ({
 						<div className="pt-3 px-4">
 							<ClayToggle
 								disabled={hasErrorSubscription}
-								label={
-									<span className="text-neutral-10">
-										{i18n.sub('expiration-notifications')}
-									</span>
-								}
+								label={i18n.translate(
+									'expiration-notifications'
+								)}
 								onClick={() =>
 									handleSubscriptionInKey(toggledSubscription)
 								}
@@ -186,7 +198,7 @@ const ModalKeyDetails = ({
 							<p className="pt-2 text-neutral-8">
 								{i18n.sub(
 									'enable-notifications-through-email-when-this-activation-key-is-about-to-expire-x-days-before-x-days-before-and-on-the-day-of-expiration-you-can-unsubscribe-at-any-time',
-									[30, 15]
+									['30', '15']
 								)}
 							</p>
 						</div>
@@ -208,7 +220,6 @@ const ModalKeyDetails = ({
 								currentActivationKeyModal={currentActivationKey}
 								identifier="renew"
 								isComplimentaryKey={isComplimentaryKey}
-								isVisibleModal={isVisibleModal}
 								productName={productName}
 								project={project}
 							>
@@ -223,14 +234,14 @@ const ModalKeyDetails = ({
 							const isAbleToDownloadKey =
 								await downloadActivationLicenseKey(
 									currentActivationKey.id,
-									oAuthToken,
+									oAuthToken as string,
 									provisioningServerAPI,
 									currentActivationKey.productName,
 									currentActivationKey.productVersion,
 									project.name
 								);
 
-							handleAlertStatus(isAbleToDownloadKey);
+							handleAlertStatus(!!isAbleToDownloadKey);
 						}}
 					>
 						{i18n.translate('download-key')}
@@ -243,7 +254,7 @@ const ModalKeyDetails = ({
 					<ClayAlert
 						autoClose={AUTO_CLOSE_ALERT_TIME.success}
 						displayType="success"
-						onClose={() => setClipboardValue(false)}
+						onClose={() => setClipboardValue(null)}
 					>
 						{i18n.sub('x-copied-to-clipboard', [clipboardValue])}
 					</ClayAlert>
@@ -254,15 +265,15 @@ const ModalKeyDetails = ({
 				<ClayAlert.ToastContainer>
 					<ClayAlert
 						autoClose={
-							AUTO_CLOSE_ALERT_TIME[
-								activationKeysDownloadStatusModal
-							]
+							activationKeysDownloadStatusModal === 'success'
+								? AUTO_CLOSE_ALERT_TIME.success
+								: AUTO_CLOSE_ALERT_TIME.danger
 						}
 						className="cp-activation-key-download-alert"
 						displayType={
-							ALERT_DOWNLOAD_TYPE[
-								activationKeysDownloadStatusModal
-							]
+							activationKeysDownloadStatusModal === 'success'
+								? ALERT_DOWNLOAD_TYPE.success
+								: ALERT_DOWNLOAD_TYPE.danger
 						}
 						onClose={() => setActivationKeysDownloadStatusModal('')}
 					>

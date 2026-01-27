@@ -6,19 +6,27 @@
 import {ClayCheckbox} from '@clayui/form';
 import {useCallback, useEffect, useState} from 'react';
 import i18n from '~/utils/I18n';
+import {IFilters} from '~/utils/types';
+
 import DateFilter from '../DateFilter';
 
 const DNE_YEARS = 100;
+
+interface ExpirationDateFilterProps {
+	clearInputs: boolean;
+	hasDNE: boolean;
+	setFilters: React.Dispatch<React.SetStateAction<IFilters>>;
+}
 
 export default function ExpirationDateFilter({
 	clearInputs,
 	hasDNE,
 	setFilters,
-}) {
-	const [dneChecked, setDNEChecked] = useState(false);
+}: ExpirationDateFilterProps) {
+	const [dneChecked, setDNEChecked] = useState<boolean>(false);
 
 	const getOnOrAfterValue = useCallback(
-		(currentValue) => {
+		(currentValue: Date | boolean): Date | boolean => {
 			if (dneChecked) {
 				const today = new Date();
 				today.setFullYear(today.getFullYear() + DNE_YEARS);
@@ -42,8 +50,11 @@ export default function ExpirationDateFilter({
 			clearInputs={clearInputs}
 			onOrAfterDisabled={dneChecked}
 			onOrBeforeDisabled={dneChecked}
-			updateFilters={(onOrAfter, onOrBefore) =>
-				setFilters((previousFilters) => ({
+			updateFilters={(
+				onOrAfter: Date | boolean,
+				onOrBefore: Date | boolean
+			) =>
+				setFilters((previousFilters: IFilters) => ({
 					...previousFilters,
 					expirationDate: {
 						...previousFilters.expirationDate,

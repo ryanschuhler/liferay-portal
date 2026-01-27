@@ -4,8 +4,9 @@
  */
 
 import classNames from 'classnames';
-import i18n from '~/utils/I18n';
 import {Skeleton} from '~/components';
+import i18n from '~/utils/I18n';
+
 import SLACard from './components/SLACard';
 import SLACardMessage from './components/SLACardMessage/SLACardMessage';
 import SwitchSLACardButton from './components/SwitchSLACardButton';
@@ -14,10 +15,28 @@ import useSLACards from './hooks/useSLACards';
 
 import './SLACardsList.css';
 
-const SLACardsList = ({koroneikiAccount, loading}) => {
-	const slaCards = useSLACards(koroneikiAccount);
+interface IKoroneikiAccount {
+
+	// Add relevant properties here based on useSLACards hook
+
+}
+
+interface ISLACard {
+	endDate: string;
+	label: string;
+	startDate: string;
+	title: string;
+}
+
+interface IProps {
+	koroneikiAccount: IKoroneikiAccount;
+	loading: boolean;
+}
+
+const SLACardsList = ({koroneikiAccount, loading}: IProps) => {
+	const slaCards: ISLACard[] | undefined = useSLACards(koroneikiAccount);
 	const {changePosition, currentPosition, lastPosition} = useSLACardPosition(
-		slaCards?.length
+		slaCards?.length || 0
 	);
 
 	const getSLACards = () =>

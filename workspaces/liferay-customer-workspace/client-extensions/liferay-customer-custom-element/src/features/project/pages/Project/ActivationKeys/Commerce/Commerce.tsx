@@ -2,24 +2,44 @@
  * SPDX-FileCopyrightText: (c) 2000 Liferay, Inc. https://liferay.com
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
+
 import DOMPurify from 'dompurify';
 import {useEffect, useState} from 'react';
-import {Liferay} from '~/services/liferay';
-import i18n from '~/utils/I18n';
 import {Table} from '~/components';
-import {fetchHeadless} from '~/services/liferay/api';
-import {getOrRequestToken} from '~/services/liferay/security/auth/getOrRequestToken';
 import {useAppContext} from '~/features/project/context';
 import ActivationKeysLayout from '~/features/project/layouts/ActivationKeysLayout';
+import {Liferay} from '~/services/liferay';
+import {fetchHeadless} from '~/services/liferay/api';
+import {getOrRequestToken} from '~/services/liferay/security/auth/getOrRequestToken';
+import i18n from '~/utils/I18n';
 
-const columns = [
+interface IColumn {
+	accessor: string;
+
+	bodyClass: string;
+
+	header: {
+		name: string;
+
+		styles: string;
+	};
+
+	headingTitle?: boolean;
+}
+
+interface IActivationInstructionsDataItem {
+	instructions: string;
+
+	version: string;
+}
+
+const columns: IColumn[] = [
 	{
 		accessor: 'version',
 		bodyClass: 'border border-0 py-4 pl-4',
 		header: {
 			name: i18n.translate('version'),
-			styles:
-				'bg-neutral-1 font-weight-bold text-neutral-8 table-cell-minw-200 py-3 pl-4',
+			styles: 'bg-neutral-1 font-weight-bold text-neutral-8 table-cell-minw-200 py-3 pl-4',
 		},
 		headingTitle: true,
 	},
@@ -28,18 +48,15 @@ const columns = [
 		bodyClass: 'border border-0',
 		header: {
 			name: i18n.translate('instructions'),
-			styles:
-				'bg-neutral-1 font-weight-bold text-neutral-8 table-cell-expand-smaller py-3',
+			styles: 'bg-neutral-1 font-weight-bold text-neutral-8 table-cell-expand-smaller py-3',
 		},
 	},
 ];
 
 const Commerce = () => {
-	const [
-		ActivationInstructionsData,
-		setActivationInstructionsData,
-	] = useState([]);
-	const [oAuthToken, setOAuthToken] = useState();
+	const [activationInstructionsData, setActivationInstructionsData] =
+		useState<IActivationInstructionsDataItem[]>([]);
+	const [oAuthToken, setOAuthToken] = useState<string | undefined>(undefined);
 	const [
 		isLoadingActivationInstructions,
 		setIsLoadingActivationInstructions,
@@ -69,7 +86,7 @@ const Commerce = () => {
 
 		const {id: commerceActivationInstructionsFolderID} =
 			structuredContentFolders.items.find(
-				({name}) => name === webContentFolderName
+				({name}: {name: string}) => name === webContentFolderName
 			) || {};
 
 		const contentTemplates = await fetchHeadless({
@@ -77,7 +94,7 @@ const Commerce = () => {
 		});
 
 		const contentTemplate = contentTemplates.items.find(
-			({id}) => id === webContentTemplateName
+			({id}: {id: string}) => id === webContentTemplateName
 		);
 
 		const structuredContents = await fetchHeadless({
@@ -85,12 +102,18 @@ const Commerce = () => {
 		});
 
 		const renderedInstructionsData = await structuredContents.items.reduce(
-			async (structuredContentList, structuredContent) => {
-				const promiseStructuredContentList = await structuredContentList;
+			async (
+				structuredContentList: Promise<
+					IActivationInstructionsDataItem[]
+				>,
+				structuredContent: any
+			) => {
+				const promiseStructuredContentList =
+					await structuredContentList;
 
 				const dxpVersion =
 					structuredContent.contentFields.find(
-						({name}) => name === 'DXPVersion'
+						({name}: {name: string}) => name === 'DXPVersion'
 					) || {};
 				const structuredComponent = await fetchHeadless({
 					resolveAsJson: false,
@@ -122,7 +145,7 @@ const Commerce = () => {
 
 	return (
 		<ActivationKeysLayout>
-			{project.dxpVersion && project.dxpVersion < '7.3' ? (
+			{oAuthToken && project.dxpVersion && project.dxpVersion < '7.3' ? (
 				<ActivationKeysLayout.Inputs
 					accountKey={project.accountKey}
 					accountSubscriptionGroupName="commerce"
@@ -132,11 +155,26 @@ const Commerce = () => {
 				/>
 			) : (
 				<Table
+					checkboxConfig={{
+						checkboxesChecked: [],
+						setCheckboxesChecked: () => {},
+					}}
 					className="cp-activation-keys-commerce-table mt-4 table-autofit"
 					columns={columns}
+					handleSortChange={() => {}}
+					hasCheckbox={false}
+					hasPagination={false}
 					isLoading={isLoadingActivationInstructions}
-					rows={ActivationInstructionsData.map(
+					paginationConfig={{
+						activePage: 1,
+						itemsPerPage: 10,
+						setActivePage: () => {},
+						setItemsPerPage: () => {},
+						totalCount: 0,
+					}}
+					rows={activationInstructionsData.map(
 						({instructions, version}) => ({
+							id: version,
 							instructions: (
 								<div
 									dangerouslySetInnerHTML={{

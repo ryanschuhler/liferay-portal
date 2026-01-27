@@ -6,7 +6,18 @@
 import LiferayContacts from './components/LiferayContacts';
 import SLACardsList from './components/SLACardsList';
 
-const SupportOverview = ({koroneikiAccount, loading}) => (
+interface IKoroneikiAccount {
+
+	// Add relevant properties here based on usage in child components
+
+}
+
+interface IProps {
+	koroneikiAccount: IKoroneikiAccount;
+	loading: boolean;
+}
+
+const SupportOverview = ({koroneikiAccount, loading}: IProps) => (
 	<div className="d-flex flex-column flex-xl-row">
 		<SLACardsList koroneikiAccount={koroneikiAccount} loading={loading} />
 

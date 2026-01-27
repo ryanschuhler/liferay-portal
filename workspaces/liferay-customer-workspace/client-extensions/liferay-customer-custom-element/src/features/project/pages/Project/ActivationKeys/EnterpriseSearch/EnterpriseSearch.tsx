@@ -24,13 +24,15 @@ const EnterpriseSearch = () => {
 
 	return (
 		<ActivationKeysLayout>
-			<ActivationKeysLayout.Inputs
-				accountKey={project?.accountKey}
-				accountSubscriptionGroupName="enterprise-search"
-				oAuthToken={oAuthToken}
-				productTitle="Enterprise Search"
-				projectName={project?.name}
-			/>
+			{project && oAuthToken && (
+				<ActivationKeysLayout.Inputs
+					accountKey={project.accountKey}
+					accountSubscriptionGroupName="enterprise-search"
+					oAuthToken={oAuthToken}
+					productTitle="Enterprise Search"
+					projectName={project.name}
+				/>
+			)}
 		</ActivationKeysLayout>
 	);
 };

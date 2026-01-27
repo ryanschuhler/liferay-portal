@@ -7,18 +7,22 @@ import {useGetAccountSubscriptionGroups} from '~/services/liferay/graphql/accoun
 import {ACCOUNT_SUBSCRIPTION_GROUPS_STATUS_TYPES} from '~/utils/constants/accountSubscriptionGroupsStatusTypes';
 
 export default function useActiveAccountSubscriptionGroups(
-	accountKey,
-	loading,
-	products
+	accountKey: string | undefined,
+	loading: boolean,
+	products: string[]
 ) {
 	const productNames = products
 		? ` and name in ('${products.join("', '")}')`
 		: '';
 
-	const {data, loading: accountSubscriptionGroupsLoading} =
+	const {data, loading: accountSubscriptionGroupsLoading}: any =
 		useGetAccountSubscriptionGroups({
 			filter: `accountKey eq '${accountKey}' and activationStatus eq '${ACCOUNT_SUBSCRIPTION_GROUPS_STATUS_TYPES.active}' and hasActivation eq true and manageContactsURL ne ''${productNames}`,
-			skip: loading,
+			notifyOnNetworkStatusChange: false,
+			page: 1,
+			pageSize: 100,
+			skip: loading || !accountKey,
+			sort: '',
 		});
 
 	return {data, loading: loading || accountSubscriptionGroupsLoading};

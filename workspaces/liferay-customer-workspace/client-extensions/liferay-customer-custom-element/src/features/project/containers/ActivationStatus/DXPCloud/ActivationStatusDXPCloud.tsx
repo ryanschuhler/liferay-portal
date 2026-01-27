@@ -8,54 +8,196 @@ import {ButtonWithIcon} from '@clayui/core';
 import {Align} from '@clayui/drop-down';
 import ClayModal, {useModal} from '@clayui/modal';
 import {useEffect, useState} from 'react';
-
-import i18n from '~/utils/I18n';
-
-import {Button, ButtonDropDown} from '~/components';
-import SetupDXPCloudForm from '~/features/project/containers/SetupDXPCloudForm';
-import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
 import {DXPIcon} from '~/assets/NavigationMenu';
-import {
-	getAccountSubscriptionGroups,
-	getCommerceOrderItems,
-} from '~/services/liferay/graphql/queries';
-import getActivationStatusDateRange from '~/utils/getActivationStatusDateRange';
+import {Button, ButtonDropDown} from '~/components';
+import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
 import {ALERT_UPDATE_DXP_CLOUD_STATUS} from '~/features/project/containers/ActivationKeysTable/utils/constants';
+import SetupDXPCloudForm from '~/features/project/containers/SetupDXPCloudForm';
 import {useAppContext} from '~/features/project/context';
 import {actionTypes} from '~/features/project/context/reducer';
 import {
 	AUTO_CLOSE_ALERT_TIME,
 	LIST_TYPES,
-	STATUS_TAG_TYPES,
 	STATUS_TAG_TYPE_NAMES,
 } from '~/features/project/utils/constants';
+import {
+	getAccountSubscriptionGroups,
+	getCommerceOrderItems,
+} from '~/services/liferay/graphql/queries';
+import i18n from '~/utils/I18n';
+import getActivationStatusDateRange from '~/utils/getActivationStatusDateRange';
+import {IAccountBrief, IOrganizationBrief, IRoleBrief} from '~/utils/types';
+
 import ModalDXPCActivationStatus from '../../ModalDXPCActivationStatus';
-import AlreadySubmittedModal from '../AlreadySubmittedModal';
+import ActivationCardLink from '../ActivationCardLink';
+import AlreadySubmittedModal from '../AlreadySubmittedModal/AlreadySubmittedModal';
 import ActivationStatusLayout from '../Layout';
 import PopoverIcon from './components/PopoverIcon';
-import ActivationCardLink from '../ActivationCardLink';
 
-const submittedModalTexts = {
-	paragraph: i18n.translate(
-		'return-to-the-product-activation-page-to-view-the-current-activation-status'
-	),
-	subtitle: i18n.translate(
-		'we-ll-need-a-few-details-to-finish-building-your-liferay-paas-environment'
-	),
-	text: i18n.translate(
-		'another-user-already-submitted-the-liferay-paas-activation-request'
-	),
-	title: i18n.translate('set-up-liferay-paas'),
-};
+export interface Project {
+	acWorkspaceGroupId: string;
+
+	accountKey: string;
+
+	code: string;
+
+	dxpVersion: string;
+
+	id: string;
+
+	maxRequestors: number;
+
+	name: string;
+}
+
+export interface SubscriptionGroup {
+	accountSubscriptionGroupId?: number;
+
+	activationProductName?: string;
+
+	activationStatus: string;
+
+	hasActivation?: boolean;
+
+	name: string;
+}
+
+export interface UserAccount {
+	accountBriefs?: IAccountBrief[];
+
+	accountKey?: string;
+
+	code?: string;
+
+	dateCreated?: string;
+
+	email?: string;
+
+	emailAddress?: string;
+
+	familyName?: string;
+
+	firstName?: string;
+
+	givenName?: string;
+
+	id?: number;
+
+	isAccountAdmin: boolean;
+
+	isLoggedUser?: boolean;
+
+	isOmniAdmin: boolean;
+
+	isPartner?: boolean;
+
+	isProvisioning: boolean;
+
+	isStaff: boolean;
+
+	lastLoginDate?: string;
+
+	lastName?: string;
+
+	organizationBriefs?: IOrganizationBrief[];
+
+	partnershipCurrent?: string;
+
+	partnershipCurrentEndDate?: string;
+
+	partnershipExpired?: string;
+
+	partnershipExpiredEndDate?: string;
+
+	partnershipFuture?: string;
+
+	partnershipFutureStartDate?: string;
+
+	region: string;
+
+	roleBriefs?: IRoleBrief[];
+
+	screenName?: string;
+
+	slaCurrent?: string;
+
+	slaCurrentEndDate?: string;
+
+	slaExpired?: string;
+
+	slaExpiredEndDate?: string;
+
+	slaFuture?: string;
+
+	slaFutureStartDate?: string;
+
+	status: string;
+
+	userId?: number;
+
+	userName?: string;
+
+	uuid?: string;
+}
+
+export interface DxpCloudEnvironment {
+	projectId: string;
+
+	// Add other properties as they are used in the component
+
+}
+
+interface SetupDXPCloudModalProps {
+	dxpVersion: string;
+
+	listType: string;
+
+	observer: any; // Can be refined
+
+	onClose: (isSuccess?: boolean) => void;
+
+	project: Project;
+
+	subscriptionGroupId: string;
+}
+
+interface ActivationStatusDXPCloudProps {
+	dxpCloudEnvironment: DxpCloudEnvironment;
+
+	dxpVersion: string;
+
+	listType: string;
+
+	project: Project;
+
+	subscriptionGroupDXPCloud: SubscriptionGroup;
+
+	userAccount: UserAccount;
+}
 
 const SetupDXPCloudModal = ({
 	observer,
+
 	onClose,
+
 	project,
+
 	subscriptionGroupId,
-}) => {
+}: SetupDXPCloudModalProps) => {
 	const [formAlreadySubmitted, setFormAlreadySubmitted] = useState(false);
+
 	const {client} = useAppPropertiesContext();
+
+	const submittedModalTexts = {
+		paragraph: i18n.translate(
+			'after-review-and-approval-you-will-receive-an-email-notification-regarding-the-status-of-your-request'
+		),
+		subtitle: i18n.translate('we-have-received-your-request'),
+		text: i18n.translate(
+			'your-request-has-been-sent-to-our-team-for-review'
+		),
+		title: i18n.translate('request-submitted'),
+	};
 
 	return (
 		<ClayModal center observer={observer}>
@@ -82,10 +224,13 @@ const SetupDXPCloudModal = ({
 
 const ActivationStatusDXPCloud = ({
 	dxpCloudEnvironment,
+
 	project,
+
 	subscriptionGroupDXPCloud,
+
 	userAccount,
-}) => {
+}: ActivationStatusDXPCloudProps) => {
 	const [projectIdValue, setProjectIdValue] = useState('');
 	const [
 		subscriptionGroupActivationStatus,
@@ -106,11 +251,11 @@ const ActivationStatusDXPCloud = ({
 	});
 	const projectID = dxpCloudEnvironment?.projectId;
 
-	const onCloseSetupModal = async (isSuccess) => {
+	const onCloseSetupModal = (isSuccess?: boolean) => {
 		setVisibleSetup(false);
 
 		if (isSuccess) {
-			const getSubscriptionGroups = async (accountKey) => {
+			const getSubscriptionGroups = async (accountKey: string) => {
 				const {data: dataSubscriptionGroups} = await client.query({
 					query: getAccountSubscriptionGroups,
 					variables: {
@@ -124,7 +269,7 @@ const ActivationStatusDXPCloud = ({
 							?.items;
 					dispatch({
 						payload: items,
-						type: actionTypes.UPDATE_SUBSCRIPTION_GROUPS,
+						type: actionTypes.UPDATE_SUBSCRIPTION_GROUPS as any,
 					});
 
 					setSubscriptionGroupActivationStatus(
@@ -146,7 +291,7 @@ const ActivationStatusDXPCloud = ({
 					/>
 				</>
 			),
-			id: STATUS_TAG_TYPES.active,
+			id: STATUS_TAG_TYPE_NAMES.active,
 			subtitle: (
 				<>
 					{i18n.translate('your-liferay-paas')}
@@ -159,32 +304,36 @@ const ActivationStatusDXPCloud = ({
 			title: i18n.translate('activation-status'),
 		},
 		[STATUS_TAG_TYPE_NAMES.inProgress]: {
-			dropdownIcon: (userAccount.isStaff &&
-				userAccount.isProvisioning) && (
-				<ButtonDropDown
-					align={Align.BottomRight}
-					customDropDownButton={
-						<ButtonWithIcon
-							aria-label={i18n.translate('set-to-active')}
-							className="text-secondary"
-    						displayType="unstyled"
-							small
-							spritemap={Liferay.Icons.spritemap}
-							symbol="caret-bottom"
-						/>
-					}
-					items={[
-						{
-							label: i18n.translate('set-to-active'),
-							onClick: () => setVisibleStatus(true),
-						},
-					]}
-					menuElementAttrs={{
-						className: 'p-0 cp-activation-key-icon rounded-xs',
-					}}
-				/>
-			),
-			id: STATUS_TAG_TYPES.inProgress,
+			dropdownIcon:
+				userAccount.isStaff && userAccount.isProvisioning ? (
+					<ButtonDropDown
+						align={Align.BottomRight}
+						customDropDownButton={
+							<ButtonWithIcon
+								aria-label={i18n.translate('set-to-active')}
+								className="text-secondary"
+								displayType="unstyled"
+								onPointerEnterCapture={() => {}}
+								onPointerLeaveCapture={() => {}}
+								placeholder=""
+								small
+								spritemap={Liferay.Icons.spritemap}
+								symbol="caret-bottom"
+							/>
+						}
+						items={[
+							{
+								label: i18n.translate('set-to-active'),
+								onClick: () => setVisibleStatus(true),
+							},
+						]}
+						label=""
+						menuElementAttrs={{
+							className: 'p-0 cp-activation-key-icon rounded-xs',
+						}}
+					/>
+				) : undefined,
+			id: STATUS_TAG_TYPE_NAMES.inProgress,
 			subtitle: (
 				<>
 					{i18n.translate('your-liferay-paas')}
@@ -197,7 +346,7 @@ const ActivationStatusDXPCloud = ({
 			title: i18n.translate('activation-status'),
 		},
 		[STATUS_TAG_TYPE_NAMES.notActivated]: {
-			buttonLink: userAccount.isAccountAdmin && (
+			buttonLink: userAccount.isAccountAdmin ? (
 				<Button
 					appendIcon="order-arrow-right"
 					className="btn btn-link font-weight-semi-bold p-0 text-brand-primary text-paragraph"
@@ -206,8 +355,8 @@ const ActivationStatusDXPCloud = ({
 				>
 					{i18n.translate('finish-activation')}
 				</Button>
-			),
-			id: STATUS_TAG_TYPES.notActivated,
+			) : undefined,
+			id: STATUS_TAG_TYPE_NAMES.notActivated,
 			subtitle: (
 				<>
 					{i18n.translate('almost-there-setup-liferay-paas')}
@@ -229,10 +378,12 @@ const ActivationStatusDXPCloud = ({
 		const fetchCommerceOrderItems = async () => {
 			const PAAS_CLOUD_ERCS = [
 				`${project.accountKey}_liferay-paas`,
-                `${project.accountKey}_liferay-cloud`
+				`${project.accountKey}_liferay-cloud`,
 			];
 
-			const ercFilter = PAAS_CLOUD_ERCS.map(erc => `customFields/accountSubscriptionGroupERC eq '${erc}'`).join(' or ');
+			const ercFilter = PAAS_CLOUD_ERCS.map(
+				(erc) => `customFields/accountSubscriptionGroupERC eq '${erc}'`
+			).join(' or ');
 
 			const {data} = await client.query({
 				query: getCommerceOrderItems,
@@ -262,7 +413,8 @@ const ActivationStatusDXPCloud = ({
 					onClose={onCloseSetupModal}
 					project={project}
 					subscriptionGroupId={
-						subscriptionGroupDXPCloud?.accountSubscriptionGroupId
+						subscriptionGroupDXPCloud?.accountSubscriptionGroupId?.toString() ||
+						''
 					}
 				/>
 			)}

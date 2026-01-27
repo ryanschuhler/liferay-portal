@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-export function getInitials(userName) {
+export function getInitials(userName: string): string {
 	const names = userName.trim().split(' ');
 	const lastNameIndex = names.length - 1;
 
@@ -13,7 +13,7 @@ export function getInitials(userName) {
 		}
 
 		return initials;
-	},'');
+	}, '');
 
 	return initials;
 }

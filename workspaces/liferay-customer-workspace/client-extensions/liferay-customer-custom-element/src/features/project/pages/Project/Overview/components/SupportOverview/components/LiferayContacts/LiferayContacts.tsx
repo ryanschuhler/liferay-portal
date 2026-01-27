@@ -10,30 +10,70 @@ import {SUBSCRIPTIONS_STATUS} from '~/features/project/utils/constants';
 import {getSubscriptionStatus} from '~/features/project/utils/getSubscriptionStatus';
 import i18n from '~/utils/I18n';
 
-const LiferayContacts = ({koroneikiAccount, loading}) => {
+interface IKoroneikiAccount {
+	accountKey?: string;
+	liferayContactEmailAddress?: string;
+	liferayContactName?: string;
+	liferayContactRole?: string;
+}
+
+interface IUserRoleBrief {
+	name: string;
+}
+
+interface ISelectedAccountSummary {
+	roleBriefs: IUserRoleBrief[];
+}
+
+interface IUserAccount {
+	emailAddress: string;
+	name: string;
+	selectedAccountSummary: ISelectedAccountSummary;
+}
+
+interface IAppSubscription {
+	endDate: string;
+	name?: string;
+	startDate: string;
+}
+
+interface IProps {
+	koroneikiAccount: IKoroneikiAccount;
+	loading: boolean;
+}
+
+interface IContactDetailsProps {
+	roleKey: string;
+	user?: IUserAccount;
+}
+
+const LiferayContacts = ({koroneikiAccount, loading}: IProps) => {
 	const [{subscriptions}] = useAppContext();
 
 	const hasActiveTAMSubscription =
 		Array.isArray(subscriptions) &&
 		subscriptions
-			?.filter((item) =>
+			?.filter((item: IAppSubscription) =>
 				item.name?.includes('Technical Account Management')
 			)
 			?.some(
-				(accountSubscription) =>
+				(accountSubscription: IAppSubscription) =>
 					getSubscriptionStatus(
 						new Date(accountSubscription.startDate),
 						new Date(accountSubscription.endDate)
 					) === SUBSCRIPTIONS_STATUS.active
 			);
 
-	const [, {data: userAccountsData}] =
-		useUserAccountsByAccountExternalReferenceCode(
-			koroneikiAccount?.accountKey
-		);
-
-	const accountMembers =
-		userAccountsData?.accountUserAccountsByExternalReferenceCode.items;
+	const [_supportSeatsCount, {data: userAccountsData}]: [
+		number | undefined,
+		any,
+	] = useUserAccountsByAccountExternalReferenceCode(
+		koroneikiAccount.accountKey ?? '',
+		!koroneikiAccount?.accountKey
+	);
+	const accountMembers: IUserAccount[] =
+		userAccountsData?.accountUserAccountsByExternalReferenceCode?.items ??
+		[];
 
 	const cxmUser = accountMembers?.find((user) =>
 		user.selectedAccountSummary.roleBriefs.some(
@@ -46,7 +86,7 @@ const LiferayContacts = ({koroneikiAccount, loading}) => {
 		)
 	);
 
-	const ContactDetails = ({roleKey, user}) => {
+	const ContactDetails = ({roleKey, user}: IContactDetailsProps) => {
 		if (!user) {
 			return null;
 		}

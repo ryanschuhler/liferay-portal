@@ -2,6 +2,7 @@
  * SPDX-FileCopyrightText: (c) 2000 Liferay, Inc. https://liferay.com
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
+
 import {
 	Bar,
 	BarChart,
@@ -11,10 +12,26 @@ import {
 	XAxis,
 	YAxis,
 } from 'recharts';
-import i18n from '~/utils/I18n';
 import {Skeleton} from '~/components';
+import i18n from '~/utils/I18n';
 
-const UsageChart = ({data, loading}) => {
+interface IAnnualSubscription {
+	maxConcurrentConsumption: number;
+	maxConcurrentQuantity: number;
+	year: string;
+}
+
+interface IData {
+	annualSubscriptions: IAnnualSubscription[];
+	currentConsumption: number;
+}
+
+interface IProps {
+	data?: IData;
+	loading: boolean;
+}
+
+const UsageChart = ({data, loading}: IProps) => {
 	if (loading || !data) {
 		return (
 			<Skeleton align="center" className="mb-5" height={20} width={100} />
@@ -25,7 +42,6 @@ const UsageChart = ({data, loading}) => {
 		<div>
 			<div className="d-flex justify-content-center">
 				<BarChart
-					cursor="pointer"
 					data={data.annualSubscriptions}
 					height={300}
 					margin={{
@@ -54,7 +70,7 @@ const UsageChart = ({data, loading}) => {
 
 					<Legend
 						align="left"
-						formatter={(value) => (
+						formatter={(value: string) => (
 							<span
 								className="text-color-class"
 								style={{
@@ -88,7 +104,7 @@ const UsageChart = ({data, loading}) => {
 			</div>
 
 			<div className="d-flex flex-row-reverse m-2 mr-3">
-				<div className='h6'>
+				<div className="h6">
 					{i18n.translate('keys-provisioned-total') +
 						': ' +
 						data.currentConsumption}

@@ -14,7 +14,7 @@ import TableSkeleton from './components/Skeleton/Skeleton';
 
 import './ActionTable.css';
 
-interface IColumn {
+export interface IColumn {
 	accessor: string;
 	align?: 'center' | 'left' | 'right' | undefined;
 	bodyClass?: string;
@@ -23,7 +23,7 @@ interface IColumn {
 	filterIdentifier?: string;
 	header: {
 		description?: string;
-		name: string;
+		name: string | React.ReactNode;
 		noWrap?: boolean;
 		styles?: string;
 	};
@@ -56,7 +56,8 @@ interface IPaginationConfig {
 }
 
 interface IProps {
-	checkboxConfig: ICheckboxConfig;
+	checkboxConfig?: ICheckboxConfig;
+	className?: string;
 	columns: IColumn[];
 	handleSortChange: Function;
 	hasCheckbox: boolean;

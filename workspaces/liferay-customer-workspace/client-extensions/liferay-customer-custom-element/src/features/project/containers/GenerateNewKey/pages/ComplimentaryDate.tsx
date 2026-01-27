@@ -6,20 +6,61 @@
 import ClayDatePicker from '@clayui/date-picker';
 import {ClayCheckbox, ClayInput, ClaySelect} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
+import {Button} from '~/components';
+import Layout from '~/components/FormLayout';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
 import useProvisioningLicenseKeys from '~/hooks/useProvisioningLicenseKeys';
 import {putSubscriptionInKey} from '~/services/liferay/rest/raysource/LicenseKeys';
 import i18n from '~/utils/I18n';
-import {Button} from '~/components';
-import Layout from '~/components/FormLayout';
-import useGetPurposeComplimentaryKeyList from './hooks/useGetPurposeComplimentaryKeyList';
+import {IActivationKey} from '~/utils/types';
+
+import {IGenerateNewKeyState} from '../types';
+import {STEP_TYPES} from '../utils/constants/stepType';
 import {getRenewKeySubtitle} from '../utils/renewKeySubtitle';
+import useGetPurposeComplimentaryKeyList from './hooks/useGetPurposeComplimentaryKeyList';
 
 const now = new Date();
 const NAVIGATION_YEARS_RANGE = 2;
 const SELECTED_PURPOSE_OTHER = 'Other, please specify';
+
+interface ISelectedKeyData {
+	licenseEntryType?: string;
+	productType?: string;
+	productVersion?: string;
+	selectedSubscription?: {
+		complimentary?: boolean;
+		endDate?: string;
+		instanceSize?: number;
+		perpetual?: boolean;
+		productKey?: string;
+		provisionedCount?: number;
+		quantity?: number;
+		startDate?: string;
+	};
+	[key: string]: any;
+}
+
+interface ComplimentaryDateProps {
+	accountKey: string;
+	deactivateKeysStatus: string;
+	filterCheckedActivationKeys: IActivationKey[];
+	oAuthToken: string;
+	productGroupName: string;
+	purposeDescription: string;
+	selectedKeyData: ISelectedKeyData | undefined;
+	setDeactivateKeysStatus: (value: string) => void;
+	setPurposeDescription: React.Dispatch<React.SetStateAction<string>>;
+	setSelectedKeyData: React.Dispatch<
+		React.SetStateAction<ISelectedKeyData | undefined>
+	>;
+	setStep: React.Dispatch<
+		React.SetStateAction<(typeof STEP_TYPES)[keyof typeof STEP_TYPES]>
+	>;
+	state: IGenerateNewKeyState;
+	urlPreviousPage: string;
+}
 
 const ComplimentaryDate = ({
 	accountKey,
@@ -31,31 +72,19 @@ const ComplimentaryDate = ({
 	setStep,
 	state,
 	urlPreviousPage,
-}) => {
-	const {provisioningServerAPI} = useAppPropertiesContext();
-	const provisioningService = useProvisioningLicenseKeys();
-	const currentDate = now.toISOString().split('T')[0];
-	const [selectedSubscription] = useState(
-		selectedKeyData?.selectedSubscription
-	);
-	const purposeComplimentaryKeyList = useGetPurposeComplimentaryKeyList();
-	const [selectedPurpose, setSelectedPurpose] = useState('');
-
-	useEffect(() => {
-		if (purposeComplimentaryKeyList.length) {
-			setPurposeDescription(purposeComplimentaryKeyList[0]?.value);
-		}
-	}, [purposeComplimentaryKeyList]);
-
-	const [expandedOnOrAfter, setExpandedOnOrAfter] = useState(false);
-	const [selectedStartDate, setSelectedStartDate] = useState(currentDate);
-	const [isLoadingGenerateKey, setIsLoadingGenerateKey] = useState(false);
-	const checkedBoxSubscription = true;
-	const [checkBoxConfirmationTerms, setCheckBoxConfirmationTerms] = useState(
-		false
-	);
-
+}: ComplimentaryDateProps) => {
 	const navigate = useNavigate();
+	const {provisioningServerAPI} = useAppPropertiesContext();
+	const currentDate = now.toISOString().split('T')[0];
+	const [selectedStartDate, setSelectedStartDate] =
+		useState<string>(currentDate);
+	const [checkedBoxSubscription, setCheckedBoxSubscription] =
+		useState<boolean>(false);
+	const [isLoadingGenerateKey, setIsLoadingGenerateKey] =
+		useState<boolean>(false);
+	const [expandedOnOrAfter, setExpandedOnOrAfter] = useState<boolean>(false);
+	const [selectedPurpose, setSelectedPurpose] = useState<string>('');
+	const purposeComplimentaryKeyList = useGetPurposeComplimentaryKeyList();
 
 	const {endDate, startDate} = useMemo(() => {
 		const inputStartDate = new Date(selectedStartDate);
@@ -75,14 +104,12 @@ const ComplimentaryDate = ({
 		};
 	}, [selectedStartDate]);
 
-	const updatedSelectedSubscription = useMemo(() => {
-		return {
-			...selectedSubscription,
-			complimentary: true,
-			endDate,
-			startDate,
-		};
-	}, [selectedSubscription, endDate, startDate]);
+	const {provisioningLicenseKeys: provisioningService} =
+		useProvisioningLicenseKeys(
+			selectedStartDate,
+			endDate.toISOString().split('T')[0],
+			false
+		);
 
 	const hasDateLimitExceeded = useMemo(() => {
 		const daysLimit = 29;
@@ -95,16 +122,18 @@ const ComplimentaryDate = ({
 	}, [startDate]);
 
 	const isRenew = state?.id === 'renew';
-	const keyCount = state?.activationKeys?.length;	
+	const keyCount = state?.activationKeys?.length || 0;
 	const renewKeySubtitle = getRenewKeySubtitle(state);
 
-	const isComplimentaryKeys = state.activationKeys?.map((item) => {
-		return item.complimentary;
-	});
+	const isComplimentaryKeys = state.activationKeys?.map(
+		(item: IActivationKey) => {
+			return item.complimentary;
+		}
+	);
 	const isComplimentaryKey = [...new Set(isComplimentaryKeys)].join(', ');
 
-	const hasDesiredEntry = state.activationKeys.some(
-		(item) =>
+	const hasDesiredEntry = state.activationKeys?.some(
+		(item: IActivationKey) =>
 			item.licenseEntryType === 'oem' ||
 			item.licenseEntryType === 'virtual-cluster' ||
 			item.licenseEntryType === 'enterprise'
@@ -125,60 +154,79 @@ const ComplimentaryDate = ({
 			'sizing',
 		];
 
-		const saveSubscriptionKey = async (id) => {
+		const saveSubscriptionKey = async (id: string) => {
 			return putSubscriptionInKey(oAuthToken, provisioningServerAPI, id);
 		};
 
-		const generateLicenseKey = async (item, isComplimentary = false) => {
-			const licenseKey = {
+		const generateLicenseKey = async (
+			item: IActivationKey,
+			isComplimentary = false
+		) => {
+			const licenseKey: any = {
 				accountKey,
 				complimentary: 'true',
-				expirationDate: endDate,
-				productKey: selectedKeyData.selectedSubscription.productKey,
-				startDate,
+				expirationDate: endDate.toISOString().split('T')[0],
+				productKey: selectedKeyData?.selectedSubscription?.productKey,
+				startDate: selectedStartDate,
 			};
 			selectedFields.forEach((field) => {
-				licenseKey[field] = item[field];
+				licenseKey[field] = (item as any)[field];
 			});
-			const response = await provisioningService.createNewGenerateKey(
-				accountKey,
-				licenseKey
-			);
+
+			if (!provisioningService) {
+				throw new Error('Provisioning service not available.');
+			}
+			const response: any =
+				await provisioningService.createNewGenerateKey(
+					accountKey,
+					licenseKey
+				);
 
 			if (checkedBoxSubscription && isComplimentary) {
-				await saveSubscriptionKey(response?.items?.[0]?.id);
+				await saveSubscriptionKey(response?.items?.[0]?.id as string);
 			}
 		};
 
 		setIsLoadingGenerateKey(true);
 
 		try {
-			const updatedActivationKeysItem = state.activationKeys.map(item => ({
-				...item,
-				description: purposeDescription,
-			}));
+			const updatedActivationKeysItem = state.activationKeys?.map(
+				(item) => ({
+					...item,
+					description: purposeDescription,
+				})
+			);
 
 			if (hasDesiredEntry) {
-				const createKeyPromises = updatedActivationKeysItem.map(
-					async (item) => {
+				const createKeyPromises = updatedActivationKeysItem?.map(
+					async (item: IActivationKey) => {
 						await generateLicenseKey(item);
 					}
 				);
 
-				await Promise.all(createKeyPromises);
+				await Promise.all(createKeyPromises || []);
 
 				setIsLoadingGenerateKey(false);
 
 				navigate(urlPreviousPage, {
-					state: {isMultipleKeys: keyCount > 1, newKeyGeneratedAlert: true},
+					state: {
+						isMultipleKeys: keyCount > 1,
+						newKeyGeneratedAlert: true,
+					},
 				});
 
 				return true;
-			} else {
+			}
+			else {
 				const results = await Promise.all(
-					updatedActivationKeysItem.map(async (item) => {
-						await generateLicenseKey(item, isComplimentaryKey);
-					})
+					updatedActivationKeysItem?.map(
+						async (item: IActivationKey) => {
+							await generateLicenseKey(
+								item,
+								isComplimentaryKey === 'true'
+							);
+						}
+					) || []
 				);
 
 				await Promise.all(results);
@@ -186,12 +234,16 @@ const ComplimentaryDate = ({
 				setIsLoadingGenerateKey(false);
 
 				navigate(urlPreviousPage, {
-					state: {isMultipleKeys: keyCount > 1, newKeyGeneratedAlert: true},
+					state: {
+						isMultipleKeys: keyCount > 1,
+						newKeyGeneratedAlert: true,
+					},
 				});
 
 				return true;
 			}
-		} catch (error) {
+		}
+		catch (error: any) {
 			Liferay.Util.openToast({
 				message:
 					error?.info?.title ??
@@ -217,9 +269,10 @@ const ComplimentaryDate = ({
 		provisioningServerAPI,
 		provisioningService,
 		purposeDescription,
+		selectedStartDate,
 		state.activationKeys,
-		startDate,
 		urlPreviousPage,
+		keyCount,
 	]);
 
 	return (
@@ -241,12 +294,12 @@ const ComplimentaryDate = ({
 						<div>
 							<Button
 								className="btn btn-secondary mr-3"
-								displayType="secundary"
+								displayType="secondary"
 								onClick={() => {
 									setSelectedKeyData(() => ({
 										selectedSubscription: {},
 									}));
-									setStep(0);
+									setStep('selectDescriptions');
 								}}
 							>
 								{i18n.translate('previous')}
@@ -254,7 +307,7 @@ const ComplimentaryDate = ({
 
 							<Button
 								disabled={
-									!checkBoxConfirmationTerms ||
+									!checkedBoxSubscription ||
 									!purposeDescription ||
 									!selectedStartDate ||
 									hasDateLimitExceeded ||
@@ -262,26 +315,12 @@ const ComplimentaryDate = ({
 								}
 								displayType="primary"
 								isLoading={isLoadingGenerateKey}
-								onClick={() => {
-									if (isRenew && keyCount > 1) {
-										submitKey();
-									} else {
-										setSelectedKeyData(
-											(previousSelectedKeyData) => ({
-												...previousSelectedKeyData,
-												selectedSubscription: updatedSelectedSubscription,
-											})
-										);
-
-										setStep(2);
-									}
-								}}
+								onClick={submitKey}
 							>
 								{isRenew && keyCount > 1
-									? i18n.sub(
-										'renew-x-keys',
-											[keyCount]
-									  )
+									? i18n.sub('renew-x-keys', [
+											keyCount.toString(),
+										])
 									: i18n.translate('next')}
 							</Button>
 						</div>
@@ -289,8 +328,16 @@ const ComplimentaryDate = ({
 				}}
 				headerProps={{
 					headerClass: 'ml-5 mt-4 mb-3',
-					helper: isRenew ? renewKeySubtitle : i18n.translate('select-the-subscription-and-key-type-you-would-like-to-generate'),
-					title: i18n.translate(isRenew ? 'renew-activation-keys' : 'generate-activation-keys'),
+					helper: isRenew
+						? renewKeySubtitle
+						: i18n.translate(
+								'select-the-subscription-and-key-type-you-would-like-to-generate'
+							),
+					title: i18n.translate(
+						isRenew
+							? 'renew-activation-keys'
+							: 'generate-activation-keys'
+					),
 				}}
 				layoutType="cp-generateKey"
 			>
@@ -308,10 +355,10 @@ const ComplimentaryDate = ({
 					<ClayDatePicker
 						dateFormat="yyyy-MM-dd"
 						expanded={expandedOnOrAfter}
-						onChange={(value, eventType) => {
+						onChange={(value: string) => {
 							setSelectedStartDate(value);
 
-							if (eventType === 'click') {
+							if (!value) {
 								setExpandedOnOrAfter(false);
 							}
 						}}
@@ -367,6 +414,7 @@ const ComplimentaryDate = ({
 								<ClaySelect.Option
 									key={item.label}
 									label={item.label}
+									value={item.value}
 								/>
 							))}
 						</ClaySelect>
@@ -383,9 +431,9 @@ const ComplimentaryDate = ({
 							<ClayInput
 								component="textarea"
 								name="description"
-								onChange={(event) =>
-									setPurposeDescription(event.target.value)
-								}
+								onChange={(
+									event: React.ChangeEvent<HTMLInputElement>
+								) => setPurposeDescription(event.target.value)}
 								placeholder={i18n.translate(
 									'enter-the-purpose'
 								)}
@@ -402,12 +450,12 @@ const ComplimentaryDate = ({
 					<div className="d-flex mt-4">
 						<div className="pr-2 pt-1">
 							<ClayCheckbox
-								checked={checkBoxConfirmationTerms}
+								checked={checkedBoxSubscription}
 								id="expiration-checkbox"
 								onChange={() =>
-									setCheckBoxConfirmationTerms(
-										(checkedBoxSubcription) =>
-											!checkedBoxSubcription
+									setCheckedBoxSubscription(
+										(checkedBoxSubscription) =>
+											!checkedBoxSubscription
 									)
 								}
 							/>

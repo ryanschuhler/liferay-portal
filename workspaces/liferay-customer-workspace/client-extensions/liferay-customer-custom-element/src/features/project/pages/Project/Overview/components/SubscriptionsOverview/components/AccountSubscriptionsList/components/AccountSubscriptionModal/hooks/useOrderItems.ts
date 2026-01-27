@@ -11,16 +11,17 @@ const PAGE_SIZE = 5;
 const FIRST_PAGE = 1;
 
 export default function useOrderItems(
-	accountSubscriptionExternalReferenceCode,
-	pageSize
+	accountSubscriptionExternalReferenceCode: string
 ) {
 	const [activePage, setActivePage] = useState(FIRST_PAGE);
+	const [itemsPerPage, setItemsPerPage] = useState(PAGE_SIZE);
 
-	const {data, fetchMore, networkStatus} = useGetOrderItems({
+	const {data, fetchMore, networkStatus}: any = useGetOrderItems({
 		filter: `customFields/accountSubscriptionERC eq '${accountSubscriptionExternalReferenceCode}'`,
 		notifyOnNetworkStatusChange: true,
 		page: activePage,
-		pageSize: pageSize ?? PAGE_SIZE,
+		pageSize: itemsPerPage,
+		skip: !accountSubscriptionExternalReferenceCode,
 	});
 
 	useEffect(() => {
@@ -36,8 +37,9 @@ export default function useOrderItems(
 	return {
 		activePage,
 		data,
+		itemsPerPage,
 		loading: networkStatus === NetworkStatus.loading,
-		pageSize: pageSize ?? PAGE_SIZE,
 		setActivePage,
+		setItemsPerPage,
 	};
 }

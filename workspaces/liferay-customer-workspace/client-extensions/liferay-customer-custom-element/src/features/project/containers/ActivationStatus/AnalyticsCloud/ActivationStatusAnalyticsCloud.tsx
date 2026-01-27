@@ -8,34 +8,41 @@ import {ButtonWithIcon} from '@clayui/core';
 import {Align} from '@clayui/drop-down';
 import {useModal} from '@clayui/modal';
 import {useEffect, useState} from 'react';
-import SearchBuilder from '~/lib/SearchBuilder';
-import i18n from '~/utils/I18n';
+import {AnalyticsIcon} from '~/assets/NavigationMenu';
 import {Button, ButtonDropDown} from '~/components';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import {AnalyticsIcon} from '~/assets/NavigationMenu';
-import {patchAccountSubscriptionGroups} from '~/services/liferay/graphql/account-subscription-groups/queries/patchAccountSubscriptionGroups';
-import {
-	getAccountSubscriptionGroups,
-	getCommerceOrderItems,
-} from '~/services/liferay/graphql/queries';
-import getActivationStatusDateRange from '~/utils/getActivationStatusDateRange';
 import {ALERT_UPDATE_ANALYTICS_CLOUD_STATUS} from '~/features/project/containers/ActivationKeysTable/utils/constants/alertUpdateAnalyticsCloudStatus';
 import {useAppContext} from '~/features/project/context';
 import {actionTypes} from '~/features/project/context/reducer';
 import {
 	AUTO_CLOSE_ALERT_TIME,
 	PRODUCT_TYPES,
-	STATUS_TAG_TYPES,
 	STATUS_TAG_TYPE_NAMES,
 } from '~/features/project/utils/constants';
+import SearchBuilder from '~/lib/SearchBuilder';
+import {patchAccountSubscriptionGroups} from '~/services/liferay/graphql/account-subscription-groups/queries/patchAccountSubscriptionGroups';
+import {
+	getAccountSubscriptionGroups,
+	getCommerceOrderItems,
+} from '~/services/liferay/graphql/queries';
+import i18n from '~/utils/I18n';
+import getActivationStatusDateRange from '~/utils/getActivationStatusDateRange';
+import {IAccountSubscriptionGroup, IProject} from '~/utils/types';
+
 import AnalyticsCloudModal from '../../AnalyticsCloudModal';
+import ActivationCardLink from '../ActivationCardLink';
 import ActivationStatusLayout from '../Layout';
 import AnalyticsCloudStatusModal from './AnalyticsCloudStatusModal';
-import ActivationCardLink from '../ActivationCardLink';
+
+interface AppContextValue {
+	project: IProject;
+	subscriptionGroups: IAccountSubscriptionGroup[];
+	userAccount: any;
+}
 
 const ActivationStatusAnalyticsCloud = () => {
 	const [{project, subscriptionGroups, userAccount}, dispatch] =
-		useAppContext();
+		useAppContext() as [AppContextValue, React.Dispatch<any>];
 
 	const {client} = useAppPropertiesContext();
 	const [activationStatusDate, setActivationStatusDate] = useState('');
@@ -59,12 +66,12 @@ const ActivationStatusAnalyticsCloud = () => {
 		setSubscriptionGroupActivationStatus,
 	] = useState(subscriptionGroupAnalyticsCloud?.activationStatus);
 
-	const onCloseSetupModal = async (isSuccess) => {
+	const onCloseSetupModal = async (isSuccess?: boolean) => {
 		onClose();
 
 		if (isSuccess) {
 			const searchBuilder = new SearchBuilder();
-			const getSubscriptionGroups = async (accountKey) => {
+			const getSubscriptionGroups = async (accountKey: string) => {
 				const {data: dataSubscriptionGroups} = await client.query({
 					query: getAccountSubscriptionGroups,
 					variables: {
@@ -98,63 +105,50 @@ const ActivationStatusAnalyticsCloud = () => {
 
 	const currentActivationStatus = {
 		[STATUS_TAG_TYPE_NAMES.active]: {
-			buttonLink: project?.acWorkspaceGroupId && (
-				<ActivationCardLink
-					linkText={i18n.translate('go-to-workspace')}
-					url={`https://analytics.liferay.com/workspace/${project?.acWorkspaceGroupId}/sites`}
-				/>
-			),
-			id: STATUS_TAG_TYPES.active,
+			id: STATUS_TAG_TYPE_NAMES.active,
 			subtitle: i18n.translate(
 				'your-analytics-cloud-environments-are-ready-visit-the-workspace-to-view-analytics-cloud-details'
 			),
 			title: i18n.translate('analytics-cloud-activation'),
 		},
 		[STATUS_TAG_TYPE_NAMES.inProgress]: {
-			dropdownIcon: (userAccount.isStaff &&
-				userAccount.isProvisioning) && (
-				<ButtonDropDown
-					align={Align.BottomRight}
-					customDropDownButton={
-						<ButtonWithIcon
-							aria-label={i18n.translate('set-to-active')}
-							className="text-secondary"
-    						displayType="unstyled"
-							small
-							spritemap={Liferay.Icons.spritemap}
-							symbol="caret-bottom"
-						/>
-					}
-					items={[
-						{
-							label: i18n.translate('set-to-active'),
-							onClick: () => setVisible(true),
-						},
-					]}
-					menuElementAttrs={{
-						className: 'p-0 cp-activation-key-icon rounded-xs',
-					}}
-				/>
-			),
-			id: STATUS_TAG_TYPES.inProgress,
+			dropdownIcon:
+				userAccount.isStaff && userAccount.isProvisioning ? (
+					<ButtonDropDown
+						align={Align.BottomRight}
+						customDropDownButton={
+							<ButtonWithIcon
+								aria-label={i18n.translate('set-to-active')}
+								className="text-secondary"
+								displayType="unstyled"
+								onPointerEnterCapture={() => {}}
+								onPointerLeaveCapture={() => {}}
+								placeholder=""
+								small
+								spritemap={Liferay.Icons.spritemap}
+								symbol="caret-bottom"
+							/>
+						}
+						items={[
+							{
+								label: i18n.translate('set-to-active'),
+								onClick: () => setVisible(true),
+							},
+						]}
+						label=""
+						menuElementAttrs={{
+							className: 'p-0 cp-activation-key-icon rounded-xs',
+						}}
+					/>
+				) : undefined,
+			id: STATUS_TAG_TYPE_NAMES.inProgress,
 			subtitle: i18n.translate(
 				'your-analytics-cloud-workspace-is-being-set-up-and-will-be-available-soon'
 			),
 			title: i18n.translate('analytics-cloud-activation'),
 		},
 		[STATUS_TAG_TYPE_NAMES.notActivated]: {
-			buttonLink: userAccount.isAccountAdmin && (
-				<Button
-					appendIcon="order-arrow-right"
-					aria-label={i18n.translate('finish-activation')}
-					className="btn btn-link font-weight-semi-bold p-0 text-brand-primary text-paragraph"
-					displayType="link"
-					onClick={() => setIsVisible(true)}
-				>
-					{i18n.translate('finish-activation')}
-				</Button>
-			),
-			id: STATUS_TAG_TYPES.notActivated,
+			id: STATUS_TAG_TYPE_NAMES.notActivated,
 			subtitle: i18n.translate(
 				'almost-there-setup-analytics-cloud-by-finishing-the-activation-form'
 			),
@@ -191,22 +185,24 @@ const ActivationStatusAnalyticsCloud = () => {
 	}, [client, project]);
 
 	const updateGroupId = async () => {
-		await client.mutate({
-			context: {
-				displaySuccess: false,
-				type: 'liferay-rest',
-			},
-			mutation: patchAccountSubscriptionGroups,
-			variables: {
-				accountSubscriptionGroup: {
-					accountKey: project.accountKey,
-					activationStatus: STATUS_TAG_TYPE_NAMES.active,
-					r_accountEntryToAccountSubscriptionGroup_accountEntryId:
-						project.id,
+		if (subscriptionGroupAnalyticsCloud) {
+			await client.mutate({
+				context: {
+					displaySuccess: false,
+					type: 'liferay-rest',
 				},
-				id: subscriptionGroupAnalyticsCloud?.accountSubscriptionGroupId,
-			},
-		});
+				mutation: patchAccountSubscriptionGroups,
+				variables: {
+					accountSubscriptionGroup: {
+						accountKey: project.accountKey,
+						activationStatus: STATUS_TAG_TYPE_NAMES.active,
+						r_accountEntryToAccountSubscriptionGroup_accountEntryId:
+							project.id,
+					},
+					id: subscriptionGroupAnalyticsCloud?.accountSubscriptionGroupId,
+				},
+			});
+		}
 
 		setSubscriptionGroupActivationStatus(STATUS_TAG_TYPE_NAMES.active);
 		setVisible(false);
@@ -215,14 +211,14 @@ const ActivationStatusAnalyticsCloud = () => {
 
 	return (
 		<>
-			{isVisible && (
+			{isVisible && subscriptionGroupAnalyticsCloud && (
 				<AnalyticsCloudModal
 					observer={observerSetupModal}
 					onClose={onCloseSetupModal}
 					project={project}
-					subscriptionGroupId={
+					subscriptionGroupId={String(
 						subscriptionGroupAnalyticsCloud.accountSubscriptionGroupId
-					}
+					)}
 				/>
 			)}
 
@@ -232,9 +228,35 @@ const ActivationStatusAnalyticsCloud = () => {
 				iconPath={AnalyticsIcon}
 				project={project}
 				subscriptionGroupActivationStatus={
-					subscriptionGroupActivationStatus
+					subscriptionGroupActivationStatus ||
+					STATUS_TAG_TYPE_NAMES.notActivated
 				}
-			/>
+			>
+				<>
+					{subscriptionGroupActivationStatus ===
+						STATUS_TAG_TYPE_NAMES.active &&
+						project?.acWorkspaceGroupId && (
+							<ActivationCardLink
+								linkText={i18n.translate('go-to-workspace')}
+								url={`https://analytics.liferay.com/workspace/${project?.acWorkspaceGroupId}/sites`}
+							/>
+						)}
+
+					{subscriptionGroupActivationStatus ===
+						STATUS_TAG_TYPE_NAMES.notActivated &&
+						userAccount.isAccountAdmin && (
+							<Button
+								appendIcon="order-arrow-right"
+								aria-label={i18n.translate('finish-activation')}
+								className="btn btn-link font-weight-semi-bold p-0 text-brand-primary text-paragraph"
+								displayType="link"
+								onClick={() => setIsVisible(true)}
+							>
+								{i18n.translate('finish-activation')}
+							</Button>
+						)}
+				</>
+			</ActivationStatusLayout>
 
 			{visible && (
 				<AnalyticsCloudStatusModal

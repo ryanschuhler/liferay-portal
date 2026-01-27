@@ -8,7 +8,11 @@ import i18n from '~/utils/I18n';
 
 import './IncidentContactsButton.css';
 
-const IncidentContactsButton = ({onClick}) => {
+interface IncidentContactsButtonProps {
+	onClick: () => void;
+}
+
+const IncidentContactsButton = ({onClick}: IncidentContactsButtonProps) => {
 	return (
 		<ClayButton
 			className="btn btn-secondary btn-sm incident-contact-button px-2 py-2"

@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 /**
  * SPDX-FileCopyrightText: (c) 2000 Liferay, Inc. https://liferay.com
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
@@ -10,57 +8,54 @@ import ClayButton from '@clayui/button';
 import {ClayCheckbox, ClayInput} from '@clayui/form';
 import classNames from 'classnames';
 import {useCallback, useEffect, useState} from 'react';
-
 import i18n from '~/utils/I18n';
+import {IFilters} from '~/utils/types';
 
-import './KeyTypeFilter.css';
-
-const INVALID_NODE_MESSAGE = i18n.translate('enter-a-valid-number');
-const INVALID_MIN_NODE_MESSAGE = i18n.translate(
-	'enter-a-minimum-node-value-greater-than-0'
-);
-const INVALID_MAX_NODE_MESSAGE = i18n.translate(
-	'max-nodes-must-be-greater-than-min-nodes'
-);
-const INVALID_NEGATIVE_NODES_MESSAGE = i18n.translate(
-	'enter-nodes-values-greater-than-0'
-);
+interface KeyTypeFilterProps {
+	clearInputs: boolean;
+	hasCluster: boolean;
+	hasVirtualCluster: boolean;
+	setFilters: React.Dispatch<React.SetStateAction<IFilters>>;
+}
 
 const KeyTypeFilter = ({
 	clearInputs,
 	hasCluster,
 	hasVirtualCluster,
 	setFilters,
-}) => {
-	const [minNodesValue, setMinNodesValue] = useState('');
-	const [maxNodesValue, setMaxNodesValue] = useState('');
+}: KeyTypeFilterProps) => {
+	const [minNodesValue, setMinNodesValue] = useState<string>('');
+	const [maxNodesValue, setMaxNodesValue] = useState<string>('');
 
-	const [clusterChecked, setClusterChecked] = useState(false);
-	const [onPromiseChecked, setOnPromiseChecked] = useState(false);
+	const [clusterChecked, setClusterChecked] = useState<boolean>(false);
+	const [onPromiseChecked, setOnPromiseChecked] = useState<boolean>(false);
 
-	const [errorMessage, setErrorMessage] = useState('');
+	const [errorMessage, setErrorMessage] = useState<string>('');
 
 	useEffect(() => {
-		if (isNaN(minNodesValue) || isNaN(maxNodesValue)) {
-			setErrorMessage(INVALID_NODE_MESSAGE);
+		const minNodesNum = Number(minNodesValue);
+		const maxNodesNum = Number(maxNodesValue);
+
+		if (isNaN(minNodesNum) || isNaN(maxNodesNum)) {
+			setErrorMessage(i18n.translate('invalid-node-message'));
 
 			return;
 		}
 
-		if (minNodesValue === '0') {
-			setErrorMessage(INVALID_MIN_NODE_MESSAGE);
+		if (minNodesNum === 0) {
+			setErrorMessage(i18n.translate('invalid-min-node-message'));
 
 			return;
 		}
 
-		if (maxNodesValue <= -1 || minNodesValue <= -1) {
-			setErrorMessage(INVALID_NEGATIVE_NODES_MESSAGE);
+		if (maxNodesNum <= -1 || minNodesNum <= -1) {
+			setErrorMessage(i18n.translate('invalid-negative-nodes-message'));
 
 			return;
 		}
 
-		if (maxNodesValue < minNodesValue || maxNodesValue === '0') {
-			setErrorMessage(INVALID_MAX_NODE_MESSAGE);
+		if (maxNodesNum < minNodesNum || maxNodesNum === 0) {
+			setErrorMessage(i18n.translate('invalid-max-node-message'));
 
 			return;
 		}
@@ -96,6 +91,8 @@ const KeyTypeFilter = ({
 				hasCluster: clusterChecked,
 			};
 		}
+
+		return undefined;
 	}, [clusterChecked, hasCluster, hasVirtualCluster]);
 
 	return (
@@ -133,18 +130,22 @@ const KeyTypeFilter = ({
 					<div className="d-flex ml-4">
 						<div className="mr-2">
 							<ClayInput
-								className={{
+								className={classNames({
 									'bg-neutral-1 border-danger':
 										errorMessage ===
-											INVALID_MIN_NODE_MESSAGE ||
-										isNaN(minNodesValue) ||
-										minNodesValue <= -1,
+											i18n.translate(
+												'invalid-min-node-message'
+											) ||
+										isNaN(Number(minNodesValue)) ||
+										Number(minNodesValue) <= -1,
 
 									'bg-neutral-1 border-white':
 										!clusterChecked,
-								}}
+								})}
 								disabled={!clusterChecked}
-								onChange={(event) => {
+								onChange={(
+									event: React.ChangeEvent<HTMLInputElement>
+								) => {
 									setMinNodesValue(event.target.value);
 								}}
 								placeholder="1"
@@ -160,17 +161,21 @@ const KeyTypeFilter = ({
 
 						<div>
 							<ClayInput
-								className={{
+								className={classNames({
 									'bg-neutral-1 border-danger':
 										errorMessage ===
-											INVALID_MAX_NODE_MESSAGE ||
-										isNaN(maxNodesValue) ||
-										maxNodesValue <= -1,
+											i18n.translate(
+												'invalid-max-node-message'
+											) ||
+										isNaN(Number(maxNodesValue)) ||
+										Number(maxNodesValue) <= -1,
 									'bg-neutral-1 border-white':
 										!clusterChecked,
-								}}
+								})}
 								disabled={!clusterChecked}
-								onChange={(event) => {
+								onChange={(
+									event: React.ChangeEvent<HTMLInputElement>
+								) => {
 									setMaxNodesValue(event.target.value);
 								}}
 								placeholder="28"
@@ -199,9 +204,9 @@ const KeyTypeFilter = ({
 			<div className="mb-3 mt-2 mx-3">
 				<ClayButton
 					className="w-100"
-					disabled={errorMessage}
+					disabled={!!errorMessage}
 					onClick={() => {
-						setFilters((previousFilters) => ({
+						setFilters((previousFilters: IFilters) => ({
 							...previousFilters,
 							keyType: {
 								...previousFilters.keyType,

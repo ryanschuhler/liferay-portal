@@ -26,7 +26,7 @@ export const UPDATE_LIFERAY_EXPERIENCE_CLOUD_ENVIRONMENT = gql`
 `;
 
 export function useUpdateLiferayExperienceCloudEnvironment(
-	variables: OperationVariables,
+	variables: OperationVariables = {},
 	options = {displaySuccess: false}
 ) {
 	return useMutation(UPDATE_LIFERAY_EXPERIENCE_CLOUD_ENVIRONMENT, {

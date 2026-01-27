@@ -3,15 +3,16 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import i18n from '~/utils/I18n';
 import {Input} from '~/components';
-import {
-	isValidHost,
-	isValidIp,
-	isValidMac,
-} from '~/utils/validations.form';
+import i18n from '~/utils/I18n';
+import {isValidHost, isValidIp, isValidMac} from '~/utils/validations.form';
 
-const KeyInputs = ({id, isRenew}) => {
+interface KeyInputsProps {
+	id: number;
+	isRenew: boolean;
+}
+
+const KeyInputs = ({id, isRenew}: KeyInputsProps) => {
 	return (
 		<>
 			<div className="cp-input-generate-label">
@@ -20,7 +21,7 @@ const KeyInputs = ({id, isRenew}) => {
 					label={i18n.translate('host-name')}
 					name={`keys[${id}].hostName`}
 					type="text"
-					validations={[(value) => isValidHost(value)]}
+					validations={[(value: string) => isValidHost(value)]}
 				/>
 			</div>
 
@@ -37,7 +38,7 @@ const KeyInputs = ({id, isRenew}) => {
 					name={`keys[${id}].ipAddresses`}
 					placeholder="1.1.1.1&#10;2.2.2.2"
 					type="text"
-					validations={[(value) => isValidIp(value)]}
+					validations={[(value: string) => isValidIp(value)]}
 				/>
 
 				<div className="font-weight-normal h6 mb-3 mx-3">
@@ -55,7 +56,7 @@ const KeyInputs = ({id, isRenew}) => {
 						name={`keys[${id}].macAddresses`}
 						placeholder="XX-XX-XX-XX-XX-XX&#10;XX-XX-XX-XX-XX-XX"
 						type="text"
-						validations={[(value) => isValidMac(value)]}
+						validations={[(value: string) => isValidMac(value)]}
 					/>
 
 					<div className="font-weight-normal h6 mb-3 mx-3">

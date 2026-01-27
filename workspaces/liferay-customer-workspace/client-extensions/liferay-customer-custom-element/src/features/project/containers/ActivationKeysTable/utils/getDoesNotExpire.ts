@@ -5,7 +5,7 @@
 
 const DNE_YEARS = 100;
 
-export function getDoesNotExpire(date) {
+export function getDoesNotExpire(date: string | Date): boolean {
 	const today = new Date();
 	today.setFullYear(today.getFullYear() + DNE_YEARS);
 

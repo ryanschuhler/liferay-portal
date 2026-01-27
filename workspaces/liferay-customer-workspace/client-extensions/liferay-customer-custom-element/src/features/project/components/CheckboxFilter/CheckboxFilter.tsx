@@ -8,10 +8,20 @@ import {ClayCheckbox} from '@clayui/form';
 import {useEffect, useState} from 'react';
 import i18n from '~/utils/I18n';
 
-const CheckboxFilter = ({availableItems, clearCheckboxes, updateFilters}) => {
-	const [checkedItems, setCheckedItems] = useState([]);
+interface CheckboxFilterProps {
+	availableItems: string[];
+	clearCheckboxes: boolean;
+	updateFilters: (items: string[]) => void;
+}
 
-	const handleSelectedCheckbox = (checkedItem) => {
+const CheckboxFilter = ({
+	availableItems,
+	clearCheckboxes,
+	updateFilters,
+}: CheckboxFilterProps) => {
+	const [checkedItems, setCheckedItems] = useState<string[]>([]);
+
+	const handleSelectedCheckbox = (checkedItem: string) => {
 		if (checkedItems.includes(checkedItem)) {
 			return setCheckedItems(
 				checkedItems.filter((item) => item !== checkedItem)
@@ -44,7 +54,6 @@ const CheckboxFilter = ({availableItems, clearCheckboxes, updateFilters}) => {
 				<ClayButton
 					className="w-100"
 					onClick={() => updateFilters(checkedItems)}
-					required
 					small={true}
 				>
 					{i18n.translate('apply')}

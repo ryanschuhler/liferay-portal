@@ -3,7 +3,10 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-export function has100YearsDifference(startDate, expirationDate) {
+export function has100YearsDifference(
+	startDate: string | Date,
+	expirationDate: string | Date
+) {
 	const startDateDne = new Date(startDate);
 	const expirationDateDne = new Date(expirationDate);
 	const differenceInYears =

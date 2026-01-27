@@ -3,28 +3,44 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {actionTypes} from '~/features/project/context/reducer';
+import {IAction, actionTypes} from '~/features/project/context/reducer';
 import {STATUS_TAG_TYPE_NAMES} from '~/features/project/utils/constants';
+import {IAccountSubscriptionGroup, IProject} from '~/utils/types';
+
+interface UpdateAccountSubscriptionGroupFunction {
+	(options: {
+		variables: {
+			AccountSubscriptionGroup: {
+				accountKey: string;
+				activationStatus: string;
+				r_accountEntryToAccountSubscriptionGroup_accountEntryId: string;
+			};
+			accountSubscriptionGroupId: string;
+		};
+	}): void;
+}
 
 export default function getUpdateSubscriptionGroupsStatus(
-	dispatch,
-	handleFinishUpdate,
-	handleStatusLxcActivation,
-	project,
-	projectIdValue,
-	subscriptionGroupLxcEnvironment,
-	subscriptionGroups,
-	updateAccountSubscriptionGroup
-) {
+	dispatch: React.Dispatch<IAction>,
+	handleFinishUpdate: () => void,
+	handleStatusLxcActivation: () => void,
+	project: IProject,
+	projectIdValue: string,
+	subscriptionGroupLxcEnvironment: IAccountSubscriptionGroup,
+	subscriptionGroups: IAccountSubscriptionGroup[],
+	updateAccountSubscriptionGroup: UpdateAccountSubscriptionGroupFunction
+): void {
 	updateAccountSubscriptionGroup({
 		variables: {
-			accountSubscriptionGroup: {
+			AccountSubscriptionGroup: {
 				accountKey: project?.accountKey,
 				activationStatus: STATUS_TAG_TYPE_NAMES.active,
 				r_accountEntryToAccountSubscriptionGroup_accountEntryId:
 					project?.id,
 			},
-			id: subscriptionGroupLxcEnvironment?.accountSubscriptionGroupId,
+			accountSubscriptionGroupId:
+				subscriptionGroupLxcEnvironment?.accountSubscriptionGroupId?.toString() ||
+				'',
 		},
 	});
 
@@ -47,6 +63,6 @@ export default function getUpdateSubscriptionGroupsStatus(
 
 	dispatch({
 		payload: newSubscriptionGroups,
-		type: actionTypes.UPDATE_SUBSCRIPTION_GROUPS,
+		type: actionTypes.UPDATE_SUBSCRIPTION_GROUPS as keyof typeof actionTypes,
 	});
 }

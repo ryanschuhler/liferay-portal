@@ -5,14 +5,41 @@
 
 import {useCallback} from 'react';
 import {useNavigate} from 'react-router-dom';
-import i18n from '~/utils/I18n';
 import {Button, ButtonDropDown} from '~/components';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import {ALERT_DOWNLOAD_TYPE} from '~/features/project/utils/constants';
 import {getFilteredKeysActionsItems} from '~/features/project/containers/ActivationKeysTable/utils/constants/columns-definitions/getFilteredKeysActionsItems';
 import {getActivationKeyDownload} from '~/features/project/containers/ActivationKeysTable/utils/getActivationKeyDownload';
 import {getActivationKeysActionsItems} from '~/features/project/containers/ActivationKeysTable/utils/getActivationKeysActionsItems';
 import {getActivationKeysDownloadItems} from '~/features/project/containers/ActivationKeysTable/utils/getActivationKeysDownloadItems';
+import {ALERT_DOWNLOAD_TYPE} from '~/features/project/utils/constants';
+import i18n from '~/utils/I18n';
+import {IActivationKey, IProject} from '~/utils/types';
+
+interface ActionItem {
+	icon?: JSX.Element;
+	label: string;
+	onClick: () => void | Promise<void | boolean>;
+}
+
+interface StatusState {
+	deactivate: string;
+	downloadAggregated: string;
+	downloadMultiple: string;
+}
+
+interface ActionButtonProps {
+	activationKeysByStatusPaginatedChecked: IActivationKey[];
+	filterCheckedActivationKeys: IActivationKey[];
+	hasRenewalSubscription: boolean;
+	identifier: string;
+	isAbleToDownloadAggregateKeys: boolean;
+	isAdminOrPartnerManager: boolean;
+	isAdminUserAccount: boolean;
+	oAuthToken: string;
+	productName: string;
+	project: IProject;
+	setStatus: React.Dispatch<React.SetStateAction<StatusState>>;
+}
 
 const ActionButton = ({
 	activationKeysByStatusPaginatedChecked,
@@ -26,15 +53,15 @@ const ActionButton = ({
 	productName,
 	project,
 	setStatus,
-}) => {
+}: ActionButtonProps) => {
 	const {featureFlags, provisioningServerAPI} = useAppPropertiesContext();
 	const navigate = useNavigate();
 
-	const allowSelfProvisioning = project.allowSelfProvisioning;
+	const allowSelfProvisioning = !!project.allowSelfProvisioning;
 
 	const handleAlertStatus = useCallback(
-		(hasSuccessfullyDownloadedKeys) =>
-			setStatus((previousStatus) => ({
+		(hasSuccessfullyDownloadedKeys: boolean) =>
+			setStatus((previousStatus: StatusState) => ({
 				...previousStatus,
 				downloadAggregated: hasSuccessfullyDownloadedKeys
 					? ALERT_DOWNLOAD_TYPE.success
@@ -44,8 +71,8 @@ const ActionButton = ({
 	);
 
 	const handleMultipleAlertStatus = useCallback(
-		(hasSuccessfullyDownloadedKeys) =>
-			setStatus((previousStatus) => ({
+		(hasSuccessfullyDownloadedKeys: boolean) =>
+			setStatus((previousStatus: StatusState) => ({
 				...previousStatus,
 				downloadMultiple: hasSuccessfullyDownloadedKeys
 					? ALERT_DOWNLOAD_TYPE.success
@@ -55,17 +82,18 @@ const ActionButton = ({
 	);
 
 	if (activationKeysByStatusPaginatedChecked.length > 1) {
-		const activationKeysDownloadItems = getActivationKeysDownloadItems(
-			isAbleToDownloadAggregateKeys,
-			filterCheckedActivationKeys,
-			oAuthToken,
-			provisioningServerAPI,
-			handleMultipleAlertStatus,
-			handleAlertStatus,
-			activationKeysByStatusPaginatedChecked,
-			project.name,
-			featureFlags
-		);
+		const activationKeysDownloadItems: ActionItem[] =
+			getActivationKeysDownloadItems(
+				isAbleToDownloadAggregateKeys,
+				filterCheckedActivationKeys.map((key) => key.id).join(','),
+				oAuthToken,
+				provisioningServerAPI,
+				handleMultipleAlertStatus,
+				handleAlertStatus,
+				activationKeysByStatusPaginatedChecked,
+				project.name,
+				featureFlags
+			);
 
 		return (
 			<ButtonDropDown
@@ -116,21 +144,22 @@ const ActionButton = ({
 		});
 	};
 
-	const activationKeysActionsItems = getActivationKeysActionsItems(
-		project?.accountKey,
-		oAuthToken,
-		provisioningServerAPI,
-		handleAlertStatus,
-		handleRedirectPage,
-		handleDeactivatePage,
-		productName,
-		allowSelfProvisioning,
-		hasRenewalSubscription,
-		handleRedirectRenewPage
-	);
+	const activationKeysActionsItems: ActionItem[] =
+		getActivationKeysActionsItems(
+			project.accountKey,
+			oAuthToken,
+			provisioningServerAPI,
+			handleAlertStatus,
+			handleRedirectPage,
+			handleDeactivatePage,
+			productName,
+			allowSelfProvisioning,
+			hasRenewalSubscription,
+			handleRedirectRenewPage
+		);
 
-	const filteredKeysActionsItems = getFilteredKeysActionsItems(
-		project?.accountKey,
+	const filteredKeysActionsItems: ActionItem[] = getFilteredKeysActionsItems(
+		project.accountKey,
 		oAuthToken,
 		provisioningServerAPI,
 		handleAlertStatus,

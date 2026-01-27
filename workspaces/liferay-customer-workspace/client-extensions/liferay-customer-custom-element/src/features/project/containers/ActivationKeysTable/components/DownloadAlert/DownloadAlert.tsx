@@ -10,16 +10,34 @@ import {
 	AUTO_CLOSE_ALERT_TIME,
 } from '~/features/project/utils/constants';
 
-const DownloadAlert = ({downloadStatus, message, setDownloadStatus}) => (
+export type DownloadStatusType = 'success' | 'danger' | '';
+
+interface DownloadAlertProps {
+	downloadStatus: DownloadStatusType;
+	message: string;
+	setDownloadStatus: (value: DownloadStatusType) => void;
+}
+
+const DownloadAlert = ({
+	downloadStatus,
+	message,
+	setDownloadStatus,
+}: DownloadAlertProps) => (
 	<ClayAlert.ToastContainer>
-		<ClayAlert
-			autoClose={AUTO_CLOSE_ALERT_TIME[downloadStatus]}
-			className="cp-activation-key-download-alert"
-			displayType={ALERT_DOWNLOAD_TYPE[downloadStatus]}
-			onClose={() => setDownloadStatus('')}
-		>
-			{message}
-		</ClayAlert>
+		{downloadStatus !== '' ? (
+			<ClayAlert
+				autoClose={
+					downloadStatus === 'success'
+						? AUTO_CLOSE_ALERT_TIME.success
+						: AUTO_CLOSE_ALERT_TIME.danger
+				}
+				className="cp-activation-key-download-alert"
+				displayType={ALERT_DOWNLOAD_TYPE[downloadStatus]}
+				onClose={() => setDownloadStatus('')}
+			>
+				{message}
+			</ClayAlert>
+		) : undefined}
 	</ClayAlert.ToastContainer>
 );
 

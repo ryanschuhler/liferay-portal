@@ -5,6 +5,14 @@
 
 import {Liferay} from '~/services/liferay';
 
+export const FORMAT_DATE_TYPES = {
+	day2DMonthSYearN: {
+		day: '2-digit',
+		month: 'short',
+		year: 'numeric',
+	} as Intl.DateTimeFormatOptions,
+};
+
 export default function getDateCustomFormat(
 	options: Intl.DateTimeFormatOptions = {},
 	rawDate: string | Date

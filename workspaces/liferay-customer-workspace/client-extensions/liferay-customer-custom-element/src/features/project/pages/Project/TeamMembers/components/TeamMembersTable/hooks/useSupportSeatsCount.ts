@@ -5,14 +5,19 @@
 
 import {useEffect, useState} from 'react';
 
-export default function useSupportSeatsCount(userAccounts, searching) {
-	const [supportSeatsCount, setSupportSeatsCount] = useState();
+export default function useSupportSeatsCount(
+	userAccounts: any,
+	searching: boolean
+) {
+	const [supportSeatsCount, setSupportSeatsCount] = useState<
+		number | undefined
+	>();
 
 	useEffect(() => {
 		if (!searching) {
 			setSupportSeatsCount(
 				userAccounts?.items.filter(
-					(item) =>
+					(item: any) =>
 						item?.selectedAccountSummary?.hasSupportSeatRole &&
 						!item?.isLiferayStaff
 				).length

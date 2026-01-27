@@ -14,12 +14,12 @@ import './NavSegment.css';
 interface IProps {
 	disabled?: boolean;
 	items?: {
-		key: string;
+		key?: string;
 		label: string;
 	}[];
 	loading?: boolean;
 	maxItemsLoading?: number;
-	onSelect: (index: number | {key: string; label: string}) => void;
+	onSelect: (index: number | {key?: string; label: string}) => void;
 	selectedIndex?: number;
 }
 

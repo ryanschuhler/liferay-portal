@@ -7,54 +7,67 @@ import {useQuery} from '@apollo/client';
 import {useEffect} from 'react';
 import {useOutletContext} from 'react-router-dom';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import SearchBuilder from '~/lib/SearchBuilder';
 import IncidentContactCard from '~/features/project/containers/IncidentContactCard';
-import i18n from '~/utils/I18n';
 import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
+import SearchBuilder from '~/lib/SearchBuilder';
 import {getAccountSubscriptionGroups} from '~/services/liferay/graphql/queries';
+import i18n from '~/utils/I18n';
+import {IKoroneikiAccount} from '~/utils/types';
+
 import ManageProductUsers from './components/ManageProductUsers/ManageProductUsers';
 import TeamMembersTable from './components/TeamMembersTable/TeamMembersTable';
 
-const targetProducts = [
-	'Analytics Cloud',
-	'Liferay Cloud'
-];
+interface IAccountSubscriptionGroup {
+	activationStatus: string;
+	hasActivation: boolean;
+	name: string;
+}
+
+interface IOutletContext {
+	setHasSideMenu: (hasSideMenu: boolean) => void;
+}
+
+interface IAppPropertiesContext {
+	featureFlags: string[];
+}
+
+const targetProducts = ['Analytics Cloud', 'Liferay Cloud'];
 
 const TeamMembers = () => {
-	const {setHasSideMenu} = useOutletContext();
-	const {data: dataCurrentKoroneikiAccount, loading: loadingCurrentKoroneikiAccount} = useCurrentKoroneikiAccount();
-	const koroneikiAccount = dataCurrentKoroneikiAccount?.koroneikiAccountByExternalReferenceCode;
-	const {featureFlags} = useAppPropertiesContext();
+	const {setHasSideMenu} = useOutletContext<IOutletContext>();
+	const {
+		data: dataCurrentKoroneikiAccount,
+		loading: loadingCurrentKoroneikiAccount,
+	} = useCurrentKoroneikiAccount();
+	const koroneikiAccount: IKoroneikiAccount | undefined =
+		dataCurrentKoroneikiAccount?.koroneikiAccountByExternalReferenceCode;
+	const {featureFlags} = useAppPropertiesContext() as IAppPropertiesContext;
 
-	const {data: dataSubscriptionGroups, loading: loadingSubscriptionGroups} = useQuery(
-		getAccountSubscriptionGroups,
-		{
-			skip: loadingCurrentKoroneikiAccount,
+	const {data: dataSubscriptionGroups, loading: loadingSubscriptionGroups} =
+		useQuery(getAccountSubscriptionGroups, {
+			skip: loadingCurrentKoroneikiAccount || !koroneikiAccount,
 			variables: {
 				filter: new SearchBuilder()
-					.eq('accountKey', koroneikiAccount?.accountKey)
+					.eq('accountKey', koroneikiAccount!.accountKey)
 					.and()
 					.eq('hasActivation', true)
 					.build(),
 			},
-		}
-	);
+		});
 
-	const accountSubscriptionGroups =
+	const accountSubscriptionGroups: IAccountSubscriptionGroup[] | undefined =
 		dataSubscriptionGroups?.c?.accountSubscriptionGroups?.items;
 
-	const accountSubscriptionGroupsNames = accountSubscriptionGroups?.map(
-		(group) => group?.name
-	);
+	const hasActiveProduct: boolean =
+		accountSubscriptionGroups?.some(
+			(item) =>
+				targetProducts?.includes(item?.name) &&
+				item?.hasActivation &&
+				item?.activationStatus === 'Active'
+		) ?? false;
 
-	const hasActiveProduct = accountSubscriptionGroups?.some(
-		(item) =>
-			targetProducts?.includes(item?.name) &&
-			item?.hasActivation &&
-			item?.activationStatus === 'Active'
-	);
-
-	const loading = loadingCurrentKoroneikiAccount || loadingSubscriptionGroups;
+	const loading: boolean =
+		loadingCurrentKoroneikiAccount || loadingSubscriptionGroups;
 
 	useEffect(() => {
 		setHasSideMenu(true);
@@ -72,24 +85,18 @@ const TeamMembers = () => {
 
 			<div className="mt-4">
 				<TeamMembersTable
-					koroneikiAccount={koroneikiAccount}
-					loading={loading}
+					koroneikiAccount={koroneikiAccount as IKoroneikiAccount}
+					koroneikiAccountLoading={loading}
 				/>
 
 				<ManageProductUsers
-					koroneikiAccount={koroneikiAccount}
+					koroneikiAccount={koroneikiAccount as IKoroneikiAccount}
 					loading={loading}
 				/>
 
-				{featureFlags.includes('LPS-159127') &&
-					hasActiveProduct && (
-						<IncidentContactCard
-							accountSubscriptionGroupsNames={accountSubscriptionGroupsNames}
-							hasActiveProduct={hasActiveProduct}
-							koroneikiAccount={koroneikiAccount}
-							loading={loading}
-						/>
-					)}
+				{featureFlags.includes('LPS-159127') && hasActiveProduct && (
+					<IncidentContactCard />
+				)}
 			</div>
 		</>
 	);

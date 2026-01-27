@@ -4,15 +4,20 @@
  */
 
 import i18n from '~/utils/I18n';
+import {IActivationKey} from '~/utils/types';
 
-const getRenewKeySubtitle = (state) => {
-	const keyCount = state?.activationKeys?.length;
-	const keyType = state?.activationKeys[0]?.complimentary
+interface IState {
+	activationKeys?: IActivationKey[];
+}
+
+const getRenewKeySubtitle = (state: IState) => {
+	const keyCount = state?.activationKeys?.length || 0;
+	const keyType = state?.activationKeys?.[0]?.complimentary
 		? 'complimentary'
 		: 'subscription';
 	const translationKey = keyCount === 1 ? 'renew-x-x-key' : 'renew-x-x-keys';
 
-	return i18n.sub(translationKey, [keyCount, keyType]);
+	return i18n.sub(translationKey, [keyCount.toString(), keyType || '']);
 };
 
 export {getRenewKeySubtitle};

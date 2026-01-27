@@ -6,12 +6,28 @@
 import {Button as ClayButton} from '@clayui/core';
 import {useModal} from '@clayui/modal';
 import {useState} from 'react';
-import i18n from '~/utils/I18n';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
+import {
+	ALERT_DOWNLOAD_TYPE,
+	STATUS_CODE,
+} from '~/features/project/utils/constants';
 import {putDeactivateKeys} from '~/services/liferay/rest/raysource/LicenseKeys';
-import {ALERT_DOWNLOAD_TYPE, STATUS_CODE} from '~/features/project/utils/constants';
+import i18n from '~/utils/I18n';
+
 import ConfirmationMessageModal from './ConfirmationMessageModal';
 import DeactivateKeysModal from './DeactivateKeysModal';
+
+interface ActivationKeyForDeactivation {
+	id: string;
+}
+
+interface DeactivateButtonProps {
+	deactivateKeysStatus: string;
+	filterCheckedActivationKeys: ActivationKeyForDeactivation[];
+	handleDeactivate: () => void;
+	oAuthToken: string | undefined;
+	setDeactivateKeysStatus: (value: string) => void;
+}
 
 const DeactivateButton = ({
 	deactivateKeysStatus,
@@ -19,11 +35,12 @@ const DeactivateButton = ({
 	handleDeactivate,
 	oAuthToken,
 	setDeactivateKeysStatus,
-}) => {
+}: DeactivateButtonProps) => {
 	const {provisioningServerAPI} = useAppPropertiesContext();
-	const [isDeactivating, setIsDeactivating] = useState(false);
-	const [isVisibleModal, setIsVisibleModal] = useState(false);
-	const [alreadyDeactivated, setAlreadyDeactivated] = useState(false);
+	const [isDeactivating, setIsDeactivating] = useState<boolean>(false);
+	const [isVisibleModal, setIsVisibleModal] = useState<boolean>(false);
+	const [alreadyDeactivated, setAlreadyDeactivated] =
+		useState<boolean>(false);
 	const {observer, onClose} = useModal({
 		onClose: () => {
 			setIsVisibleModal(false);
@@ -34,10 +51,14 @@ const DeactivateButton = ({
 	const deactivateKeysConfirm = async () => {
 		setIsDeactivating(true);
 
+		const activationKeyIds = filterCheckedActivationKeys
+			.map((key) => key.id)
+			.join(',');
+
 		const response = await putDeactivateKeys(
-			oAuthToken,
+			oAuthToken as string,
 			provisioningServerAPI,
-			filterCheckedActivationKeys
+			activationKeyIds
 		);
 
 		if (response.status === STATUS_CODE.successNoContent) {

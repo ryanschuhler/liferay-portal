@@ -5,17 +5,45 @@
 
 import {useEffect, useMemo, useState} from 'react';
 import i18n from '~/utils/I18n';
+import {IActivationKey} from '~/utils/types';
 
 import {ACTIVATION_KEYS_LICENSE_FILTER_TYPES} from '../utils/constants';
 
+export type ActivationKeysLicenseFilterType =
+	| 'activated'
+	| 'all'
+	| 'expired'
+	| 'notActivated';
+
+interface IPaginationConfig {
+	activePage: number;
+	currentPage: number;
+	itemsPerPage: number;
+	labels: {
+		paginationResults: string;
+		perPageItems: string;
+		selectPerPageItems: string;
+	};
+	listItemsPerPage: {label: number}[];
+	onItemsPerPageChange: (itemsPerPage: number) => void;
+	onPageChange: (page: number) => void;
+	setActivePage: React.Dispatch<React.SetStateAction<number>>;
+	setItemsPerPage: React.Dispatch<React.SetStateAction<number>>;
+	showDeltasDropDown: boolean;
+	totalCount: number;
+	totalPages: number;
+}
+
 export default function usePagination(
-	activationKeys,
-	statusFilter,
-	setAllActivationKeys = () => {}
+	activationKeys: IActivationKey[],
+	statusFilter: ActivationKeysLicenseFilterType,
+	setAllActivationKeys: React.Dispatch<
+		React.SetStateAction<IActivationKey[]>
+	> = () => {}
 ) {
-	const [activePage, setActivePage] = useState(1);
-	const [itemsPerPage, setItemsPerPage] = useState(5);
-	const [currentTotalCount, setCurrentTotalCount] = useState(0);
+	const [activePage, setActivePage] = useState<number>(1);
+	const [itemsPerPage, setItemsPerPage] = useState<number>(5);
+	const [currentTotalCount, setCurrentTotalCount] = useState<number>(0);
 
 	useEffect(() => {
 		if (statusFilter) {
@@ -25,7 +53,7 @@ export default function usePagination(
 
 	const activationKeysFilteredByStatus = useMemo(() => {
 		return (
-			activationKeys?.filter((activationKey) =>
+			activationKeys?.filter((activationKey: IActivationKey) =>
 				ACTIVATION_KEYS_LICENSE_FILTER_TYPES[statusFilter](
 					activationKey
 				)
@@ -41,9 +69,15 @@ export default function usePagination(
 		setCurrentTotalCount(activationKeysFilteredByStatus.length);
 	}, [activationKeysFilteredByStatus]);
 
-	const paginationConfig = useMemo(
+	const totalPages = useMemo(
+		() => Math.ceil(currentTotalCount / itemsPerPage),
+		[currentTotalCount, itemsPerPage]
+	);
+
+	const paginationConfig: IPaginationConfig = useMemo(
 		() => ({
 			activePage,
+			currentPage: activePage,
 			itemsPerPage,
 			labels: {
 				paginationResults: i18n.translate('showing-x-to-x-of-x'),
@@ -56,12 +90,15 @@ export default function usePagination(
 				{label: 20},
 				{label: 50},
 			],
+			onItemsPerPageChange: setItemsPerPage,
+			onPageChange: setActivePage,
 			setActivePage,
 			setItemsPerPage,
 			showDeltasDropDown: true,
 			totalCount: currentTotalCount,
+			totalPages,
 		}),
-		[activePage, currentTotalCount, itemsPerPage]
+		[activePage, currentTotalCount, itemsPerPage, totalPages]
 	);
 
 	const activationKeysByStatusPaginated = useMemo(() => {

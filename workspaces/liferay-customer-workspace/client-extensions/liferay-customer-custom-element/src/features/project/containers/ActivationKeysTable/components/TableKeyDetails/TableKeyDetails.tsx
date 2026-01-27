@@ -6,17 +6,15 @@
 import ClayIcon from '@clayui/icon';
 import classNames from 'classnames';
 import {useEffect, useState} from 'react';
-
+import {DXPIcon, PortalIcon} from '~/assets/NavigationMenu';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
 import PopoverIconButton from '~/features/project/components/PopoverIconButton';
+import {PRODUCT_TYPES} from '~/features/project/utils/constants';
 import i18n from '~/utils/I18n';
-import {
-	DXPIcon,
-	PortalIcon,
-} from '~/assets/NavigationMenu';
 import {FORMAT_DATE_TYPES} from '~/utils/constants';
 import getDateCustomFormat from '~/utils/getDateCustomFormat';
-import {PRODUCT_TYPES} from '~/features/project/utils/constants';
+import {IActivationKey} from '~/utils/types';
+
 import {getLicenseKeyPermanentStatus} from '../../../GenerateNewKey/utils/licenseKeyPermanentStatus';
 import {
 	getEnvironmentType,
@@ -27,36 +25,42 @@ import {
 	hasVirtualCluster,
 } from '../../utils/index';
 
-const HOST_NAME = i18n.translate('host-name');
-const IP_ADDRESSES = i18n.translate('ip-addresses');
-const MAC_ADDRESSES = i18n.translate('mac-addresses');
+interface ITableKeyDetailsProps {
+	activationKeys: IActivationKey;
+	setValueToCopyToClipboard: React.Dispatch<
+		React.SetStateAction<string | null>
+	>;
+}
 
-const TableKeyDetails = ({currentActivationKey, setValueToCopyToClipboard}) => {
+const TableKeyDetails = ({
+	activationKeys,
+	setValueToCopyToClipboard,
+}: ITableKeyDetailsProps) => {
 	const [actionToCopy, setActionToCopy] = useState('');
-	const instanceSizeFormated = getInstanceSize(currentActivationKey.sizing);
+	const instanceSizeFormated = getInstanceSize(activationKeys.sizing);
 
 	const {articleWhatIsMyInstanceSizingValueURL} = useAppPropertiesContext();
 
 	const hasVirtualClusterForActivationKeys = hasVirtualCluster(
-		currentActivationKey?.licenseEntryType
+		activationKeys?.licenseEntryType
 	);
-	const statusActivationTag = getStatusActivationTag(currentActivationKey);
+	const statusActivationTag = getStatusActivationTag(activationKeys);
 
 	const isPermanentLicenseKey = getLicenseKeyPermanentStatus(
-		undefined,
-		currentActivationKey?.expirationDate
+		activationKeys.startDate,
+		activationKeys?.expirationDate
 	);
 
 	const formattedProductName = getFormattedProductName(
-		currentActivationKey?.productName
+		activationKeys?.productName
 	);
 
 	const handleExpiredDate = isPermanentLicenseKey
 		? i18n.translate('does-not-expire')
 		: getDateCustomFormat(
 				FORMAT_DATE_TYPES.day2DMonthSYearN,
-				currentActivationKey.expirationDate
-		  );
+				activationKeys.expirationDate
+			);
 
 	useEffect(() => {
 		if (actionToCopy) {
@@ -64,7 +68,7 @@ const TableKeyDetails = ({currentActivationKey, setValueToCopyToClipboard}) => {
 		}
 	}, [actionToCopy]);
 
-	const handleCopyToClipboard = (value) => {
+	const handleCopyToClipboard = (value: string) => {
 		setValueToCopyToClipboard(value);
 	};
 
@@ -124,7 +128,7 @@ const TableKeyDetails = ({currentActivationKey, setValueToCopyToClipboard}) => {
 
 				<div className="col-3">
 					<p className="bg-brand-primary-lighten-5 cp-key-details-paragraph px-3 py-2 rounded">
-						{currentActivationKey.productVersion}
+						{activationKeys.productVersion}
 					</p>
 				</div>
 
@@ -156,7 +160,7 @@ const TableKeyDetails = ({currentActivationKey, setValueToCopyToClipboard}) => {
 					<p className="text-neutral-8 text-paragraph-sm">
 						{hasVirtualClusterForActivationKeys
 							? i18n.translate('cluster-nodes')
-							: HOST_NAME}
+							: i18n.translate('host-name')}
 					</p>
 				</div>
 
@@ -170,35 +174,31 @@ const TableKeyDetails = ({currentActivationKey, setValueToCopyToClipboard}) => {
 			<div className="row">
 				<div className="col-2">
 					<p className="bg-brand-primary-lighten-5 cp-key-details-paragraph px-3 py-2 rounded">
-						{getEnvironmentType(currentActivationKey.productName)}
+						{getEnvironmentType(activationKeys.productName)}
 					</p>
 				</div>
 
 				<div className="col-3">
 					<p className="bg-brand-primary-lighten-5 cp-key-details-paragraph px-3 py-2 rounded">
-						{getProductDescription(
-							currentActivationKey?.complimentary
-						)}
+						{getProductDescription(activationKeys?.complimentary)}
 					</p>
 				</div>
 
 				<div className="col-4">
 					<p className="bg-neutral-1 cp-key-details-paragraph d-flex px-3 py-2 rounded">
 						{hasVirtualClusterForActivationKeys
-							? currentActivationKey.maxClusterNodes
-							: currentActivationKey.hostName || '-'}
+							? activationKeys.maxClusterNodes
+							: activationKeys.hostName || '-'}
 
-						{currentActivationKey.hostName && (
+						{activationKeys.hostName && (
 							<ClayIcon
 								className="cp-copy-clipboard-icon ml-3 mt-1 text-neutral-5"
-								onClick={() =>
+								onClick={() => {
 									handleCopyToClipboard(
-										HOST_NAME,
-										setActionToCopy(
-											currentActivationKey.hostName
-										)
-									)
-								}
+										i18n.translate('host-name')
+									);
+									setActionToCopy(activationKeys.hostName);
+								}}
 								symbol="copy"
 							/>
 						)}
@@ -209,7 +209,7 @@ const TableKeyDetails = ({currentActivationKey, setValueToCopyToClipboard}) => {
 					<p className="bg-neutral-1 cp-key-details-paragraph px-3 py-2 rounded">
 						{getDateCustomFormat(
 							FORMAT_DATE_TYPES.day2DMonthSYearN,
-							currentActivationKey.startDate
+							activationKeys.startDate
 						)}
 					</p>
 				</div>
@@ -217,11 +217,12 @@ const TableKeyDetails = ({currentActivationKey, setValueToCopyToClipboard}) => {
 
 			<div
 				className={classNames('row', {
-					'justify-content-between': hasVirtualClusterForActivationKeys,
+					'justify-content-between':
+						hasVirtualClusterForActivationKeys,
 				})}
 			>
 				<div className="col-5">
-					{!!currentActivationKey.sizing && (
+					{!!activationKeys.sizing && (
 						<p className="text-neutral-8 text-paragraph-sm">
 							{i18n.translate('instance-size')}
 
@@ -240,7 +241,7 @@ const TableKeyDetails = ({currentActivationKey, setValueToCopyToClipboard}) => {
 				{!hasVirtualClusterForActivationKeys && (
 					<div className="col-4">
 						<p className="text-neutral-8 text-paragraph-sm">
-							{IP_ADDRESSES}
+							{i18n.translate('ip-addresses')}
 						</p>
 					</div>
 				)}
@@ -254,11 +255,12 @@ const TableKeyDetails = ({currentActivationKey, setValueToCopyToClipboard}) => {
 
 			<div
 				className={classNames('row', {
-					'justify-content-between': hasVirtualClusterForActivationKeys,
+					'justify-content-between':
+						hasVirtualClusterForActivationKeys,
 				})}
 			>
 				<div className="col-5">
-					{!!currentActivationKey.sizing && (
+					{!!activationKeys.sizing && (
 						<p className="bg-brand-primary-lighten-5 cp-key-details-paragraph px-3 py-2 rounded">
 							{instanceSizeFormated}
 						</p>
@@ -268,19 +270,19 @@ const TableKeyDetails = ({currentActivationKey, setValueToCopyToClipboard}) => {
 				{!hasVirtualClusterForActivationKeys && (
 					<div className="col-4">
 						<p className="bg-neutral-1 cp-key-details-paragraph d-flex px-3 py-2 rounded">
-							{currentActivationKey.ipAddresses || '-'}
+							{activationKeys.ipAddresses || '-'}
 
-							{currentActivationKey.ipAddresses && (
+							{activationKeys.ipAddresses && (
 								<ClayIcon
 									className="cp-copy-clipboard-icon ml-3 mt-1 text-neutral-5"
-									onClick={() =>
+									onClick={() => {
 										handleCopyToClipboard(
-											IP_ADDRESSES,
-											setActionToCopy(
-												currentActivationKey.ipAddresses
-											)
-										)
-									}
+											i18n.translate('ip-addresses')
+										);
+										setActionToCopy(
+											activationKeys.ipAddresses
+										);
+									}}
 									symbol="copy"
 								/>
 							)}
@@ -300,26 +302,26 @@ const TableKeyDetails = ({currentActivationKey, setValueToCopyToClipboard}) => {
 					<div className="justify-content-center row">
 						<div className="col-2">
 							<p className="text-neutral-8 text-paragraph-sm">
-								{MAC_ADDRESSES}
+								{i18n.translate('mac-addresses')}
 							</p>
 						</div>
 					</div>
 					<div className="justify-content-center row">
 						<div className="col-4 ml-8">
 							<p className="bg-neutral-1 cp-key-details-paragraph d-flex px-3 py-2 rounded">
-								{currentActivationKey.macAddresses || '-'}
+								{activationKeys.macAddresses || '-'}
 
-								{currentActivationKey.macAddresses && (
+								{activationKeys.macAddresses && (
 									<ClayIcon
 										className="cp-copy-clipboard-icon ml-3 mt-1 text-neutral-5"
-										onClick={() =>
+										onClick={() => {
 											handleCopyToClipboard(
-												MAC_ADDRESSES,
-												setActionToCopy(
-													currentActivationKey.macAddresses
-												)
-											)
-										}
+												i18n.translate('mac-addresses')
+											);
+											setActionToCopy(
+												activationKeys.macAddresses
+											);
+										}}
 										symbol="copy"
 									/>
 								)}

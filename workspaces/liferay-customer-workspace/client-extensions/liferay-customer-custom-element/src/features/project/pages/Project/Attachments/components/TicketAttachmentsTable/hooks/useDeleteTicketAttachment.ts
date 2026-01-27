@@ -5,10 +5,12 @@
 
 import {useState} from 'react';
 
-export default function useDelete(fetchTicketAttachments) {
+declare const Liferay: any;
+
+export default function useDelete(fetchTicketAttachments: () => void) {
 	const [isDeleting, setIsDeleting] = useState(false);
 
-	const onDelete = async (ticketAttachmentId) => {
+	const onDelete = async (ticketAttachmentId: string) => {
 		setIsDeleting(true);
 
 		await Liferay.OAuth2Client.FromUserAgentApplication(

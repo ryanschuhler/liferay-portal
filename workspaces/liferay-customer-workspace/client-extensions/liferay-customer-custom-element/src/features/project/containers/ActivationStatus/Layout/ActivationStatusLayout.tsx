@@ -8,13 +8,36 @@ import classNames from 'classnames';
 import {StatusTag} from '~/components';
 import {STATUS_TAG_TYPE_NAMES} from '~/features/project/utils/constants';
 
+interface ActivationStatusItem {
+	buttonLink?: JSX.Element;
+	dropdownIcon?: JSX.Element;
+	id: string;
+	subtitle: JSX.Element | string;
+	title: string;
+}
+
+interface Project {
+	code: string;
+	name: string;
+}
+
+interface ActivationStatusLayoutProps {
+	activationStatus: ActivationStatusItem;
+	activationStatusDate: string;
+	children?: JSX.Element;
+	iconPath: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+	project: Project;
+	subscriptionGroupActivationStatus: string;
+}
+
 const ActivationStatusLayout = ({
 	activationStatus,
 	activationStatusDate,
+	children,
 	iconPath: IconSVG,
 	project,
 	subscriptionGroupActivationStatus,
-}) => {
+}: ActivationStatusLayoutProps) => {
 	return (
 		<div className="mb-5">
 			<h2>{activationStatus.title}</h2>
@@ -40,7 +63,6 @@ const ActivationStatusLayout = ({
 											!subscriptionGroupActivationStatus,
 									}
 								)}
-								draggable={false}
 								height={30.55}
 								width={30.55}
 							/>
@@ -49,7 +71,7 @@ const ActivationStatusLayout = ({
 								className="col-8 h5 ml-2 px-0"
 								displayType="title"
 								tag="h5"
-								title={null}
+								title=""
 								truncate={false}
 							>
 								{project.name}
@@ -59,6 +81,8 @@ const ActivationStatusLayout = ({
 								</p>
 
 								{activationStatus.buttonLink}
+
+								{children}
 							</ClayCard.Description>
 
 							<div className="d-flex justify-content-between ml-auto">
@@ -66,7 +90,7 @@ const ActivationStatusLayout = ({
 									className="cp-label-activation-status position-absolute"
 									displayType="text"
 									tag="div"
-									title={null}
+									title=""
 									truncate={false}
 								>
 									<div className="align-items-center d-flex">

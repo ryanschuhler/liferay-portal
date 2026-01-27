@@ -7,24 +7,68 @@ import ClayAlert from '@clayui/alert';
 import {ClayCheckbox} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import {ClayTooltipProvider} from '@clayui/tooltip';
-import {FieldArray, Formik} from 'formik';
+import {FieldArray, Formik, FormikErrors, FormikTouched} from 'formik';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-import useProvisioningLicenseKeys from '~/hooks/useProvisioningLicenseKeys';
-import {Liferay} from '~/services/liferay';
-import i18n from '~/utils/I18n';
 import {Badge, Button, Input} from '~/components';
 import Layout from '~/components/FormLayout';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
+import useProvisioningLicenseKeys from '~/hooks/useProvisioningLicenseKeys';
+import {Liferay} from '~/services/liferay';
 import {patchOrderItemByExternalReferenceCode} from '~/services/liferay/graphql/queries';
-import {putSubscriptionInKey} from '~/services/liferay/rest/raysource/LicenseKeys';
+import i18n from '~/utils/I18n';
 import getInitialGenerateNewKey from '~/utils/constants/getInitialGenerateNewKey';
+import {ISelectedKeyData} from '~/utils/types';
+
 import GenerateCardLayout from '../GenerateCardLayout';
 import KeyInputs from '../KeyInputs';
 import KeySelect from '../KeySelect';
+import {IGenerateNewKeyState} from '../types';
+import {STEP_TYPES} from '../utils/constants/stepType';
 import {getLicenseEntryTypeSelected} from '../utils/licenseEntryType';
 import {getLicenseKeyEndDatesByLicenseType} from '../utils/licenseKeyEndDate';
 import {getRenewKeySubtitle} from '../utils/renewKeySubtitle';
+
+interface Key {
+	hostName: string;
+	ipAddresses: string;
+	macAddresses: string;
+}
+
+interface ISubmitKeyAction {
+	submitKey: () => Promise<void>;
+}
+
+interface RequiredInformationValues {
+	description: string;
+	keys: Key[];
+	maxClusterNodes: string;
+	name: string;
+}
+
+interface RequiredInformationProps {
+	accountKey: string;
+	errors: FormikErrors<RequiredInformationValues>;
+	expirationRenewDate: string;
+	hasComplimentaryKey: boolean;
+	licenseEntryTypeName: string;
+	purposeDescription?: string;
+	selectedKeyData: ISelectedKeyData;
+	setErrors: React.Dispatch<
+		React.SetStateAction<FormikErrors<RequiredInformationValues>>
+	>;
+	setStep: React.Dispatch<
+		React.SetStateAction<(typeof STEP_TYPES)[keyof typeof STEP_TYPES]>
+	>;
+	setTouched: React.Dispatch<
+		React.SetStateAction<FormikTouched<RequiredInformationValues>>
+	>;
+	state: IGenerateNewKeyState;
+	submitKeyAction: ISubmitKeyAction;
+	touched: FormikTouched<RequiredInformationValues>;
+	urlPreviousPage: string;
+	values: RequiredInformationValues;
+}
 
 const RequiredInformation = ({
 	accountKey,
@@ -32,39 +76,43 @@ const RequiredInformation = ({
 	expirationRenewDate,
 	hasComplimentaryKey,
 	licenseEntryTypeName,
-	oAuthToken,
 	selectedKeyData,
 	setErrors,
 	setStep,
 	setTouched,
-	startRenewDate,
 	state,
 	submitKeyAction,
 	touched,
 	urlPreviousPage,
 	values,
-}) => {
-	const {
-		client,
-		featureFlags,
-		provisioningServerAPI,
-	} = useAppPropertiesContext();
+}: RequiredInformationProps) => {
+	const {client, featureFlags} = useAppPropertiesContext();
 
-	const provisioningService = useProvisioningLicenseKeys();
+	const {provisioningLicenseKeys: provisioningService} =
+		useProvisioningLicenseKeys(
+			selectedKeyData?.selectedSubscription?.startDate ||
+				new Date().toISOString(),
+			getLicenseKeyEndDatesByLicenseType(selectedKeyData) ??
+				selectedKeyData?.selectedSubscription?.endDate ??
+				'',
+			false
+		);
 
-	const [baseButtonDisabled, setBaseButtonDisabled] = useState(true);
-	const [addButtonDisabled, setAddButtonDisabled] = useState(false);
-	const [showKeyEmptyError, setShowKeyEmptyError] = useState(false);
-	const [isLoadingGenerateKey, setIsLoadingGenerateKey] = useState(false);
-	const [availableKeys, setAvailableKeys] = useState(1);
-	const [checkedBoxSubscription, setCheckedBoxSubscription] = useState(true);
+	const [baseButtonDisabled, setBaseButtonDisabled] = useState<boolean>(true);
+	const [addButtonDisabled, setAddButtonDisabled] = useState<boolean>(false);
+	const [showKeyEmptyError, setShowKeyEmptyError] = useState<boolean>(false);
+	const [isLoadingGenerateKey, setIsLoadingGenerateKey] =
+		useState<boolean>(false);
+	const [availableKeys, setAvailableKeys] = useState<number>(1);
+	const [checkedBoxSubscription, setCheckedBoxSubscription] =
+		useState<boolean>(true);
 	const navigate = useNavigate();
 
 	const hasTouched = !Object.keys(touched).length;
 	const hasError = Object.keys(errors).length;
 
 	const isRenew = state?.id === 'renew';
-	const renewKey = state?.activationKeys[0];
+	const renewKey = state?.activationKeys?.[0];
 	const renewKeySubtitle = getRenewKeySubtitle(state);
 
 	const avaliableKeysMaximumCount =
@@ -83,33 +131,34 @@ const RequiredInformation = ({
 	});
 
 	const isComplimentaryKey =
-		selectedKeyData?.selectedSubscription.complimentary;
+		selectedKeyData?.selectedSubscription?.complimentary;
 
-	const newUsedKeys = usedKeysCount + values?.keys?.length;
+	const newUsedKeys = (usedKeysCount || 0) + (values?.keys?.length || 0);
 	const hasReachedMaximumKeys = newUsedKeys === avaliableKeysMaximumCount;
 
 	const isOemOrEnterprise =
-		selectedKeyData?.licenseEntryType.includes('OEM') ||
-		selectedKeyData?.licenseEntryType.includes('Enterprise') ||
-		(state.activationKeys.length &&
-			(state?.activationKeys[0].licenseEntryType.includes('oem') ||
-				state?.activationKeys[0].licenseEntryType.includes(
+		selectedKeyData?.licenseEntryType?.includes('OEM') ||
+		selectedKeyData?.licenseEntryType?.includes('Enterprise') ||
+		((state.activationKeys?.length || 0) > 0 &&
+			(state?.activationKeys?.[0]?.licenseEntryType.includes('oem') ||
+				state?.activationKeys?.[0]?.licenseEntryType.includes(
 					'enterprise'
 				)));
 
 	const hasNotPermanentLicenseRenewKeyType =
-		(state.activationKeys.length &&
+		((state.activationKeys?.length || 0) > 0 &&
 			renewKey?.licenseEntryType.includes('virtual-cluster')) ||
 		renewKey?.licenseEntryType.includes('oem') ||
 		renewKey?.licenseEntryType.includes('enterprise');
 
-	const handleHasNotPermanentLicenseValidation = state?.activationKeys.length
-		? !selectedKeyData.hasNotPermanentLicense &&
-		  !hasNotPermanentLicenseRenewKeyType
-		: !selectedKeyData.hasNotPermanentLicense;
+	const handleHasNotPermanentLicenseValidation =
+		selectedKeyData.hasNotPermanentLicense !== undefined
+			? !selectedKeyData.hasNotPermanentLicense &&
+				!hasNotPermanentLicenseRenewKeyType
+			: !hasNotPermanentLicenseRenewKeyType;
 
 	useEffect(() => {
-		const getVerificationDisabledType = () => {
+		const getVerificationDisabledType = (): boolean => {
 			if (
 				selectedKeyData.hasNotPermanentLicense ||
 				hasNotPermanentLicenseRenewKeyType
@@ -121,7 +170,7 @@ const RequiredInformation = ({
 				return !values.name || !values.maxClusterNodes;
 			}
 
-			return !hasFilledAtLeastOneField || hasError;
+			return !hasFilledAtLeastOneField || hasError > 0;
 		};
 
 		setBaseButtonDisabled(getVerificationDisabledType());
@@ -145,30 +194,34 @@ const RequiredInformation = ({
 				title: i18n.translate(
 					'maximum-number-of-activation-keys-reached-for-this-subscription'
 				),
-		  }
+			}
 		: {};
 
 	const licenseKey = useMemo(
 		() => ({
 			accountKey,
 			active: true,
-			complimentary: selectedKeyData?.selectedSubscription.complimentary,
+			complimentary: selectedKeyData?.selectedSubscription?.complimentary,
 			description: values?.description,
 			expirationDate:
 				getLicenseKeyEndDatesByLicenseType(selectedKeyData) ??
-				selectedKeyData?.selectedSubscription.endDate,
+				selectedKeyData?.selectedSubscription?.endDate,
 			licenseEntryType: getLicenseEntryTypeSelected(selectedKeyData),
-			maxClusterNodes: values?.maxClusterNodes || 0,
+			maxClusterNodes: values?.maxClusterNodes
+				? Number(values.maxClusterNodes)
+				: 0,
 			name: values?.name,
-			productKey: selectedKeyData?.selectedSubscription.productKey,
+			productKey: selectedKeyData?.selectedSubscription?.productKey,
 			productName: `${selectedKeyData?.productType} ${selectedKeyData?.licenseEntryType}`,
 			productPurchaseKey:
-				selectedKeyData?.selectedSubscription.productPurchaseKey,
+				selectedKeyData?.selectedSubscription?.productPurchaseKey,
 			productVersion: selectedKeyData?.productVersion,
 			sizing: `Sizing ${
 				selectedKeyData?.selectedSubscription?.instanceSize || 1
 			}`,
-			startDate: selectedKeyData?.selectedSubscription?.startDate || new Date(),
+			startDate:
+				selectedKeyData?.selectedSubscription?.startDate ||
+				new Date().toISOString(),
 		}),
 		[
 			accountKey,
@@ -185,44 +238,48 @@ const RequiredInformation = ({
 			!hasFilledAtLeastOneField
 		) {
 			setErrors({
-				keys: [...new Array(values.keys?.length)].map(() => ({
+				keys: [...new Array(values.keys?.length || 0)].map(() => ({
+					hostName: 'true',
+					ipAddresses: 'true',
+					macAddresses: 'true',
+				})),
+			});
+
+			setTouched({
+				keys: [...new Array(values.keys?.length || 0)].map(() => ({
 					hostName: true,
 					ipAddresses: true,
 					macAddresses: true,
 				})),
 			});
 
-			setTouched(
-				{
-					keys: [...new Array(values.keys?.length)].map(() => ({
-						hostName: true,
-						ipAddresses: true,
-						macAddresses: true,
-					})),
-				},
-				false
-			);
-
 			setShowKeyEmptyError(true);
 
 			return;
 		}
 
-		const saveSubscriptionKey = async (id) => {
-			return putSubscriptionInKey(oAuthToken, provisioningServerAPI, id);
+		const saveSubscriptionKey = async (id: string) => {
+			if (provisioningService) {
+				return provisioningService.putSubscriptionInKey(id);
+			}
 		};
 
 		try {
 			if (selectedKeyData.hasNotPermanentLicense) {
 				setIsLoadingGenerateKey(true);
 
-				const response = await provisioningService.createNewGenerateKey(
-					accountKey,
-					licenseKey
-				);
+				if (provisioningService) {
+					const response: any =
+						await provisioningService.createNewGenerateKey(
+							accountKey,
+							licenseKey as any
+						);
 
-				if (checkedBoxSubscription) {
-					await saveSubscriptionKey(response?.items?.[0]?.id);
+					if (checkedBoxSubscription) {
+						await saveSubscriptionKey(
+							response?.items?.[0]?.id as string
+						);
+					}
 				}
 
 				setIsLoadingGenerateKey(false);
@@ -230,32 +287,37 @@ const RequiredInformation = ({
 				navigate(urlPreviousPage, {
 					state: {newKeyGeneratedAlert: true},
 				});
-			} else {
+			}
+			else {
 				setIsLoadingGenerateKey(true);
 
-				const results = await Promise.all(
-					values?.keys?.map(
-						({hostName, ipAddresses, macAddresses}) => {
-							licenseKey.macAddresses = macAddresses.replace(
-								'\n',
-								','
-							);
-							licenseKey.hostName = hostName.replace('\n', ',');
-							licenseKey.ipAddresses = ipAddresses.replace(
-								'\n',
-								','
-							);
+				if (provisioningService) {
+					const results = await Promise.all(
+						(values?.keys || []).map(
+							({hostName, ipAddresses, macAddresses}) => {
+								const newLicenseKey = {
+									...licenseKey,
+									hostName:
+										hostName?.replace(/\n/g, ',') || '',
+									ipAddresses:
+										ipAddresses?.replace(/\n/g, ',') || '',
+									macAddresses:
+										macAddresses?.replace(/\n/g, ',') || '',
+								};
 
-							return provisioningService.createNewGenerateKey(
-								accountKey,
-								licenseKey
-							);
-						}
-					)
-				);
+								return provisioningService.createNewGenerateKey(
+									accountKey,
+									newLicenseKey as any
+								);
+							}
+						)
+					);
 
-				if (checkedBoxSubscription && isComplimentaryKey) {
-					await saveSubscriptionKey(results[0]?.items[0]?.id);
+					if (checkedBoxSubscription && isComplimentaryKey) {
+						await saveSubscriptionKey(
+							(results[0] as any)?.items?.[0]?.id as string
+						);
+					}
 				}
 
 				setIsLoadingGenerateKey(false);
@@ -274,14 +336,16 @@ const RequiredInformation = ({
 									{
 										customValue: {
 											data:
-												selectedKeyData
-													.selectedSubscription
-													.provisionedCount + 1,
+												(selectedKeyData
+													?.selectedSubscription
+													?.provisionedCount || 0) +
+												1,
 										},
 										name: 'provisionedCount',
 									},
 								],
-								externalReferenceCode: licenseKey.productPurchaseKey,
+								externalReferenceCode:
+									licenseKey.productPurchaseKey,
 							},
 						},
 					});
@@ -291,7 +355,8 @@ const RequiredInformation = ({
 					state: {newKeyGeneratedAlert: true},
 				});
 			}
-		} catch (error) {
+		}
+		catch (error: any) {
 			Liferay.Util.openToast({
 				message:
 					error?.info?.title ??
@@ -309,14 +374,12 @@ const RequiredInformation = ({
 		checkedBoxSubscription,
 		client,
 		hasFilledAtLeastOneField,
-		selectedKeyData.hasNotPermanentLicense,
-		selectedKeyData.selectedSubscription.provisionedCount,
 		isComplimentaryKey,
 		licenseKey,
 		navigate,
-		oAuthToken,
-		provisioningServerAPI,
 		provisioningService,
+		selectedKeyData.hasNotPermanentLicense,
+		selectedKeyData.selectedSubscription,
 		setErrors,
 		setTouched,
 		urlPreviousPage,
@@ -347,21 +410,29 @@ const RequiredInformation = ({
 						<label htmlFor="expiration-checkbox">
 							{i18n.sub(
 								'receive-expiration-notifications-through-email-when-this-activation-key-is-about-to-expire-x-days-before-x-days-before-and-on-the-day-of-expiration-unsubscribe-at-any-time',
-								[30, 15]
+								['30', '15']
 							)}
 						</label>
 					</div>
 				</>
 			);
 		}
+
+		return null;
 	};
 
 	const HandleButtonValue = () => {
 		if (isRenew) {
-			return state?.activationKeys.length === 1 ? i18n.sub('renew-x-key', [state?.activationKeys.length]) : i18n.sub('renew-x-keys', [state?.activationKeys.length]);
+			return (state?.activationKeys?.length || 0) === 1
+				? i18n.sub('renew-x-key', [
+						(state?.activationKeys?.length || 0).toString(),
+					])
+				: i18n.sub('renew-x-keys', [
+						(state?.activationKeys?.length || 0).toString(),
+					]);
 		}
 
-		if (selectedKeyData?.licenseEntryType.includes('Virtual Cluster')) {
+		if (selectedKeyData?.licenseEntryType?.includes('Virtual Cluster')) {
 			return i18n.sub(
 				Number(values.maxClusterNodes) === 1
 					? 'generate-cluster-x-key'
@@ -372,7 +443,7 @@ const RequiredInformation = ({
 
 		return i18n.sub(
 			availableKeys > 1 ? 'generate-x-keys' : 'generate-x-key',
-			[availableKeys]
+			[availableKeys.toString()]
 		);
 	};
 
@@ -395,9 +466,13 @@ const RequiredInformation = ({
 						<div>
 							<Button
 								className="btn btn-secondary mr-3"
-								displayType="secundary"
+								displayType="secondary"
 								onClick={() =>
-									setStep(isComplimentaryKey ? 1 : 0)
+									setStep(
+										isComplimentaryKey
+											? STEP_TYPES.selectInfoComplimentaryKey
+											: STEP_TYPES.selectDescriptions
+									)
 								}
 							>
 								{i18n.translate('previous')}
@@ -419,17 +494,23 @@ const RequiredInformation = ({
 									submitKey();
 								}}
 							>
-								<HandleButtonValue />
+								{HandleButtonValue()}
 							</Button>
 						</div>
 					),
 				}}
 				headerProps={{
 					headerClass: 'ml-5 my-4',
-					helper: isRenew ? renewKeySubtitle : i18n.translate(
-						'fill-out-the-information-required-to-generate-the-activation-key'
+					helper: isRenew
+						? renewKeySubtitle
+						: i18n.translate(
+								'fill-out-the-information-required-to-generate-the-activation-key'
+							),
+					title: i18n.translate(
+						isRenew
+							? 'renew-activation-keys'
+							: 'generate-activation-keys'
 					),
-					title: i18n.translate(isRenew ? 'renew-activation-keys' : 'generate-activation-keys'),
 				}}
 				layoutType="cp-required-info"
 			>
@@ -450,7 +531,7 @@ const RequiredInformation = ({
 												'environment-name'
 											)}
 											name="name"
-											placeholder="e.g. Liferay Ecommerce Site"
+											placeholder="e.g. LiferayEcommerce Site"
 											required
 											type="text"
 										/>
@@ -478,7 +559,7 @@ const RequiredInformation = ({
 											type="text"
 										/>
 									</div>
-									
+
 									{!hasComplimentaryKey && (
 										<h6 className="font-weight-normal ml-3 mr-0 mt-1">
 											{i18n.translate(
@@ -510,13 +591,15 @@ const RequiredInformation = ({
 										</span>
 									</ClayAlert>
 
-									{values?.keys?.map((_, index) => (
-										<KeyInputs
-											id={index}
-											isRenew={isRenew}
-											key={index}
-										/>
-									))}
+									{(values?.keys || []).map(
+										(_key: Key, index: number) => (
+											<KeyInputs
+												id={index}
+												isRenew={isRenew}
+												key={index}
+											/>
+										)
+									)}
 
 									{showKeyEmptyError && !!hasError && (
 										<Badge badgeClassName="m-0">
@@ -528,10 +611,10 @@ const RequiredInformation = ({
 										</Badge>
 									)}
 
-									{values?.keys?.length > 1 && (
+									{(values?.keys?.length || 0) > 1 && (
 										<Button
 											className="btn btn-secondary mb-3 mr-3 mt-4 py-2"
-											displayType="secundary"
+											displayType="secondary"
 											onClick={() => {
 												pop();
 												setAvailableKeys(
@@ -539,7 +622,7 @@ const RequiredInformation = ({
 														previousAdmins - 1
 												);
 												setBaseButtonDisabled(
-													hasTouched || hasError
+													hasTouched || hasError > 0
 												);
 											}}
 										>
@@ -555,7 +638,11 @@ const RequiredInformation = ({
 									)}
 
 									<ClayTooltipProvider
-										contentRenderer={({title}) => (
+										contentRenderer={({
+											title,
+										}: {
+											title: string;
+										}) => (
 											<div>
 												<p className="font-weight-bold m-0"></p>
 
@@ -569,10 +656,13 @@ const RequiredInformation = ({
 										<Button
 											className="btn btn-secondary mb-3 mt-4 p-0"
 											disabled={addButtonDisabled}
-											displayType="secundary"
+											displayType="secondary"
 											onClick={() => {
 												push(
-													getInitialGenerateNewKey()
+													getInitialGenerateNewKey(
+														isRenew,
+														renewKey
+													)
 												);
 
 												setAvailableKeys(
@@ -606,23 +696,26 @@ const RequiredInformation = ({
 								</div>
 							) : (
 								<div className="mx-6">
-									{!(isComplimentaryKey && isRenew) && !isOemOrEnterprise && (
-										<div className="cp-input-generate-label">
-											<KeySelect
-												avaliableKeysMaximumCount={
-													avaliableKeysMaximumCount
-												}
-												isRenew={isRenew}
-												minAvaliableKeysCount={
-													avaliableKeysMaximumCount -
-													usedKeysCount
-												}
-												selectedClusterNodes={
-													values.maxClusterNodes
-												}
-											/>
-										</div>
-									)}
+									{!(isComplimentaryKey && isRenew) &&
+										!isOemOrEnterprise && (
+											<div className="cp-input-generate-label">
+												<KeySelect
+													avaliableKeysMaximumCount={
+														avaliableKeysMaximumCount ??
+														0
+													}
+													isRenew={isRenew}
+													minAvaliableKeysCount={
+														(avaliableKeysMaximumCount ||
+															0) -
+														(usedKeysCount || 0)
+													}
+													selectedClusterNodes={
+														values.maxClusterNodes
+													}
+												/>
+											</div>
+										)}
 
 									<CheckboxSubscriptionNotification />
 								</div>
@@ -637,23 +730,39 @@ const RequiredInformation = ({
 				isRenew={isRenew}
 				licenseEntryTypeName={licenseEntryTypeName}
 				selectedKeyData={selectedKeyData}
-				startRenewDate={startRenewDate}
 			/>
 		</div>
 	);
 };
 
-const RequiredInformationForm = (props) => {
+interface RequiredInformationFormProps {
+	accountKey: string;
+	expirationRenewDate: string;
+	hasComplimentaryKey: boolean;
+	licenseEntryTypeName: string;
+	oAuthToken: string;
+	purposeDescription?: string;
+	selectedKeyData: ISelectedKeyData;
+	setStep: React.Dispatch<
+		React.SetStateAction<(typeof STEP_TYPES)[keyof typeof STEP_TYPES]>
+	>;
+	startRenewDate: string;
+	state: IGenerateNewKeyState;
+	submitKeyAction: ISubmitKeyAction;
+	urlPreviousPage: string;
+}
+
+const RequiredInformationForm = (props: RequiredInformationFormProps) => {
 	const isRenew = props.state?.id === 'renew';
-	const renewKey = props.state?.activationKeys[0];
+	const renewKey = props.state?.activationKeys?.[0];
 
 	const handleDescriptionValue = () => {
 		if (props?.hasComplimentaryKey) {
-			return props?.purposeDescription;
+			return props?.purposeDescription || '';
 		}
 
 		if (isRenew) {
-			return renewKey.description;
+			return renewKey?.description || '';
 		}
 
 		return '';
@@ -664,11 +773,14 @@ const RequiredInformationForm = (props) => {
 			initialValues={{
 				description: handleDescriptionValue(),
 				keys: [getInitialGenerateNewKey(isRenew, renewKey)],
-				maxClusterNodes: isRenew ? renewKey.maxClusterNodes : '',
-				name: isRenew ? renewKey.name : '',
+				maxClusterNodes: isRenew
+					? (renewKey?.maxClusterNodes || 0).toString()
+					: '',
+				name: isRenew ? renewKey?.name || '' : '',
 			}}
+			onSubmit={() => {}}
 		>
-			{(formikProps) => (
+			{(formikProps: any) => (
 				<RequiredInformation {...props} {...formikProps} />
 			)}
 		</Formik>

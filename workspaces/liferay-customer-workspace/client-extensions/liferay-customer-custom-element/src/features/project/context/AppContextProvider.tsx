@@ -220,7 +220,7 @@ const AppContextProvider = ({children}: {children: React.ReactNode}) => {
 			if (projects) {
 				const currentProject = {
 					...projects.c.koroneikiAccounts.items[0],
-					id: accountBrief.id,
+					id: accountBrief.id.toString(),
 					name: accountBrief.name,
 				};
 

@@ -5,19 +5,47 @@
 
 import ClayModal from '@clayui/modal';
 import {memo} from 'react';
-
+import {Button, Table} from '~/components';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
+import {useGetAccountSubscriptionUsage} from '~/services/liferay/graphql/account-subscription-usage';
 import i18n from '~/utils/I18n';
 
-import {
-	Button,
-	Table,
-} from '~/components';
-import {useGetAccountSubscriptionUsage} from '~/services/liferay/graphql/account-subscription-usage';
 import UsageChart from './components/UsageChart';
 import useOrderItems from './hooks/useOrderItems';
 import getColumns from './utils/getColumns';
 import getRows from './utils/getRows';
+
+interface IAccountSubscriptionGroup {
+	name: string;
+}
+
+interface IOrderItemOptions {
+	endDate: string;
+	instanceSize: number;
+	startDate: string;
+}
+
+interface IReducedCustomFields {
+	provisionedCount: number;
+	status: string;
+}
+
+interface IOrderItem {
+	options: IOrderItemOptions;
+	quantity: number;
+	reducedCustomFields: IReducedCustomFields;
+}
+
+interface IProps {
+	IsPortalOrDXP: boolean;
+	accountKey: string;
+	accountSubscriptionGroup: IAccountSubscriptionGroup;
+	accountSubscriptionProductKey: string;
+	externalReferenceCode: string;
+	observer: any;
+	onClose: () => void;
+	title: string;
+}
 
 const accountSubscriptionGroupNames = ['Liferay Self-Hosted', 'Portal'];
 
@@ -30,14 +58,15 @@ const AccountSubscriptionModal = ({
 	observer,
 	onClose,
 	title,
-}) => {
+}: IProps) => {
 	const {
 		activePage,
 		data,
-		setActivePage,
+		itemsPerPage,
 		loading,
-		pageSize: itemsPerPage,
- 	} = useOrderItems(externalReferenceCode);
+		setActivePage,
+		setItemsPerPage,
+	} = useOrderItems(externalReferenceCode);
 
 	const {articleWhatIsMyInstanceSizingValueURL} = useAppPropertiesContext();
 
@@ -52,11 +81,13 @@ const AccountSubscriptionModal = ({
 
 	const totalCount = data?.orderItems.totalCount;
 
-	const accountSubscriptionTerms = data?.orderItems?.items ?? [];
+	const accountSubscriptionTerms: IOrderItem[] =
+		data?.orderItems?.items ?? [];
 
 	const accountSubscriptionTermsSort = [...accountSubscriptionTerms].sort(
 		(a, b) =>
-			new Date(b.options?.startDate) - new Date(a.options?.startDate)
+			new Date(b.options.startDate).getTime() -
+			new Date(a.options.startDate).getTime()
 	);
 
 	return (
@@ -99,16 +130,18 @@ const AccountSubscriptionModal = ({
 						title,
 						articleWhatIsMyInstanceSizingValueURL
 					)}
+					handleSortChange={() => {}}
+					hasCheckbox={false}
 					hasPagination
 					isLoading={loading}
 					paginationConfig={{
 						activePage,
 						itemsPerPage,
 						setActivePage,
+						setItemsPerPage,
 						totalCount,
 					}}
 					rows={getRows(accountSubscriptionTermsSort)}
-					tableVerticalAlignment="middle"
 				/>
 			</div>
 		</ClayModal>

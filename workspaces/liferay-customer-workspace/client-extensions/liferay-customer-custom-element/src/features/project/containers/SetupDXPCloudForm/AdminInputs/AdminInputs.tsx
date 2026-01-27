@@ -4,13 +4,25 @@
  */
 
 import ClayForm, {ClayInput} from '@clayui/form';
-import i18n from '~/utils/I18n';
 import {Input} from '~/components';
 import useBannedDomains from '~/hooks/useBannedDomains';
+import i18n from '~/utils/I18n';
 import {isValidEmail} from '~/utils/validations.form';
 
-const AdminInputs = ({admin, id}) => {
-	const bannedDomains = useBannedDomains(admin?.email, 500);
+interface IAdmin {
+	email: string;
+	firstName: string;
+	github: string;
+	lastName: string;
+}
+
+interface AdminInputsProps {
+	admin: IAdmin;
+	id: number;
+}
+
+const AdminInputs = ({admin, id}: AdminInputsProps) => {
+	const bannedDomains = useBannedDomains(admin?.email);
 
 	return (
 		<ClayForm.Group className="mb-0 pb-1">
@@ -23,7 +35,7 @@ const AdminInputs = ({admin, id}) => {
 				placeholder="email@example.com"
 				required
 				type="email"
-				validations={[(value) => isValidEmail(value, bannedDomains)]}
+				validations={[isValidEmail(bannedDomains)]}
 			/>
 
 			<ClayInput.Group className="mb-0">

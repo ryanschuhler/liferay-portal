@@ -3,41 +3,24 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-type CICType = {
-	category?: {
-		[key: string]: string;
-	};
-	email: string;
-	filterId?: number;
-	id: number;
-	key: number;
-	label: string;
-	value: number;
-};
-
-type CICCategoryType = {
-	contactCategory: {[key: string]: string};
-};
-
-type roleIDType = {
-	__typename: string;
-	displayName: string;
-	id: number;
-	roleId: number;
-};
+import {CICType} from '~/features/project/types';
 
 const useHighPriorityContacts = ({
 	addContactList,
 	currentHighPriorityContacts,
 	highPriorityContactCategory,
 	removedContactList,
-	rolesId,
 }: {
 	addContactList: (newValue: CICType[]) => void;
 	currentHighPriorityContacts: CICType[];
-	highPriorityContactCategory: CICCategoryType;
+	highPriorityContactCategory: {
+		contactCategory: {
+			key: string;
+			name: string;
+			role: string;
+		};
+	};
 	removedContactList: (newValue: CICType[]) => void;
-	rolesId: roleIDType[];
 }) => {
 	const addContacts = (contacts: CICType[], currentContacts: CICType[]) => {
 		const contactsWithoutCategory = contacts.filter(
@@ -50,11 +33,7 @@ const useHighPriorityContacts = ({
 		return contactsWithoutCategory.map((newContact) => ({
 			...newContact,
 			category: highPriorityContactCategory.contactCategory,
-			filterId: rolesId?.filter(
-				(role) =>
-					role.displayName ===
-					highPriorityContactCategory.contactCategory.role
-			)[0]?.id,
+			filterId: '',
 		}));
 	};
 

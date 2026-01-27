@@ -5,6 +5,6 @@
 
 const VIRTUAL_CLUSTER = 'virtual-cluster';
 
-export function hasVirtualCluster(licenseEntryType) {
+export function hasVirtualCluster(licenseEntryType: string) {
 	return licenseEntryType === VIRTUAL_CLUSTER;
 }

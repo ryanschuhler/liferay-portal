@@ -16,10 +16,11 @@ export const actionTypes = {
 	UPDATE_PROJECT: 'UPDATE_PROJECT',
 	UPDATE_SUBSCRIPTION_GROUPS: 'UPDATE_SUBSCRIPTION_GROUPS',
 	UPDATE_USER_ACCOUNT: 'UPDATE_USER_ACCOUNT',
-};
+} as const;
 
 export type ActionPayload =
 	| string
+	| number
 	| IProject
 	| IUserAccount
 	| IAccountSubscriptionGroup[]

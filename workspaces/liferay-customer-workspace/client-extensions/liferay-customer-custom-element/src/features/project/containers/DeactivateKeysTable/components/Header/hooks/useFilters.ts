@@ -10,8 +10,12 @@ import {INITIAL_FILTER} from '~/features/project/containers/ActivationKeysTable/
 const COMPLIMENTARY = 'Complimentary';
 const SUBSCRIPTION = 'Subscription';
 
-export default function useFilters(setFilterTerm, productName, baseFilter) {
-	const [filters, setFilters] = useState(INITIAL_FILTER);
+export default function useFilters(
+	setFilterTerm: (filter: string) => void,
+	productName: string,
+	baseFilter: string
+) {
+	const [filters, setFilters] = useState<any>(INITIAL_FILTER);
 
 	useEffect(() => {
 		let initialFilter = `active eq true and ${baseFilter}`;
@@ -20,7 +24,7 @@ export default function useFilters(setFilterTerm, productName, baseFilter) {
 		if (filters.searchTerm) {
 			const seachTermSplitted = filters.searchTerm
 				.split(' ')
-				.map((term) => {
+				.map((term: string) => {
 					return `(contains(name, '${term}') or contains(description, '${term}') or contains(hostName, '${term}') or ipAddresses/any(s:contains(s, '${term}')) or macAddresses/any(s:contains(s, '${term}')))`;
 				})
 				.join(' and ');
@@ -32,7 +36,11 @@ export default function useFilters(setFilterTerm, productName, baseFilter) {
 			hasFilterPill = true;
 
 			const instanceSizesFilter = `(${filters.instanceSizes.value.reduce(
-				(accumulatorInstanceSizesFilter, instanceSize, index) => {
+				(
+					accumulatorInstanceSizesFilter: string,
+					instanceSize: string,
+					index: number
+				) => {
 					return `${accumulatorInstanceSizesFilter}${
 						index > 0 ? ' or ' : ''
 					}contains(sizing,'${instanceSize}')`;
@@ -47,12 +55,16 @@ export default function useFilters(setFilterTerm, productName, baseFilter) {
 			hasFilterPill = true;
 
 			const productVersionsFilter = `(${filters.productVersions.value.reduce(
-				(accumulatorProductVersionsFilter, productVersion, index) => {
+				(
+					accumulatorProductVersionsFilter: string,
+					productVersion: string,
+					index: number
+				) => {
 					return `${accumulatorProductVersionsFilter}${
 						index > 0 ? ' or ' : ''
 					}${productVersion
 						.split(' ')
-						.map((version) => {
+						.map((version: string) => {
 							return `contains(productVersion, '${version}')`;
 						})
 						.join(' and ')}`;
@@ -70,7 +82,11 @@ export default function useFilters(setFilterTerm, productName, baseFilter) {
 
 			const now = new Date().toISOString();
 			const statusFilter = filters.status.value.reduce(
-				(accumulatorStatusFilter, status, index) => {
+				(
+					accumulatorStatusFilter: string,
+					status: string,
+					index: number
+				) => {
 					let filter = '';
 					if (status === ACTIVATION_STATUS.expired.title) {
 						filter = `(expirationDate lt ${now})`;
@@ -100,9 +116,9 @@ export default function useFilters(setFilterTerm, productName, baseFilter) {
 			const environmentTypesFilter =
 				filters.environmentTypes.value.reduce(
 					(
-						accumulatorEnvironmentTypesFilter,
-						environmentType,
-						index
+						accumulatorEnvironmentTypesFilter: string,
+						environmentType: string,
+						index: number
 					) => {
 						if (environmentType === COMPLIMENTARY) {
 							return `${accumulatorEnvironmentTypesFilter}${
@@ -131,7 +147,7 @@ export default function useFilters(setFilterTerm, productName, baseFilter) {
 		if (
 			Object.values(filters.expirationDate.value).some((date) => !!date)
 		) {
-			const filterDates = [];
+			const filterDates: string[] = [];
 			hasFilterPill = true;
 
 			if (filters.expirationDate.value.onOrBefore) {
@@ -156,7 +172,7 @@ export default function useFilters(setFilterTerm, productName, baseFilter) {
 		}
 
 		if (Object.values(filters.startDate.value).some((date) => !!date)) {
-			const filterDates = [];
+			const filterDates: string[] = [];
 			hasFilterPill = true;
 
 			if (filters.startDate.value.onOrBefore) {
@@ -181,9 +197,11 @@ export default function useFilters(setFilterTerm, productName, baseFilter) {
 		}
 
 		if (
-			Object.values(filters.keyType.value).every((value) => !isNaN(value))
+			Object.values(filters.keyType.value).every(
+				(value) => !isNaN(value as number)
+			)
 		) {
-			const filtersKeyType = [];
+			const filtersKeyType: string[] = [];
 			let showOnPrem = false;
 
 			if (
@@ -268,7 +286,7 @@ export default function useFilters(setFilterTerm, productName, baseFilter) {
 			}
 		}
 
-		setFilters((previousFilter) => ({
+		setFilters((previousFilter: any) => ({
 			...previousFilter,
 			hasValue: hasFilterPill,
 		}));

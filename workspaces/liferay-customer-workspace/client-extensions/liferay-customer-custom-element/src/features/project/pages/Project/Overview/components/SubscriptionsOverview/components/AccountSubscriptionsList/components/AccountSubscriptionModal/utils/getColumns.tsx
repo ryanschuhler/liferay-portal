@@ -3,10 +3,26 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import i18n from '~/utils/I18n';
+import React from 'react';
 import PopoverIconButton from '~/features/project/components/PopoverIconButton';
+import i18n from '~/utils/I18n';
 
-const getInitialColumns = articleWhatIsMyInstanceSizingValueURL => [
+interface IColumn {
+	accessor: string;
+	align?: 'left' | 'center' | 'right';
+	bodyClass: string;
+	expanded?: boolean;
+	filterIdentifier?: string;
+	header: {
+		name: string | React.ReactNode;
+		styles: string;
+	};
+	truncate?: boolean;
+}
+
+const getInitialColumns = (
+	articleWhatIsMyInstanceSizingValueURL: string
+): IColumn[] => [
 	{
 		accessor: 'start-end-date',
 		align: 'center',
@@ -14,9 +30,8 @@ const getInitialColumns = articleWhatIsMyInstanceSizingValueURL => [
 		expanded: true,
 		header: {
 			name: i18n.translate('start-end-date'),
-			styles:
-				'bg-neutral-1 font-weight-bold text-neutral-8 table-cell-expand-smaller py-3'
-		}
+			styles: 'bg-neutral-1 font-weight-bold text-neutral-8 table-cell-expand-smaller py-3',
+		},
 	},
 	{
 		accessor: 'quantity',
@@ -24,9 +39,8 @@ const getInitialColumns = articleWhatIsMyInstanceSizingValueURL => [
 		bodyClass: 'border-0',
 		header: {
 			name: i18n.translate('purchased'),
-			styles:
-				'bg-neutral-1 font-weight-bold text-neutral-8 table-cell-expand-smaller py-3'
-		}
+			styles: 'bg-neutral-1 font-weight-bold text-neutral-8 table-cell-expand-smaller py-3',
+		},
 	},
 	{
 		accessor: 'instance-size',
@@ -34,22 +48,21 @@ const getInitialColumns = articleWhatIsMyInstanceSizingValueURL => [
 		bodyClass: 'border-0',
 		header: {
 			name: (
-				<div className='align-items-center d-flex justify-content-center'>
-					<p className='m-0'>{i18n.translate('instance-size')}</p>
+				<div className="align-items-center d-flex justify-content-center">
+					<p className="m-0">{i18n.translate('instance-size')}</p>
 
 					<PopoverIconButton
 						popoverLink={{
 							textLink: i18n.translate(
 								'learn-more-about-instance-sizing'
 							),
-							url: articleWhatIsMyInstanceSizingValueURL
+							url: articleWhatIsMyInstanceSizingValueURL,
 						}}
 					/>
 				</div>
 			),
-			styles:
-				'bg-neutral-1 font-weight-bold text-neutral-8 table-cell-expand-smaller py-3'
-		}
+			styles: 'bg-neutral-1 font-weight-bold text-neutral-8 table-cell-expand-smaller py-3',
+		},
 	},
 	{
 		accessor: 'subscription-term-status',
@@ -57,19 +70,18 @@ const getInitialColumns = articleWhatIsMyInstanceSizingValueURL => [
 		bodyClass: 'border-0',
 		header: {
 			name: i18n.translate('status'),
-			styles:
-				'bg-neutral-1 font-weight-bold text-neutral-8 table-cell-expand-smaller py-3'
-		}
-	}
+			styles: 'bg-neutral-1 font-weight-bold text-neutral-8 table-cell-expand-smaller py-3',
+		},
+	},
 ];
 
-const displayInstanceSizeMap = {
-	Commerce: [
+const displayInstanceSizeMap: {[key: string]: string[]} = {
+	'Commerce': [
 		'Backup',
 		'Development',
 		'Non-Production',
 		'Production',
-		'Unlimited Enterprise-Wide'
+		'Unlimited Enterprise-Wide',
 	],
 	'Liferay Self-Hosted': [
 		'Backup',
@@ -79,9 +91,9 @@ const displayInstanceSizeMap = {
 		'Non-Production',
 		'OEM',
 		'Production',
-		'Unlimited Enterprise-Wide'
+		'Unlimited Enterprise-Wide',
 	],
-	Portal: [
+	'Portal': [
 		'Backup',
 		'Backup (Additional JVM)',
 		'Development',
@@ -95,14 +107,14 @@ const displayInstanceSizeMap = {
 		'OEM',
 		'Portal Per User',
 		'Production',
-		'Production (Additional JVM)'
-	]
+		'Production (Additional JVM)',
+	],
 };
 
 export default function getColumns(
 	title = '',
-	articleWhatIsMyInstanceSizingValueURL
-) {
+	articleWhatIsMyInstanceSizingValueURL: string
+): IColumn[] {
 	const columns = getInitialColumns(articleWhatIsMyInstanceSizingValueURL);
 
 	const displayColumns = [...columns];
@@ -110,12 +122,14 @@ export default function getColumns(
 	const displayInstanceSizeForProduct = [
 		'Commerce',
 		'Liferay Self-Hosted',
-		'Portal'
-	].some(category => {
+		'Portal',
+	].some((category) => {
 		if (title.startsWith(category)) {
 			const productName = title.substring(category.length + 1);
 
-			return displayInstanceSizeMap[category].includes(productName);
+			return (displayInstanceSizeMap[category] || []).includes(
+				productName
+			);
 		}
 
 		return false;

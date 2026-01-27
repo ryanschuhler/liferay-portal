@@ -4,6 +4,6 @@
  */
 
 export const AUTO_CLOSE_ALERT_TIME = {
-	fail: false,
+	danger: false,
 	success: 2000,
-};
+} as const;

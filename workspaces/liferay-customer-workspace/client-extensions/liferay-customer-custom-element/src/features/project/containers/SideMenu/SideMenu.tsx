@@ -4,47 +4,89 @@
  */
 
 import classNames from 'classnames';
-import {useEffect, useMemo, useRef, useState} from 'react';
-import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import i18n from '~/utils/I18n';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Button} from '~/components';
-import getKebabCase from '~/utils/getKebabCase';
+import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
 import {useAppContext} from '~/features/project/context';
-import {MENU_TYPES, PRODUCT_TYPES} from '~/features/project/utils/constants';
+import useMyUserAccountByAccountExternalReferenceCode from '~/features/project/pages/Project/TeamMembers/components/TeamMembersTable/hooks/useMyUserAccountByAccountExternalReferenceCode';
+import {MENU_TYPES} from '~/features/project/utils/constants/menuTypes';
+import {PRODUCT_TYPES} from '~/features/project/utils/constants/productTypes';
+import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
+import i18n from '~/utils/I18n';
+import getKebabCase from '~/utils/getKebabCase';
+import {IAccountSubscriptionGroup} from '~/utils/types';
+
 import SideMenuSkeleton from './SideMenuSkeleton';
 import MenuItem from './components/MenuItem';
-import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
-import useMyUserAccountByAccountExternalReferenceCode from '~/features/project/pages/Project/TeamMembers/components/TeamMembersTable/hooks/useMyUserAccountByAccountExternalReferenceCode';
 
 import './SideMenu.css';
 
 const ACTIVATION_PATH = 'activation';
 
-const expandGroupForSideMenu = (group) => {
+interface SubscriptionGroup extends IAccountSubscriptionGroup {
+	displayName?: string;
+
+	externalReferenceCode?: string;
+
+	// Add other properties as they are used in the component
+
+}
+
+interface KoroneikiAccount {
+	accountKey: string;
+
+	slaCurrent: string[];
+
+	slaExpired: string[];
+
+	slaFuture: string[];
+
+	// Add other properties as they are used in the component
+
+}
+
+interface UserAccount {
+	isLiferayStaff: boolean;
+
+	isPartner: boolean;
+
+	// Add other properties as they are used in the component
+
+}
+
+const expandGroupForSideMenu = (group: SubscriptionGroup) => {
 	if (group.name === 'Liferay Cloud' && group.activationProductName) {
-		const productNames = group.activationProductName.split(',')
-			.map(name => name.trim())
-			.filter(name => name.length > 0);
+		const productNames = group.activationProductName
+
+			.split(',')
+
+			.map((name) => name.trim())
+
+			.filter((name) => !!name.length);
 
 		return productNames.map((productName) => ({
 			...group,
+
+			displayName: productName,
+
 			name: productName,
-			displayName: productName
 		}));
 	}
-	
+
 	return [group];
 };
 
 const SideMenu = () => {
-	const [{project, subscriptionGroups}] = useAppContext();
+	const [{subscriptionGroups}] = useAppContext();
 	const [isOpenedProductsMenu, setIsOpenedProductsMenu] = useState(false);
-	const [menuItemActiveStatus, setMenuItemActiveStatus] = useState([]);
+	const [menuItemActiveStatus, setMenuItemActiveStatus] = useState<boolean[]>(
+		[]
+	);
 	const {featureFlags} = useAppPropertiesContext();
 
 	const {data: koroneikiData, loading: koroneikiAccountLoading} =
 		useCurrentKoroneikiAccount();
-	const koroneikiAccount =
+	const koroneikiAccount: KoroneikiAccount =
 		koroneikiData?.koroneikiAccountByExternalReferenceCode;
 
 	const {data: myUserAccountData} =
@@ -52,19 +94,20 @@ const SideMenu = () => {
 			koroneikiAccount?.accountKey,
 			koroneikiAccountLoading
 		);
-	const loggedUserAccount = myUserAccountData?.myUserAccount;
+	const loggedUserAccount: UserAccount = myUserAccountData?.myUserAccount;
 
-	const activationMenuRef = useRef();
+	const activationMenuRef = useRef<HTMLUListElement>(null);
 
-	const activationSubscriptionGroups = useMemo(
-		() =>
-			subscriptionGroups?.filter((subscriptionGroup) => {
-				return (
-					subscriptionGroup.hasActivation
-				);
-			}),
-		[subscriptionGroups]
-	);
+	const activationSubscriptionGroups: SubscriptionGroup[] | undefined =
+		useMemo(
+			() =>
+				subscriptionGroups?.filter(
+					(subscriptionGroup: SubscriptionGroup) => {
+						return subscriptionGroup.hasActivation;
+					}
+				),
+			[subscriptionGroups]
+		);
 
 	const hasSomeMenuItemActive = useMemo(
 		() => menuItemActiveStatus.some((menuItemActive) => !!menuItemActive),
@@ -72,13 +115,14 @@ const SideMenu = () => {
 	);
 
 	const hasSaasSubscription = useMemo(
-        () =>
-            subscriptionGroups?.some(
-                (subscription) =>
-                    subscription.activationProductName?.includes(PRODUCT_TYPES.liferayExperienceCloud)
-            ),
-        [subscriptionGroups]
-    );
+		() =>
+			subscriptionGroups?.some((subscription) =>
+				subscription.activationProductName?.includes(
+					PRODUCT_TYPES.liferayExperienceCloud
+				)
+			),
+		[subscriptionGroups]
+	);
 
 	const hasSLASubscription = useMemo(
 		() =>
@@ -90,7 +134,7 @@ const SideMenu = () => {
 
 	useEffect(() => {
 		const expandedHeightProducts = isOpenedProductsMenu
-			? activationSubscriptionGroups?.length * 48
+			? (activationSubscriptionGroups?.length || 0) * 48
 			: 0;
 
 		if (activationMenuRef?.current) {
@@ -102,61 +146,60 @@ const SideMenu = () => {
 		isOpenedProductsMenu,
 	]);
 
-	const accountSubscriptionGroupsMenuItem = useMemo(
-		() => {
-			const expandedGroups = activationSubscriptionGroups?.flatMap(expandGroupForSideMenu);
+	const accountSubscriptionGroupsMenuItem = useMemo(() => {
+		const expandedGroups = activationSubscriptionGroups?.flatMap(
+			expandGroupForSideMenu
+		);
 
-			return expandedGroups?.sort(
-				(a, b) => {
-					const aDisplayName = a.displayName || a.activationProductName || a.name;
-					const bDisplayName = b.displayName || b.activationProductName || b.name;
+		return expandedGroups
+			?.sort((a, b) => {
+				const aDisplayName =
+					a.displayName || a.activationProductName || a.name;
+				const bDisplayName =
+					b.displayName || b.activationProductName || b.name;
 
-					return aDisplayName.localeCompare(bDisplayName);
-				}
-			).map(
-				({ displayName, activationProductName, name}, index) => {
-					const itemDisplayName = displayName || activationProductName || name;
+				return aDisplayName.localeCompare(bDisplayName);
+			})
+			.map(({activationProductName, displayName, name}, index) => {
+				const itemDisplayName =
+					displayName || activationProductName || name;
 
-					const redirectPage = getKebabCase(itemDisplayName);
+				const redirectPage = getKebabCase(itemDisplayName);
 
-					const iconKey = activationProductName.split(',')
-						.includes(PRODUCT_TYPES.dxpCloud)
-							? 'lxc'
-							: activationProductName.split(',')
+				const iconKey = activationProductName
+					?.split(',')
+					.includes(PRODUCT_TYPES.dxpCloud)
+					? 'lxc'
+					: activationProductName
+								?.split(',')
 								.includes(PRODUCT_TYPES.liferayExperienceCloud)
-									? 'experienceCloud'
-									: redirectPage.split('-')[0];
+						? 'experienceCloud'
+						: redirectPage.split('-')[0];
 
-					const menuUpdateStatus = (isActive) =>
-						setMenuItemActiveStatus(
-							(previousMenuItemActiveStatus) => {
-								const menuItemStatus = [
-									...previousMenuItemActiveStatus,
-								];
-								menuItemStatus[index] = isActive;
+				const menuUpdateStatus = (isActive: boolean) =>
+					setMenuItemActiveStatus((previousMenuItemActiveStatus) => {
+						const menuItemStatus = [
+							...previousMenuItemActiveStatus,
+						];
+						menuItemStatus[index] = isActive;
 
-								setIsOpenedProductsMenu(
-									menuItemStatus.some(Boolean)
-								);
+						setIsOpenedProductsMenu(menuItemStatus.some(Boolean));
 
-								return menuItemStatus;
-							}
-						);
+						return menuItemStatus;
+					});
 
-					return (
-						<MenuItem
-							iconKey={iconKey}
-							key={`${itemDisplayName}-${index}`}
-							setActive={menuUpdateStatus}
-							to={`${ACTIVATION_PATH}/${redirectPage}`}
-						>
-							{itemDisplayName}
-						</MenuItem>
-					);
-				}
-			);
-		}, [activationSubscriptionGroups]
-	);
+				return (
+					<MenuItem
+						iconKey={iconKey as any}
+						key={`${itemDisplayName}-${index}`}
+						setActive={menuUpdateStatus}
+						to={`${ACTIVATION_PATH}/${redirectPage}`}
+					>
+						{itemDisplayName}
+					</MenuItem>
+				);
+			});
+	}, [activationSubscriptionGroups]);
 
 	if (!activationSubscriptionGroups) {
 		return <SideMenuSkeleton />;
@@ -171,13 +214,13 @@ const SideMenu = () => {
 					</MenuItem>
 				</div>
 
-				{accountSubscriptionGroupsMenuItem.length > 0 && (
+				{(accountSubscriptionGroupsMenuItem?.length ?? 0) > 0 && (
 					<li>
 						<div className="d-flex">
 							<Button
 								appendIcon={
-									!!activationSubscriptionGroups.length &&
-									'angle-right-small'
+									(!!activationSubscriptionGroups.length &&
+										'angle-right-small') as any
 								}
 								appendIconClassName="ml-auto"
 								className={classNames(
@@ -252,25 +295,29 @@ const SideMenu = () => {
 							iconKey="businessEvents"
 							to={getKebabCase(MENU_TYPES.businessEvents)}
 						>
-							{i18n.translate(getKebabCase(MENU_TYPES.businessEvents))}
+							{i18n.translate(
+								getKebabCase(MENU_TYPES.businessEvents)
+							)}
 						</MenuItem>
 					</div>
 				)}
 
-				{((featureFlags.includes('LRSD-6322') && loggedUserAccount?.isLiferayStaff) ||
-					(featureFlags.includes('LRSD-7805') && loggedUserAccount?.isPartner)) &&
-						hasSaasSubscription && (
-							<div className="d-flex">
-								<MenuItem
-									iconKey="projectUsage"
-									to={getKebabCase(MENU_TYPES.projectUsage)}
-								>
-									{i18n.translate(
-										getKebabCase(MENU_TYPES.projectUsage)
-									)}
-								</MenuItem>
-							</div>
-				)}
+				{((featureFlags.includes('LRSD-6322') &&
+					loggedUserAccount?.isLiferayStaff) ||
+					(featureFlags.includes('LRSD-7805') &&
+						loggedUserAccount?.isPartner)) &&
+					hasSaasSubscription && (
+						<div className="d-flex">
+							<MenuItem
+								iconKey="projectUsage"
+								to={getKebabCase(MENU_TYPES.projectUsage)}
+							>
+								{i18n.translate(
+									getKebabCase(MENU_TYPES.projectUsage)
+								)}
+							</MenuItem>
+						</div>
+					)}
 			</ul>
 		</div>
 	);

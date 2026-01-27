@@ -5,29 +5,39 @@
 
 import {useMemo} from 'react';
 import {Navigate, Outlet, useOutletContext} from 'react-router-dom';
-import i18n from '~/utils/I18n';
 import {useAppContext} from '~/features/project/context';
+import i18n from '~/utils/I18n';
 
-const ProductOutlet = ({product}) => {
-	const {setHasSideMenu} = useOutletContext();
+interface IOutletContext {
+	setHasSideMenu: (hasSideMenu: boolean) => void;
+}
+
+interface IProps {
+	product: string;
+}
+
+const ProductOutlet = ({product}: IProps) => {
+	const {setHasSideMenu} = useOutletContext<IOutletContext>();
 	const [{project, subscriptionGroups}] = useAppContext();
 
-	const hasProduct = useMemo(
-		() => !!subscriptionGroups?.find(({activationProductName, name}) => {
-			if (name === product) {
-				return true;
-			}
+	const hasProduct: boolean = useMemo(
+		() =>
+			!!subscriptionGroups?.find(({activationProductName, name}) => {
+				if (name === product) {
+					return true;
+				}
 
-			const activationProductNames = (activationProductName || '').split(',')
-				.map(name => name.trim())
-				.filter(name => name.length > 0);
+				const activationProductNames = (activationProductName || '')
+					.split(',')
+					.map((name) => name.trim())
+					.filter((name) => !!name.length);
 
-			if (activationProductNames?.includes(product)) {
-				return true;
-			}
+				if (activationProductNames?.includes(product)) {
+					return true;
+				}
 
-			return false;
-		}),
+				return false;
+			}),
 		[product, subscriptionGroups]
 	);
 

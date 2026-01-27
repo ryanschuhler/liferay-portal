@@ -25,11 +25,13 @@ export const actionTypes = {
 };
 
 export type ActionPayload =
-	| string
+	| string[]
 	| IAccountSubscription[]
 	| IAccountSubscriptionGroup[]
+	| IBusinessEvent[]
 	| IUserAccount
 	| IProject
+	| {denyAccess: boolean; hasProjectAccess: boolean}
 	| boolean
 	| undefined;
 
@@ -39,16 +41,18 @@ export interface IAction {
 }
 
 export interface IState {
-	businessEvents: IBusinessEvent | undefined;
+	businessEvents: IBusinessEvent[] | undefined;
 	isQuickLinksExpanded: boolean;
 	page: string | undefined;
 	project: IProject | undefined;
-	quickLinks: string | undefined;
+	quickLinks: string[] | undefined;
 	structuredContents: string | undefined;
 	subscriptionGroups: IAccountSubscriptionGroup[] | undefined;
 	subscriptions: IAccountSubscription[] | undefined;
 	userAccount: IUserAccount | undefined;
-	userProjectAccess: boolean | undefined;
+	userProjectAccess:
+		| {denyAccess: boolean; hasProjectAccess: boolean}
+		| undefined;
 }
 
 const reducer = (state: IState, action: IAction): IState => {
@@ -61,7 +65,7 @@ const reducer = (state: IState, action: IAction): IState => {
 		case actionTypes.UPDATE_BUSINESS_EVENTS:
 			return {
 				...state,
-				businessEvents: action.payload as IBusinessEvent,
+				businessEvents: action.payload as IBusinessEvent[],
 			};
 		case actionTypes.UPDATE_PROJECT:
 			return {
@@ -71,7 +75,7 @@ const reducer = (state: IState, action: IAction): IState => {
 		case actionTypes.UPDATE_QUICK_LINKS:
 			return {
 				...state,
-				quickLinks: action.payload as string,
+				quickLinks: action.payload as string[],
 			};
 		case actionTypes.UPDATE_QUICK_LINKS_EXPANDED_PANEL:
 			return {
@@ -81,29 +85,31 @@ const reducer = (state: IState, action: IAction): IState => {
 		case actionTypes.UPDATE_STRUCTURED_CONTENTS:
 			return {
 				...state,
-				structuredContents: action.payload as string,
+				structuredContents: action.payload as unknown as string,
 			};
 		case actionTypes.UPDATE_SUBSCRIPTION_GROUPS:
 			return {
 				...state,
 				subscriptionGroups:
-					action.payload as unknown as IAccountSubscriptionGroup[],
+					action.payload as IAccountSubscriptionGroup[],
 			};
 		case actionTypes.UPDATE_SUBSCRIPTIONS:
 			return {
 				...state,
-				subscriptions:
-					action.payload as unknown as IAccountSubscription[],
+				subscriptions: action.payload as IAccountSubscription[],
 			};
 		case actionTypes.UPDATE_PAGE:
 			return {
 				...state,
-				page: action.payload as string,
+				page: action.payload as unknown as string,
 			};
 		case actionTypes.UPDATE_USER_PROJECT_ACCESS:
 			return {
 				...state,
-				userProjectAccess: action.payload as boolean,
+				userProjectAccess: action.payload as {
+					denyAccess: boolean;
+					hasProjectAccess: boolean;
+				},
 			};
 		default:
 			return state;

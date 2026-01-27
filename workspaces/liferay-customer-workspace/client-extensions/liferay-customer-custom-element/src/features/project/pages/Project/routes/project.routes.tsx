@@ -7,97 +7,121 @@ import ClayLoadingIndicator from '@clayui/loading-indicator';
 import {useEffect, useMemo, useState} from 'react';
 import {HashRouter, Route, Routes} from 'react-router-dom';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import getKebabCase from '~/utils/getKebabCase';
-import BusinessEventAdd from '~/features/project/pages/Project/BusinessEvents/pages/BusinessEventsAdd';
-import DeactivateKeysTable from '~/features/project/containers/DeactivateKeysTable';
+
+// import {DeactivateKeysTable} from '~/features/project/containers/DeactivateKeysTable';
+
 import GenerateNewKey from '~/features/project/containers/GenerateNewKey';
 import {useAppContext} from '~/features/project/context';
 import {actionTypes} from '~/features/project/context/reducer';
 import Layout from '~/features/project/layouts/BaseLayout';
+import BusinessEventAdd from '~/features/project/pages/Project/BusinessEvents/pages/BusinessEventsAdd';
+import useMyUserAccountByAccountExternalReferenceCode from '~/features/project/pages/Project/TeamMembers/components/TeamMembersTable/hooks/useMyUserAccountByAccountExternalReferenceCode';
 import {PRODUCT_TYPES} from '~/features/project/utils/constants';
+import {WEB_CONTENT_DXP_VERSION_TYPES} from '~/features/project/utils/constants/webContentDXPVersionTypes';
 import {getWebContents} from '~/features/project/utils/getWebContents';
+import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
+import getKebabCase from '~/utils/getKebabCase';
+import {
+	IAccountSubscriptionGroup,
+	IKoroneikiAccount,
+	IProject,
+} from '~/utils/types';
+
 import Commerce from '../ActivationKeys/Commerce';
 import EnterpriseSearch from '../ActivationKeys/EnterpriseSearch';
 import AnalyticsCloud from '../AnalyticsCloud';
 import Attachments from '../Attachments';
+import BusinessEvents from '../BusinessEvents';
+import BusinessEventsItemActivityHistory from '../BusinessEvents/pages/BusinessEventsItem/BusinessEventsItemActivityHistory';
+import BusinessEventsItemDetails from '../BusinessEvents/pages/BusinessEventsItem/BusinessEventsItemDetails';
+import BusinessEventsItemEdit from '../BusinessEvents/pages/BusinessEventsItem/BusinessEventsItemEdit';
 import CloudNative from '../CloudNative';
 import DXP from '../DXP';
 import DXPCloud from '../DXPCloud';
 import LiferayExperienceCloud from '../LiferayExperienceCloud';
 import Overview from '../Overview';
 import Portal from '../Portal';
+import ProjectUsage from '../ProjectUsage';
 import RenewTable from '../RenewTable';
 import TeamMembers from '../TeamMembers';
 import ActivationOutlet from './Outlets/ActivationOutlet';
 import BusinessEventOutlet from './Outlets/BusinessEventOutlet';
 import ProductOutlet from './Outlets/ProductOutlet';
-import ProjectUsage from '../ProjectUsage';
-import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
-import useMyUserAccountByAccountExternalReferenceCode from '~/features/project/pages/Project/TeamMembers/components/TeamMembersTable/hooks/useMyUserAccountByAccountExternalReferenceCode';
-import BusinessEvents from '../BusinessEvents';
-import BusinessEventsItemActivityHistory from '../BusinessEvents/pages/BusinessEventsItem/BusinessEventsItemActivityHistory';
-import BusinessEventsItemDetails from '../BusinessEvents/pages/BusinessEventsItem/BusinessEventsItemDetails';
-import BusinessEventsItemEdit from '../BusinessEvents/pages/BusinessEventsItem/BusinessEventsItemEdit';
+
+interface IMyUserAccount {
+	myUserAccount: {
+		isLiferayStaff: boolean;
+		isPartner: boolean;
+		selectedAccountSummary: {
+			hasAdministratorRole: boolean;
+		};
+	};
+}
+
+interface IAppPropertiesContext {
+	featureFlags: string[];
+}
 
 const ProjectRoutes = () => {
-	const [hasComplimentaryKey, setHasComplimentaryKey] = useState(false);
+	const [hasComplimentaryKey, setHasComplimentaryKey] =
+		useState<boolean>(false);
 
 	const [{project, subscriptionGroups}, dispatch] = useAppContext();
-	const {featureFlags} = useAppPropertiesContext();
+	const {featureFlags} = useAppPropertiesContext() as IAppPropertiesContext;
 
 	const {data: koroneikiData, loading: koroneikiAccountLoading} =
 		useCurrentKoroneikiAccount();
-	const koroneikiAccount =
+	const koroneikiAccount: IKoroneikiAccount | undefined =
 		koroneikiData?.koroneikiAccountByExternalReferenceCode;
 
 	if (koroneikiAccount) {
 		const userId = Liferay.ThemeDisplay.getUserId();
 
 		const cookieKey = `CP_LAST_VIEWED_PROJECT_${userId}`;
-		const cookieValue = encodeURIComponent(koroneikiAccount.accountKey);
+		const cookieValue = encodeURIComponent(
+			koroneikiAccount?.accountKey ?? ''
+		);
 		const expires = new Date();
 
 		expires.setDate(expires.getDate() + 30);
 
 		if (Liferay?.Util?.Cookie) {
-			Liferay.Util.Cookie.set?.(
-				cookieKey,
-				cookieValue,
-				Liferay?.Util?.Cookie?.TYPES?.FUNCTIONAL,
-				{
-					expires,
-					secure: true,
-				}
-			);
+			Liferay.Util.Cookie.set?.(cookieKey, cookieValue, {
+				expires,
+				secure: true,
+			});
 		}
 	}
 
 	const {data: myUserAccountData} =
 		useMyUserAccountByAccountExternalReferenceCode(
-			koroneikiAccount?.accountKey,
+			koroneikiAccount?.accountKey ?? '',
 			koroneikiAccountLoading
 		);
-	const loggedUserAccount = myUserAccountData?.myUserAccount;
+	const loggedUserAccount: IMyUserAccount['myUserAccount'] | undefined =
+		myUserAccountData?.myUserAccount;
 
-	const hasSaasSubscription = useMemo(
-		() => {
-			const allowedERCs = [
-				`${project?.externalReferenceCode}_liferay-cloud`,
-				`${project?.externalReferenceCode}_liferay-saas`
-			];
+	const hasSaasSubscription: boolean = useMemo(() => {
+		const allowedERCs = [
+			`${project?.externalReferenceCode ?? ''}_liferay-cloud`,
+			`${project?.externalReferenceCode ?? ''}_liferay-saas`,
+		];
 
-			return subscriptionGroups?.some(({externalReferenceCode}) =>
-				allowedERCs.includes(externalReferenceCode)
-			);
-		},
-		[project?.externalReferenceCode, subscriptionGroups]
-	);
+		return (
+			subscriptionGroups?.some((group: IAccountSubscriptionGroup) =>
+				allowedERCs.includes(group.externalReferenceCode ?? '')
+			) ?? false
+		);
+	}, [project?.externalReferenceCode, subscriptionGroups]);
 
-	const hasSLASubscription = useMemo(
+	const hasSLASubscription: boolean = useMemo(
 		() =>
-			koroneikiAccount?.slaCurrent ||
-			koroneikiAccount?.slaExpired ||
-			koroneikiAccount?.slaFuture,
+			Boolean(
+				koroneikiAccount?.slaCurrent ||
+					koroneikiAccount?.slaExpired ||
+					koroneikiAccount?.slaFuture ||
+					false
+			),
 		[koroneikiAccount]
 	);
 
@@ -105,11 +129,15 @@ const ProjectRoutes = () => {
 		if (project && subscriptionGroups) {
 			dispatch({
 				payload: getWebContents(
-					project.dxpVersion,
+					WEB_CONTENT_DXP_VERSION_TYPES[
+						project.dxpVersion as keyof typeof WEB_CONTENT_DXP_VERSION_TYPES
+					]
+						? (project.dxpVersion as keyof typeof WEB_CONTENT_DXP_VERSION_TYPES)
+						: undefined,
 					project.slaCurrent,
-					subscriptionGroups
+					subscriptionGroups as IAccountSubscriptionGroup[]
 				),
-				type: actionTypes.UPDATE_QUICK_LINKS,
+				type: actionTypes.UPDATE_QUICK_LINKS as 'UPDATE_QUICK_LINKS',
 			});
 		}
 	}, [dispatch, project, subscriptionGroups]);
@@ -155,7 +183,7 @@ const ProjectRoutes = () => {
 								path="new"
 							/>
 
-							{featureFlags.includes('LPS-186175') && (
+							{/* {featureFlags.includes('LPS-186175') && (
 								<Route
 									element={
 										<DeactivateKeysTable
@@ -165,7 +193,7 @@ const ProjectRoutes = () => {
 									}
 									path="deactivate"
 								/>
-							)}
+							)} */}
 
 							<Route
 								element={
@@ -173,6 +201,7 @@ const ProjectRoutes = () => {
 										hasComplimentaryKey={
 											hasComplimentaryKey
 										}
+										isDXPTable={false}
 										isRenewTable
 									/>
 								}
@@ -212,7 +241,7 @@ const ProjectRoutes = () => {
 								path="new"
 							/>
 
-							<Route
+							{/* <Route
 								element={
 									<DeactivateKeysTable
 										initialFilter="(startswith(productName,'DXP') or startswith(productName,'Digital'))"
@@ -220,7 +249,7 @@ const ProjectRoutes = () => {
 									/>
 								}
 								path="deactivate"
-							/>
+							/> */}
 
 							<Route
 								element={
@@ -238,7 +267,9 @@ const ProjectRoutes = () => {
 
 						<Route
 							element={
-								<ProductOutlet product={PRODUCT_TYPES.dxpCloud} />
+								<ProductOutlet
+									product={PRODUCT_TYPES.dxpCloud}
+								/>
 							}
 						>
 							<Route
@@ -278,17 +309,13 @@ const ProjectRoutes = () => {
 						<Route
 							element={
 								<ProductOutlet
-									product={
-										PRODUCT_TYPES.cloudNative
-									}
+									product={PRODUCT_TYPES.cloudNative}
 								/>
 							}
 						>
 							<Route
 								element={<CloudNative />}
-								path={getKebabCase(
-									PRODUCT_TYPES.cloudNative
-								)}
+								path={getKebabCase(PRODUCT_TYPES.cloudNative)}
 							/>
 						</Route>
 
@@ -324,23 +351,44 @@ const ProjectRoutes = () => {
 					{hasSLASubscription && (
 						<Route path="business-events">
 							<Route element={<BusinessEvents />} index />
-							<Route element={<BusinessEventAdd />} path="new"/>
-							<Route path=":id" element={<BusinessEventOutlet project={project} skip={!project} />}>
-								<Route element={<BusinessEventsItemDetails />} index />
-								<Route element={<BusinessEventsItemEdit />} path="edit"/>
-								<Route element={<BusinessEventsItemActivityHistory />} path="activity-history"/>
+							<Route element={<BusinessEventAdd />} path="new" />
+							<Route
+								element={
+									<BusinessEventOutlet
+										project={project as IProject}
+										skip={!project}
+									/>
+								}
+								path=":id"
+							>
+								<Route
+									element={<BusinessEventsItemDetails />}
+									index
+								/>
+								<Route
+									element={<BusinessEventsItemEdit />}
+									path="edit"
+								/>
+								<Route
+									element={
+										<BusinessEventsItemActivityHistory />
+									}
+									path="activity-history"
+								/>
 							</Route>
 						</Route>
 					)}
 
-					{((featureFlags.includes('LRSD-6322') && loggedUserAccount?.isLiferayStaff) ||
-						(featureFlags.includes('LRSD-7805') && loggedUserAccount?.isPartner)) &&
-							hasSaasSubscription && (
-								<Route
-									element={<ProjectUsage />}
-									path="project-usage"
-								/>
-					)}
+					{((featureFlags.includes('LRSD-6322') &&
+						loggedUserAccount?.isLiferayStaff) ||
+						(featureFlags.includes('LRSD-7805') &&
+							loggedUserAccount?.isPartner)) &&
+						hasSaasSubscription && (
+							<Route
+								element={<ProjectUsage />}
+								path="project-usage"
+							/>
+						)}
 
 					<Route element={<h3>Page not found</h3>} path="*" />
 				</Route>

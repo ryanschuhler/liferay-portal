@@ -41,7 +41,7 @@ const isValidDate = (value: string, years?: IYears) => {
 	}
 };
 
-const isValidEmail = (value: string, bannedEmailDomains: string[]) => {
+const isValidEmail = (bannedEmailDomains: string[]) => (value: string) => {
 	if (value && !EMAIL_REGEX.test(value)) {
 		return i18n.translate('please-insert-a-valid-email');
 	}
@@ -51,11 +51,12 @@ const isValidEmail = (value: string, bannedEmailDomains: string[]) => {
 	}
 };
 
-const isValidEmailDomain = (bannedEmailDomains: string[]) => {
-	if (bannedEmailDomains.length) {
-		return i18n.translate('domain-not-allowed');
-	}
-};
+const isValidEmailDomain =
+	(bannedEmailDomains: string[]) => (_value: string) => {
+		if (bannedEmailDomains.length) {
+			return i18n.translate('domain-not-allowed');
+		}
+	};
 
 const isValidFriendlyURL = (value: string) => {
 	if (value && value[0] !== '/') {

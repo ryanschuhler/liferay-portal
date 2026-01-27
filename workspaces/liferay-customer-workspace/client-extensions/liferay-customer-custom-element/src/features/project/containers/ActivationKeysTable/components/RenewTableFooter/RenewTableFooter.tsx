@@ -7,11 +7,21 @@ import {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {Button} from '~/components';
 import RenewButton from '~/features/project/containers/ActivationKeysTable/components/RenewButton';
+import {hasAdminOrPartnerManager} from '~/features/project/containers/ActivationKeysTable/utils/hasAdminOrPartnerManager';
+import {isBulkRenewAvailable} from '~/features/project/containers/ActivationKeysTable/utils/isBulkRenewAvailable';
+import {useGetMyUserAccount} from '~/services/liferay/graphql/user-accounts';
 import i18n from '~/utils/I18n';
+import {IActivationKey, IProject} from '~/utils/types';
 
-import {hasAdminOrPartnerManager} from '../../utils/hasAdminOrPartnerManager';
-import {isBulkRenewAvailable} from '../../utils/isBulkRenewAvailable';
-import useGetAccountUserAccount from '../Header/hooks/useGetAccountUserAccount';
+interface RenewTableFooterProps {
+	activationKeysChecked: IActivationKey[];
+	isAdminUserAccount: boolean;
+	isRenewTable: boolean;
+	keysSelectedCount: number;
+	productName: string;
+	project: IProject;
+	renewKeysFilterChecked: string;
+}
 
 const RenewTableFooter = ({
 	activationKeysChecked,
@@ -21,21 +31,16 @@ const RenewTableFooter = ({
 	productName,
 	project,
 	renewKeysFilterChecked,
-}) => {
-	const {
-		userAccountsState: [userAccounts],
-	} = useGetAccountUserAccount(project);
+}: RenewTableFooterProps) => {
+	const {data: myAccount} = useGetMyUserAccount();
 
-	const [isComplimentaryKey, setIsComplimentaryKey] = useState('');
+	const [isComplimentaryKey, setIsComplimentaryKey] =
+		useState<boolean>(false);
 
-	const currentUser = userAccounts?.find(
-		({id}) => id === Number(Liferay.ThemeDisplay.getUserId())
-	);
 	const allowSelfProvisioning = project.allowSelfProvisioning;
-	const isAdminOrPartnerManager = hasAdminOrPartnerManager(
-		project,
-		currentUser
-	);
+	const isAdminOrPartnerManager =
+		myAccount?.myUserAccount &&
+		hasAdminOrPartnerManager(project, myAccount.myUserAccount);
 
 	const urlPreviousPage = `/${
 		project?.accountKey
@@ -45,14 +50,12 @@ const RenewTableFooter = ({
 
 	useEffect(() => {
 		if (activationKeysChecked) {
-			const complimentaryKeyValidation = (activationKey) => activationKey;
-
 			const handleComplimentaryKey = activationKeysChecked?.map(
 				(activationKey) => activationKey.complimentary
 			);
 
 			const hasComplimentaryKey = handleComplimentaryKey.some(
-				complimentaryKeyValidation
+				(complimentary: boolean) => complimentary
 			);
 
 			if (hasComplimentaryKey) {
@@ -86,14 +89,17 @@ const RenewTableFooter = ({
 							identifier="renew"
 							isComplimentaryKey={isComplimentaryKey}
 							isRenewTable={isRenewTable}
-							keysSelectedCount={keysSelectedCount}
 							productName={productName}
 							project={project}
 							renewKeysFilterChecked={renewKeysFilterChecked}
 						>
 							{keysSelectedCount === 1
-								? i18n.sub('renew-x-key', [keysSelectedCount])
-								: i18n.sub('renew-x-keys', [keysSelectedCount])}
+								? i18n.sub('renew-x-key', [
+										keysSelectedCount.toString(),
+									])
+								: i18n.sub('renew-x-keys', [
+										keysSelectedCount.toString(),
+									])}
 						</RenewButton>
 					)}
 			</div>

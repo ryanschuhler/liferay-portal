@@ -9,9 +9,14 @@ import SearchBuilder from '~/lib/SearchBuilder';
 import {getCommerceOrderItems} from '~/services/liferay/graphql/queries';
 import getActivationStatusDateRange from '~/utils/getActivationStatusDateRange';
 
-export default function useActivationStatusDate(project) {
-	const {client} = useAppPropertiesContext();
-	const [activationStatusDate, setActivationStatusDate] = useState('');
+interface IProject {
+	accountKey: string;
+}
+
+export default function useActivationStatusDate(project: IProject) {
+	const {client}: any = useAppPropertiesContext();
+	const [activationStatusDate, setActivationStatusDate] =
+		useState<string>('');
 
 	useEffect(() => {
 		const fetchCommerceOrderItems = async () => {

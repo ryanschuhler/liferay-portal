@@ -6,11 +6,11 @@
 import {useGetAccountRolesByAccountExternalReferenceCode} from '~/services/liferay/graphql/account-roles';
 
 export default function useAccountRolesByAccountExternalReferenceCode(
-	koroneikiAccount,
-	loading,
-	skip
-) {
-	const getFilter = () => {
+	koroneikiAccount: any,
+	loading: boolean,
+	skip: boolean
+): any {
+	const getFilter = (): string => {
 		const filters = ["name ne 'Provisioning'"];
 
 		if (!koroneikiAccount?.hasPrioritySLA) {
@@ -28,6 +28,7 @@ export default function useAccountRolesByAccountExternalReferenceCode(
 		koroneikiAccount?.accountKey,
 		{
 			filter: getFilter(),
+			notifyOnNetworkStatusChange: false,
 			skip: loading || skip,
 		}
 	);

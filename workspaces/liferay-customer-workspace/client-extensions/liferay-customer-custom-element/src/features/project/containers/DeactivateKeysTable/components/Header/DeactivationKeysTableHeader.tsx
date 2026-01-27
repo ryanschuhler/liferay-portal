@@ -3,14 +3,25 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import BadgeFilter from '~/features/project/containers/ActivationKeysTable/components/BadgeFilter';
-import Filter from '~/features/project/containers/ActivationKeysTable/components/Filter';
+import {IActivationKey, IFilters} from '~/utils/types';
+
+interface DeactivationKeysTableHeaderProps {
+	activationKeysState: [
+		IActivationKey[],
+		React.Dispatch<React.SetStateAction<IActivationKey[]>>,
+	];
+	filterState: [IFilters, React.Dispatch<React.SetStateAction<IFilters>>];
+	loading: boolean;
+}
 
 const DeactivationKeysTableHeader = ({
 	activationKeysState,
 	filterState: [filters, setFilters],
 	loading,
-}) => {
+}: DeactivationKeysTableHeaderProps) => {
+=======
+}: DeactivationKeysTableHeaderProps) => {
+>>>>>>> 7e8f3b93c0d1f (LRSD-12021 Convert to typescript)
 	const [activationKeys] = activationKeysState;
 
 	return (

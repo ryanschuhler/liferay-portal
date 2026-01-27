@@ -4,3 +4,4 @@
  */
 
 export {default} from './DownloadAlert';
+export type {DownloadStatusType} from './DownloadAlert';

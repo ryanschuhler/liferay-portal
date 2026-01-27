@@ -7,10 +7,10 @@ import {useReplaceAccountRoleByUserAccountEmailAddress} from '~/services/liferay
 import {useUpdateRolesByContactEmailAddress} from '~/services/raysource/graphql/roles';
 
 export default function useUpdateUserAccount() {
-	const [replaceAccountRole, {loading: replaceAccountRoleLoading}] =
+	const [replaceAccountRole, {loading: replaceAccountRoleLoading}]: any =
 		useReplaceAccountRoleByUserAccountEmailAddress();
 
-	const [updateContactRoles, {loading: updateContactRolesLoading}] =
+	const [updateContactRoles, {loading: updateContactRolesLoading}]: any =
 		useUpdateRolesByContactEmailAddress();
 
 	const loading = replaceAccountRoleLoading || updateContactRolesLoading;

@@ -5,12 +5,36 @@
 
 import {SLA_TYPES} from '~/utils/constants';
 
-export default function getStyleFromTitle(title) {
+type TTitle =
+	| typeof SLA_TYPES.gold
+	| typeof SLA_TYPES.standard
+	| typeof SLA_TYPES.limited
+	| typeof SLA_TYPES.global
+	| typeof SLA_TYPES.platinum
+	| typeof SLA_TYPES.premier
+	| typeof SLA_TYPES.strategic
+	| typeof SLA_TYPES.premium;
+
+interface IStyle {
+	cardStyle: {
+		[key: string]: boolean;
+	};
+	dateStyle: {
+		[key: string]: boolean;
+	};
+	labelStyle: {
+		[key: string]: boolean;
+	};
+	titleStyle: {
+		[key: string]: boolean;
+	};
+}
+
+export default function getStyleFromTitle(title: TTitle): IStyle {
 	return {
 		cardStyle: {
 			'bg-brand-secondary-lighten-6 border-brand-secondary-lighten-4':
-				title === SLA_TYPES.gold ||
-				title === SLA_TYPES.standard,
+				title === SLA_TYPES.gold || title === SLA_TYPES.standard,
 			'bg-neutral-0 border-brand-primary-darken-2 ':
 				title === SLA_TYPES.limited,
 			'bg-neutral-0 border-neutral-2 ':
@@ -18,22 +42,22 @@ export default function getStyleFromTitle(title) {
 				title === SLA_TYPES.platinum ||
 				title === SLA_TYPES.premier ||
 				title === SLA_TYPES.strategic,
-			'border-brand-primary-lighten-3 bg-brand-primary-lighten-5': title === SLA_TYPES.premium,
+			'border-brand-primary-lighten-3 bg-brand-primary-lighten-5':
+				title === SLA_TYPES.premium,
 		},
 		dateStyle: {
 			'text-brand-primary-darken-2': title === SLA_TYPES.limited,
 			'text-brand-primary-lighten-1': title === SLA_TYPES.premium,
 			'text-brand-secondary-darken-3':
-				title === SLA_TYPES.gold ||
-				title === SLA_TYPES.standard,
+				title === SLA_TYPES.gold || title === SLA_TYPES.standard,
+			'text-center':
+				title === SLA_TYPES.premier ||
+				title === SLA_TYPES.standard ||
+				title === SLA_TYPES.strategic,
 			'text-neutral-6':
 				title === SLA_TYPES.global ||
 				title === SLA_TYPES.platinum ||
 				title === SLA_TYPES.premier ||
-				title === SLA_TYPES.strategic,
-			'text-center':
-			    title === SLA_TYPES.premier ||
-			    title === SLA_TYPES.standard ||
 				title === SLA_TYPES.strategic,
 		},
 		labelStyle: {
@@ -44,21 +68,20 @@ export default function getStyleFromTitle(title) {
 				title === SLA_TYPES.strategic,
 			'label-borderless-primary text-brand-primary-darken-2':
 				title === SLA_TYPES.limited,
-			'label-borderless-secondary text-brand-primary-lighten-1': title === SLA_TYPES.premium,
+			'label-borderless-secondary text-brand-primary-lighten-1':
+				title === SLA_TYPES.premium,
 			'label-borderless-secondary text-brand-secondary-darken-3':
-				title === SLA_TYPES.gold ||
-				title === SLA_TYPES.standard,
+				title === SLA_TYPES.gold || title === SLA_TYPES.standard,
 		},
 		titleStyle: {
 			'pr-2':
-			    title === SLA_TYPES.premier ||
+				title === SLA_TYPES.premier ||
 				title === SLA_TYPES.standard ||
 				title === SLA_TYPES.strategic,
 			'text-brand-primary-darken-2': title === SLA_TYPES.limited,
-			'text-brand-primary-lighten-1':	title === SLA_TYPES.premium,
-			'text-brand-secondary-darken-3': 
-				title === SLA_TYPES.gold ||
-				title === SLA_TYPES.standard,
+			'text-brand-primary-lighten-1': title === SLA_TYPES.premium,
+			'text-brand-secondary-darken-3':
+				title === SLA_TYPES.gold || title === SLA_TYPES.standard,
 			'text-neutral-7':
 				title === SLA_TYPES.global ||
 				title === SLA_TYPES.platinum ||

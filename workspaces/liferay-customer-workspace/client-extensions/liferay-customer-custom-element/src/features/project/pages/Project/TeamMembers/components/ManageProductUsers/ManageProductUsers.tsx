@@ -4,15 +4,35 @@
  */
 
 import {useMemo} from 'react';
-import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import i18n from '~/utils/I18n';
 import Skeleton from '~/components/Skeleton';
+import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
 import {PRODUCT_TYPES} from '~/features/project/utils/constants/productTypes';
+import i18n from '~/utils/I18n';
+
 import ManageUsersButton from './components/ManageUsersButton/ManageUsersButton';
 import useActiveAccountSubscriptionGroups from './hooks/useActiveAccountSubscriptionGroups';
+
 import './ManageProductUsers.css';
 
-const getManagedContactURL = (manageContactsURL, activationProductName) => {
+interface IKoroneikiAccount {
+	accountKey?: string;
+}
+
+interface IAccountSubscriptionGroup {
+	activationProductName: string;
+	manageContactsURL: string;
+	name: string;
+}
+
+interface IProps {
+	koroneikiAccount?: IKoroneikiAccount;
+	loading: boolean;
+}
+
+const getManagedContactURL = (
+	manageContactsURL: string,
+	activationProductName: string
+) => {
 	if (!manageContactsURL) {
 		return '';
 	}
@@ -27,47 +47,40 @@ const getManagedContactURL = (manageContactsURL, activationProductName) => {
 	}
 };
 
-const ManageProductUsers = ({koroneikiAccount, loading}) => {
-	const {
-		data,
-		loading: accountSubscriptionGroupsLoading,
-	} = useActiveAccountSubscriptionGroups(
-		koroneikiAccount?.accountKey,
-		loading,
-		[
-			PRODUCT_TYPES.analyticsCloud,
-			PRODUCT_TYPES.liferayCloud,
-		]
-	);
-	const {featureFlags} = useAppPropertiesContext();
+const ManageProductUsers = ({koroneikiAccount, loading}: IProps) => {
+	const {data, loading: accountSubscriptionGroupsLoading} =
+		useActiveAccountSubscriptionGroups(
+			koroneikiAccount?.accountKey,
+			loading,
+			[PRODUCT_TYPES.analyticsCloud, PRODUCT_TYPES.liferayCloud]
+		);
+	useAppPropertiesContext();
 
-	const accountSubscriptionGroups = data?.c.accountSubscriptionGroups.items;
+	const accountSubscriptionGroups: IAccountSubscriptionGroup[] = useMemo(
+		() => data?.c?.accountSubscriptionGroups?.items ?? [],
+		[data]
+	);
 	const accountSubscriptionGroupLiferayExperienceCloud = useMemo(
 		() =>
 			accountSubscriptionGroups?.find(
 				(subscriptionGroup) =>
 					subscriptionGroup.name === PRODUCT_TYPES.liferayCloud &&
-					subscriptionGroup.activationProductName.split(',')
+					subscriptionGroup.activationProductName
+						.split(',')
 						.includes(PRODUCT_TYPES.liferayExperienceCloud)
 			),
 		[accountSubscriptionGroups]
 	);
 
 	const getManageUsersButton = () => {
-		if (
-			accountSubscriptionGroupLiferayExperienceCloud
-		) {
+		if (accountSubscriptionGroupLiferayExperienceCloud) {
 			return (
 				<ManageUsersButton
-					href={
-						getManagedContactURL(
-							accountSubscriptionGroupLiferayExperienceCloud.manageContactsURL,
-							PRODUCT_TYPES.liferayExperienceCloud
-						)
-					}
-					title={i18n.translate(
-						'manage-liferay-saas-users'
+					href={getManagedContactURL(
+						accountSubscriptionGroupLiferayExperienceCloud.manageContactsURL,
+						PRODUCT_TYPES.liferayExperienceCloud
 					)}
+					title={i18n.translate('manage-liferay-saas-users')}
 				/>
 			);
 		}
@@ -75,12 +88,16 @@ const ManageProductUsers = ({koroneikiAccount, loading}) => {
 		return (
 			<div className="d-flex">
 				{accountSubscriptionGroups?.map(
-					({activationProductName, manageContactsURL, name}, index) => {
-						if (activationProductName.split(',')
-								.includes(PRODUCT_TYPES.dxpCloud)) {
-
+					({activationProductName, manageContactsURL}, index) => {
+						if (
+							activationProductName
+								.split(',')
+								.includes(PRODUCT_TYPES.dxpCloud)
+						) {
 							const targetURL = getManagedContactURL(
-								manageContactsURL, PRODUCT_TYPES.dxpCloud);
+								manageContactsURL,
+								PRODUCT_TYPES.dxpCloud
+							);
 
 							return (
 								<ManageUsersButton
@@ -94,7 +111,9 @@ const ManageProductUsers = ({koroneikiAccount, loading}) => {
 						}
 
 						const targetURL = getManagedContactURL(
-							manageContactsURL, PRODUCT_TYPES.analyticsCloud);
+							manageContactsURL,
+							PRODUCT_TYPES.analyticsCloud
+						);
 
 						return (
 							<ManageUsersButton
@@ -121,9 +140,7 @@ const ManageProductUsers = ({koroneikiAccount, loading}) => {
 				) : (
 					<h4 className="mb-0">
 						{accountSubscriptionGroupLiferayExperienceCloud
-							? i18n.translate(
-									'manage-liferay-saas-users'
-							  )
+							? i18n.translate('manage-liferay-saas-users')
 							: i18n.translate('manage-product-users')}
 					</h4>
 				)}

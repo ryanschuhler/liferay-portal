@@ -4,6 +4,7 @@
  */
 
 import SearchBuilder from '~/lib/SearchBuilder';
+import {IActivationKey} from '~/utils/types';
 
 import {baseFetcher} from '../../fetcher';
 
@@ -159,10 +160,10 @@ class ProvisioningLicenseKeys {
 	public async getSingleUserSubscriptions(
 		accountKey: string,
 		emailAdress: string
-	) {
-		return this.fetcher(
+	): Promise<{items: IActivationKey[]}> {
+		return (await this.fetcher(
 			`/accounts/${accountKey}/license-keys?pageSize=999&filter=active+eq+true+and+subscriptionContactEmailAddresses/any(s:s+eq+'${emailAdress}')+and+subscriptionContactCount+eq+1`
-		);
+		)) as {items: IActivationKey[]};
 	}
 }
 

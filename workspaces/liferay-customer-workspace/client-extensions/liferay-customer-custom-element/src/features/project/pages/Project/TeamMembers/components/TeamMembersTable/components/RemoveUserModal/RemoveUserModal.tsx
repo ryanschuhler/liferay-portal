@@ -6,8 +6,18 @@
 import {Button} from '@clayui/core';
 import ClayModal from '@clayui/modal';
 import classNames from 'classnames';
-import {memo} from 'react';
+import {ReactNode, memo} from 'react';
 import i18n from '~/utils/I18n';
+
+interface IProps {
+	children: ReactNode;
+	isSingleSubscribedUser: any[];
+	modalTitle: string;
+	observer: any; // Define a more specific type if possible
+	onClose: () => void;
+	onRemove: () => Promise<void>;
+	removing: boolean;
+}
 
 const RemoveUserModal = ({
 	children,
@@ -16,7 +26,7 @@ const RemoveUserModal = ({
 	onClose,
 	onRemove,
 	removing,
-}) => (
+}: IProps) => (
 	<ClayModal center className="remove-user-modal" observer={observer}>
 		<ClayModal.Header className="h-100 p-4">
 			<span className="header-modal-title mb-0 text-neutral-10">

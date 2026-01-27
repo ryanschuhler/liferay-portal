@@ -3,23 +3,24 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {ApolloClient, NormalizedCacheObject} from '@apollo/client';
 import ClayAlert from '@clayui/alert';
 import {ClaySelect} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import {useEffect, useState} from 'react';
-import i18n from '~/utils/I18n';
 import {Button} from '~/components';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import {getListTypeDefinitions} from '~/services/liferay/graphql/queries';
-import {getDevelopmentLicenseKey} from '~/services/liferay/rest/raysource/LicenseKeys';
-import downloadFromBlob from '~/utils/downloadFromBlob';
-import sortLiferayVersions from '~/utils/sortLiferayVersions';
 import {
 	ALERT_DOWNLOAD_TYPE,
 	AUTO_CLOSE_ALERT_TIME,
 	EXTENSION_FILE_TYPES,
 	STATUS_CODE,
 } from '~/features/project/utils/constants';
+import {getListTypeDefinitions} from '~/services/liferay/graphql/queries';
+import {getDevelopmentLicenseKey} from '~/services/liferay/rest/raysource/LicenseKeys';
+import i18n from '~/utils/I18n';
+import downloadFromBlob from '~/utils/downloadFromBlob';
+import sortLiferayVersions from '~/utils/sortLiferayVersions';
 
 import './DeveloperKeysInputs.css';
 
@@ -27,6 +28,23 @@ const ALERT_DEVELOPER_KEYS_DOWNLOAD_TEXT = {
 	[ALERT_DOWNLOAD_TYPE.danger]: 'Unable to download key, please try again.',
 	[ALERT_DOWNLOAD_TYPE.success]: 'Developer Key was downloaded successfully.',
 };
+
+interface IDxpVersion {
+	key: string;
+	name: string;
+}
+
+interface IProps {
+	accountKey: string;
+	downloadTextHelper: string;
+	dxpVersion: string;
+	listType: string;
+	oAuthToken: string;
+	productName: string;
+	projectName: string;
+}
+
+type DeveloperKeysDownloadStatus = keyof typeof ALERT_DOWNLOAD_TYPE | '';
 
 const DeveloperKeysInputs = ({
 	accountKey,
@@ -36,37 +54,36 @@ const DeveloperKeysInputs = ({
 	oAuthToken,
 	productName,
 	projectName,
-}) => {
-	const {
-		articleDeployingActivationKeysURL,
-		client,
-		provisioningServerAPI,
-	} = useAppPropertiesContext();
-	const [dxpVersions, setDxpVersions] = useState([]);
+}: IProps) => {
+	const {articleDeployingActivationKeysURL, client, provisioningServerAPI} =
+		useAppPropertiesContext();
+	const [dxpVersions, setDxpVersions] = useState<IDxpVersion[]>([]);
 	const [selectedVersion, setSelectedVersion] = useState(dxpVersion || '');
-	const [
-		developerKeysDownloadStatus,
-		setDeveloperKeysDownloadStatus,
-	] = useState('');
+	const [developerKeysDownloadStatus, setDeveloperKeysDownloadStatus] =
+		useState<DeveloperKeysDownloadStatus>('');
 
 	useEffect(() => {
 		const fetchListTypeDefinitions = async () => {
-			const {data} = await client.query({
+			const {data} = await (
+				client as ApolloClient<NormalizedCacheObject>
+			).query({
 				query: getListTypeDefinitions,
 				variables: {
 					filter: `name eq '${listType}'`,
 				},
 			});
 
-			const items = data?.listTypeDefinitions?.items[0]?.listTypeEntries;
+			const items: IDxpVersion[] =
+				data?.listTypeDefinitions?.items[0]?.listTypeEntries;
 
 			const sortedItems = sortLiferayVersions([...items]);
 
 			if (sortedItems?.length) {
 				const versionedItems = sortedItems.map((sortedItem) => {
-					var name = sortedItem.name.replace('DXP ', '');
+					let name = sortedItem.name.replace('DXP ', '');
 
-					const quarterlyVersion = sortedItem.name.match(/\d{4}\.Q\d/);
+					const quarterlyVersion =
+						sortedItem.name.match(/\d{4}\.Q\d/);
 
 					if (quarterlyVersion?.length) {
 						name = quarterlyVersion[0];
@@ -99,7 +116,10 @@ const DeveloperKeysInputs = ({
 
 		if (license.status === STATUS_CODE.success) {
 			const contentType = license.headers.get('content-type');
-			const extensionFile = EXTENSION_FILE_TYPES[contentType] || '.txt';
+			const extensionFile =
+				EXTENSION_FILE_TYPES[
+					contentType as keyof typeof EXTENSION_FILE_TYPES
+				] || '.txt';
 			const licenseBlob = await license.blob();
 
 			setDeveloperKeysDownloadStatus(ALERT_DOWNLOAD_TYPE.success);
@@ -133,7 +153,9 @@ const DeveloperKeysInputs = ({
 
 						<ClaySelect
 							className="bg-neutral-1 border-0 font-weight-bold mr-2 pr-6"
-							onChange={({target}) => {
+							onChange={({
+								target,
+							}: React.ChangeEvent<HTMLSelectElement>) => {
 								setSelectedVersion(target.value);
 							}}
 							value={selectedVersion}

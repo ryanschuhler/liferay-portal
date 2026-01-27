@@ -4,13 +4,30 @@
  */
 
 import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
+import i18n from '~/utils/I18n';
 
 import SubscriptionsOverview from './components/SubscriptionsOverview';
 import SupportOverview from './components/SupportOverview';
 
+interface IKoroneikiAccount {
+	accountKey: string;
+
+	// Add relevant properties here based on usage in child components
+
+}
+
 const Overview = () => {
 	const {data, loading} = useCurrentKoroneikiAccount();
-	const koroneikiAccount = data?.koroneikiAccountByExternalReferenceCode;
+	const koroneikiAccount: IKoroneikiAccount | undefined =
+		data?.koroneikiAccountByExternalReferenceCode;
+
+	if (loading) {
+		return <span>{i18n.translate('loading')}...</span>;
+	}
+
+	if (!koroneikiAccount) {
+		return null;
+	}
 
 	return (
 		<>

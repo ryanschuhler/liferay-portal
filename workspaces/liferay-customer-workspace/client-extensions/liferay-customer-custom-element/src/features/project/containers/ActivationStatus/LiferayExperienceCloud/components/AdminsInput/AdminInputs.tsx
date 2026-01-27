@@ -4,13 +4,26 @@
  */
 
 import ClayForm from '@clayui/form';
-import i18n from '~/utils/I18n';
 import {Input} from '~/components';
 import useBannedDomains from '~/hooks/useBannedDomains';
+import i18n from '~/utils/I18n';
 import {isValidEmail} from '~/utils/validations.form';
 
-const AdminInputs = ({admin, id}) => {
-	const bannedDomains = useBannedDomains(admin?.email, 500);
+interface Admin {
+	email: string;
+	fullName: string;
+
+	// Add other properties as they are used in the component
+
+}
+
+interface AdminInputsProps {
+	admin: Admin;
+	id: number;
+}
+
+const AdminInputs = ({admin, id}: AdminInputsProps) => {
+	const bannedDomains = useBannedDomains(admin?.email);
 
 	return (
 		<ClayForm className="mb-0 pb-1">
@@ -30,7 +43,7 @@ const AdminInputs = ({admin, id}) => {
 				placeholder="email@example.com"
 				required
 				type="email"
-				validations={[(value) => isValidEmail(value, bannedDomains)]}
+				validations={[isValidEmail(bannedDomains)]}
 			/>
 		</ClayForm>
 	);

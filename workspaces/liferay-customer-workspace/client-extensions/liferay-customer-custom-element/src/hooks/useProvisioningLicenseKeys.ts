@@ -5,13 +5,20 @@
 
 import {useEffect, useMemo, useState} from 'react';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
+import {IActivationKey} from '~/utils/types';
 
 import ProvisioningLicenseKeys from '../services/liferay/rest/raysource/ProvisioningLicenseKeys';
 import {getOrRequestToken} from '../services/liferay/security/auth/getOrRequestToken';
 
-const useProvisioningLicenseKeys = () => {
+const useProvisioningLicenseKeys = (
+	startDate: string,
+	endDate: string,
+	includeAll: boolean
+) => {
 	const [oAuthToken, setOAuthToken] = useState<string | null>(null);
 	const {provisioningServerAPI} = useAppPropertiesContext();
+	const [allLicenseKeys, setAllLicenseKeys] = useState<IActivationKey[]>([]);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchToken = async () => {
@@ -34,7 +41,36 @@ const useProvisioningLicenseKeys = () => {
 		});
 	}, [oAuthToken, provisioningServerAPI]);
 
-	return provisioningLicenseKeysService;
+	useEffect(() => {
+		if (provisioningLicenseKeysService) {
+			const fetchLicenseKeys = async () => {
+				try {
+					setLoading(true);
+
+					// This method needs to be implemented in ProvisioningLicenseKeys.ts
+					// For now, returning an empty array
+
+					const keys: IActivationKey[] = []; // await provisioningLicenseKeysService.getAllLicenseKeys(startDate, endDate, includeAll);
+					setAllLicenseKeys(keys);
+				}
+				catch (error) {
+					console.error('Error fetching license keys:', error);
+					setAllLicenseKeys([]);
+				}
+				finally {
+					setLoading(false);
+				}
+			};
+
+			fetchLicenseKeys();
+		}
+	}, [provisioningLicenseKeysService, startDate, endDate, includeAll]);
+
+	return {
+		allLicenseKeys,
+		loading,
+		provisioningLicenseKeys: provisioningLicenseKeysService,
+	};
 };
 
 export default useProvisioningLicenseKeys;

@@ -7,26 +7,44 @@ import {useEffect, useMemo, useState} from 'react';
 import {useOutletContext} from 'react-router-dom';
 import Skeleton from '~/components/Skeleton';
 import i18n from '~/utils/I18n';
+import {IAccountSubscription, IAccountSubscriptionGroup} from '~/utils/types';
 
 import AccountSubscriptionsList from './components/AccountSubscriptionsList/AccountSubscriptionsList';
 import SubscriptionsNavbar from './components/SubscriptionsNavbar/SubscriptionsNavbar';
 import useAccountSubscriptionGroups from './hooks/useAccountSubscriptionGroups';
 import useAccountSubscriptions from './hooks/useAccountSubscriptions';
 
-const SubscriptionsOverview = ({koroneikiAccount, loading}) => {
-	const [selectedItemIndex, setSelectedItemIndex] = useState(0);
+interface IKoroneikiAccount {
+	accountKey: string;
+}
 
-	const {setHasSideMenu} = useOutletContext();
+interface IOutletContext {
+	setHasSideMenu: (hasSideMenu: boolean) => void;
+}
+
+interface IProps {
+	koroneikiAccount: IKoroneikiAccount;
+	loading: boolean;
+}
+
+const SubscriptionsOverview = ({koroneikiAccount, loading}: IProps) => {
+	const [selectedItemIndex, setSelectedItemIndex] = useState(0);
+	const [lastAccountSubscriptionGroup, setLastAccountSubscriptionGroup] =
+		useState<IAccountSubscriptionGroup | undefined>(undefined);
+
+	const {setHasSideMenu} = useOutletContext<IOutletContext>();
 	const [
-		{lastAccountSubcriptionGroup, setLastAccountSubscriptionGroup},
+		_setLastAccountSubscriptionGroup,
 		{
 			data: accountSubscriptionGroupsData,
 			loading: accountSubscriptionGroupsLoading,
 		},
 	] = useAccountSubscriptionGroups(koroneikiAccount?.accountKey, loading);
 
-	const accountSubscriptionGroups =
-		accountSubscriptionGroupsData?.c.accountSubscriptionGroups;
+	const accountSubscriptionGroups:
+		| {items: IAccountSubscriptionGroup[]}
+		| undefined =
+		accountSubscriptionGroupsData?.c?.accountSubscriptionGroups;
 
 	const translatedSubscriptionGroups = useMemo(() => {
 		const items = accountSubscriptionGroups?.items;
@@ -53,19 +71,19 @@ const SubscriptionsOverview = ({koroneikiAccount, loading}) => {
 		setLastSubscriptionStatus,
 		{data: accountSubscriptionsData, loading: accountSubscriptionsLoading},
 	] = useAccountSubscriptions(
-		lastAccountSubcriptionGroup,
+		lastAccountSubscriptionGroup,
 		accountSubscriptionGroupsLoading
 	);
 
-	const accountSubscriptions =
-		accountSubscriptionsData?.c.accountSubscriptions.items;
+	const accountSubscriptions: IAccountSubscription[] | undefined =
+		accountSubscriptionsData?.c?.accountSubscriptions?.items;
 
 	useEffect(() => {
 		setHasSideMenu(true);
 	}, [setHasSideMenu]);
 
-	const handleDropdownOnClick = (selectedStatus) =>
-		setLastSubscriptionStatus(selectedStatus);
+	const handleDropdownOnClick = (selectedStatus: string[] | undefined) =>
+		setLastSubscriptionStatus(selectedStatus ?? []);
 
 	const subscriptionsGroupSelected =
 		translatedSubscriptionGroups?.[selectedItemIndex]?.name;
@@ -77,35 +95,43 @@ const SubscriptionsOverview = ({koroneikiAccount, loading}) => {
 			{accountSubscriptionGroupsLoading ? (
 				<Skeleton className="mb-4 pb-2" height={35} width={200} />
 			) : (
-				!accountSubscriptionGroups?.hasPartnership && (
+				!accountSubscriptionGroups?.items.some(
+					(group) => group.hasPartnership
+				) && (
 					<h3 className="mb-4 pb-2">
 						{i18n.translate('subscriptions')}
 					</h3>
 				)
 			)}
 
-			{!!lastAccountSubcriptionGroup && (
+			{!!lastAccountSubscriptionGroup && (
 				<>
 					<SubscriptionsNavbar
-						accountSubscriptionGroups={translatedSubscriptionGroups}
+						accountSubscriptionGroups={
+							translatedSubscriptionGroups ?? []
+						}
 						disabled={accountSubscriptionsLoading}
 						loading={accountSubscriptionGroupsLoading}
 						onClickDropdownItem={handleDropdownOnClick}
-						onSelectNavItem={setLastAccountSubscriptionGroup}
+						onSelectNavItem={(index: number) =>
+							setLastAccountSubscriptionGroup(
+								translatedSubscriptionGroups?.[index]
+							)
+						}
 						selectedItemIndex={selectedItemIndex}
 						setSelectedItemIndex={setSelectedItemIndex}
 					/>
 
 					<AccountSubscriptionsList
 						IsPortalOrDXP={portalOrDXPSubscriptions.includes(
-							subscriptionsGroupSelected
+							subscriptionsGroupSelected ?? ''
 						)}
-						accountKey={koroneikiAccount?.accountKey}
-						accountSubscriptionGroup={lastAccountSubcriptionGroup}
-						accountSubscriptions={accountSubscriptions}
+						accountKey={koroneikiAccount?.accountKey ?? ''}
+						accountSubscriptionGroup={lastAccountSubscriptionGroup}
+						accountSubscriptions={accountSubscriptions ?? []}
 						loading={accountSubscriptionsLoading}
 						selectedAccountSubscriptionGroup={
-							lastAccountSubcriptionGroup
+							lastAccountSubscriptionGroup
 						}
 					/>
 				</>

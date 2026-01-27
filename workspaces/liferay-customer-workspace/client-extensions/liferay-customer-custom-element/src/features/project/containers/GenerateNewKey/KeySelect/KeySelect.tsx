@@ -4,15 +4,22 @@
  */
 
 import {ClayInput} from '@clayui/form';
-import i18n from '~/utils/I18n';
 import {Select} from '~/components';
+import i18n from '~/utils/I18n';
+
+interface KeySelectProps {
+	avaliableKeysMaximumCount: number;
+	isRenew: boolean;
+	minAvaliableKeysCount: number;
+	selectedClusterNodes: string; // Assuming selectedClusterNodes is a string from input
+}
 
 const KeySelect = ({
 	avaliableKeysMaximumCount,
 	isRenew,
 	minAvaliableKeysCount,
 	selectedClusterNodes,
-}) => {
+}: KeySelectProps) => {
 	const emptyOption = {
 		disabled: true,
 		label: i18n.translate('select-the-option'),
@@ -20,7 +27,7 @@ const KeySelect = ({
 	};
 
 	const options = [...Array(minAvaliableKeysCount)].map((_, index) => ({
-		label: index + 1,
+		label: (index + 1).toString(),
 		value: index + 1,
 	}));
 
@@ -42,7 +49,7 @@ const KeySelect = ({
 				<div className="font-weight-normal h6 ml-3 mt-1">
 					{i18n.sub(
 						'cluster-nodes-may-not-exceed-the-maximum-number-of-x',
-						[avaliableKeysMaximumCount]
+						[avaliableKeysMaximumCount.toString()]
 					)}
 				</div>
 			</ClayInput.GroupItem>

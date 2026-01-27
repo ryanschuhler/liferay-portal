@@ -16,13 +16,18 @@ import {
 } from '~/services/liferay/rest/raysource/LicenseKeys';
 import downloadFromBlob from '~/utils/downloadFromBlob';
 
+interface ISelectedKey {
+	productName: string;
+	productVersion: string;
+}
+
 export async function downloadActivationLicenseKey(
-	licenseKey,
-	oAuthToken,
-	provisioningServerAPI,
-	activationKeyName,
-	activationKeyVersion,
-	projectName
+	licenseKey: string,
+	oAuthToken: string,
+	provisioningServerAPI: string,
+	activationKeyName: string,
+	activationKeyVersion: string,
+	projectName: string
 ) {
 	const license = await getActivationDownloadKey(
 		licenseKey,
@@ -32,7 +37,10 @@ export async function downloadActivationLicenseKey(
 
 	if (license.status === STATUS_CODE.success) {
 		const contentType = license.headers.get('content-type');
-		const extensionFile = EXTENSION_FILE_TYPES[contentType] || '.txt';
+		const extensionFile =
+			EXTENSION_FILE_TYPES[
+				contentType as keyof typeof EXTENSION_FILE_TYPES
+			] || '.txt';
 		const licenseBlob = await license.blob();
 
 		const projectFileName = projectName.replaceAll(' ', '').toLowerCase();
@@ -50,11 +58,11 @@ export async function downloadActivationLicenseKey(
 }
 
 export async function downloadAggregatedActivationKey(
-	selectedKeysIDs,
-	oAuthToken,
-	provisioningServerAPI,
-	selectedKeysObjects,
-	projectName
+	selectedKeysIDs: string,
+	oAuthToken: string,
+	provisioningServerAPI: string,
+	selectedKeysObjects: ISelectedKey[],
+	projectName: string
 ) {
 	const license = await getAggregatedActivationDownloadKey(
 		selectedKeysIDs,
@@ -66,7 +74,10 @@ export async function downloadAggregatedActivationKey(
 	const DIFFERENT_AGGREGATED_VERSIONS = 'multiple-versions';
 
 	const aggregatedNamesAndVersions = selectedKeysObjects.reduce(
-		(selectedKeysAccumulator, selectedKeysObject) => {
+		(
+			selectedKeysAccumulator: ISelectedKey,
+			selectedKeysObject: ISelectedKey
+		) => {
 			if (
 				selectedKeysObject.productName !==
 				selectedKeysAccumulator.productName
@@ -100,7 +111,10 @@ export async function downloadAggregatedActivationKey(
 
 	if (license.status === STATUS_CODE.success) {
 		const contentType = license.headers.get('content-type');
-		const extensionFile = EXTENSION_FILE_TYPES[contentType] || '.txt';
+		const extensionFile =
+			EXTENSION_FILE_TYPES[
+				contentType as keyof typeof EXTENSION_FILE_TYPES
+			] || '.txt';
 		const licenseBlob = await license.blob();
 
 		return downloadFromBlob(
@@ -111,10 +125,10 @@ export async function downloadAggregatedActivationKey(
 }
 
 export async function downloadMultipleActivationKey(
-	selectedKeysIDs,
-	oAuthToken,
-	provisioningServerAPI,
-	projectName
+	selectedKeysIDs: string,
+	oAuthToken: string,
+	provisioningServerAPI: string,
+	projectName: string
 ) {
 	const license = await getMultipleActivationDownloadKey(
 		selectedKeysIDs,
@@ -126,7 +140,10 @@ export async function downloadMultipleActivationKey(
 
 	if (license.status === STATUS_CODE.success) {
 		const contentType = license.headers.get('content-type');
-		const extensionFile = EXTENSION_FILE_TYPES[contentType] || '.zip';
+		const extensionFile =
+			EXTENSION_FILE_TYPES[
+				contentType as keyof typeof EXTENSION_FILE_TYPES
+			] || '.zip';
 		const licenseBlob = await license.blob();
 
 		return downloadFromBlob(
@@ -137,9 +154,9 @@ export async function downloadMultipleActivationKey(
 }
 
 export async function downloadSelectedKeysDetails(
-	selectedKeysIDs,
-	oAuthToken,
-	provisioningServerAPI
+	selectedKeysIDs: string,
+	oAuthToken: string,
+	provisioningServerAPI: string
 ) {
 	const license = await getExportedSelectedLicenseKeys(
 		selectedKeysIDs,
@@ -149,7 +166,10 @@ export async function downloadSelectedKeysDetails(
 
 	if (license.status === STATUS_CODE.success) {
 		const contentType = license.headers.get('content-type');
-		const extensionFile = EXTENSION_FILE_TYPES[contentType] || '.txt';
+		const extensionFile =
+			EXTENSION_FILE_TYPES[
+				contentType as keyof typeof EXTENSION_FILE_TYPES
+			] || '.txt';
 		const licenseBlob = await license.blob();
 
 		return downloadFromBlob(licenseBlob, `activation-keys${extensionFile}`);
@@ -157,10 +177,10 @@ export async function downloadSelectedKeysDetails(
 }
 
 export async function downloadAllKeysDetails(
-	accountKey,
-	oAuthToken,
-	provisioningServerAPI,
-	productName
+	accountKey: string,
+	oAuthToken: string,
+	provisioningServerAPI: string,
+	productName: string
 ) {
 	const license = await getExportedLicenseKeys(
 		accountKey,
@@ -171,7 +191,10 @@ export async function downloadAllKeysDetails(
 
 	if (license.status === STATUS_CODE.success) {
 		const contentType = license.headers.get('content-type');
-		const extensionFile = EXTENSION_FILE_TYPES[contentType] || '.txt';
+		const extensionFile =
+			EXTENSION_FILE_TYPES[
+				contentType as keyof typeof EXTENSION_FILE_TYPES
+			] || '.txt';
 		const licenseBlob = await license.blob();
 
 		return downloadFromBlob(licenseBlob, `activation-keys${extensionFile}`);

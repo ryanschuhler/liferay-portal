@@ -4,21 +4,30 @@
  */
 
 import {useEffect, useState} from 'react';
-import {useGetMyUserAccount} from '~/services/liferay/graphql/user-accounts';
+import ActivationKeysTable from '~/features/project/containers/ActivationKeysTable';
 import RenewTableFooter from '~/features/project/containers/ActivationKeysTable/components/RenewTableFooter';
 import {hasAdminUserAccount} from '~/features/project/containers/ActivationKeysTable/utils/hasAdminUserAccount';
-import ActivationKeysTable from '~/features/project/containers/ActivationKeysTable';
 import {useAppContext} from '~/features/project/context';
+import {useGetMyUserAccount} from '~/services/liferay/graphql/user-accounts';
 import {getOrRequestToken} from '~/services/liferay/security/auth/getOrRequestToken';
+import {IActivationKey, IProject} from '~/utils/types';
 
-import './RenewTable.css';
+interface IProps {
+	hasComplimentaryKey: boolean;
+	isDXPTable: boolean;
+	isRenewTable: boolean;
+}
 
-const RenewTable = ({hasComplimentaryKey, isDXPTable, isRenewTable}) => {
+const RenewTable = ({
+	hasComplimentaryKey,
+	isDXPTable,
+	isRenewTable,
+}: IProps) => {
 	const productName = isDXPTable ? 'DXP' : 'Portal';
 
 	const [{project}] = useAppContext();
 	const {data: myAccount} = useGetMyUserAccount();
-	const [oAuthToken, setOAuthToken] = useState();
+	const [oAuthToken, setOAuthToken] = useState<string | undefined>();
 
 	const isAdminUserAccount = hasAdminUserAccount(myAccount);
 
@@ -32,9 +41,12 @@ const RenewTable = ({hasComplimentaryKey, isDXPTable, isRenewTable}) => {
 		fetchToken();
 	}, []);
 
-	const [keysSelectedCount, setKeysSelectedCount] = useState('');
-	const [activationKeysChecked, setActivationKeysChecked] = useState('');
-	const [renewKeysFilterChecked, setRenewKeysFilterChecked] = useState('');
+	const [keysSelectedCount, setKeysSelectedCount] = useState<number>(0);
+	const [activationKeysChecked, setActivationKeysChecked] = useState<
+		IActivationKey[]
+	>([]);
+	const [renewKeysFilterChecked, setRenewKeysFilterChecked] =
+		useState<string>('');
 
 	const initialFilter = isDXPTable
 		? "(startswith(productName,'DXP') or startswith(productName,'Digital'))"
@@ -46,9 +58,9 @@ const RenewTable = ({hasComplimentaryKey, isDXPTable, isRenewTable}) => {
 				hasComplimentaryKey={hasComplimentaryKey}
 				initialFilter={initialFilter}
 				isRenewTable={isRenewTable}
-				oAuthToken={oAuthToken}
+				oAuthToken={oAuthToken ?? ''}
 				productName={productName}
-				project={project}
+				project={project as IProject}
 				setActivationKeysChecked={setActivationKeysChecked}
 				setKeysSelectedCount={setKeysSelectedCount}
 				setRenewKeysFilterChecked={setRenewKeysFilterChecked}
@@ -60,7 +72,7 @@ const RenewTable = ({hasComplimentaryKey, isDXPTable, isRenewTable}) => {
 				isRenewTable={isRenewTable}
 				keysSelectedCount={keysSelectedCount}
 				productName={productName}
-				project={project}
+				project={project as IProject}
 				renewKeysFilterChecked={renewKeysFilterChecked}
 			/>
 		</div>

@@ -9,34 +9,34 @@ import isAccountAdministrator from '~/utils/isAccountAdministrator';
 import isSupportSeatRole from '~/utils/isSupportSeatRole';
 
 export default function useMyUserAccountByAccountExternalReferenceCode(
-	externalReferenceCode,
-	koroneikiAccountLoading
+	externalReferenceCode: string,
+	koroneikiAccountLoading: boolean
 ) {
-	const {data, loading} = useGetMyUserAccount({
+	const {data, loading}: any = useGetMyUserAccount({
 		skip: koroneikiAccountLoading,
 	});
 
-	const selectedAccountSummary = useMemo(
+	const selectedAccountSummary: any = useMemo(
 		() =>
 			data?.myUserAccount?.accountBriefs?.find(
-				(accountBrief) =>
+				(accountBrief: any) =>
 					accountBrief?.externalReferenceCode ===
 					externalReferenceCode
 			),
 		[data?.myUserAccount?.accountBriefs, externalReferenceCode]
 	);
 
-	const hasAdministratorRole = useMemo(
+	const hasAdministratorRole: boolean = useMemo(
 		() =>
-			selectedAccountSummary?.roleBriefs?.some(({name}) =>
+			selectedAccountSummary?.roleBriefs?.some(({name}: any) =>
 				isAccountAdministrator(name)
 			),
 		[selectedAccountSummary?.roleBriefs]
 	);
 
-	const hasSupportSeatRole = useMemo(
+	const hasSupportSeatRole: boolean = useMemo(
 		() =>
-			selectedAccountSummary?.roleBriefs?.some(({name}) =>
+			selectedAccountSummary?.roleBriefs?.some(({name}: any) =>
 				isSupportSeatRole(name)
 			),
 		[selectedAccountSummary?.roleBriefs]

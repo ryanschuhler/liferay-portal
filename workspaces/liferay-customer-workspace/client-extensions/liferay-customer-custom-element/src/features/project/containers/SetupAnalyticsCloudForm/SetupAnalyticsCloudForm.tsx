@@ -3,12 +3,19 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {useQuery} from '@apollo/client';
+import {ApolloClient, NormalizedCacheObject, useQuery} from '@apollo/client';
 import ClayForm, {ClayCheckbox} from '@clayui/form';
-import {FieldArray, Formik} from 'formik';
+import {
+	FieldArray,
+	Formik,
+	FormikErrors,
+	FormikTouched,
+	FormikValues,
+} from 'formik';
 import {useEffect, useMemo, useState} from 'react';
 import {Button, Input, Select} from '~/components';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
+import {IContact} from '~/features/project/types';
 import {
 	STATUS_CODE,
 	STATUS_TAG_TYPE_NAMES,
@@ -45,15 +52,115 @@ import {
 
 import Layout from '../../../../components/FormLayout';
 import SetupHighPriorityContactForm from '../HighPriorityContacts/SetupHighPriorityContact';
-import IncidentReportInput from './IncidentReportInput';
 
-const BLANK_TEXT = '< none >';
-const FETCH_DELAY_AFTER_TYPING = 500;
-const INITIAL_SETUP_ADMIN_COUNT = 1;
+interface IncidentReportContact {
+	email: string;
+}
+
+const BLANK_TEXT = '';
 const MAX_LENGTH = 255;
+const INITIAL_SETUP_ADMIN_COUNT = 0;
 
-const getAnalyticsCloudSubmittedStatus = async (client, accountKey) => {
-	const {data} = await client.query({
+interface ActivationValues {
+	allowedEmailDomains: string;
+	dataCenterLocation: string;
+	disasterDataCenterLocation: string;
+	incidentReportContact: IncidentReportContact[];
+	ownerEmailAddress: string;
+	timeZone: string;
+	workspaceFriendlyUrl: string;
+	workspaceName: string;
+	workspaceURL: string;
+}
+
+interface FormikInitialValues {
+	activations: ActivationValues;
+}
+
+interface IProject {
+	accountKey: string;
+	code?: string;
+	id: string;
+	name: string;
+	salesforceAccountKey?: string;
+	salesforceProjectKey?: string;
+}
+
+interface SetupAnalyticsCloudPageProps {
+	client: ApolloClient<NormalizedCacheObject>;
+	errors: FormikErrors<FormikInitialValues>;
+	handlePage: (success?: boolean) => void;
+	leftButton: string;
+	project: IProject;
+	setFieldValue: (
+		field: string,
+		value: any,
+		shouldValidate?: boolean
+	) => Promise<FormikErrors<FormikInitialValues> | undefined>;
+	setFormAlreadySubmitted: React.Dispatch<React.SetStateAction<boolean>>;
+	subscriptionGroupId: string;
+	touched: FormikTouched<FormikInitialValues>;
+	values: FormikInitialValues;
+}
+
+interface SetupAnalyticsCloudFormProps {
+	client: ApolloClient<NormalizedCacheObject>;
+	handlePage: (success?: boolean) => void;
+	leftButton: string;
+	project: IProject;
+	setFormAlreadySubmitted: React.Dispatch<React.SetStateAction<boolean>>;
+	subscriptionGroupId: string;
+}
+
+interface IAnalyticsCloudWorkspace {
+	accountKey: string;
+	allowedEmailDomains: string;
+	dataCenterLocation: string;
+	id: string;
+	ownerEmailAddress: string;
+	timeZone: string;
+	workspaceFriendlyUrl: string;
+	workspaceName: string;
+}
+
+interface IGetAnalyticsCloudWorkspaceData {
+	c: {
+		analyticsCloudWorkspaces: {
+			items: IAnalyticsCloudWorkspace[];
+		};
+	};
+}
+
+interface IAnalyticsCloudDataCenterLocation {
+	name: string;
+}
+
+interface IAccountSubscription {
+	hasDisasterDataCenterRegion: boolean;
+}
+
+interface IGetAnalyticsCloudPageInfoData {
+	c: {
+		accountSubscriptions: {
+			items: IAccountSubscription[];
+		};
+		analyticsCloudDataCenterLocations: {
+			items: IAnalyticsCloudDataCenterLocation[];
+		};
+	};
+}
+
+interface IAddAnalyticsCloudWorkspaceData {
+	createAnalyticsCloudWorkspace: {
+		id: string;
+	};
+}
+
+const getAnalyticsCloudSubmittedStatus = async (
+	client: ApolloClient<NormalizedCacheObject>,
+	accountKey: string
+) => {
+	const {data} = await client.query<IGetAnalyticsCloudWorkspaceData>({
 		query: getAnalyticsCloudWorkspace,
 		variables: {
 			filter: SearchBuilder.eq('accountKey', accountKey),
@@ -74,18 +181,21 @@ const SetupAnalyticsCloudPage = ({
 	subscriptionGroupId,
 	touched,
 	values,
-}) => {
-	const [isLoadingSubmitButton, setIsLoadingSubmitButton] = useState(false);
-	const [baseButtonDisabled, setBaseButtonDisabled] = useState(true);
-	const [addHighPriorityContact, setAddHighPriorityContact] = useState([]);
+}: SetupAnalyticsCloudPageProps) => {
+	const [isLoadingSubmitButton, setIsLoadingSubmitButton] =
+		useState<boolean>(false);
+	const [baseButtonDisabled, setBaseButtonDisabled] = useState<boolean>(true);
+	const [addHighPriorityContact, setAddHighPriorityContact] = useState<
+		IContact[]
+	>([]);
 	const [termAndConditionsChecked, setTermAndConditionsChecked] =
-		useState(false);
-	const [removeHighPriorityContact, setRemoveHighPriorityContact] = useState(
-		[]
-	);
+		useState<boolean>(false);
+	const [removeHighPriorityContact, setRemoveHighPriorityContact] = useState<
+		IContact[]
+	>([]);
 	const [currentHighPriorityContacts, setCurrentHighPriorityContacts] =
-		useState([]);
-	const [step, setStep] = useState(1);
+		useState<IContact[]>([]);
+	const [step, setStep] = useState<number>(1);
 
 	const handlePreviousStep = () => {
 		setStep(step - 1);
@@ -94,34 +204,38 @@ const SetupAnalyticsCloudPage = ({
 	const handleNextStep = () => {
 		setStep(step + 1);
 	};
-	const [isMultiSelectEmpty, setIsMultiSelectEmpty] = useState(false);
+	const [isMultiSelectEmpty, setIsMultiSelectEmpty] =
+		useState<boolean>(false);
 
 	const bannedDomainsOwnerEmail = useBannedDomains(
-		values?.activations?.ownerEmailAddress,
-		FETCH_DELAY_AFTER_TYPING
+		values?.activations?.ownerEmailAddress
 	);
 
 	const bannedDomainsAllowedDomains = useBannedDomains(
-		values?.activations?.allowedEmailDomains,
-		FETCH_DELAY_AFTER_TYPING
+		values?.activations?.allowedEmailDomains
 	);
 
 	useEffect(() => {}, [values?.activations?.allowedEmailDomains]);
 
-	const {data} = useQuery(getAnalyticsCloudPageInfo, {
-		variables: {
-			accountSubscriptionsFilter: `(accountKey eq '${project?.accountKey}') and (hasDisasterDataCenterRegion eq true)`,
-		},
-	});
+	const {data} = useQuery<IGetAnalyticsCloudPageInfoData>(
+		getAnalyticsCloudPageInfo,
+		{
+			variables: {
+				accountSubscriptionsFilter: `(accountKey eq '${project?.accountKey}') and (hasDisasterDataCenterRegion eq true)`,
+			},
+		}
+	);
 
 	const {featureFlags, provisioningServerAPI} = useAppPropertiesContext();
 
 	const analyticsDataCenterLocations = useMemo(
 		() =>
-			data?.c?.analyticsCloudDataCenterLocations?.items.map(({name}) => ({
-				label: i18n.translate(getKebabCase(name)),
-				value: name,
-			})) || [],
+			data?.c?.analyticsCloudDataCenterLocations?.items.map(
+				({name}: IAnalyticsCloudDataCenterLocation) => ({
+					label: i18n.translate(getKebabCase(name)),
+					value: name,
+				})
+			) || [],
 		[data]
 	);
 
@@ -147,13 +261,13 @@ const SetupAnalyticsCloudPage = ({
 		const hasTouched = !Object.keys(touched).length;
 		const hasError = Object.keys(errors).length;
 
-		setBaseButtonDisabled(hasTouched || hasError);
+		setBaseButtonDisabled(hasTouched || hasError > 0);
 	}, [touched, errors]);
 
 	const emailsCriticalIncident = currentHighPriorityContacts
 		.concat(addHighPriorityContact)
 		.filter(
-			(contact) =>
+			(contact: IContact) =>
 				!removeHighPriorityContact.some(
 					({email}) => email === contact.email
 				)
@@ -176,27 +290,31 @@ const SetupAnalyticsCloudPage = ({
 		}
 
 		const handleDataSubmit = async () => {
-			const {data} = await client.mutate({
-				context: {
-					displaySuccess: false,
-					type: 'liferay-rest',
-				},
-				mutation: addAnalyticsCloudWorkspace,
-				variables: {
-					analyticsCloudWorkspace: {
-						accountKey: project.accountKey,
-						allowedEmailDomains: analyticsCloud.allowedEmailDomains,
-						dataCenterLocation: analyticsCloud.dataCenterLocation,
-						ownerEmailAddress: analyticsCloud.ownerEmailAddress,
-						r_accountEntryToAnalyticsCloudWorkspace_accountEntryId:
-							project?.id,
-						timeZone: analyticsCloud.timeZone,
-						workspaceFriendlyUrl:
-							analyticsCloud.workspaceFriendlyUrl,
-						workspaceName: analyticsCloud.workspaceName,
+			const {data} = await client.mutate<IAddAnalyticsCloudWorkspaceData>(
+				{
+					context: {
+						displaySuccess: false,
+						type: 'liferay-rest',
 					},
-				},
-			});
+					mutation: addAnalyticsCloudWorkspace,
+					variables: {
+						analyticsCloudWorkspace: {
+							accountKey: project.accountKey,
+							allowedEmailDomains:
+								analyticsCloud.allowedEmailDomains,
+							dataCenterLocation:
+								analyticsCloud.dataCenterLocation,
+							ownerEmailAddress: analyticsCloud.ownerEmailAddress,
+							r_accountEntryToAnalyticsCloudWorkspace_accountEntryId:
+								project?.id,
+							timeZone: analyticsCloud.timeZone,
+							workspaceFriendlyUrl:
+								analyticsCloud.workspaceFriendlyUrl,
+							workspaceName: analyticsCloud.workspaceName,
+						},
+					},
+				}
+			);
 
 			if (data) {
 				const analyticsCloudWorkspaceId =
@@ -222,7 +340,7 @@ const SetupAnalyticsCloudPage = ({
 				if (!featureFlags.includes('LPS-159127')) {
 					await Promise.all(
 						analyticsCloud?.incidentReportContact?.map(
-							({email}) => {
+							({email}: IncidentReportContact) => {
 								return client.mutate({
 									context: {
 										displaySuccess: false,
@@ -267,7 +385,7 @@ const SetupAnalyticsCloudPage = ({
 								BLANK_TEXT,
 							'[%AC_WORKSPACE_NAME%]':
 								analyticsCloud.workspaceName,
-							'[%PROJECT_ID%]': project?.code,
+							'[%PROJECT_ID%]': project?.code || BLANK_TEXT,
 							'[%PROJECT_SALESFORCE_ACCOUNT_LINK%]':
 								project?.salesforceAccountKey
 									? 'https://liferay.lightning.force.com/lightning/r/Account/' +
@@ -296,24 +414,24 @@ const SetupAnalyticsCloudPage = ({
 					await updateRaysourceContact(
 						addContactRoleRaysource,
 						addHighPriorityContact,
-						oAuthToken,
-						project,
+						oAuthToken as string,
+						project as any,
 						provisioningServerAPI
 					);
 
 					await updateLiferayContact(
 						addHighPriorityContact,
 						addContactRoleLiferay,
-						project,
+						project as any,
 						client
 					);
 				}
-				catch (error) {
+				catch (error: any) {
 					if (error.cause === STATUS_CODE.conflict) {
 						await updateLiferayContact(
 							addHighPriorityContact,
 							addContactRoleLiferay,
-							project,
+							project as any,
 							client
 						);
 					}
@@ -325,20 +443,20 @@ const SetupAnalyticsCloudPage = ({
 				await updateRaysourceContact(
 					removeContactRoleRaysource,
 					removeHighPriorityContact,
-					oAuthToken,
-					project,
+					oAuthToken as string,
+					project as any,
 					provisioningServerAPI
 				);
 
 				await updateLiferayContact(
 					removeHighPriorityContact,
 					removeContactRoleLiferay,
-					project,
+					project as any,
 					client
 				);
 			}
 
-			handleDataSubmit();
+			await handleDataSubmit();
 			setIsLoadingSubmitButton(false);
 
 			handlePage(true);
@@ -354,7 +472,7 @@ const SetupAnalyticsCloudPage = ({
 		step === 1 ? handlePage(false) : handlePreviousStep();
 	};
 
-	const updateMultiSelectEmpty = (error) => {
+	const updateMultiSelectEmpty = (error: boolean) => {
 		setIsMultiSelectEmpty(error);
 	};
 
@@ -428,11 +546,9 @@ const SetupAnalyticsCloudPage = ({
 											required
 											type="email"
 											validations={[
-												(value) =>
-													isValidEmail(
-														value,
-														bannedDomainsOwnerEmail
-													),
+												isValidEmail(
+													bannedDomainsOwnerEmail
+												),
 											]}
 										/>
 
@@ -446,7 +562,7 @@ const SetupAnalyticsCloudPage = ({
 											required
 											type="text"
 											validations={[
-												(value) =>
+												(value: string) =>
 													maxLength(
 														value,
 														MAX_LENGTH
@@ -459,7 +575,9 @@ const SetupAnalyticsCloudPage = ({
 											helper={i18n.translate(
 												'select-a-server-location-for-your-data-to-be-stored'
 											)}
-											key={analyticsDataCenterLocations}
+											key={
+												analyticsDataCenterLocations.length
+											}
 											label={i18n.translate(
 												'data-center-location'
 											)}
@@ -496,7 +614,7 @@ const SetupAnalyticsCloudPage = ({
 											placeholder="/myurl"
 											type="text"
 											validations={[
-												(value) =>
+												(value: string) =>
 													isValidFriendlyURL(value),
 											]}
 										/>
@@ -513,10 +631,9 @@ const SetupAnalyticsCloudPage = ({
 											placeholder="@mycompany.com"
 											type="text"
 											validations={[
-												() =>
-													isValidEmailDomain(
-														bannedDomainsAllowedDomains
-													),
+												isValidEmailDomain(
+													bannedDomainsAllowedDomains
+												),
 											]}
 										/>
 
@@ -536,20 +653,14 @@ const SetupAnalyticsCloudPage = ({
 												checked={
 													termAndConditionsChecked
 												}
-												label={
-													<div
-														dangerouslySetInnerHTML={{
-															__html: i18n.sub(
-																'by-checking-this-box-and-clicking-next-below-i-as-an-authorized-representative-of-x-acknowledge-that-x-accepts-the-x-terms-and-conditions-and-privacy-policy-x-these-terms-will-govern-x-s-use-of-liferay-analytics-cloud-unless-x-has-entered-into-a-separate-agreement-with-liferay-that-governs-x-s-use-of-liferay-analytics-cloud',
-																[
-																	project.name,
-																	'<a href="https://www.liferay.com/documents/d/guest/1012410" rel="noreferrer noopener" target="_blank">',
-																	'</a>',
-																]
-															),
-														}}
-													/>
-												}
+												label={i18n.sub(
+													'by-checking-this-box-and-clicking-next-below-i-as-an-authorized-representative-of-x-acknowledge-that-x-accepts-the-x-terms-and-conditions-and-privacy-policy-x-these-terms-will-govern-x-s-use-of-liferay-analytics-cloud-unless-x-has-entered-into-a-separate-agreement-with-liferay-that-governs-x-s-use-of-liferay-analytics-cloud',
+													[
+														project.name,
+														'<a href="https://www.liferay.com/documents/d/guest/1012410" rel="noreferrer noopener" target="_blank">',
+														'</a>',
+													]
+												)}
 												onChange={() =>
 													setTermAndConditionsChecked(
 														(
@@ -572,9 +683,9 @@ const SetupAnalyticsCloudPage = ({
 						<SetupHighPriorityContactForm
 							addContactList={setAddHighPriorityContact}
 							currentHighPriorityContacts={
-								setCurrentHighPriorityContacts
+								setCurrentHighPriorityContacts as any
 							}
-							disableSubmit={updateMultiSelectEmpty}
+							disableSubmit={updateMultiSelectEmpty as any}
 							filter={
 								HIGH_PRIORITY_CONTACT_CATEGORIES.criticalIncident
 							}
@@ -638,11 +749,7 @@ const SetupAnalyticsCloudPage = ({
 								required
 								type="email"
 								validations={[
-									(value) =>
-										isValidEmail(
-											value,
-											bannedDomainsOwnerEmail
-										),
+									isValidEmail(bannedDomainsOwnerEmail),
 								]}
 							/>
 
@@ -654,7 +761,8 @@ const SetupAnalyticsCloudPage = ({
 								required
 								type="text"
 								validations={[
-									(value) => maxLength(value, MAX_LENGTH),
+									(value: string) =>
+										maxLength(value, MAX_LENGTH),
 								]}
 							/>
 
@@ -663,7 +771,7 @@ const SetupAnalyticsCloudPage = ({
 								helper={i18n.translate(
 									'select-a-server-location-for-your-data-to-be-stored'
 								)}
-								key={analyticsDataCenterLocations}
+								key={analyticsDataCenterLocations.length}
 								label={i18n.translate('data-center-location')}
 								name="activations.dataCenterLocation"
 								options={analyticsDataCenterLocations}
@@ -692,7 +800,8 @@ const SetupAnalyticsCloudPage = ({
 								placeholder="/myurl"
 								type="text"
 								validations={[
-									(value) => isValidFriendlyURL(value),
+									(value: string) =>
+										isValidFriendlyURL(value),
 								]}
 							/>
 
@@ -706,10 +815,9 @@ const SetupAnalyticsCloudPage = ({
 								placeholder="@mycompany.com"
 								type="text"
 								validations={[
-									() =>
-										isValidEmailDomain(
-											bannedDomainsAllowedDomains
-										),
+									isValidEmailDomain(
+										bannedDomainsAllowedDomains
+									),
 								]}
 							/>
 
@@ -727,20 +835,14 @@ const SetupAnalyticsCloudPage = ({
 							<div className="ml-3">
 								<ClayCheckbox
 									checked={termAndConditionsChecked}
-									label={
-										<div
-											dangerouslySetInnerHTML={{
-												__html: i18n.sub(
-													'by-checking-this-box-and-clicking-submit-below-i-as-an-authorized-representative-of-x-acknowledge-that-x-accepts-the-x-terms-and-conditions-and-privacy-policy-x-these-terms-will-govern-x-s-use-of-liferay-analytics-cloud-unless-x-has-entered-into-a-separate-agreement-with-liferay-that-governs-x-s-use-of-liferay-analytics-cloud',
-													[
-														project.name,
-														'<a href="https://www.liferay.com/documents/d/guest/1012410" rel="noreferrer noopener" target="_blank">',
-														'</a>',
-													]
-												),
-											}}
-										/>
-									}
+									label={i18n.sub(
+										'by-checking-this-box-and-clicking-submit-below-i-as-an-authorized-representative-of-x-acknowledge-that-x-accepts-the-x-terms-and-conditions-and-privacy-policy-x-these-terms-will-govern-x-s-use-of-liferay-analytics-cloud-unless-x-has-entered-into-a-separate-agreement-with-liferay-that-governs-x-s-use-of-liferay-analytics-cloud',
+										[
+											project.name,
+											'<a href="https://www.liferay.com/documents/d/guest/1012410" rel="noreferrer noopener" target="_blank">',
+											'</a>',
+										]
+									)}
 									onChange={() =>
 										setTermAndConditionsChecked(
 											(
@@ -754,19 +856,16 @@ const SetupAnalyticsCloudPage = ({
 
 							<ClayForm.Group>
 								{values?.activations?.incidentReportContact?.map(
-									(activation, index) => (
-										<IncidentReportInput
-											activation={activation}
-											id={index}
-											key={index}
-										/>
-									)
+									(
+										activation: IncidentReportContact,
+										index: number
+									) => <div key={index}></div>
 								)}
 							</ClayForm.Group>
 						</ClayForm.Group>
 
-						{values?.activations?.incidentReportContact?.length >
-							INITIAL_SETUP_ADMIN_COUNT && (
+						{(values?.activations?.incidentReportContact?.length ||
+							0) > INITIAL_SETUP_ADMIN_COUNT && (
 							<Button
 								className="ml-3 my-2 text-brandy-secondary"
 								displayType="secondary"
@@ -783,12 +882,7 @@ const SetupAnalyticsCloudPage = ({
 						<Button
 							className="btn-outline-primary ml-3 my-2 rounded-xs"
 							onClick={() => {
-								push(
-									getInitialAnalyticsInvite(
-										values?.activations
-											?.incidentReportContact
-									)
-								);
+								push(getInitialAnalyticsInvite());
 							}}
 							prependIcon="plus"
 							small
@@ -802,7 +896,7 @@ const SetupAnalyticsCloudPage = ({
 	);
 };
 
-const SetupAnalyticsCloudForm = (props) => {
+const SetupAnalyticsCloudForm = (props: SetupAnalyticsCloudFormProps) => {
 	return (
 		<Formik
 			initialValues={{
@@ -810,17 +904,19 @@ const SetupAnalyticsCloudForm = (props) => {
 					allowedEmailDomains: '',
 					dataCenterLocation: '',
 					disasterDataCenterLocation: '',
-					incidentReportContact: [getInitialAnalyticsInvite()],
+					incidentReportContact: [getInitialAnalyticsInvite() as any],
 					ownerEmailAddress: '',
 					timeZone: '',
+					workspaceFriendlyUrl: '',
 					workspaceName: '',
 					workspaceURL: '',
 				},
 			}}
+			onSubmit={() => {}}
 			validateOnChange
 		>
-			{(formikProps) => (
-				<SetupAnalyticsCloudPage {...props} {...formikProps} />
+			{(formikProps: FormikValues) => (
+				<SetupAnalyticsCloudPage {...props} {...(formikProps as any)} />
 			)}
 		</Formik>
 	);

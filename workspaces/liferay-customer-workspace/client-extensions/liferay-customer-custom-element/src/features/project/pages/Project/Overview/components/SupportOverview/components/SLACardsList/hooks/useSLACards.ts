@@ -8,7 +8,7 @@ import {useMemo} from 'react';
 import {SLA_LABELS} from '../utils/constants/slaLabels';
 import getSLACard from '../utils/getSLACard';
 
-export default function useSLACards(koroneikiAccount) {
+export default function useSLACards(koroneikiAccount: any) {
 	return useMemo(() => {
 		if (koroneikiAccount) {
 			const {
@@ -23,7 +23,7 @@ export default function useSLACards(koroneikiAccount) {
 				slaFutureStartDate,
 			} = koroneikiAccount;
 
-			const slaCards = [];
+			const slaCards: any[] = [];
 
 			if (slaCurrent) {
 				slaCards.push(

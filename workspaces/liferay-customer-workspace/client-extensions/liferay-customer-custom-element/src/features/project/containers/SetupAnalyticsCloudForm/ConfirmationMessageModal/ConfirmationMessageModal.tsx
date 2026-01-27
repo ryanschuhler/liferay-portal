@@ -3,10 +3,16 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import i18n from '~/utils/I18n';
 import {Button} from '~/components';
+import i18n from '~/utils/I18n';
 
-const ConfirmationMessageModal = ({handlePage}) => {
+interface IConfirmationMessageModalProps {
+	handlePage: (isSuccess: boolean) => void;
+}
+
+const ConfirmationMessageModal = ({
+	handlePage,
+}: IConfirmationMessageModalProps) => {
 	return (
 		<div className="d-flex flex-column p-4">
 			<div className="mb-4">

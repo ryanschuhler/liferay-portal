@@ -9,13 +9,47 @@ import classNames from 'classnames';
 import {memo} from 'react';
 import i18n from '~/utils/I18n';
 import getKebabCase from '~/utils/getKebabCase';
+
 import getStyleFromTitle from './utils/getStyleFromTitle';
 
 import './SLACard.css';
 
-const SLACard = ({active, endDate, label, last, startDate, title, unique}) => {
+interface ICurrentStyle {
+	cardStyle: {
+		[key: string]: boolean;
+	};
+	dateStyle: {
+		[key: string]: boolean;
+	};
+	labelStyle: {
+		[key: string]: boolean;
+	};
+	titleStyle: {
+		[key: string]: boolean;
+	};
+}
+
+interface IProps {
+	active: boolean;
+	endDate: string;
+	label: string;
+	last: boolean;
+	startDate: string;
+	title: string;
+	unique: boolean;
+}
+
+const SLACard = ({
+	active,
+	endDate,
+	label,
+	last,
+	startDate,
+	title,
+	unique,
+}: IProps) => {
 	const displayDate = `${startDate} - ${endDate}`;
-	const currentStyle = getStyleFromTitle(title);
+	const currentStyle: ICurrentStyle = getStyleFromTitle(title);
 
 	return (
 		<div
@@ -46,7 +80,7 @@ const SLACard = ({active, endDate, label, last, startDate, title, unique}) => {
 									'mr-0 p-0 text-small-caps',
 									currentStyle.labelStyle
 								)}
-								displayType="secundary"
+								displayType="secondary"
 							>
 								{i18n
 									.translate(getKebabCase(label))

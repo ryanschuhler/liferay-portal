@@ -4,7 +4,8 @@
  */
 
 import {useEffect, useState} from 'react';
-import {Liferay} from '~/services/liferay';
+
+declare const Liferay: any;
 
 export default function useIsTablet() {
 	const [isTablet, setIsTablet] = useState(Liferay.Util.isTablet());

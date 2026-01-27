@@ -4,20 +4,44 @@
  */
 
 import {useEffect, useMemo, useState} from 'react';
+import {IActivationKey} from '~/utils/types';
 
+import {ActivationKeysLicenseFilterType} from '../hooks/usePagination';
 import {
 	ACTIVATION_KEYS_LICENSE_FILTER_TYPES as FILTER_TYPES,
 	ACTIVATION_STATUS,
 } from '../utils/constants';
 import {getGroupButtons} from '../utils/getGroupButtons';
 
-export default function useStatusCountNavigation(activationKeys) {
-	const [statusCountNavigation, setStatusCountNavigation] = useState();
-	const [statusFilter, setStatusFilter] = useState(ACTIVATION_STATUS.all.id);
+interface IStatusCountMap {
+	activatedTotalCount: number;
+	allTotalCount: number;
+	expiredTotalCount: number;
+	notActiveTotalCount: number;
+}
+
+interface UseStatusCountNavigationReturn {
+	navigationGroupButtons: Array<{
+		label: string;
+		value: ActivationKeysLicenseFilterType;
+	}>;
+	statusfilterByTitle: [
+		ActivationKeysLicenseFilterType,
+		React.Dispatch<React.SetStateAction<ActivationKeysLicenseFilterType>>,
+	];
+}
+
+export default function useStatusCountNavigation(
+	activationKeys: IActivationKey[]
+): UseStatusCountNavigationReturn {
+	const [statusCountNavigation, setStatusCountNavigation] =
+		useState<IStatusCountMap>();
+	const [statusFilter, setStatusFilter] =
+		useState<ActivationKeysLicenseFilterType>(ACTIVATION_STATUS.all.id);
 
 	useEffect(() => {
 		if (activationKeys) {
-			const statusCountMap = {
+			const statusCountMap: IStatusCountMap = {
 				activatedTotalCount: 0,
 				allTotalCount: activationKeys.length,
 				expiredTotalCount: 0,
@@ -49,21 +73,21 @@ export default function useStatusCountNavigation(activationKeys) {
 
 	const navigationGroupButtons = useMemo(
 		() => [
-			getGroupButtons(
+			getGroupButtons<ActivationKeysLicenseFilterType>(
 				ACTIVATION_STATUS.all,
-				statusCountNavigation?.allTotalCount
+				statusCountNavigation?.allTotalCount ?? 0
 			),
-			getGroupButtons(
+			getGroupButtons<ActivationKeysLicenseFilterType>(
 				ACTIVATION_STATUS.activated,
-				statusCountNavigation?.activatedTotalCount
+				statusCountNavigation?.activatedTotalCount ?? 0
 			),
-			getGroupButtons(
+			getGroupButtons<ActivationKeysLicenseFilterType>(
 				ACTIVATION_STATUS.notActivated,
-				statusCountNavigation?.notActiveTotalCount
+				statusCountNavigation?.notActiveTotalCount ?? 0
 			),
-			getGroupButtons(
+			getGroupButtons<ActivationKeysLicenseFilterType>(
 				ACTIVATION_STATUS.expired,
-				statusCountNavigation?.expiredTotalCount
+				statusCountNavigation?.expiredTotalCount ?? 0
 			),
 		],
 		[

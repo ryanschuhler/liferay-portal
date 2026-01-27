@@ -26,20 +26,20 @@ import {
 } from '~/services/liferay/graphql/liferay-experience-cloud-environments';
 import {getLiferayExperienceCloudEnvironments} from '~/services/liferay/graphql/queries';
 import {getOrRequestToken} from '~/services/liferay/security/auth/getOrRequestToken';
+import {IProject} from '~/utils/types';
 
 export default function useSubmitLXCEnvironment(
-	handleChangeForm,
-	project,
-	setFormAlreadySubmitted,
-	addHighPriorityContactList,
-	removeHighPriorityContactList,
-	subscriptionGroupLxcId,
-	handleLoadingSubmitButton,
-	values
+	handleChangeForm: (isSuccess: boolean) => void,
+	project: IProject,
+	setFormAlreadySubmitted: (value: boolean) => void,
+	addHighPriorityContactList: any[],
+	removeHighPriorityContactList: any[],
+	subscriptionGroupLxcId: string,
+	handleLoadingSubmitButton: (isLoading: boolean) => void,
+	values: {lxc: any}
 ) {
-	const {client} = useAppPropertiesContext();
-
-	const {featureFlags, provisioningServerAPI} = useAppPropertiesContext();
+	const {client, featureFlags, provisioningServerAPI}: any =
+		useAppPropertiesContext();
 
 	const [createLiferayExperienceCloudEnvironment] =
 		useCreateLiferayExperienceCloudEnvironment();
@@ -124,7 +124,7 @@ export default function useSubmitLXCEnvironment(
 
 					await Promise.all(
 						lxcActivationFields?.admins?.map(
-							({email, fullName}) => {
+							({email, fullName}: any) => {
 								return createAdminLiferayExperienceCloud({
 									variables: {
 										AdminLiferayExperienceCloud: {
@@ -143,7 +143,7 @@ export default function useSubmitLXCEnvironment(
 
 					if (featureFlags.includes('LPS-181031')) {
 						const adminInfo = lxcActivationFields?.admins?.map(
-							({email, fullName}) => {
+							({email, fullName}: any) => {
 								const [firstName, ...lastNames] =
 									fullName.split(' ');
 								const lastName = lastNames.join(' ');
@@ -167,7 +167,7 @@ export default function useSubmitLXCEnvironment(
 								'[%DATE_AND_TIME_SUBMITTED%]':
 									new Date().toUTCString(),
 								'[%PROJECT_ADMIN%]': adminInfo.join(''),
-								'[%PROJECT_CODE%]': project.code,
+								'[%PROJECT_CODE%]': project.code || '',
 								'[%PROJECT_DATA_CENTER_REGION%]':
 									lxcActivationFields.primaryRegion,
 								'[%PROJECT_ID%]': lxcActivationFields.projectId,
@@ -203,7 +203,7 @@ export default function useSubmitLXCEnvironment(
 						client
 					);
 				}
-				catch (error) {
+				catch (error: any) {
 					if (error.cause === STATUS_CODE.conflict) {
 						await updateLiferayContact(
 							addHighPriorityContactList,

@@ -6,87 +6,117 @@
 import {ClayInput} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import {useEffect, useMemo, useState} from 'react';
+import {Input} from '~/components';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
-import useProvisioningLicenseKeys from '~/hooks/useProvisioningLicenseKeys';
 import RoleSelectorDropdown from '~/features/project/components/RoleSelectorDropdown';
 import useUserAccountsByAccountExternalReferenceCode from '~/features/project/pages/Project/TeamMembers/components/TeamMembersTable/hooks/useUserAccountsByAccountExternalReferenceCode';
-import i18n from '~/utils/I18n';
-import {Input} from '~/components';
 import useBannedDomains from '~/hooks/useBannedDomains';
+import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
+import useProvisioningLicenseKeys from '~/hooks/useProvisioningLicenseKeys';
+import i18n from '~/utils/I18n';
 import {ROLE_TYPES} from '~/utils/constants';
 import {liferayDomains} from '~/utils/constants/liferayDomains';
-import {
-	isLiferayDomain,
-	isValidEmail,
-} from '~/utils/validations.form';
+import {IAccountRole} from '~/utils/types';
+import {isLiferayDomain, isValidEmail} from '~/utils/validations.form';
 
-const FETCH_DELAY_AFTER_TYPING = 500;
-const partnerMemberRoles = [
-	ROLE_TYPES.partnerMarketingUser.key,
-	ROLE_TYPES.partnerSalesUser.key,
-	ROLE_TYPES.partnerTechnicalUser.key,
-];
+interface IKoroneikiAccountData {
+	koroneikiAccountByExternalReferenceCode: {
+		accountKey: string;
+	};
+}
+
+interface TeamMemberInputsProps {
+	administratorsAssetsAvailable: number;
+	disableError: any;
+	errors?: any;
+	id: number;
+	invite: any;
+	options: any[];
+	placeholderEmail: string;
+	selectOnChange: (roleSelected: any) => void;
+	setRoleSelectorFilled: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface IRadioOptions {
+	partnerMemberRoles: {
+		active: boolean;
+		roles: any[];
+	};
+	[key: string]: any;
+}
 
 const TeamMemberInputs = ({
 	administratorsAssetsAvailable,
 	disableError,
-	errors,
+	errors = {},
 	id,
 	invite,
 	options,
 	placeholderEmail,
 	selectOnChange,
 	setRoleSelectorFilled,
-}) => {
+}: TeamMemberInputsProps) => {
 	const {accountSettingsURL, featureFlags} = useAppPropertiesContext();
-	const provisioningService = useProvisioningLicenseKeys();
+	const {provisioningLicenseKeys: provisioningService} =
+		useProvisioningLicenseKeys('', '', false);
 
-	const [radioOptions, setRadioOptions] = useState({});
-	const [selectedAccountRoleName, setSelectedAccountRoleName] = useState([]);
-	const [updateModal, setUpdateModal] = useState(0);
+	const [radioOptions, setRadioOptions] = useState<IRadioOptions>({
+		partnerMemberRoles: {
+			active: false,
+			roles: [],
+		},
+	});
+	const [selectedAccountRoleName, setSelectedAccountRoleName] = useState<
+		string[]
+	>([]);
+	const [updateModal, setUpdateModal] = useState<number>(0);
 
 	useEffect(() => {
 		setTimeout(() => setUpdateModal(new Date().getTime()), 500);
 	}, []);
 
-	const bannedDomains = useBannedDomains(
-		invite?.email,
-		FETCH_DELAY_AFTER_TYPING
-	);
+	const bannedDomains = useBannedDomains(invite?.email);
 
 	const {data} = useCurrentKoroneikiAccount();
-	const koroneikiAccount = data?.koroneikiAccountByExternalReferenceCode;
+	const koroneikiAccount:
+		| IKoroneikiAccountData['koroneikiAccountByExternalReferenceCode']
+		| undefined = data?.koroneikiAccountByExternalReferenceCode;
 
-	const [
-		,
-		{data: userAccountsData},
-	] = useUserAccountsByAccountExternalReferenceCode(
-		koroneikiAccount?.accountKey
-	);
+	const [, {data: userAccountsData}] =
+		useUserAccountsByAccountExternalReferenceCode(
+			koroneikiAccount?.accountKey || '',
+			!koroneikiAccount?.accountKey
+		) as any;
 
-	const currentDomain = userAccountsData?.accountUserAccountsByExternalReferenceCode.items
-		.map(({emailAddress}) => emailAddress.split('@')[1])
-		.flat();
+	const currentDomain =
+		userAccountsData?.accountUserAccountsByExternalReferenceCode.items
+			.map(
+				({emailAddress}: {emailAddress: string}) =>
+					emailAddress.split('@')[1]
+			)
+			.flat();
 
 	const [, domain] = invite?.email.split('@');
 
-	const mathEmail = currentDomain?.includes(domain) || false;
-
-	const isEmailValid = !!errors.invites?.[id]?.email;
+	const isEmailValid = !!(errors.invites as any)?.[id]?.email;
 
 	const warningMessage =
-		invite?.email.length > 1 && !mathEmail && !isEmailValid;
+		(invite?.email.length || 0) > 1 &&
+		!(currentDomain || []).includes(domain || '') &&
+		!isEmailValid;
 
-	const validateEmail = useMemo(async () => {
-		if (isValidEmail(invite?.email, bannedDomains)) {
-			return isValidEmail(invite?.email, bannedDomains);
+	const validateEmail = useMemo(() => {
+		if (isValidEmail(bannedDomains)(invite?.email)) {
+			return isValidEmail(bannedDomains)(invite?.email);
 		}
 
-		const hasLiferayDomain = liferayDomains.includes(domain);
+		const hasLiferayDomain = liferayDomains.includes((domain as any) || '');
 
 		if (hasLiferayDomain) {
-			const emailExistsInOkta = await provisioningService.getUserInOkta(
+			if (!provisioningService) {
+				throw new Error('Provisioning service not available.');
+			}
+			const emailExistsInOkta = provisioningService.getUserInOkta(
 				invite?.email
 			);
 
@@ -96,17 +126,19 @@ const TeamMemberInputs = ({
 
 			return false;
 		}
-	}, [bannedDomains, invite?.email, provisioningService]);
 
-	const isAdministratorOrRequestorRoleSelected =
-		invite?.role?.some(role => 
+		return false;
+	}, [bannedDomains, invite?.email, provisioningService, domain]);
+
+	const isAdministratorOrRequestorRoleSelected = invite?.role?.some(
+		(role: IAccountRole) =>
 			role.name === ROLE_TYPES.requester.name ||
 			role.name === ROLE_TYPES.admin.name
-		);
+	);
 
-	const optionsFormatted = useMemo(
+	const optionsFormatted: IAccountRole[] = useMemo(
 		() =>
-			options.map((option) => {
+			options.map((option: any) => {
 				const isAdministratorOrRequestorRole =
 					option.label === ROLE_TYPES.requester.name ||
 					option.label === ROLE_TYPES.admin.name;
@@ -119,7 +151,7 @@ const TeamMemberInputs = ({
 						administratorsAssetsAvailable === 0 &&
 						isAdministratorOrRequestorRole &&
 						!isAdministratorOrRequestorRoleSelected,
-				};
+				} as IAccountRole;
 			}),
 		[
 			administratorsAssetsAvailable,
@@ -132,8 +164,13 @@ const TeamMemberInputs = ({
 	useEffect(() => {
 		setRadioOptions(
 			optionsFormatted.reduce(
-				(previousItem, item) => {
-					if (!partnerMemberRoles.includes(item.label)) {
+				(previousItem: IRadioOptions, item: IAccountRole) => {
+					if (
+						item.label &&
+						!previousItem.partnerMemberRoles.roles.includes(
+							item.label
+						)
+					) {
 						previousItem[item.label] = item;
 
 						return previousItem;
@@ -143,15 +180,15 @@ const TeamMemberInputs = ({
 					previousItem.partnerMemberRoles.active = previousItem
 						.partnerMemberRoles.active
 						? true
-						: item.active;
+						: (item as any).active;
 
 					return previousItem;
 				},
 				{
 					partnerMemberRoles: {
 						active: false,
-						roles: []
-					}
+						roles: [],
+					},
 				}
 			)
 		);
@@ -215,10 +252,11 @@ const TeamMemberInputs = ({
 						<RoleSelectorDropdown
 							isTeamMemberInviteForm
 							key={updateModal}
-							radioOptions={radioOptions}
+							onClick={() => {}}
+							radioOptions={radioOptions as any}
 							selectOnChange={selectOnChange}
 							selectedAccountRoleName={selectedAccountRoleName}
-							setRadioOptions={setRadioOptions}
+							setRadioOptions={setRadioOptions as any}
 							setRoleSelectorFilled={setRoleSelectorFilled}
 							setSelectedAccountRoleName={
 								setSelectedAccountRoleName
@@ -246,7 +284,7 @@ const TeamMemberInputs = ({
 
 						{` ${i18n.sub(
 							'part-of-your-organization-it-looks-like-x-is-a-new-domain-name',
-							[`${domain}`]
+							[domain || '']
 						)}`}
 
 						<ul className="mb-0">

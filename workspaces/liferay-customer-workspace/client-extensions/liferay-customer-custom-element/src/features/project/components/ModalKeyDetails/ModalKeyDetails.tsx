@@ -7,8 +7,26 @@ import ClayAlert from '@clayui/alert';
 import ClayModal from '@clayui/modal';
 import React, {useState} from 'react';
 import Button from '~/components/Button';
-import {AUTO_CLOSE_ALERT_TIME} from '~/utils/constants/autoCloseAlertTime';
+import {
+	ALERT_DOWNLOAD_TYPE,
+	AUTO_CLOSE_ALERT_TIME,
+} from '~/features/project/utils/constants';
+import {IActivationKey} from '~/utils/types';
+
 import TableKeyDetails from '../TableKeyDetails';
+
+interface ModalKeyDetailsProps {
+	activationKeys: IActivationKey;
+	downloadActivationLicenseKey: (
+		id: string,
+		oAuthToken: string,
+		provisioningServerAPI: string
+	) => void;
+	oAuthToken: string;
+	observer: any; // Temporarily set to any to unblock compilation
+	onClose: () => void;
+	provisioningServerAPI: string;
+}
 
 const ModalKeyDetails = ({
 	activationKeys,
@@ -17,8 +35,10 @@ const ModalKeyDetails = ({
 	observer,
 	onClose,
 	provisioningServerAPI,
-}) => {
-	const [valueToCopyToClipboard, setValueToCopyToClipboard] = useState('');
+}: ModalKeyDetailsProps) => {
+	const [valueToCopyToClipboard, setValueToCopyToClipboard] = useState<
+		string | null
+	>(null);
 
 	return (
 		<ClayModal center observer={observer} size="lg">
@@ -75,8 +95,8 @@ const ModalKeyDetails = ({
 				<ClayAlert.ToastContainer>
 					<ClayAlert
 						autoClose={AUTO_CLOSE_ALERT_TIME.success}
-						displayType="success"
-						onClose={() => setValueToCopyToClipboard(false)}
+						displayType={ALERT_DOWNLOAD_TYPE.success as 'success'}
+						onClose={() => setValueToCopyToClipboard(null)}
 					>
 						{valueToCopyToClipboard} copied to clipboard
 					</ClayAlert>

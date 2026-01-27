@@ -4,13 +4,20 @@
  */
 
 import classNames from 'classnames';
-import {memo, useEffect, useMemo} from 'react';
+import {ReactNode, memo, useEffect, useMemo} from 'react';
 import {Link, useMatch, useResolvedPath} from 'react-router-dom';
-
 import {Button} from '~/components';
+
 import {navigationIcons} from '../../utils/navigationIcons';
 
-const MenuItem = ({children, iconKey, setActive, to}) => {
+interface MenuItemProps {
+	children: ReactNode;
+	iconKey: keyof typeof navigationIcons;
+	setActive?: (isActive: boolean) => void;
+	to: string;
+}
+
+const MenuItem = ({children, iconKey, setActive, to}: MenuItemProps) => {
 	const isActive = !!useMatch({path: useResolvedPath(to)?.pathname});
 
 	const isPortalIcon = iconKey === 'portal';
@@ -24,8 +31,8 @@ const MenuItem = ({children, iconKey, setActive, to}) => {
 	const Icon = useMemo(() => {
 		try {
 			if (iconKey) {
-				const [activeIcon, inactiveIcon] = navigationIcons[iconKey]
-					|| navigationIcons['liferay'];
+				const [activeIcon, inactiveIcon] =
+					navigationIcons[iconKey] || navigationIcons['liferay'];
 
 				return isActive ? activeIcon : inactiveIcon;
 			}

@@ -3,17 +3,36 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import React from 'react';
 import PopoverIconButton from '~/features/project/components/PopoverIconButton';
 import i18n from '~/utils/I18n';
 
-const getInitialColumns = (articleAccountSupportURL) => [
+interface IHeader {
+	name: string | React.ReactNode;
+	noWrap?: boolean;
+	styles: string;
+}
+
+interface IColumn {
+	accessor: string;
+	align?: 'center' | 'left' | 'right';
+	bodyClass: string;
+	header: IHeader;
+	truncate?: boolean;
+}
+
+interface IPopoverLink {
+	textLink: string;
+	url: string;
+}
+
+const getInitialColumns = (articleAccountSupportURL: string): IColumn[] => [
 	{
 		accessor: 'name',
 		bodyClass: 'border-0',
 		header: {
 			name: i18n.translate('name'),
-			styles:
-				'h6 border-bottom text-neutral-10 font-weight-bold table-cell-expand',
+			styles: 'h6 border-bottom text-neutral-10 font-weight-bold table-cell-expand',
 		},
 		truncate: true,
 	},
@@ -23,8 +42,7 @@ const getInitialColumns = (articleAccountSupportURL) => [
 
 		header: {
 			name: i18n.translate('email'),
-			styles:
-				'h6 border-bottom text-neutral-10 font-weight-bold table-cell-expand-small',
+			styles: 'h6 border-bottom text-neutral-10 font-weight-bold table-cell-expand-small',
 		},
 		truncate: true,
 	},
@@ -39,12 +57,14 @@ const getInitialColumns = (articleAccountSupportURL) => [
 					<p className="m-0">{i18n.translate('support-seat')}</p>
 
 					<PopoverIconButton
-						popoverLink={{
-							textLink: i18n.translate(
-								'learn-more-about-customer-portal-roles'
-							),
-							url: articleAccountSupportURL,
-						}}
+						popoverLink={
+							{
+								textLink: i18n.translate(
+									'learn-more-about-customer-portal-roles'
+								),
+								url: articleAccountSupportURL,
+							} as IPopoverLink
+						}
 						popoverText={i18n.translate(
 							'the-support-seats-limit-counts-the-total-users-with-the-administrator-or-requester-role-administrators-and-requesters-have-permissions-to-open-support-tickets'
 						)}
@@ -52,8 +72,7 @@ const getInitialColumns = (articleAccountSupportURL) => [
 				</div>
 			),
 			noWrap: true,
-			styles:
-				'h6 border-bottom text-neutral-10 font-weight-bold table-cell-expand-smaller',
+			styles: 'h6 border-bottom text-neutral-10 font-weight-bold table-cell-expand-smaller',
 		},
 	},
 	{
@@ -61,8 +80,7 @@ const getInitialColumns = (articleAccountSupportURL) => [
 		bodyClass: 'border-0',
 		header: {
 			name: i18n.translate('role'),
-			styles:
-				'h6 border-bottom text-neutral-10 font-weight-bold table-cell-expand-smaller',
+			styles: 'h6 border-bottom text-neutral-10 font-weight-bold table-cell-expand-smaller',
 		},
 		truncate: true,
 	},
@@ -71,13 +89,12 @@ const getInitialColumns = (articleAccountSupportURL) => [
 		bodyClass: 'border-0',
 		header: {
 			name: i18n.translate('status'),
-			styles:
-				'h6 border-bottom text-neutral-10 font-weight-bold table-cell-expand-smallest',
+			styles: 'h6 border-bottom text-neutral-10 font-weight-bold table-cell-expand-smallest',
 		},
 	},
 ];
 
-const optionColumn = {
+const optionColumn: IColumn = {
 	accessor: 'options',
 	align: 'right',
 	bodyClass: 'border-0',
@@ -87,7 +104,10 @@ const optionColumn = {
 	},
 };
 
-export function getColumns(hasAccountAdministrator, articleAccountSupportURL) {
+export function getColumns(
+	hasAccountAdministrator: boolean,
+	articleAccountSupportURL: string
+): IColumn[] {
 	const columns = getInitialColumns(articleAccountSupportURL);
 
 	if (hasAccountAdministrator) {

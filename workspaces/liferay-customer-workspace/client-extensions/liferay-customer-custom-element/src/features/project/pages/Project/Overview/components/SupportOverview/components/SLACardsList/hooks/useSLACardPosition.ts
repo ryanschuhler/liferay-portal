@@ -5,9 +5,9 @@
 
 import {useEffect, useState} from 'react';
 
-export default function useSLACardPosition(slaCardsCount) {
+export default function useSLACardPosition(slaCardsCount: number) {
 	const [currentPosition, setCurrentPosition] = useState(0);
-	const [lastPosition, setLastPosition] = useState();
+	const [lastPosition, setLastPosition] = useState<number | undefined>();
 
 	useEffect(() => {
 		if (slaCardsCount) {

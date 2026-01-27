@@ -4,54 +4,81 @@
  */
 
 import {useCallback} from 'react';
-import i18n from '~/utils/I18n';
+import BadgeButton from '~/components/BadgeButton';
 import Button from '~/components/Button';
+import {INITIAL_FILTER} from '~/features/project/containers/ActivationKeysTable/utils/constants/initialFilter';
+import i18n from '~/utils/I18n';
 import {FORMAT_DATE_TYPES} from '~/utils/constants';
 import getDateCustomFormat from '~/utils/getDateCustomFormat';
-import BadgeButton from '~/components/BadgeButton';
-import {INITIAL_FILTER} from '~/features/project/containers/ActivationKeysTable/utils/constants/initialFilter';
+import {DateFilterValue, IFilters, KeyTypeFilterValue} from '~/utils/types';
 
 const DNE_YEARS = 100;
+
+interface BadgeFilterProps {
+	activationKeysLength: number;
+	filtersState: [IFilters, React.Dispatch<React.SetStateAction<IFilters>>];
+	loading: boolean;
+}
+
+interface IDateFilterState {
+	value: DateFilterValue;
+}
+
+interface IKeyTypeFilter {
+	name: string;
+	value: KeyTypeFilterValue;
+}
 
 const BadgeFilter = ({
 	activationKeysLength,
 	loading,
 	filtersState: [filters, setFilters],
-}) => {
-	const getDatesDisplay = useCallback((dateFilterState) => {
-		const dateDisplays = [];
+}: BadgeFilterProps) => {
+	const getDatesDisplay = useCallback(
+		(dateFilterState: IDateFilterState): string => {
+			const dateDisplays: string[] = [];
 
-		if (dateFilterState.value?.onOrAfter) {
-			const todayDNE = new Date();
-			todayDNE.setFullYear(todayDNE.getFullYear() + DNE_YEARS);
+			if (dateFilterState.value) {
+				if (typeof dateFilterState.value.onOrAfter === 'string') {
+					const onOrAfterDate = dateFilterState.value.onOrAfter;
+					const todayDNE = new Date();
+					todayDNE.setFullYear(todayDNE.getFullYear() + DNE_YEARS);
 
-			if (new Date(dateFilterState.value?.onOrAfter) >= todayDNE) {
-				return i18n.translate('dne');
+					if (new Date(onOrAfterDate) >= todayDNE) {
+						return i18n.translate('dne');
+					}
+
+					const formattedDate = getDateCustomFormat(
+						FORMAT_DATE_TYPES.day2DMonthSYearN,
+						onOrAfterDate
+					);
+
+					if (formattedDate) {
+						dateDisplays.push(formattedDate);
+					}
+				}
+
+				if (typeof dateFilterState.value.onOrBefore === 'string') {
+					const onOrBeforeDate = dateFilterState.value.onOrBefore;
+					const formattedDate = getDateCustomFormat(
+						FORMAT_DATE_TYPES.day2DMonthSYearN,
+						onOrBeforeDate
+					);
+
+					if (formattedDate) {
+						dateDisplays.push(formattedDate);
+					}
+				}
 			}
 
-			dateDisplays.push(
-				getDateCustomFormat(
-					FORMAT_DATE_TYPES.day2DMonthSYearN,
-					dateFilterState.value?.onOrAfter
-				)
-			);
-		}
-
-		if (dateFilterState.value?.onOrBefore) {
-			dateDisplays.push(
-				getDateCustomFormat(
-					FORMAT_DATE_TYPES.day2DMonthSYearN,
-					dateFilterState.value?.onOrBefore
-				)
-			);
-		}
-
-		return dateDisplays.join(' – ');
-	}, []);
+			return dateDisplays.join(' – ');
+		},
+		[]
+	);
 
 	const getKeyTypeDisplay = useCallback(
-		(filterKeyType) => {
-			const keyTypesDisplay = [];
+		(filterKeyType: IKeyTypeFilter): React.ReactNode => {
+			const keyTypesDisplay: string[] = [];
 
 			if (filterKeyType.value?.hasOnPremise) {
 				keyTypesDisplay.push(i18n.translate('on-premise'));
@@ -72,12 +99,12 @@ const BadgeFilter = ({
 				) {
 					keyTypesDisplay.push(
 						i18n.sub('virtual-cluster-x-nodes', [
-							filterKeyType.value?.minNodes,
+							filterKeyType.value?.minNodes as string,
 						])
 					);
 				}
 				else {
-					const nodesDisplay = [];
+					const nodesDisplay: string[] = [];
 
 					if (filterKeyType.value?.minNodes) {
 						nodesDisplay.push(filterKeyType.value?.minNodes);
@@ -126,13 +153,13 @@ const BadgeFilter = ({
 					<p className="font-weight-semi-bold m-0 mt-3 text-paragraph-sm">
 						{activationKeysLength > 1
 							? `${i18n.sub('x-results-for-x', [
-									activationKeysLength,
+									activationKeysLength.toString(),
 									`"${filters.searchTerm}"`,
-							  ])}`
+								])}`
 							: `${i18n.sub('x-result-for-x', [
-									activationKeysLength,
+									activationKeysLength.toString(),
 									`"${filters.searchTerm}"`,
-							  ])}`}
+								])}`}
 					</p>
 				)}
 			</div>

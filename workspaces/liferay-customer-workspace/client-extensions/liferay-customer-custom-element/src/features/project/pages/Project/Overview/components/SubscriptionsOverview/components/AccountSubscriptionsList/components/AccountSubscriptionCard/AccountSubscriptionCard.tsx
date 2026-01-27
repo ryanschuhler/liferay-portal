@@ -5,7 +5,7 @@
 
 import ClayCard from '@clayui/card';
 import classNames from 'classnames';
-import {memo, useMemo} from 'react';
+import {FunctionComponent, SVGProps, memo, useMemo} from 'react';
 import {Skeleton, StatusTag} from '~/components';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
 import PopoverIconButton from '~/features/project/components/PopoverIconButton';
@@ -21,10 +21,25 @@ import {
 	SUBSCRIPTION_TYPES,
 } from '~/utils/constants/subscriptionCardsCount';
 import getDateCustomFormat from '~/utils/getDateCustomFormat';
+import {IAccountSubscription, IAccountSubscriptionGroup} from '~/utils/types';
 
 import useOrderItems from '../AccountSubscriptionModal/hooks/useOrderItems';
 
-import './AccountSubscriptionCard.css';
+interface IProps extends IAccountSubscription {
+	IsPortalOrDXP: boolean;
+	loading: boolean;
+	logoPath: FunctionComponent<SVGProps<SVGSVGElement>>;
+	onClick: () => void;
+	selectedAccountSubscriptionGroup: IAccountSubscriptionGroup;
+}
+
+interface IOrderItem {
+	options: {
+		endDate: string;
+		startDate: string;
+	};
+	quantity: number;
+}
 
 const AccountSubscriptionCard = ({
 	IsPortalOrDXP,
@@ -33,12 +48,12 @@ const AccountSubscriptionCard = ({
 	onClick,
 	selectedAccountSubscriptionGroup,
 	...accountSubscription
-}) => {
+}: IProps) => {
 	const {theOverviewPageURL} = useAppPropertiesContext();
 
 	const {data: accountSubscriptionUsageData} = useGetAccountSubscriptionUsage(
-		accountSubscription?.accountKey,
-		accountSubscription?.productKey,
+		accountSubscription.accountKey,
+		accountSubscription.productKey,
 		IsPortalOrDXP
 	);
 
@@ -53,14 +68,12 @@ const AccountSubscriptionCard = ({
 
 	const now = new Date();
 
-	const {
-		data
-	} = useOrderItems(accountSubscription.externalReferenceCode, 1000);
+	const {data} = useOrderItems(accountSubscription.externalReferenceCode);
 
-	data?.orderItems?.items?.map((item) => {
+	data?.orderItems?.items?.map((item: IOrderItem) => {
 		if (
-			now > new Date(item.options?.startDate) &&
-			now < new Date(item.options?.endDate)
+			now > new Date(item.options.startDate) &&
+			now < new Date(item.options.endDate)
 		) {
 			quantity += item.quantity;
 		}
@@ -86,21 +99,28 @@ const AccountSubscriptionCard = ({
 		),
 	};
 
-	const displayQuantityOnCard = (subscriptionType, productName) => {
+	const displayQuantityOnCard = (
+		subscriptionType: string,
+		productName: string
+	) => {
 		const isPurchasedAndProvisioned =
 			SUBSCRIPTION_TYPES.PurchasedAndProvisioned.includes(
-				subscriptionType
+				subscriptionType as any
 			);
-		const isPurchased =
-			SUBSCRIPTION_TYPES.Purchased.includes(subscriptionType);
-
+		const isPurchased = SUBSCRIPTION_TYPES.Purchased.includes(
+			subscriptionType as any
+		);
 		if (isPurchasedAndProvisioned) {
-			if (PRODUCT_DISPLAY_EXCEPTION.blankProducts.includes(productName)) {
+			if (
+				PRODUCT_DISPLAY_EXCEPTION.blankProducts.includes(
+					productName as any
+				)
+			) {
 				return DisplayOnCard.Blank;
 			}
 
 			return PRODUCT_DISPLAY_EXCEPTION.purchasedProduct.includes(
-				productName
+				productName as any
 			)
 				? DisplayOnCard.Purchased
 				: DisplayOnCard.PurchasedAndProvisioned;
@@ -112,7 +132,7 @@ const AccountSubscriptionCard = ({
 				subscriptionType === 'Other'
 			) {
 				return PRODUCT_DISPLAY_EXCEPTION.blankProducts.includes(
-					productName
+					productName as any
 				)
 					? DisplayOnCard.Blank
 					: DisplayOnCard.Purchased;
@@ -121,7 +141,9 @@ const AccountSubscriptionCard = ({
 			return DisplayOnCard.Purchased;
 		}
 
-		return PRODUCT_DISPLAY_EXCEPTION.nonBlankProducts.includes(productName)
+		return PRODUCT_DISPLAY_EXCEPTION.nonBlankProducts.includes(
+			productName as any
+		)
 			? DisplayOnCard.Purchased
 			: DisplayOnCard.Blank;
 	};
@@ -133,26 +155,31 @@ const AccountSubscriptionCard = ({
 
 	const DisplayOnCardInstanceSize = {
 		Blank: null,
-		PurchasedAndProvisioned: accountSubscription.instanceSize > 0 && (
+		PurchasedAndProvisioned: !!accountSubscription.instanceSize && (
 			<span className="align-items-center d-flex justify-content-start m-0">
 				{accountSubscription.instanceSize}
 			</span>
 		),
 	};
 
-	const displayInstanceSizeOnCard = (subscriptionType, productName) => {
+	const displayInstanceSizeOnCard = (
+		subscriptionType: string,
+		productName: string
+	) => {
 		const isPurchasedAndProvisioned =
 			SUBSCRIPTION_TYPES.PurchasedAndProvisioned.includes(
-				subscriptionType
+				subscriptionType as any
 			);
 
 		if (isPurchasedAndProvisioned) {
 			return PRODUCT_DISPLAY_EXCEPTION_INSTANCE_SIZE.purchasedProductInstanceSize.includes(
-				productName
+				productName as any
 			)
 				? DisplayOnCardInstanceSize.Blank
 				: DisplayOnCardInstanceSize.PurchasedAndProvisioned;
 		}
+
+		return null;
 	};
 
 	const keysProvisionedContentInstanceSize = displayInstanceSizeOnCard(
@@ -161,7 +188,7 @@ const AccountSubscriptionCard = ({
 	);
 
 	const isPurchased = SUBSCRIPTION_TYPES.Purchased.includes(
-		selectedAccountSubscriptionGroup?.name
+		selectedAccountSubscriptionGroup?.name as any
 	);
 
 	const accountSubscriptionGroupName =

@@ -2,6 +2,7 @@
  * SPDX-FileCopyrightText: (c) 2000 Liferay, Inc. https://liferay.com
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
+
 import ClayButton from '@clayui/button';
 import ClayDatePicker from '@clayui/date-picker';
 import {useEffect, useState} from 'react';
@@ -9,18 +10,30 @@ import i18n from '~/utils/I18n';
 
 const NAVIGATION_YEARS_RANGE = 5;
 
+interface DateFilterProps {
+	children?: React.ReactNode;
+	clearInputs: boolean;
+	onOrAfterDisabled?: boolean;
+	onOrBeforeDisabled?: boolean;
+	updateFilters: (
+		onOrAfter: Date | boolean,
+		onOrBefore: Date | boolean
+	) => void;
+}
+
 const DateFilter = ({
 	children,
 	clearInputs,
 	onOrAfterDisabled,
 	onOrBeforeDisabled,
 	updateFilters,
-}) => {
-	const [expandedOnOrAfter, setExpandedOnOrAfter] = useState(false);
-	const [expandedOnOrBefore, setExpandedOnOrBefore] = useState(false);
+}: DateFilterProps) => {
+	const [expandedOnOrAfter, setExpandedOnOrAfter] = useState<boolean>(false);
+	const [expandedOnOrBefore, setExpandedOnOrBefore] =
+		useState<boolean>(false);
 
-	const [onOrAfterValue, setOnOrAfterValue] = useState('');
-	const [onOrBeforeValue, setOnOrBeforeValue] = useState('');
+	const [onOrAfterValue, setOnOrAfterValue] = useState<string>('');
+	const [onOrBeforeValue, setOnOrBeforeValue] = useState<string>('');
 
 	const now = new Date();
 
@@ -52,12 +65,9 @@ const DateFilter = ({
 					dateFormat="MM/dd/yyyy"
 					disabled={onOrAfterDisabled}
 					expanded={expandedOnOrAfter}
-					onChange={(value, eventType) => {
+					onChange={(value: string) => {
 						setOnOrAfterValue(value);
-
-						if (eventType === 'click') {
-							setExpandedOnOrAfter(false);
-						}
+						setExpandedOnOrAfter(false);
 					}}
 					onExpandedChange={setExpandedOnOrAfter}
 					placeholder={i18n.translate('mm-dd-yyyy')}
@@ -77,12 +87,9 @@ const DateFilter = ({
 					disabled={onOrBeforeDisabled}
 					expanded={expandedOnOrBefore}
 					onExpandedChange={setExpandedOnOrBefore}
-					onValueChange={(value, eventType) => {
+					onValueChange={(value: string) => {
 						setOnOrBeforeValue(value);
-
-						if (eventType === 'click') {
-							setExpandedOnOrBefore(false);
-						}
+						setExpandedOnOrBefore(false);
 					}}
 					placeholder={i18n.translate('mm-dd-yyyy')}
 					value={onOrBeforeValue}
@@ -111,7 +118,6 @@ const DateFilter = ({
 								onOrBefore
 						);
 					}}
-					required
 					small={true}
 				>
 					{i18n.translate('apply')}

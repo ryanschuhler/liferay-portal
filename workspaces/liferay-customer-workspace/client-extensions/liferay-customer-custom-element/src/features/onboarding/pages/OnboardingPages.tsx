@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {ApolloClient, NormalizedCacheObject} from '@apollo/client';
 import React, {useEffect, useState} from 'react';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
 import InviteTeamMembersForm from '~/features/project/containers/InviteTeamMembersForm';
@@ -53,8 +54,11 @@ const OnboardingPages: React.FC = () => {
 		fetchToken();
 	}, []);
 
+	const accountKey = project?.accountKey;
+
 	const [supportSeatsCount] = useUserAccountsByAccountExternalReferenceCode(
-		project?.accountKey
+		accountKey as string,
+		!accountKey
 	);
 
 	const {client} = useAppPropertiesContext();
@@ -93,16 +97,15 @@ const OnboardingPages: React.FC = () => {
 		) {
 			dispatch({
 				payload:
-					ONBOARDING_STEP_TYPES.liferayExperienceCloud as unknown as ActionPayload,
-				type: actionTypes.CHANGE_STEP as keyof typeof actionTypes,
+					ONBOARDING_STEP_TYPES.liferayExperienceCloud as ActionPayload,
+				type: actionTypes.CHANGE_STEP,
 			});
 		}
 		else {
 			if (subscriptionDXPCloud && !dxpCloudActivationSubmittedStatus) {
 				return dispatch({
-					payload:
-						ONBOARDING_STEP_TYPES.dxpCloud as unknown as ActionPayload,
-					type: actionTypes.CHANGE_STEP as keyof typeof actionTypes,
+					payload: ONBOARDING_STEP_TYPES.dxpCloud as ActionPayload,
+					type: actionTypes.CHANGE_STEP,
 				});
 			}
 
@@ -112,8 +115,8 @@ const OnboardingPages: React.FC = () => {
 			) {
 				return dispatch({
 					payload:
-						ONBOARDING_STEP_TYPES.analyticsCloud as unknown as ActionPayload,
-					type: actionTypes.CHANGE_STEP as keyof typeof actionTypes,
+						ONBOARDING_STEP_TYPES.analyticsCloud as ActionPayload,
+					type: actionTypes.CHANGE_STEP,
 				});
 			}
 		}
@@ -127,9 +130,8 @@ const OnboardingPages: React.FC = () => {
 			!analyticsCloudActivationSubmittedStatus
 		) {
 			dispatch({
-				payload:
-					ONBOARDING_STEP_TYPES.analyticsCloud as unknown as ActionPayload,
-				type: actionTypes.CHANGE_STEP as keyof typeof actionTypes,
+				payload: ONBOARDING_STEP_TYPES.analyticsCloud as ActionPayload,
+				type: actionTypes.CHANGE_STEP,
 			});
 		}
 
@@ -145,30 +147,37 @@ const OnboardingPages: React.FC = () => {
 		availableSupportSeatsCount = 0;
 	}
 
+	const mutateUserData = () => {};
+
 	const StepsLayout: Record<string, IStepLayout> = {
 		[ONBOARDING_STEP_TYPES.invites]: {
-			Component: (
+			Component: oAuthToken ? (
 				<InviteTeamMembersForm
 					availableSupportSeatsCount={availableSupportSeatsCount}
 					handlePage={invitesPageHandle}
 					leftButton={i18n.translate('skip-for-now')}
+					mutateUserData={mutateUserData}
 					oAuthToken={oAuthToken}
-					project={project}
+					project={project!}
 				/>
+			) : (
+				<></>
 			),
 		},
 
 		[ONBOARDING_STEP_TYPES.liferayExperienceCloud]: {
 			Component: (
 				<SetupLiferayExperienceCloudForm
-					client={client}
-					handleChangeForm={() => pageHandle()}
-					handleOnLeftButtonClick={() => pageHandle()}
+					client={client as ApolloClient<NormalizedCacheObject>}
+					handleChangeForm={pageHandle}
+					handleOnLeftButtonClick={pageHandle}
 					leftButton={i18n.translate('skip-for-now')}
-					project={project}
-					subscriptionGroupLxcId={
-						subscriptionLiferayExperienceCloud?.accountSubscriptionGroupId
-					}
+					project={project!}
+					setFormAlreadySubmitted={() => {}}
+					subscriptionGroupLxcId={String(
+						subscriptionLiferayExperienceCloud?.accountSubscriptionGroupId ??
+							''
+					)}
 				/>
 			),
 		},
@@ -178,14 +187,14 @@ const OnboardingPages: React.FC = () => {
 		[ONBOARDING_STEP_TYPES.dxpCloud]: {
 			Component: (
 				<SetupDXPCloudForm
-					client={client}
-					dxpVersion={project?.dxpVersion}
-					handlePage={(isSuccess: boolean) => {
+					client={client as ApolloClient<NormalizedCacheObject>}
+					dxpVersion={project?.dxpVersion as string}
+					handlePage={(isSuccess?: boolean) => {
 						if (isSuccess) {
 							return dispatch({
 								payload:
-									ONBOARDING_STEP_TYPES.successDxpCloud as unknown as ActionPayload,
-								type: actionTypes.CHANGE_STEP as keyof typeof actionTypes,
+									ONBOARDING_STEP_TYPES.successDxpCloud as ActionPayload,
+								type: actionTypes.CHANGE_STEP,
 							});
 						}
 
@@ -193,10 +202,11 @@ const OnboardingPages: React.FC = () => {
 					}}
 					leftButton={i18n.translate('skip-for-now')}
 					listType={LIST_TYPES.dxpMajorVersion}
-					project={project}
-					subscriptionGroupId={
-						subscriptionDXPCloud?.accountSubscriptionGroupId
-					}
+					project={project!}
+					setFormAlreadySubmitted={() => {}}
+					subscriptionGroupId={String(
+						subscriptionDXPCloud?.accountSubscriptionGroupId ?? ''
+					)}
 				/>
 			),
 		},
@@ -215,23 +225,25 @@ const OnboardingPages: React.FC = () => {
 		[ONBOARDING_STEP_TYPES.analyticsCloud]: {
 			Component: (
 				<SetupAnalyticsCloudForm
-					client={client}
-					handlePage={(isSuccess: boolean) => {
+					client={client as ApolloClient<NormalizedCacheObject>}
+					handlePage={(isSuccess?: boolean) => {
 						if (isSuccess) {
 							return dispatch({
 								payload:
-									ONBOARDING_STEP_TYPES.successAnalyticsCloud as unknown as ActionPayload,
-								type: actionTypes.CHANGE_STEP as keyof typeof actionTypes,
+									ONBOARDING_STEP_TYPES.successAnalyticsCloud,
+								type: actionTypes.CHANGE_STEP,
 							});
 						}
 
 						pageHandle();
 					}}
 					leftButton={i18n.translate('skip-for-now')}
-					project={project}
-					subscriptionGroupId={
-						subscriptionAnalyticsCloud?.accountSubscriptionGroupId
-					}
+					project={project!}
+					setFormAlreadySubmitted={() => {}}
+					subscriptionGroupId={String(
+						subscriptionAnalyticsCloud?.accountSubscriptionGroupId ??
+							''
+					)}
 				/>
 			),
 		},

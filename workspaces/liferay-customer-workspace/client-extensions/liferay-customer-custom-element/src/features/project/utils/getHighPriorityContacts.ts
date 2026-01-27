@@ -4,6 +4,7 @@
  */
 
 import {ApolloClient, FetchResult} from '@apollo/client';
+import {IContact} from '~/features/project/types';
 import {
 	createAccountUserRoles,
 	deleteAccountUserRoles,
@@ -15,14 +16,6 @@ import {
 } from '~/services/liferay/rest/raysource/TeamMembers';
 import i18n from '~/utils/I18n';
 import {IAccountRole, IProject} from '~/utils/types';
-
-interface IContact {
-	category: {role: string};
-	email: string;
-	filter?: string[];
-	filterId?: string;
-	label: string;
-}
 
 const addContactRoleLiferay = async (
 	item: IContact,
@@ -55,7 +48,7 @@ const addContactRoleRaysource = (
 		item.label,
 		oAuthToken,
 		provisioningServerAPI,
-		item.category.role
+		item.category?.role ?? ''
 	);
 };
 

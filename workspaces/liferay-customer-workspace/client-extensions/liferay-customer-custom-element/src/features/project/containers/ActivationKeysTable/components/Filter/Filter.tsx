@@ -4,9 +4,7 @@
  */
 
 import {useEffect, useRef, useState} from 'react';
-import i18n from '~/utils/I18n';
 import {Button} from '~/components';
-import getAvailableFieldsCheckboxs from '../../utils/getAvailableFieldsCheckboxs';
 import FilterDropdown from '~/components/Filter/components/FilterDropdown';
 import SearchBar from '~/components/SearchBar';
 import {
@@ -19,13 +17,35 @@ import {
 	hasVirtualCluster,
 } from '~/features/project/containers/ActivationKeysTable/utils';
 import {hasCluster} from '~/features/project/containers/ActivationKeysTable/utils/hasCluster';
+import i18n from '~/utils/I18n';
+import {IActivationKey, IFilters} from '~/utils/types';
+
+import getAvailableFieldsCheckboxs from '../../utils/getAvailableFieldsCheckboxs';
 
 const MAX_UPDATE = 3;
 
-const Filter = ({activationKeys, filtersState: [filters, setFilters]}) => {
-	const countFetchActivationKeysRef = useRef(0);
+interface AvailableFields {
+	environmentTypes: (string | number)[];
+	hasCluster: boolean;
+	hasDNE: boolean;
+	hasVirtualCluster: boolean;
+	instanceSizes: (string | number)[];
+	productVersions: (string | number)[];
+	status: (string | number)[];
+}
 
-	const [availableFields, setAvailableFields] = useState({
+interface FilterProps {
+	activationKeys: IActivationKey[];
+	filtersState: [IFilters, React.Dispatch<React.SetStateAction<IFilters>>];
+}
+
+const Filter = ({
+	activationKeys,
+	filtersState: [filters, setFilters],
+}: FilterProps) => {
+	const countFetchActivationKeysRef = useRef<number>(0);
+
+	const [availableFields, setAvailableFields] = useState<AvailableFields>({
 		environmentTypes: [],
 		hasCluster: false,
 		hasDNE: false,
@@ -37,7 +57,8 @@ const Filter = ({activationKeys, filtersState: [filters, setFilters]}) => {
 
 	useEffect(() => {
 		if (activationKeys) {
-			countFetchActivationKeysRef.current = ++countFetchActivationKeysRef.current;
+			countFetchActivationKeysRef.current =
+				++countFetchActivationKeysRef.current;
 		}
 	}, [activationKeys]);
 
@@ -50,34 +71,38 @@ const Filter = ({activationKeys, filtersState: [filters, setFilters]}) => {
 				environmentTypes: [
 					...getAvailableFieldsCheckboxs(
 						activationKeys,
-						({productName}) => getEnvironmentType(productName)
+						({productName}: IActivationKey) =>
+							getEnvironmentType(productName)
 					),
 					...getAvailableFieldsCheckboxs(
 						activationKeys,
-						({complimentary}) =>
+						({complimentary}: IActivationKey) =>
 							getProductDescription(complimentary)
 					),
 				],
-				hasCluster: activationKeys?.some(({licenseEntryType}) =>
-					hasCluster(licenseEntryType)
+				hasCluster: activationKeys?.some(
+					({licenseEntryType}: IActivationKey) =>
+						hasCluster(licenseEntryType)
 				),
-				hasDNE: activationKeys?.some(({expirationDate}) =>
-					getDoesNotExpire(expirationDate)
+				hasDNE: activationKeys?.some(
+					({expirationDate}: IActivationKey) =>
+						getDoesNotExpire(expirationDate)
 				),
-				hasVirtualCluster: activationKeys?.some(({licenseEntryType}) =>
-					hasVirtualCluster(licenseEntryType)
+				hasVirtualCluster: activationKeys?.some(
+					({licenseEntryType}: IActivationKey) =>
+						hasVirtualCluster(licenseEntryType)
 				),
 				instanceSizes: getAvailableFieldsCheckboxs(
 					activationKeys,
-					({sizing}) => +getInstanceSize(sizing)
+					({sizing}: IActivationKey) => +getInstanceSize(sizing)
 				),
 				productVersions: getAvailableFieldsCheckboxs(
 					activationKeys,
-					({productVersion}) => productVersion
+					({productVersion}: IActivationKey) => productVersion
 				),
 				status: getAvailableFieldsCheckboxs(
 					activationKeys,
-					(activationKey) =>
+					(activationKey: IActivationKey) =>
 						getStatusActivationTag(activationKey)?.title
 				),
 			});
@@ -88,7 +113,7 @@ const Filter = ({activationKeys, filtersState: [filters, setFilters]}) => {
 		<div className="d-flex flex-column">
 			<div className="d-flex">
 				<SearchBar
-					onSearchSubmit={(term) => {
+					onSearchSubmit={(term: string) => {
 						setFilters((previousFilters) => ({
 							...previousFilters,
 							searchTerm: term,

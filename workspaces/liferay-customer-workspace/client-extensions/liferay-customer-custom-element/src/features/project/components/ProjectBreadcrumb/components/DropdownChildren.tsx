@@ -11,7 +11,19 @@ import i18n from '~/utils/I18n';
 import DropdownItems from './DropdownItems';
 import Search from './Search';
 
-const DropdownChildren = ({
+interface DropdownChildrenProps {
+	dropdownProjectsExceeded: boolean;
+	fetching: boolean;
+	initialTotalCount: number;
+	koroneikiAccounts: any; // TODO: Refine this type
+	koroneikiAccountsItems: any[]; // TODO: Refine this type
+	onIntersecting: (page: number) => void;
+	onSearch: (searchTerm: string) => void;
+	searching: boolean;
+	selectedKoroneikiAccount: any; // TODO: Refine this type
+}
+
+const DropdownChildren: React.FC<DropdownChildrenProps> = ({
 	dropdownProjectsExceeded,
 	fetching,
 	initialTotalCount,
@@ -21,7 +33,7 @@ const DropdownChildren = ({
 	onSearch,
 	searching,
 	selectedKoroneikiAccount,
-}: any) => {
+}) => {
 	const [trackedRef, isIntersecting] = useIntersectionObserver();
 
 	const isLastPage = koroneikiAccounts?.page === koroneikiAccounts?.lastPage;

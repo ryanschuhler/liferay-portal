@@ -5,7 +5,13 @@
 
 import {has100YearsDifference} from './has100YearsDifference';
 
-export function isBulkRenewAvailable(items) {
+interface IItem {
+	expirationDate: string | Date;
+	productName: string;
+	startDate: string | Date;
+}
+
+export function isBulkRenewAvailable(items: IItem[]) {
 	const firstItem = items[0];
 
 	for (const item of items) {

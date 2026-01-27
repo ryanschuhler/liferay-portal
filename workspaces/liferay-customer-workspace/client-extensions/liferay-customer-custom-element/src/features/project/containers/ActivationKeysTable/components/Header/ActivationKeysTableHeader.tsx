@@ -5,25 +5,64 @@
 
 import ClayAlert from '@clayui/alert';
 import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useLocation, useOutletContext} from 'react-router-dom';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import {useGetMyUserAccount} from '~/services/liferay/graphql/user-accounts';
+import {DOWNLOADABLE_LICENSE_KEYS} from '~/features/project/containers/ActivationKeysTable/utils/constants/downloadableLicenseKeys';
+import {hasAdminUserAccount} from '~/features/project/containers/ActivationKeysTable/utils/hasAdminUserAccount';
+import {isBulkRenewAvailable} from '~/features/project/containers/ActivationKeysTable/utils/isBulkRenewAvailable';
+import {useGetMyUserAccount} from '~/services/liferay/graphql/user-accounts/queries/useGetMyUserAccount';
 import i18n from '~/utils/I18n';
-import {ROLE_TYPES} from '~/utils/constants';
-import {ALERT_DOWNLOAD_TYPE} from '~/features/project/utils/constants/alertDownloadType';
-import {ALERT_ACTIVATION_AGGREGATED_KEYS_DOWNLOAD_TEXT} from '../../utils/constants/alertAggregateKeysDownloadText';
-import {ALERT_ACTIVATION_MULTIPLE_KEYS_DOWNLOAD_TEXT} from '../../utils/constants/alertMultipleKeysDownloadText';
-import {DOWNLOADABLE_LICENSE_KEYS} from '../../utils/constants/downloadableLicenseKeys';
-import {hasAdminUserAccount} from '../../utils/hasAdminUserAccount';
-import {isBulkRenewAvailable} from '../../utils/isBulkRenewAvailable';
+import {
+	ALERT_ACTIVATION_AGGREGATED_KEYS_DOWNLOAD_TEXT,
+	ALERT_ACTIVATION_MULTIPLE_KEYS_DOWNLOAD_TEXT,
+	ALERT_DOWNLOAD_TYPE,
+} from '~/utils/constants/alerts';
+import {ROLE_TYPES} from '~/utils/constants/roleTypes';
+import {
+	IActivationKey,
+	IFilters,
+	IMyAccountApollo,
+	IProject,
+	IRoleBrief,
+	ISelectedKey,
+	IUserAccount,
+} from '~/utils/types';
+
 import ActionButton from '../ActionButton';
 import BadgeFilter from '../BadgeFilter';
 import DeactivateButton from '../DeactivateButton';
-import DownloadAlert from '../DownloadAlert';
+import DownloadAlert, {DownloadStatusType} from '../DownloadAlert';
 import Filter from '../Filter';
 import RenewButton from '../RenewButton';
 import useGetAccountUserAccount from './hooks/useGetAccountUserAccount';
 
-import './ActivationKeysTableHeader.css';
+interface ActivationKeysTableHeaderProps {
+	activationKeysByStatusPaginatedChecked: IActivationKey[];
+	activationKeysState: [
+		IActivationKey[],
+		React.Dispatch<React.SetStateAction<IActivationKey[]>>,
+	];
+	filterState: [IFilters, React.Dispatch<React.SetStateAction<IFilters>>];
+	hasRenewalSubscription: boolean;
+	isRenewTable: boolean;
+	loading: boolean;
+	oAuthToken: string | undefined;
+	productName: string;
+	project: IProject;
+	setRenewKeysFilterChecked: React.Dispatch<React.SetStateAction<string>>;
+}
+
+interface IStatusState {
+	deactivate: string;
+	downloadAggregated: string;
+	downloadMultiple: string;
+}
+
+interface IOutletContext {
+	setHasSideMenu: (hasSideMenu: boolean) => void;
+}
+
+declare const Liferay: any;
 
 const ActivationKeysTableHeader = ({
 	activationKeysByStatusPaginatedChecked,
@@ -36,36 +75,47 @@ const ActivationKeysTableHeader = ({
 	productName,
 	project,
 	setRenewKeysFilterChecked,
-}) => {
+}: ActivationKeysTableHeaderProps) => {
 	const [activationKeys, setActivationKeys] = activationKeysState;
 
-	const {
-		userAccountsState: [userAccounts],
-	} = useGetAccountUserAccount(project);
+	useLocation();
+	const {setHasSideMenu} = useOutletContext<IOutletContext>();
+
+	useEffect(() => {
+		setHasSideMenu(true);
+	}, [setHasSideMenu]);
+
+	const {userAccounts} = useGetAccountUserAccount(project);
 
 	const {data: myAccount} = useGetMyUserAccount();
 
-	const isAdminUserAccount = hasAdminUserAccount(myAccount);
+	const isAdminUserAccount = hasAdminUserAccount(
+		myAccount as IMyAccountApollo
+	);
 
 	const isAdminOrPartnerManager = useMemo(() => {
 		const currentUser = userAccounts?.find(
-			({id}) => id === Number(Liferay.ThemeDisplay.getUserId())
+			(user: IUserAccount) =>
+				user.id === Number(Liferay.ThemeDisplay.getUserId())
 		);
 
 		if (currentUser) {
-			const hasAdminRoles = currentUser?.roles?.some(
-				(role) =>
-					role === ROLE_TYPES.admin.key ||
-					role === ROLE_TYPES.partnerManager.key
-			);
+			const hasAdminRoles =
+				currentUser?.accountBriefs?.[0]?.roleBriefs?.some(
+					(role: IRoleBrief) =>
+						role.name === ROLE_TYPES.admin.key ||
+						role.name === ROLE_TYPES.partnerManager.key
+				);
 
-			return hasAdminRoles;
+			return hasAdminRoles ?? false;
 		}
+
+		return false;
 	}, [userAccounts]);
 
 	const {featureFlags} = useAppPropertiesContext();
 
-	const [status, setStatus] = useState({
+	const [status, setStatus] = useState<IStatusState>({
 		deactivate: '',
 		downloadAggregated: '',
 		downloadMultiple: '',
@@ -73,44 +123,50 @@ const ActivationKeysTableHeader = ({
 
 	const filterCheckedActivationKeys = useMemo(
 		() =>
-			activationKeysByStatusPaginatedChecked.reduce(
-				(
-					filterCheckedActivationKeysAccumulator,
-					activationKeyChecked,
-					index
-				) =>
-					`${filterCheckedActivationKeysAccumulator}${
-						index > 0 ? '&' : ''
-					}licenseKeyIds=${activationKeyChecked.id}`,
-				''
-			),
+			activationKeysByStatusPaginatedChecked
+				.map((key) => key.id)
+				.join(','),
 		[activationKeysByStatusPaginatedChecked]
 	);
 
 	const isAbleToDownloadAggregateKeys = useMemo(() => {
-		const [
-			firstActivationKeyChecked,
-			...restActivationKeysChecked
-		] = activationKeysByStatusPaginatedChecked;
+		const [firstActivationKeyChecked, ...restActivationKeysChecked] =
+			activationKeysByStatusPaginatedChecked;
+
+		const toSelectedKey = (key: IActivationKey): ISelectedKey => ({
+			expirationDate: key.expirationDate,
+			licenseEntryType: key.licenseEntryType,
+			licenseVersion: key.licenseVersion ?? 0,
+			productVersion: key.productVersion,
+			sizing: key.sizing,
+			startDate: key.startDate,
+		});
+
+		const firstSelectedKey = toSelectedKey(firstActivationKeyChecked);
 
 		return restActivationKeysChecked.every(
-			(activationKeyChecked) =>
-				DOWNLOADABLE_LICENSE_KEYS.above71DXPVersion(
-					firstActivationKeyChecked,
-					activationKeyChecked
-				) ||
-				DOWNLOADABLE_LICENSE_KEYS.below71DXPVersion(
-					firstActivationKeyChecked,
-					activationKeyChecked
-				)
+			(activationKeyChecked: IActivationKey) => {
+				const selectedKey = toSelectedKey(activationKeyChecked);
+
+				return (
+					DOWNLOADABLE_LICENSE_KEYS.above71DXPVersion(
+						firstSelectedKey,
+						selectedKey
+					) ||
+					DOWNLOADABLE_LICENSE_KEYS.below71DXPVersion(
+						firstSelectedKey,
+						selectedKey
+					)
+				);
+			}
 		);
 	}, [activationKeysByStatusPaginatedChecked]);
 
 	const handleDeactivate = useCallback(
 		() =>
-			setActivationKeys((previousActivationKeys) =>
+			setActivationKeys((previousActivationKeys: IActivationKey[]) =>
 				previousActivationKeys.filter(
-					(activationKey) =>
+					(activationKey: IActivationKey) =>
 						!activationKeysByStatusPaginatedChecked.find(
 							({id}) => activationKey.id === id
 						)
@@ -125,14 +181,8 @@ const ActivationKeysTableHeader = ({
 		activationKeysByStatusPaginatedChecked
 	);
 
-	const complimentaryKeyValidation = (activationKey) => activationKey;
-
-	const handleComplimentaryKey = activationKeysByStatusPaginatedChecked?.map(
-		(activationKey) => activationKey.complimentary
-	);
-
-	const isComplimentaryKey = handleComplimentaryKey.some(
-		complimentaryKeyValidation
+	const isComplimentaryKey = activationKeysByStatusPaginatedChecked.some(
+		(activationKey: IActivationKey) => activationKey.complimentary
 	);
 
 	useEffect(() => {
@@ -156,8 +206,8 @@ const ActivationKeysTableHeader = ({
 								<>
 									<p className="font-weight-semi-bold m-0 ml-auto pr-2 text-neutral-10">
 										{i18n.sub('x-of-x-keys-selected', [
-											activationKeysByStatusPaginatedChecked.length,
-											activationKeys.length,
+											activationKeysByStatusPaginatedChecked.length.toString(),
+											activationKeys.length.toString(),
 										])}
 									</p>
 
@@ -169,17 +219,19 @@ const ActivationKeysTableHeader = ({
 													status.deactivate
 												}
 												filterCheckedActivationKeys={
-													filterCheckedActivationKeys
+													activationKeysByStatusPaginatedChecked
 												}
 												handleDeactivate={
 													handleDeactivate
 												}
 												oAuthToken={oAuthToken}
 												setDeactivateKeysStatus={(
-													value
+													value: string
 												) =>
 													setStatus(
-														(previousStatus) => ({
+														(
+															previousStatus: IStatusState
+														) => ({
 															...previousStatus,
 															deactivate: value,
 														})
@@ -217,7 +269,7 @@ const ActivationKeysTableHeader = ({
 									activationKeysByStatusPaginatedChecked
 								}
 								filterCheckedActivationKeys={
-									filterCheckedActivationKeys
+									activationKeysByStatusPaginatedChecked
 								}
 								hasRenewalSubscription={hasRenewalSubscription}
 								identifier="action"
@@ -228,7 +280,7 @@ const ActivationKeysTableHeader = ({
 									isAdminOrPartnerManager
 								}
 								isAdminUserAccount={isAdminUserAccount}
-								oAuthToken={oAuthToken}
+								oAuthToken={oAuthToken as string}
 								productName={productName}
 								project={project}
 								setStatus={setStatus}
@@ -246,14 +298,16 @@ const ActivationKeysTableHeader = ({
 
 			{status.downloadAggregated && (
 				<DownloadAlert
-					downloadStatus={status.downloadAggregated}
+					downloadStatus={
+						status.downloadAggregated as 'success' | 'danger'
+					}
 					message={
 						ALERT_ACTIVATION_AGGREGATED_KEYS_DOWNLOAD_TEXT[
-							status.downloadAggregated
+							status.downloadAggregated as 'success' | 'danger'
 						]
 					}
-					setDownloadStatus={(value) =>
-						setStatus((previousStatus) => ({
+					setDownloadStatus={(value: DownloadStatusType) =>
+						setStatus((previousStatus: IStatusState) => ({
 							...previousStatus,
 							downloadAggregated: value,
 						}))
@@ -263,14 +317,16 @@ const ActivationKeysTableHeader = ({
 
 			{status.downloadMultiple && (
 				<DownloadAlert
-					downloadStatus={status.downloadMultiple}
+					downloadStatus={
+						status.downloadMultiple as 'success' | 'danger'
+					}
 					message={
 						ALERT_ACTIVATION_MULTIPLE_KEYS_DOWNLOAD_TEXT[
-							status.downloadMultiple
+							status.downloadMultiple as 'success' | 'danger'
 						]
 					}
-					setDownloadStatus={(value) =>
-						setStatus((previousStatus) => ({
+					setDownloadStatus={(value: DownloadStatusType) =>
+						setStatus((previousStatus: IStatusState) => ({
 							...previousStatus,
 							downloadMultiple: value,
 						}))
@@ -284,8 +340,8 @@ const ActivationKeysTableHeader = ({
 					message={i18n.translate(
 						'activation-keys-were-deactivated-successfully'
 					)}
-					setDownloadStatus={(value) =>
-						setStatus((previousStatus) => ({
+					setDownloadStatus={(value: DownloadStatusType) =>
+						setStatus((previousStatus: IStatusState) => ({
 							...previousStatus,
 							deactivate: value,
 						}))
@@ -299,8 +355,11 @@ const ActivationKeysTableHeader = ({
 						dangerouslySetInnerHTML={{
 							__html: i18n.sub(
 								'to-download-an-aggregate-key-select-keys-for-a-valid-liferay-version-with-identical-type-start-date-end-date-and-instance-size-to-learn-more-click-x-here-x',
-								['<a href="https://support.liferay.com/w/how-do-i-download-my-liferay-dxp-portal-activation-keys" target="_blank">', '</a>']
-							)
+								[
+									'<a href="https://support.liferay.com/w/how-do-i-download-my-liferay-dxp-portal-activation-keys" target="_blank">',
+									'</a>',
+								]
+							),
 						}}
 					/>
 				</ClayAlert>
