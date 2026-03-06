@@ -26,7 +26,7 @@ function create_cluster {
 		k3d cluster create ${CLUSTER_NAME} \
 			--port "80:80@loadbalancer" \
 			--registry-create registry:5000 \
-			--volume "${PWD}/liferay:/mnt/local@all:*" \
+			--volume "${PWD}/liferay:/mnt/liferay@all:*" \
 			--wait
 		echo "Cluster '${CLUSTER_NAME}' created."
 	else
@@ -155,14 +155,13 @@ function deploy_cx {
 }
 
 function download_hotfix {
-	mkdir -p ./liferay/patching
-	chown -R $(whoami) ./liferay
+	mkdir -p ./liferay/files/patching-tool/patches
 
 	for file_url in \
 		"https://releases-cdn.liferay.com/dxp/hotfix/2025.q3.7/liferay-dxp-2025.q3.7-hotfix-16.zip" \
 		"https://releases-cdn.liferay.com/tools/patching-tool/patching-tool-4.0.9.zip"
 	do
-		local file_name="./liferay/patching/$(basename "${file_url}")"
+		local file_name="./liferay/files/patching-tool/patches/$(basename "${file_url}")"
 
 		if [ ! -f "${file_name}" ]
 		then
@@ -174,15 +173,17 @@ function download_hotfix {
 }
 
 function extract_license {
-	LIC="license.xml"
+	mkdir -p ./liferay/files/data/license
 
-	if stat "${LIC}" &>/dev/null; then
-		echo "File '${LIC}' exists."
+	local file_name="./liferay/files/data/license/license.xml"
+
+	if stat "${file_name}" &>/dev/null; then
+		echo "File '${file_name}' exists."
 	else
 		docker container rm --force liferay-dxp-latest && \
 			docker create --pull always --name liferay-dxp-latest liferay/dxp:latest && \
 			docker export liferay-dxp-latest | tar --extract --verbose --strip-components=3 --wildcards --directory . opt/liferay/deploy/*.xml && \
-			mv trial-dxp-license*.xml ${LIC}
+			mv trial-dxp-license*.xml ${file_name}
 	fi
 }
 
@@ -233,7 +234,7 @@ function install_dependencies {
 }
 
 function patch_coredns {
-  gateway_ip=$(k3d cluster list "${CLUSTER_NAME}" -o json | jq -r '[.[] | .nodes[] | select(.runtimeLabels["k3d.server.loadbalancer"] == "k3d-'"${cluster_name}"'-serverlb")][0] | .IP["IP"]')
+  gateway_ip=$(k3d cluster list "${CLUSTER_NAME}" -o json | jq -r '[.[] | .nodes[] | select(.runtimeLabels["k3d.server.loadbalancer"] == "k3d-'"${CLUSTER_NAME}"'-serverlb")][0] | .IP["IP"]')
 
 	cat "${PWD}/manifests/coredns-custom.yaml" | sed "s/__GATEWAY_IP__/${gateway_ip}/" | sed "s/__DOMAIN_SUFFIX__/${DOMAIN_SUFFIX}/" | kubectl apply -f -
 }
@@ -391,8 +392,9 @@ function start_portal {
 	helm upgrade --install ${release_name} "${LIFERAY_DEFAULT_HELM_URL}" \
 		"${create_namespace_args[@]}" \
 		"${namespace_args[@]}" \
-		--set-file "configmap.data.license\.xml=license.xml" \
-		"${values_args[@]}" ${helm_debug_arg}
+		"${values_args[@]}" ${helm_debug_arg} \
+		--timeout 10m \
+		--wait
 
 	if [[ -n "${portal_url}" ]]; then
 		echo "URL: http://${portal_url}"
@@ -402,28 +404,31 @@ function start_portal {
 }
 
 function update_registry {
-local enabled
+	local service="maildev"
+	local enabled
 
-	enabled=$(awk -v service="maildev" '
+	enabled=$(awk -v service="${service}" '
 		/^cx:/ { in_cx = 1 }
 		in_cx && $0 ~ "  " service ":" { in_service = 1 }
 		in_cx && in_service && /enabled:/ { print $2; exit }
 	' "${PWD}/helm/default-values.yaml")
 
 	if [[ "${enabled}" == "false" ]]; then
-		continue
+		return
 	fi
 
 	if curl --silent "http://localhost:5000/v2/${service}/tags/list" | grep -q "latest"; then
-		continue
+		return
 	fi
 
-docker pull "maildev/maildev"
+	docker pull "maildev/maildev"
 	docker tag "maildev/maildev:latest" "localhost:5000/maildev"
 	docker push "localhost:5000/maildev"
 }
 
 function main {
+	mkdir -p liferay
+
 	install_dependencies
 
 	download_hotfix

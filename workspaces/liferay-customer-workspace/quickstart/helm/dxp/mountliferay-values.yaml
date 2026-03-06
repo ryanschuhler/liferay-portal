@@ -1,0 +1,9 @@
+customVolumeMounts:
+    x-mountliferay:
+        -   mountPath: /mnt/liferay
+            name: mount-liferay
+customVolumes:
+    x-mountliferay:
+        -   hostPath:
+                path: /mnt/liferay
+            name: mount-liferay

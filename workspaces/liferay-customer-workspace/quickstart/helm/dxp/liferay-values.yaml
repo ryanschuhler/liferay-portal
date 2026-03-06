@@ -1,6 +1,9 @@
 customEnv:
     x-envvars:
-        -   name: GLOWROOT_ENABLED 
+        -   name: GLOWROOT_ENABLED
+            value: "true"
+    x-license:
+        -   name: LIFERAY_DISABLE_TRIAL_LICENSE
             value: "true"
 image:
     tag: 2025.q3.7
@@ -38,6 +41,8 @@ portalProperties: |
     virtual.hosts.valid.hosts=*
     web.server.protocol=http
 replicaCount: 1
+securityContext:
+    readOnlyRootFilesystem: false
 resources:
     limits:
         cpu: 8000m
