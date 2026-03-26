@@ -4,5 +4,11 @@
 		"properties": {
 			"promptEnabled": true
 		}
+	},
+	{
+		"pid": "com.liferay.portal.kernel.model.Group",
+		"properties": {
+			"friendlyURL": "/customer-portal"
+		}
 	}
 ]
