@@ -3,22 +3,33 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useOutletContext} from 'react-router-dom';
-import i18n from '~/utils/I18n';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import {getDXPCloudEnvironment} from '~/services/liferay/graphql/queries';
-import {getOrRequestToken} from '~/services/liferay/security/auth/getOrRequestToken';
 import ActivationStatus from '~/features/project/containers/ActivationStatus/index';
 import {useAppContext} from '~/features/project/context';
 import DeveloperKeysLayouts from '~/features/project/layouts/DeveloperKeysLayout';
 import {LIST_TYPES, PRODUCT_TYPES} from '~/features/project/utils/constants';
+import {getDXPCloudEnvironment} from '~/services/liferay/graphql/queries';
+import {getOrRequestToken} from '~/services/liferay/security/auth/getOrRequestToken';
+import i18n from '~/utils/I18n';
+import {
+	IAccountSubscriptionGroup,
+	IDXPCloudEnvironment,
+	IProject,
+	IUserAccount,
+} from '~/utils/types';
 
-const DXPCloud = () => {
+interface IProps {}
+
+const DXPCloud: React.FC<IProps> = () => {
 	const [{project, subscriptionGroups, userAccount}] = useAppContext();
-	const {setHasSideMenu} = useOutletContext();
-	const [dxpCloudEnvironment, setDxpCloudEnvironment] = useState();
-	const [oAuthToken, setOAuthToken] = useState();
+	const {setHasSideMenu} = useOutletContext<{
+		setHasSideMenu: (value: boolean) => void;
+	}>();
+	const [dxpCloudEnvironment, setDxpCloudEnvironment] =
+		useState<IDXPCloudEnvironment | null>(null);
+	const [oAuthToken, setOAuthToken] = useState<string | null>(null);
 	const {client} = useAppPropertiesContext();
 
 	useEffect(() => {
@@ -37,6 +48,10 @@ const DXPCloud = () => {
 
 	useEffect(() => {
 		const getDxpCloudEnvironmentData = async () => {
+			if (!project?.accountKey) {
+				return;
+			}
+
 			const {data} = await client.query({
 				fetchPolicy: 'network-only',
 				query: getDXPCloudEnvironment,
@@ -57,20 +72,28 @@ const DXPCloud = () => {
 		getDxpCloudEnvironmentData();
 	}, [client, project, subscriptionGroups]);
 
+	if (!project || !subscriptionGroups) {
+		return null;
+	}
+
 	return (
 		<div className="mr-4">
 			<ActivationStatus.DXPCloud
 				dxpCloudEnvironment={dxpCloudEnvironment}
 				dxpVersion={project.dxpVersion}
 				listType={LIST_TYPES.dxpMajorVersion}
-				project={project}
-				subscriptionGroupDXPCloud={subscriptionGroups.find(
-					(subscriptionGroup) =>
-						subscriptionGroup.name === PRODUCT_TYPES.liferayCloud &&
-						subscriptionGroup.activationProductName.split(',')
-							.includes(PRODUCT_TYPES.dxpCloud)
-				)}
-				userAccount={userAccount}
+				project={project as IProject}
+				subscriptionGroupDXPCloud={
+					subscriptionGroups.find(
+						(subscriptionGroup) =>
+							subscriptionGroup.name ===
+								PRODUCT_TYPES.liferayCloud &&
+							subscriptionGroup.activationProductName
+								?.split(',')
+								.includes(PRODUCT_TYPES.dxpCloud)
+					) as IAccountSubscriptionGroup
+				}
+				userAccount={userAccount as IUserAccount}
 			/>
 
 			<DeveloperKeysLayouts>
@@ -81,10 +104,10 @@ const DXPCloud = () => {
 					)}
 					dxpVersion={project.dxpVersion}
 					listType={LIST_TYPES.dxpMajorVersion}
-					oAuthToken={oAuthToken}
+					oAuthToken={oAuthToken as string}
 					productName="DXP"
 					projectName={project.name}
-				></DeveloperKeysLayouts.Inputs>
+				/>
 			</DeveloperKeysLayouts>
 		</div>
 	);

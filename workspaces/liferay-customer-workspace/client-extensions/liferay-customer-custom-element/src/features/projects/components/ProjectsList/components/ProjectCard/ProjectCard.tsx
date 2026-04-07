@@ -80,7 +80,7 @@ const ProjectCard: React.FC<IProps> = ({
 
 				<span className="font-weight-bold ml-1">
 					{i18n.translate(
-						getKebabCase(koroneikiAccount.region) as string
+						getKebabCase(koroneikiAccount.region || '')
 					)}
 				</span>
 			</div>

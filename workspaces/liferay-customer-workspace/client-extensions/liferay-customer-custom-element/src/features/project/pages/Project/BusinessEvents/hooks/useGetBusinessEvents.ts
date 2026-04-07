@@ -20,7 +20,9 @@ export default function useGetBusinessEvents(filterQuery: string): {
 		try {
 			const businessEventsResponse = await getBusinessEvents(filterQuery);
 
-			setBusinessEvents(businessEventsResponse.items);
+			if (businessEventsResponse) {
+				setBusinessEvents(businessEventsResponse.items);
+			}
 		}
 		catch (error) {
 			console.error('Error fetching business events:', error);

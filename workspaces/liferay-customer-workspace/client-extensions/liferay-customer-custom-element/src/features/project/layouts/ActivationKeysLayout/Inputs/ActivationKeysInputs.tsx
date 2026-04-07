@@ -3,29 +3,56 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {ApolloClient, NormalizedCacheObject} from '@apollo/client';
 import {ClaySelect} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import {useEffect, useMemo, useState} from 'react';
-import i18n from '~/utils/I18n';
 import {Button} from '~/components';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
+import {useAppContext} from '~/features/project/context';
+import {
+	EXTENSION_FILE_TYPES,
+	STATUS_CODE,
+} from '~/features/project/utils/constants';
+import {getYearlyTerms} from '~/features/project/utils/getYearlyTerms';
 import {
 	getAccountSubscriptions,
 	getCommerceOrderItems,
 } from '~/services/liferay/graphql/queries';
 import {getCommonLicenseKey} from '~/services/liferay/rest/raysource/LicenseKeys';
-import {
-	FORMAT_DATE_TYPES,
-	ROLE_TYPES,
-} from '~/utils/constants';
+import i18n from '~/utils/I18n';
+import {FORMAT_DATE_TYPES, ROLE_TYPES} from '~/utils/constants';
 import downloadFromBlob from '~/utils/downloadFromBlob';
 import getDateCustomFormat from '~/utils/getDateCustomFormat';
 import getKebabCase from '~/utils/getKebabCase';
-import {useAppContext} from '~/features/project/context';
-import {EXTENSION_FILE_TYPES, STATUS_CODE} from '~/features/project/utils/constants';
-import {getYearlyTerms} from '~/features/project/utils/getYearlyTerms';
+import {IAccountBrief, IAccountSubscription, IRoleBrief} from '~/utils/types';
 
 import './ActivationKeysInputs.css';
+
+interface IOrderItemDate {
+	endDate: Date;
+	startDate: Date;
+}
+
+interface IAccountSubscriptionExtended extends IAccountSubscription {
+	accountSubscriptionId: number;
+	externalReferenceCode: string;
+}
+
+interface IActivationKeysInputsProps {
+	accountKey: string;
+	accountSubscriptionGroupName: string;
+	oAuthToken: string;
+	productTitle: string;
+	projectName: string;
+}
+
+interface IOrderItem {
+	options: {
+		endDate: string;
+		startDate: string;
+	};
+}
 
 const ActivationKeysInputs = ({
 	accountKey,
@@ -33,7 +60,7 @@ const ActivationKeysInputs = ({
 	oAuthToken,
 	productTitle,
 	projectName,
-}) => {
+}: IActivationKeysInputsProps) => {
 	const [{project, userAccount}] = useAppContext();
 
 	const {
@@ -43,25 +70,31 @@ const ActivationKeysInputs = ({
 		submitSupportTicketURL,
 	} = useAppPropertiesContext();
 
-	const [accountSubscriptions, setAccountSubscriptions] = useState([]);
+	const [accountSubscriptions, setAccountSubscriptions] = useState<
+		IAccountSubscriptionExtended[]
+	>([]);
 
 	const [
 		selectedAccountSubscriptionName,
 		setSelectedAccountSubscriptionName,
 	] = useState('');
-	const [
-		selectedAccountSubscriptionERC,
-		setSelectedAccountSubscriptionERC,
-	] = useState('');
+	const [selectedAccountSubscriptionERC, setSelectedAccountSubscriptionERC] =
+		useState('');
 
-	const [orderItemsDates, setAccountOrderItemsDates] = useState([]);
-	const [selectDateInterval, setSelectedDateInterval] = useState();
+	const [orderItemsDates, setAccountOrderItemsDates] = useState<
+		IOrderItemDate[]
+	>([]);
+	const [selectDateInterval, setSelectedDateInterval] = useState<
+		IOrderItemDate | undefined
+	>(undefined);
 
 	const [hasLicenseDownloadError, setLicenseDownloadError] = useState(false);
 
 	useEffect(() => {
 		const fetchAccountSubscriptions = async () => {
-			const {data} = await client.query({
+			const {data} = await (
+				client as ApolloClient<NormalizedCacheObject>
+			).query({
 				query: getAccountSubscriptions,
 				variables: {
 					filter: `accountSubscriptionGroupERC eq '${accountKey}_${accountSubscriptionGroupName}'`,
@@ -69,11 +102,18 @@ const ActivationKeysInputs = ({
 			});
 
 			if (data) {
-				const items = data.c?.accountSubscriptions?.items;
-				setAccountSubscriptions(data.c?.accountSubscriptions?.items);
+				const items: IAccountSubscriptionExtended[] =
+					data.c?.accountSubscriptions?.items;
+				setAccountSubscriptions(items);
 
-				setSelectedAccountSubscriptionERC(items[0].externalReferenceCode);
-				setSelectedAccountSubscriptionName(getKebabCase(items[0].name));
+				if (items.length) {
+					setSelectedAccountSubscriptionERC(
+						items[0].externalReferenceCode
+					);
+					setSelectedAccountSubscriptionName(
+						getKebabCase(items[0].name || '')
+					);
+				}
 			}
 		};
 
@@ -84,7 +124,9 @@ const ActivationKeysInputs = ({
 		const getOrderItems = async () => {
 			const filterAccountSubscriptionERC = `customFields/accountSubscriptionERC eq '${selectedAccountSubscriptionERC}'`;
 
-			const {data} = await client.query({
+			const {data} = await (
+				client as ApolloClient<NormalizedCacheObject>
+			).query({
 				fetchPolicy: 'network-only',
 				query: getCommerceOrderItems,
 				variables: {
@@ -93,13 +135,16 @@ const ActivationKeysInputs = ({
 			});
 
 			if (data) {
-				const orderItems = data?.orderItems?.items || [];
+				const orderItems: IOrderItem[] = data?.orderItems?.items || [];
 
 				if (orderItems.length) {
 					const orderItemsByYearlyTerms = orderItems
 						.map((orderItem) => getYearlyTerms(orderItem.options))
 						.flat()
-						.sort((a, b) => a.startDate - b.startDate);
+						.sort(
+							(a: IOrderItemDate, b: IOrderItemDate) =>
+								a.startDate.getTime() - b.startDate.getTime()
+						);
 
 					setAccountOrderItemsDates(orderItemsByYearlyTerms);
 					setSelectedDateInterval(orderItemsByYearlyTerms[0]);
@@ -110,7 +155,11 @@ const ActivationKeysInputs = ({
 		if (selectedAccountSubscriptionName) {
 			getOrderItems();
 		}
-	}, [accountKey, accountSubscriptionGroupName, client, selectedAccountSubscriptionName]);
+	}, [
+		client,
+		selectedAccountSubscriptionERC,
+		selectedAccountSubscriptionName,
+	]);
 
 	useEffect(() => {
 		if (selectedAccountSubscriptionName && selectDateInterval) {
@@ -119,17 +168,21 @@ const ActivationKeysInputs = ({
 	}, [selectDateInterval, selectedAccountSubscriptionName]);
 
 	const handleClick = async () => {
+		if (!selectDateInterval) {
+			return;
+		}
+
 		const license = await getCommonLicenseKey(
 			accountKey,
-			selectDateInterval.endDate.toISOString(),
-			selectDateInterval.startDate.toISOString(),
+			selectDateInterval.endDate,
+			selectDateInterval.startDate,
 			selectedAccountSubscriptionName.toLowerCase(),
 			oAuthToken,
 			provisioningServerAPI,
 			encodeURI(productTitle)
 		);
 
-		const formatText = (text) =>
+		const formatText = (text: string) =>
 			text.replaceAll(/[^a-zA-Z0-9]/g, '').toLowerCase();
 		const productName = [productTitle, selectedAccountSubscriptionName]
 			.map(formatText)
@@ -137,7 +190,10 @@ const ActivationKeysInputs = ({
 
 		if (license.status === STATUS_CODE.success) {
 			const contentType = license.headers.get('content-type');
-			const extensionFile = EXTENSION_FILE_TYPES[contentType] || '.txt';
+			const extensionFile =
+				EXTENSION_FILE_TYPES[
+					contentType as keyof typeof EXTENSION_FILE_TYPES
+				] || '.txt';
 			const licenseBlob = await license.blob();
 
 			downloadFromBlob(
@@ -153,10 +209,11 @@ const ActivationKeysInputs = ({
 		setLicenseDownloadError(true);
 	};
 
-	const accountBrief = userAccount.accountBriefs?.find(
-		(accountBrief) =>
-			accountBrief.externalReferenceCode === project?.accountKey
-	);
+	const accountBrief: IAccountBrief | undefined =
+		userAccount?.accountBriefs?.find(
+			(accountBrief: IAccountBrief) =>
+				accountBrief.externalReferenceCode === project?.accountKey
+		);
 
 	const errorDownloadMessage = useMemo(
 		() => ({
@@ -206,9 +263,9 @@ const ActivationKeysInputs = ({
 
 	const currentEnterpriseMessage = useMemo(() => {
 		const isRequester = accountBrief?.roleBriefs?.some(
-			({name}) => name === ROLE_TYPES.requester.key
+			({name}: IRoleBrief) => name === ROLE_TYPES.requester.key
 		);
-		if (userAccount.isAccountAdmin || isRequester) {
+		if (userAccount?.isAccountAdmin || isRequester) {
 			return errorDownloadMessage.messageRequestersAdministrators;
 		}
 
@@ -227,7 +284,7 @@ const ActivationKeysInputs = ({
 
 			<div className="d-flex mb-3">
 				<label className="cp-subscription-select mr-3">
-					{i18n.sub('subscription')}
+					{i18n.sub('subscription', [])}
 
 					<div className="position-relative">
 						<ClayIcon
@@ -236,22 +293,36 @@ const ActivationKeysInputs = ({
 						/>
 
 						<ClaySelect
-							onChange={(event) => {
-								setSelectedAccountSubscriptionERC(event.target.value);
+							onChange={(
+								event: React.ChangeEvent<HTMLSelectElement>
+							) => {
+								setSelectedAccountSubscriptionERC(
+									event.target.value
+								);
 								setSelectedAccountSubscriptionName(
-									getKebabCase(event.target.options[event.target.selectedIndex].label)
+									getKebabCase(
+										event.target.options[
+											event.target.selectedIndex
+										].label
+									)
 								);
 							}}
 						>
-							{accountSubscriptions.map((accountSubscription) => (
-								<ClaySelect.Option
-									key={
-										accountSubscription.accountSubscriptionId
-									}
-									label={accountSubscription.name}
-									value={accountSubscription.externalReferenceCode}
-								/>
-							))}
+							{accountSubscriptions.map(
+								(
+									accountSubscription: IAccountSubscriptionExtended
+								) => (
+									<ClaySelect.Option
+										key={
+											accountSubscription.accountSubscriptionId
+										}
+										label={accountSubscription.name}
+										value={
+											accountSubscription.externalReferenceCode
+										}
+									/>
+								)
+							)}
 						</ClaySelect>
 					</div>
 				</label>
@@ -266,9 +337,13 @@ const ActivationKeysInputs = ({
 						/>
 
 						<ClaySelect
-							onChange={(event) => {
+							onChange={(
+								event: React.ChangeEvent<HTMLSelectElement>
+							) => {
 								setSelectedDateInterval(
-									orderItemsDates[event.target.value]
+									orderItemsDates[
+										parseInt(event.target.value, 10)
+									]
 								);
 							}}
 						>

@@ -5,22 +5,40 @@
 
 import ClayForm, {ClayInput} from '@clayui/form';
 import ClayModal from '@clayui/modal';
+import {Observer} from '@clayui/modal/lib/types';
 import classNames from 'classnames';
 import {useState} from 'react';
-import i18n from '~/utils/I18n';
 import {Badge, Button} from '~/components';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
+import {useAppContext} from '~/features/project/context';
+import {
+	PRODUCT_TYPES,
+	STATUS_TAG_TYPE_NAMES,
+} from '~/features/project/utils/constants';
+import {Liferay} from '~/services/liferay';
 import {patchAccountSubscriptionGroups} from '~/services/liferay/graphql/account-subscription-groups/queries/patchAccountSubscriptionGroups';
 import {
 	getDXPCloudEnvironment,
 	patchDXPCloudEnvironment,
 } from '~/services/liferay/graphql/queries';
+import i18n from '~/utils/I18n';
+import {IAccountSubscriptionGroup} from '~/utils/types';
 import {isLowercaseAndNumbers} from '~/utils/validations.form';
-import {useAppContext} from '~/features/project/context';
 
 import {actionTypes} from '../../context/reducer';
 
-import {PRODUCT_TYPES, STATUS_TAG_TYPE_NAMES} from '~/features/project/utils/constants';
+interface IProps {
+	accountKey: string;
+	observer: Observer;
+	onClose: () => void;
+	projectID: string | undefined;
+	projectIdValue: string;
+	setHasFinishedUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+	setProjectIdValue: React.Dispatch<React.SetStateAction<string>>;
+	setSubscriptionGroupActivationStatus: React.Dispatch<
+		React.SetStateAction<string | undefined>
+	>;
+}
 
 const ModalDXPCActivationStatus = ({
 	accountKey,
@@ -31,30 +49,19 @@ const ModalDXPCActivationStatus = ({
 	setHasFinishedUpdate,
 	setProjectIdValue,
 	setSubscriptionGroupActivationStatus,
-}) => {
-	const [hasError, setHasError] = useState();
+}: IProps) => {
+	const [hasError, setHasError] = useState<string | undefined>();
 
 	const [{project, subscriptionGroups}, dispatch] = useAppContext();
+
 	const {client} = useAppPropertiesContext();
 
-	const handleOnConfirm = () => {
-		const errorMessageProductId = isLowercaseAndNumbers(projectIdValue);
-
-		if (errorMessageProductId) {
-			setHasError(errorMessageProductId);
-
-			return;
-		}
-		updateProjectId(accountKey);
-		updateSubscriptionGroupsStatus();
-		onClose();
-	};
-
 	const updateSubscriptionGroupsStatus = async () => {
-		const dxpCloudSubscriptionGroup = subscriptionGroups.find(
-			(subscriptionGroup) =>
+		const dxpCloudSubscriptionGroup = subscriptionGroups?.find(
+			(subscriptionGroup: IAccountSubscriptionGroup) =>
 				subscriptionGroup.name === PRODUCT_TYPES.liferayCloud &&
-				subscriptionGroup.activationProductName.split(',')
+				subscriptionGroup.activationProductName
+					?.split(',')
 					.includes(PRODUCT_TYPES.dxpCloud)
 		);
 
@@ -66,7 +73,7 @@ const ModalDXPCActivationStatus = ({
 			mutation: patchAccountSubscriptionGroups,
 			variables: {
 				accountSubscriptionGroup: {
-					accountKey: project.accountKey,
+					accountKey: project?.accountKey,
 					activationStatus: STATUS_TAG_TYPE_NAMES.active,
 					r_accountEntryToAccountSubscriptionGroup_accountEntryId:
 						project?.id,
@@ -78,19 +85,21 @@ const ModalDXPCActivationStatus = ({
 		setSubscriptionGroupActivationStatus(STATUS_TAG_TYPE_NAMES.active);
 		setHasFinishedUpdate(true);
 
-		const newSubscriptionGroups = subscriptionGroups.map((subscription) => {
-			if (
-				subscription.accountSubscriptionGroupId ===
-				dxpCloudSubscriptionGroup?.accountSubscriptionGroupId
-			) {
-				return {
-					...subscription,
-					activationStatus: STATUS_TAG_TYPE_NAMES.active,
-				};
-			}
+		const newSubscriptionGroups = (subscriptionGroups?.map(
+			(subscription: IAccountSubscriptionGroup) => {
+				if (
+					subscription.accountSubscriptionGroupId ===
+					dxpCloudSubscriptionGroup?.accountSubscriptionGroupId
+				) {
+					return {
+						...subscription,
+						activationStatus: STATUS_TAG_TYPE_NAMES.active,
+					};
+				}
 
-			return subscription;
-		});
+				return subscription;
+			}
+		) ?? []) as IAccountSubscriptionGroup[];
 
 		dispatch({
 			payload: newSubscriptionGroups,
@@ -98,11 +107,13 @@ const ModalDXPCActivationStatus = ({
 		});
 	};
 
-	const updateProjectId = async (accountKey) => {
+	const updateProjectId = async (accountKey: string) => {
 		const {data: dataDXPCEnvironment} = await client.query({
 			query: getDXPCloudEnvironment,
+
 			variables: {
 				filter: `accountKey eq '${accountKey}'`,
+
 				scopeKey: Liferay.ThemeDisplay.getScopeGroupId(),
 			},
 		});
@@ -114,20 +125,41 @@ const ModalDXPCActivationStatus = ({
 			await client.mutate({
 				context: {
 					displaySuccess: false,
+
 					type: 'liferay-rest',
 				},
+
 				mutation: patchDXPCloudEnvironment,
+
 				variables: {
 					DXPCloudEnvironment: {
 						projectId: projectIdValue,
+
 						r_accountEntryToDXPCloudEnvironment_accountEntryId:
 							project?.id,
 					},
+
 					dxpCloudEnvironmentId:
 						dxpCloudEnvironment.dxpCloudEnvironmentId,
 				},
 			});
 		}
+	};
+
+	const handleOnConfirm = () => {
+		const errorMessageProductId = isLowercaseAndNumbers(projectIdValue);
+
+		if (errorMessageProductId) {
+			setHasError(errorMessageProductId);
+
+			return;
+		}
+
+		updateProjectId(accountKey);
+
+		updateSubscriptionGroupsStatus();
+
+		onClose();
 	};
 
 	return (
@@ -193,15 +225,17 @@ const ModalDXPCActivationStatus = ({
 
 					<div className="d-flex my-4 px-4">
 						<Button
-							displayType="secondary ml-auto mt-2"
+							className="ml-auto mt-2"
+							displayType="secondary"
 							onClick={onClose}
 						>
 							{i18n.translate('cancel')}
 						</Button>
 
 						<Button
+							className="ml-3 mt-2"
 							disabled={!projectIdValue}
-							displayType="primary ml-3 mt-2"
+							displayType="primary"
 							onClick={handleOnConfirm}
 						>
 							{i18n.translate('confirm')}

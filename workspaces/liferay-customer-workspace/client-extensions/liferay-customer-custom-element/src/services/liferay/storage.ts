@@ -9,11 +9,11 @@ export const storage = {
 	getItem: (
 		key: string,
 		consentType = Liferay.Util.SessionStorage.TYPES.NECESSARY
-	) => (Liferay.Util.SessionStorage as any).getItem(key, consentType),
+	) => Liferay.Util.SessionStorage.getItem(key, consentType),
 	removeItem: (key: string) => Liferay.Util.SessionStorage.removeItem(key),
 	setItem: (
 		key: string,
 		value: any,
 		consentType = Liferay.Util.SessionStorage.TYPES.NECESSARY
-	) => (Liferay.Util.SessionStorage as any).setItem(key, value, consentType),
+	) => Liferay.Util.SessionStorage.setItem(key, value, consentType),
 };

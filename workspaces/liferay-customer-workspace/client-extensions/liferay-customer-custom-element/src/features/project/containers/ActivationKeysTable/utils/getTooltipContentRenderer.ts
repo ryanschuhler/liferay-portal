@@ -9,7 +9,7 @@ import {
 } from './constants';
 import {getTooltipTitles} from './getTooltipTitles';
 
-export function getTooltipContentRenderer(title) {
+export function getTooltipContentRenderer(title: string) {
 	const hasDropdownTooltip = title === TOOLTIP_CLASSNAMES_TYPES.dropDownItem;
 
 	if (hasDropdownTooltip) {

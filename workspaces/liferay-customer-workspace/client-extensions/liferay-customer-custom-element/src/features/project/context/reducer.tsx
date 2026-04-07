@@ -8,6 +8,7 @@ import {
 	IAccountSubscriptionGroup,
 	IBusinessEvent,
 	IProject,
+	IStructuredContent,
 	IUserAccount,
 } from '~/utils/types';
 
@@ -25,36 +26,65 @@ export const actionTypes = {
 	UPDATE_SUBSCRIPTIONS: 'UPDATE_SUBSCRIPTIONS',
 	UPDATE_USER_ACCOUNT: 'UPDATE_USER_ACCOUNT',
 	UPDATE_USER_PROJECT_ACCESS: 'UPDATE_USER_PROJECT_ACCESS',
-};
+} as const;
 
-export type ActionPayload =
-	| string
-	| IAccountSubscription[]
-	| IAccountSubscriptionGroup[]
-	| IUserAccount
-	| IProject
-	| boolean
-	| undefined;
+export type ActionType = (typeof actionTypes)[keyof typeof actionTypes];
 
-export interface IAction {
-	payload: ActionPayload;
-	type: keyof typeof actionTypes;
-}
+export type IAction =
+	| {
+			payload: IBusinessEvent[];
+			type: typeof actionTypes.UPDATE_BUSINESS_EVENTS;
+	  }
+	| {
+			payload: boolean;
+			type: typeof actionTypes.UPDATE_HAS_EXPERIENCE_SUBSCRIPTION;
+	  }
+	| {
+			payload: boolean;
+			type: typeof actionTypes.UPDATE_HAS_LEGACY_SUBSCRIPTION;
+	  }
+	| {payload: boolean; type: typeof actionTypes.UPDATE_HAS_PLAN_SUBSCRIPTION}
+	| {payload: string; type: typeof actionTypes.UPDATE_PAGE}
+	| {payload: IProject; type: typeof actionTypes.UPDATE_PROJECT}
+	| {payload: string[]; type: typeof actionTypes.UPDATE_QUICK_LINKS}
+	| {
+			payload: boolean;
+			type: typeof actionTypes.UPDATE_QUICK_LINKS_EXPANDED_PANEL;
+	  }
+	| {
+			payload: IStructuredContent[];
+			type: typeof actionTypes.UPDATE_STRUCTURED_CONTENTS;
+	  }
+	| {
+			payload: IAccountSubscriptionGroup[];
+			type: typeof actionTypes.UPDATE_SUBSCRIPTION_GROUPS;
+	  }
+	| {
+			payload: IAccountSubscription[];
+			type: typeof actionTypes.UPDATE_SUBSCRIPTIONS;
+	  }
+	| {payload: IUserAccount; type: typeof actionTypes.UPDATE_USER_ACCOUNT}
+	| {
+			payload: {denyAccess: boolean; hasProjectAccess: boolean};
+			type: typeof actionTypes.UPDATE_USER_PROJECT_ACCESS;
+	  };
 
 export interface IState {
-	businessEvents: IBusinessEvent | undefined;
+	businessEvents: IBusinessEvent[] | undefined;
 	hasExperienceSubscription: boolean;
 	hasLegacySubscription: boolean;
 	hasPlanSubscription: boolean;
 	isQuickLinksExpanded: boolean;
 	page: string | undefined;
 	project: IProject | undefined;
-	quickLinks: string | undefined;
-	structuredContents: string | undefined;
+	quickLinks: string[] | undefined;
+	structuredContents: IStructuredContent[] | undefined;
 	subscriptionGroups: IAccountSubscriptionGroup[] | undefined;
 	subscriptions: IAccountSubscription[] | undefined;
 	userAccount: IUserAccount | undefined;
-	userProjectAccess: boolean | undefined;
+	userProjectAccess:
+		| {denyAccess: boolean; hasProjectAccess: boolean}
+		| undefined;
 }
 
 const reducer = (state: IState, action: IAction): IState => {
@@ -62,69 +92,67 @@ const reducer = (state: IState, action: IAction): IState => {
 		case actionTypes.UPDATE_USER_ACCOUNT:
 			return {
 				...state,
-				userAccount: action.payload as IUserAccount,
+				userAccount: action.payload,
 			};
 		case actionTypes.UPDATE_BUSINESS_EVENTS:
 			return {
 				...state,
-				businessEvents: action.payload as IBusinessEvent,
+				businessEvents: action.payload,
 			};
 		case actionTypes.UPDATE_PROJECT:
 			return {
 				...state,
-				project: action.payload as IProject,
+				project: action.payload,
 			};
 		case actionTypes.UPDATE_QUICK_LINKS:
 			return {
 				...state,
-				quickLinks: action.payload as string,
+				quickLinks: action.payload,
 			};
 		case actionTypes.UPDATE_QUICK_LINKS_EXPANDED_PANEL:
 			return {
 				...state,
-				isQuickLinksExpanded: action.payload as boolean,
+				isQuickLinksExpanded: action.payload,
 			};
 		case actionTypes.UPDATE_STRUCTURED_CONTENTS:
 			return {
 				...state,
-				structuredContents: action.payload as string,
+				structuredContents: action.payload,
 			};
 		case actionTypes.UPDATE_SUBSCRIPTION_GROUPS:
 			return {
 				...state,
-				subscriptionGroups:
-					action.payload as unknown as IAccountSubscriptionGroup[],
+				subscriptionGroups: action.payload,
 			};
 		case actionTypes.UPDATE_SUBSCRIPTIONS:
 			return {
 				...state,
-				subscriptions:
-					action.payload as unknown as IAccountSubscription[],
+				subscriptions: action.payload,
 			};
 		case actionTypes.UPDATE_HAS_EXPERIENCE_SUBSCRIPTION:
 			return {
 				...state,
-				hasExperienceSubscription: action.payload as boolean,
+				hasExperienceSubscription: action.payload,
 			};
 		case actionTypes.UPDATE_HAS_LEGACY_SUBSCRIPTION:
 			return {
 				...state,
-				hasLegacySubscription: action.payload as boolean,
+				hasLegacySubscription: action.payload,
 			};
 		case actionTypes.UPDATE_HAS_PLAN_SUBSCRIPTION:
 			return {
 				...state,
-				hasPlanSubscription: action.payload as boolean,
+				hasPlanSubscription: action.payload,
 			};
 		case actionTypes.UPDATE_PAGE:
 			return {
 				...state,
-				page: action.payload as string,
+				page: action.payload,
 			};
 		case actionTypes.UPDATE_USER_PROJECT_ACCESS:
 			return {
 				...state,
-				userProjectAccess: action.payload as boolean,
+				userProjectAccess: action.payload,
 			};
 		default:
 			return state;

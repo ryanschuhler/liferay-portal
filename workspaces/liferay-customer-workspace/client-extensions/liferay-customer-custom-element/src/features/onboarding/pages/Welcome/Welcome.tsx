@@ -10,7 +10,7 @@ import {ONBOARDING_STEP_TYPES} from '~/features/onboarding/utils/constants';
 import i18n from '~/utils/I18n';
 
 import {useOnboarding} from '../../context';
-import {ActionPayload, actionTypes} from '../../context/reducer';
+import {actionTypes} from '../../context/reducer';
 import WelcomeSkeleton from './WelcomeSkeleton';
 
 const Welcome = () => {
@@ -25,9 +25,8 @@ const Welcome = () => {
 						displayType="primary"
 						onClick={() =>
 							dispatch({
-								payload:
-									ONBOARDING_STEP_TYPES.invites as unknown as ActionPayload,
-								type: actionTypes.CHANGE_STEP as keyof typeof actionTypes,
+								payload: ONBOARDING_STEP_TYPES.invites,
+								type: actionTypes.CHANGE_STEP,
 							})
 						}
 					>

@@ -5,25 +5,35 @@
 
 import {Formik} from 'formik';
 import {useState} from 'react';
-import i18n from '~/utils/I18n';
-import SetupHighPriorityContactForm from '~/features/project/containers/HighPriorityContacts/SetupHighPriorityContact';
+import {Button} from '~/components';
 import Layout from '~/components/FormLayout';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import openToast from '~/utils/getToast';
-import {STATUS_CODE} from '~/features/project/utils/constants';
-import {Button} from '~/components';
-import {getOrRequestToken} from '~/services/liferay/security/auth/getOrRequestToken';
-import getKebabCase from '~/utils/getKebabCase';
+import SetupHighPriorityContactForm from '~/features/project/containers/HighPriorityContacts/SetupHighPriorityContact';
 import {useAppContext} from '~/features/project/context';
+import {STATUS_CODE} from '~/features/project/utils/constants';
 import {
+	HIGH_PRIORITY_CONTACT_CATEGORIES,
 	addContactRoleLiferay,
 	addContactRoleRaysource,
-	HIGH_PRIORITY_CONTACT_CATEGORIES,
 	removeContactRoleLiferay,
 	removeContactRoleRaysource,
 	updateLiferayContact,
-	updateRaysourceContact
+	updateRaysourceContact,
 } from '~/features/project/utils/getHighPriorityContacts';
+import {getOrRequestToken} from '~/services/liferay/security/auth/getOrRequestToken';
+import i18n from '~/utils/I18n';
+import getKebabCase from '~/utils/getKebabCase';
+import openToast from '~/utils/getToast';
+import {IContact} from '~/utils/types';
+
+interface IProps {
+	close: () => void;
+	hasCriticalIncidentContact: boolean;
+	hasPrivacyBreachContact: boolean;
+	hasSecurityBreachContact: boolean;
+	leftButton: string;
+	modalFilter: string;
+}
 
 const IncidentContactEditModal = ({
 	close,
@@ -32,39 +42,42 @@ const IncidentContactEditModal = ({
 	hasSecurityBreachContact,
 	leftButton,
 	modalFilter,
-}) => {
+}: IProps) => {
 	const [{project}] = useAppContext();
 
-	const [addHighPriorityContact, setAddHighPriorityContacts] = useState([]);
+	const [addHighPriorityContact, setAddHighPriorityContacts] = useState<
+		IContact[]
+	>([]);
 
-	const [
-		removeHighPriorityContacts,
-		setRemoveHighPriorityContacts,
-	] = useState([]);
+	const [removeHighPriorityContacts, setRemoveHighPriorityContacts] =
+		useState<IContact[]>([]);
 
 	const [isMultiSelectEmpty, setIsMultiSelectEmpty] = useState(false);
-
-	const {client, provisioningServerAPI} = useAppPropertiesContext();
 	const [isLoadingSaveButton, setIsLoadingSaveButton] = useState(false);
 
-	const updateMultiSelectEmpty = (error) => {
-		setIsMultiSelectEmpty(error);
+	const {client, provisioningServerAPI} = useAppPropertiesContext();
+
+	const updateMultiSelectEmpty = (error: string | undefined) => {
+		setIsMultiSelectEmpty(!!error);
 	};
 
 	const handleSubmit = async () => {
-		const handleToastOpening = (contacts, actionType) => {
-			contacts?.map((item) => {
-				openToast(
-					`${item.label}`,
-					`${i18n.translate(`high-priority-contact-${actionType}`)}
-					<b>${i18n.translate(
-						`${getKebabCase(
-							actionType === 'added'
-								? item.category.name
-								: item.labelRole
-						)}-contact`
-					)}</b>`
-				);
+		const handleToastOpening = (
+			contacts: IContact[],
+			actionType: string
+		) => {
+			contacts?.map((item: IContact) => {
+				const message = `${i18n.translate(
+					`high-priority-contact-${actionType}`
+				)} <b>${i18n.translate(
+					`${getKebabCase(
+						(actionType === 'added'
+							? item.category?.role
+							: item.labelRole) || ''
+					)}-contact`
+				)}</b>`;
+
+				openToast({message, title: `${item.label}`});
 			});
 		};
 
@@ -73,24 +86,16 @@ const IncidentContactEditModal = ({
 
 			const oAuthToken = await getOrRequestToken();
 
-			try {
-				await updateRaysourceContact(
-					addContactRoleRaysource,
-					addHighPriorityContact,
-					oAuthToken,
-					project,
-					provisioningServerAPI
-				);
+			if (project && oAuthToken) {
+				try {
+					await updateRaysourceContact(
+						addContactRoleRaysource,
+						addHighPriorityContact,
+						oAuthToken,
+						project,
+						provisioningServerAPI
+					);
 
-				await updateLiferayContact(
-					addHighPriorityContact,
-					addContactRoleLiferay,
-					project,
-					client
-				);
-			}
-			catch (error) {
-				if (error.cause === STATUS_CODE.conflict) {
 					await updateLiferayContact(
 						addHighPriorityContact,
 						addContactRoleLiferay,
@@ -98,25 +103,37 @@ const IncidentContactEditModal = ({
 						client
 					);
 				}
-				else {
-					throw new Error('Error', {cause: error.cause});
+				catch (error: unknown) {
+					const typedError = error as {cause: number};
+
+					if (typedError.cause === STATUS_CODE.conflict) {
+						await updateLiferayContact(
+							addHighPriorityContact,
+							addContactRoleLiferay,
+							project,
+							client
+						);
+					}
+					else {
+						throw new Error('Error', {cause: typedError.cause});
+					}
 				}
+
+				await updateRaysourceContact(
+					removeContactRoleRaysource,
+					removeHighPriorityContacts,
+					oAuthToken,
+					project,
+					provisioningServerAPI
+				);
+
+				await updateLiferayContact(
+					removeHighPriorityContacts,
+					removeContactRoleLiferay,
+					project,
+					client
+				);
 			}
-
-			await updateRaysourceContact(
-				removeContactRoleRaysource,
-				removeHighPriorityContacts,
-				oAuthToken,
-				project,
-				provisioningServerAPI
-			);
-
-			await updateLiferayContact(
-				removeHighPriorityContacts,
-				removeContactRoleLiferay,
-				project,
-				client
-			);
 
 			handleToastOpening(addHighPriorityContact, 'added');
 			handleToastOpening(removeHighPriorityContacts, 'removed');
@@ -124,11 +141,13 @@ const IncidentContactEditModal = ({
 			setIsLoadingSaveButton(false);
 			close();
 		}
-		catch (error) {
+		catch (error: unknown) {
 			setIsLoadingSaveButton(false);
 
-			openToast('error', 'an-unexpected-error-occurred', {
-				type: 'danger'
+			openToast({
+				message: 'an-unexpected-error-occurred',
+				title: 'Error',
+				type: 'danger',
 			});
 		}
 	};
@@ -138,9 +157,12 @@ const IncidentContactEditModal = ({
 	).find((category) => category === modalFilter);
 
 	const hasHighPriorityContactByCategory = {
-		[HIGH_PRIORITY_CONTACT_CATEGORIES.criticalIncident]: hasCriticalIncidentContact,
-		[HIGH_PRIORITY_CONTACT_CATEGORIES.privacyBreach]: hasPrivacyBreachContact,
-		[HIGH_PRIORITY_CONTACT_CATEGORIES.securityBreach]: hasSecurityBreachContact,
+		[HIGH_PRIORITY_CONTACT_CATEGORIES.criticalIncident]:
+			hasCriticalIncidentContact,
+		[HIGH_PRIORITY_CONTACT_CATEGORIES.privacyBreach]:
+			hasPrivacyBreachContact,
+		[HIGH_PRIORITY_CONTACT_CATEGORIES.securityBreach]:
+			hasSecurityBreachContact,
 	};
 
 	const highPriorityContactsModalTitle = () => {
@@ -162,7 +184,7 @@ const IncidentContactEditModal = ({
 
 		return `${i18n.translate(
 			translationPrefix
-		)} ${highPriorityContactCategorySelected.toLowerCase()}`;
+		)} ${highPriorityContactCategorySelected?.toLowerCase()}`;
 	};
 
 	return (
@@ -212,11 +234,10 @@ const IncidentContactEditForm = ({
 	hasSecurityBreachContact,
 	leftButton,
 	modalFilter,
-	props,
-}) => {
+}: IProps) => {
 	return (
-		<Formik validateOnChange>
-			{(formikProps) => (
+		<Formik initialValues={{}} onSubmit={() => {}} validateOnChange>
+			{() => (
 				<IncidentContactEditModal
 					close={close}
 					hasCriticalIncidentContact={hasCriticalIncidentContact}
@@ -224,8 +245,6 @@ const IncidentContactEditForm = ({
 					hasSecurityBreachContact={hasSecurityBreachContact}
 					leftButton={leftButton}
 					modalFilter={modalFilter}
-					{...props}
-					{...formikProps}
 				/>
 			)}
 		</Formik>

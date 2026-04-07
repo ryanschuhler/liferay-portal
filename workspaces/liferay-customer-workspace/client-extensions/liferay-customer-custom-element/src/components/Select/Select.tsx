@@ -27,6 +27,7 @@ interface ISelectOption {
 interface IProps {
 	badgeClassName?: string;
 	className?: string;
+	disabled?: boolean;
 	groupStyle?: string;
 	helper?: string;
 	id?: string;
@@ -60,6 +61,7 @@ const Select: React.FC<IProps> = ({
 	required,
 	text,
 	validations = [],
+	disabled,
 }) => {
 	if (required) {
 		validations = validations
@@ -148,6 +150,7 @@ const Select: React.FC<IProps> = ({
 
 					<ClaySelect
 						aria-label={label}
+						disabled={disabled}
 						id={id}
 						name={name}
 						onBlur={handleBlur}

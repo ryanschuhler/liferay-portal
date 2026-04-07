@@ -6,10 +6,10 @@
 import * as OAuth2 from '@liferay/oauth2-provider-web/client';
 import {useState} from 'react';
 
-export default function useDelete(fetchTicketAttachments) {
+export default function useDelete(fetchTicketAttachments: () => void) {
 	const [isDeleting, setIsDeleting] = useState(false);
 
-	const onDelete = async (ticketAttachmentId) => {
+	const onDelete = async (ticketAttachmentId: string) => {
 		setIsDeleting(true);
 
 		try {

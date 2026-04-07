@@ -7,12 +7,17 @@ import {useEffect, useState} from 'react';
 import {ACTIVATION_STATUS} from '~/features/project/containers/ActivationKeysTable/utils/constants/activationStatus';
 import {INITIAL_FILTER} from '~/features/project/containers/ActivationKeysTable/utils/constants/initialFilter';
 import i18n from '~/utils/I18n';
+import {IFilters} from '~/utils/types';
 
 const COMPLIMENTARY = 'Complimentary';
 const SUBSCRIPTION = 'Subscription';
 
-export default function useFilters(setFilterTerm, productName, baseFilter) {
-	const [filters, setFilters] = useState(INITIAL_FILTER);
+export default function useFilters(
+	setFilterTerm: React.Dispatch<React.SetStateAction<string>>,
+	productName: string,
+	baseFilter: string
+): [IFilters, React.Dispatch<React.SetStateAction<IFilters>>] {
+	const [filters, setFilters] = useState<IFilters>(INITIAL_FILTER);
 
 	useEffect(() => {
 		let initialFilter = `active eq true and ${baseFilter}`;
@@ -145,24 +150,28 @@ export default function useFilters(setFilterTerm, productName, baseFilter) {
 		if (
 			Object.values(filters.expirationDate.value).some((date) => !!date)
 		) {
-			const filterDates = [];
+			const filterDates: string[] = [];
 			hasFilterPill = true;
 
 			if (filters.expirationDate.value.onOrBefore) {
 				filterDates.push(
-					`expirationDate lt ${filters.expirationDate.value.onOrBefore.toISOString()}`
+					`expirationDate lt ${(
+						filters.expirationDate.value.onOrBefore as Date
+					).toISOString()}`
 				);
 			}
 			if (filters.expirationDate.value.onOrAfter) {
 				filterDates.push(
-					`expirationDate ge ${filters.expirationDate.value.onOrAfter.toISOString()}`
+					`expirationDate ge ${(
+						filters.expirationDate.value.onOrAfter as Date
+					).toISOString()}`
 				);
 			}
 
 			initialFilter = initialFilter.concat(
 				` and (${filterDates.join(
-					filters.expirationDate.value.onOrAfter >
-						filters.expirationDate.value.onOrBefore
+					(filters.expirationDate.value.onOrAfter as Date) >
+						(filters.expirationDate.value.onOrBefore as Date)
 						? ' or '
 						: ' and '
 				)})`
@@ -170,24 +179,28 @@ export default function useFilters(setFilterTerm, productName, baseFilter) {
 		}
 
 		if (Object.values(filters.startDate.value).some((date) => !!date)) {
-			const filterDates = [];
+			const filterDates: string[] = [];
 			hasFilterPill = true;
 
 			if (filters.startDate.value.onOrBefore) {
 				filterDates.push(
-					`startDate lt ${filters.startDate.value.onOrBefore.toISOString()}`
+					`startDate lt ${(
+						filters.startDate.value.onOrBefore as Date
+					).toISOString()}`
 				);
 			}
 			if (filters.startDate.value.onOrAfter) {
 				filterDates.push(
-					`startDate ge ${filters.startDate.value.onOrAfter.toISOString()}`
+					`startDate ge ${(
+						filters.startDate.value.onOrAfter as Date
+					).toISOString()}`
 				);
 			}
 
 			initialFilter = initialFilter.concat(
 				` and (${filterDates.join(
-					filters.startDate.value.onOrAfter >
-						filters.startDate.value.onOrBefore
+					(filters.startDate.value.onOrAfter as Date) >
+						(filters.startDate.value.onOrBefore as Date)
 						? ' or '
 						: ' and '
 				)})`
@@ -195,9 +208,11 @@ export default function useFilters(setFilterTerm, productName, baseFilter) {
 		}
 
 		if (
-			Object.values(filters.keyType.value).every((value) => !isNaN(value))
+			Object.values(filters.keyType.value).every(
+				(value) => !isNaN(value as number)
+			)
 		) {
-			const filtersKeyType = [];
+			const filtersKeyType: string[] = [];
 			let showOnPrem = false;
 
 			if (
@@ -236,7 +251,7 @@ export default function useFilters(setFilterTerm, productName, baseFilter) {
 				filtersKeyType.push(
 					`maxClusterNodes le ${filters.keyType.value.maxNodes}`
 				);
-				showOnPrem = filters.keyType.value.hasOnPremise;
+				showOnPrem = filters.keyType.value.hasOnPremise as boolean;
 			}
 
 			if (filters.keyType.value.minNodes) {
@@ -245,7 +260,7 @@ export default function useFilters(setFilterTerm, productName, baseFilter) {
 				filtersKeyType.push(
 					`maxClusterNodes ge ${filters.keyType.value.minNodes}`
 				);
-				showOnPrem = filters.keyType.value.hasOnPremise;
+				showOnPrem = filters.keyType.value.hasOnPremise as boolean;
 			}
 
 			if (showOnPrem) {
@@ -289,6 +304,7 @@ export default function useFilters(setFilterTerm, productName, baseFilter) {
 		filters.status.value,
 		productName,
 		setFilterTerm,
+		setFilters,
 	]);
 
 	return [filters, setFilters];

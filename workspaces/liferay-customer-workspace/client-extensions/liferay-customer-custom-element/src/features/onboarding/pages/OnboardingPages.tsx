@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {ApolloClient, NormalizedCacheObject} from '@apollo/client';
+import {Formik} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
 import InviteTeamMembersForm from '~/features/project/containers/InviteTeamMembersForm';
@@ -18,7 +20,7 @@ import ConfirmationMessageModal from '../../project/containers/ActivationStatus/
 import SetupLiferayExperienceCloudForm from '../../project/containers/ActivationStatus/LiferayExperienceCloud/components/SetupLXCForm';
 import {LIST_TYPES, PRODUCT_TYPES} from '../../project/utils/constants';
 import {useOnboarding} from '../context';
-import {ActionPayload, actionTypes} from '../context/reducer';
+import {actionTypes} from '../context/reducer';
 import {ONBOARDING_STEP_TYPES} from '../utils/constants';
 import SuccessCloud from './SuccessCloud';
 import Welcome from './Welcome';
@@ -41,7 +43,7 @@ const OnboardingPages: React.FC = () => {
 		dispatch,
 	] = useOnboarding();
 
-	const [oAuthToken, setOAuthToken] = useState<string | undefined>();
+	const [oAuthToken, setOAuthToken] = useState<string | null>(null);
 
 	useEffect(() => {
 		const fetchToken = async () => {
@@ -53,8 +55,11 @@ const OnboardingPages: React.FC = () => {
 		fetchToken();
 	}, []);
 
+	const accountKey = project?.accountKey;
+
 	const [supportSeatsCount] = useUserAccountsByAccountExternalReferenceCode(
-		project?.accountKey
+		accountKey as string,
+		!accountKey
 	);
 
 	const {client} = useAppPropertiesContext();
@@ -92,17 +97,15 @@ const OnboardingPages: React.FC = () => {
 			!liferayExperienceCloudActivationSubmittedStatus
 		) {
 			return dispatch({
-				payload:
-					ONBOARDING_STEP_TYPES.liferayExperienceCloud as unknown as ActionPayload,
-				type: actionTypes.CHANGE_STEP as keyof typeof actionTypes,
+				payload: ONBOARDING_STEP_TYPES.liferayExperienceCloud,
+				type: actionTypes.CHANGE_STEP,
 			});
 		}
 		else {
 			if (subscriptionDXPCloud && !dxpCloudActivationSubmittedStatus) {
 				return dispatch({
-					payload:
-						ONBOARDING_STEP_TYPES.dxpCloud as unknown as ActionPayload,
-					type: actionTypes.CHANGE_STEP as keyof typeof actionTypes,
+					payload: ONBOARDING_STEP_TYPES.dxpCloud,
+					type: actionTypes.CHANGE_STEP,
 				});
 			}
 
@@ -111,9 +114,8 @@ const OnboardingPages: React.FC = () => {
 				!analyticsCloudActivationSubmittedStatus
 			) {
 				return dispatch({
-					payload:
-						ONBOARDING_STEP_TYPES.analyticsCloud as unknown as ActionPayload,
-					type: actionTypes.CHANGE_STEP as keyof typeof actionTypes,
+					payload: ONBOARDING_STEP_TYPES.analyticsCloud,
+					type: actionTypes.CHANGE_STEP,
 				});
 			}
 		}
@@ -127,9 +129,8 @@ const OnboardingPages: React.FC = () => {
 			!analyticsCloudActivationSubmittedStatus
 		) {
 			dispatch({
-				payload:
-					ONBOARDING_STEP_TYPES.analyticsCloud as unknown as ActionPayload,
-				type: actionTypes.CHANGE_STEP as keyof typeof actionTypes,
+				payload: ONBOARDING_STEP_TYPES.analyticsCloud,
+				type: actionTypes.CHANGE_STEP,
 			});
 		}
 
@@ -145,31 +146,56 @@ const OnboardingPages: React.FC = () => {
 		availableSupportSeatsCount = 0;
 	}
 
+	const mutateUserData = () => {};
+
+	if (!project || !subscriptionGroups) {
+		return <Welcome.Skeleton />;
+	}
+
 	const StepsLayout: Record<string, IStepLayout> = {
 		[ONBOARDING_STEP_TYPES.invites]: {
-			Component: (
-				<InviteTeamMembersForm
-					availableSupportSeatsCount={availableSupportSeatsCount}
-					handlePage={invitesPageHandle}
-					leftButton={i18n.translate('skip-for-now')}
-					oAuthToken={oAuthToken}
-					project={project}
-				/>
+			Component: oAuthToken ? (
+				<Formik initialValues={{}} onSubmit={() => {}} validateOnChange>
+					{(formikProps) => (
+						<InviteTeamMembersForm
+							availableSupportSeatsCount={
+								availableSupportSeatsCount
+							}
+							handlePage={invitesPageHandle}
+							leftButton={i18n.translate('skip-for-now')}
+							mutateUserData={mutateUserData}
+							oAuthToken={oAuthToken}
+							project={project}
+							{...formikProps}
+						/>
+					)}
+				</Formik>
+			) : (
+				<></>
 			),
 		},
 
 		[ONBOARDING_STEP_TYPES.liferayExperienceCloud]: {
 			Component: (
-				<SetupLiferayExperienceCloudForm
-					client={client}
-					handleChangeForm={() => pageHandle()}
-					handleOnLeftButtonClick={() => pageHandle()}
-					leftButton={i18n.translate('skip-for-now')}
-					project={project}
-					subscriptionGroupLxcId={
-						subscriptionLiferayExperienceCloud?.accountSubscriptionGroupId
-					}
-				/>
+				<Formik initialValues={{}} onSubmit={() => {}} validateOnChange>
+					{(formikProps) => (
+						<SetupLiferayExperienceCloudForm
+							client={
+								client as ApolloClient<NormalizedCacheObject>
+							}
+							handleChangeForm={pageHandle}
+							handleOnLeftButtonClick={pageHandle}
+							leftButton={i18n.translate('skip-for-now')}
+							project={project}
+							setFormAlreadySubmitted={() => {}}
+							subscriptionGroupLxcId={String(
+								subscriptionLiferayExperienceCloud?.accountSubscriptionGroupId ??
+									''
+							)}
+							{...formikProps}
+						/>
+					)}
+				</Formik>
 			),
 		},
 		[ONBOARDING_STEP_TYPES.successliferayExperienceCloud]: {
@@ -177,27 +203,36 @@ const OnboardingPages: React.FC = () => {
 		},
 		[ONBOARDING_STEP_TYPES.dxpCloud]: {
 			Component: (
-				<SetupDXPCloudForm
-					client={client}
-					dxpVersion={project?.dxpVersion}
-					handlePage={(isSuccess: boolean) => {
-						if (isSuccess) {
-							return dispatch({
-								payload:
-									ONBOARDING_STEP_TYPES.successDxpCloud as unknown as ActionPayload,
-								type: actionTypes.CHANGE_STEP as keyof typeof actionTypes,
-							});
-						}
+				<Formik initialValues={{}} onSubmit={() => {}} validateOnChange>
+					{(formikProps) => (
+						<SetupDXPCloudForm
+							client={
+								client as ApolloClient<NormalizedCacheObject>
+							}
+							dxpVersion={project.dxpVersion as string}
+							handlePage={(isSuccess?: boolean) => {
+								if (isSuccess) {
+									return dispatch({
+										payload:
+											ONBOARDING_STEP_TYPES.successDxpCloud,
+										type: actionTypes.CHANGE_STEP,
+									});
+								}
 
-						dxpCloudPageHandle();
-					}}
-					leftButton={i18n.translate('skip-for-now')}
-					listType={LIST_TYPES.dxpMajorVersion}
-					project={project}
-					subscriptionGroupId={
-						subscriptionDXPCloud?.accountSubscriptionGroupId
-					}
-				/>
+								dxpCloudPageHandle();
+							}}
+							leftButton={i18n.translate('skip-for-now')}
+							listType={LIST_TYPES.dxpMajorVersion}
+							project={project}
+							setFormAlreadySubmitted={() => {}}
+							subscriptionGroupId={String(
+								subscriptionDXPCloud?.accountSubscriptionGroupId ??
+									''
+							)}
+							{...formikProps}
+						/>
+					)}
+				</Formik>
 			),
 		},
 		[ONBOARDING_STEP_TYPES.successDxpCloud]: {
@@ -214,25 +249,34 @@ const OnboardingPages: React.FC = () => {
 		},
 		[ONBOARDING_STEP_TYPES.analyticsCloud]: {
 			Component: (
-				<SetupAnalyticsCloudForm
-					client={client}
-					handlePage={(isSuccess: boolean) => {
-						if (isSuccess) {
-							return dispatch({
-								payload:
-									ONBOARDING_STEP_TYPES.successAnalyticsCloud as unknown as ActionPayload,
-								type: actionTypes.CHANGE_STEP as keyof typeof actionTypes,
-							});
-						}
+				<Formik initialValues={{}} onSubmit={() => {}} validateOnChange>
+					{(formikProps) => (
+						<SetupAnalyticsCloudForm
+							client={
+								client as ApolloClient<NormalizedCacheObject>
+							}
+							handlePage={(isSuccess?: boolean) => {
+								if (isSuccess) {
+									return dispatch({
+										payload:
+											ONBOARDING_STEP_TYPES.successAnalyticsCloud,
+										type: actionTypes.CHANGE_STEP,
+									});
+								}
 
-						pageHandle();
-					}}
-					leftButton={i18n.translate('skip-for-now')}
-					project={project}
-					subscriptionGroupId={
-						subscriptionAnalyticsCloud?.accountSubscriptionGroupId
-					}
-				/>
+								pageHandle();
+							}}
+							leftButton={i18n.translate('skip-for-now')}
+							project={project}
+							setFormAlreadySubmitted={() => {}}
+							subscriptionGroupId={String(
+								subscriptionAnalyticsCloud?.accountSubscriptionGroupId ??
+									''
+							)}
+							{...formikProps}
+						/>
+					)}
+				</Formik>
 			),
 		},
 		[ONBOARDING_STEP_TYPES.successAnalyticsCloud]: {
@@ -245,17 +289,13 @@ const OnboardingPages: React.FC = () => {
 		},
 	};
 
-	if (project && subscriptionGroups) {
-		const currentStep = StepsLayout[step];
+	const currentStep = StepsLayout[step];
 
-		return (
-			currentStep?.Component ?? (
-				<div>Component not found for step: {step}</div>
-			)
-		);
-	}
-
-	return StepsLayout[ONBOARDING_STEP_TYPES.welcome]?.Skeleton ?? null;
+	return (
+		currentStep?.Component ?? (
+			<div>Component not found for step: {step}</div>
+		)
+	);
 };
 
 export default OnboardingPages;

@@ -3,10 +3,30 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {ApolloClient} from '@apollo/client';
+import {ApolloClient, NormalizedCacheObject} from '@apollo/client';
 import {createContext, useContext} from 'react';
 
-export const AppPropertiesContext = createContext({
+export interface IAppPropertiesContext {
+	accountSettingsURL: string;
+	articleAccountSupportURL: string;
+	articleDeactivateKey: string;
+	articleDeployingActivationKeysURL: string;
+	articleGettingStartedWithLiferayEnterpriseSearchURL: string;
+	articleNotifiedWhenMyActivationKeyIsAboutToExpireURL: string;
+	articleWhatIsMyInstanceSizingValueURL: string;
+	client: ApolloClient<NormalizedCacheObject>;
+	createTicketURL: string;
+	featureFlags: string[];
+	importDate?: string | null;
+	jiraFLSPortalURL: string;
+	jiraFLSProject: string;
+	jiraHCPortalURL: string;
+	provisioningServerAPI: string;
+	submitSupportTicketURL: string;
+	theOverviewPageURL: string;
+}
+
+export const AppPropertiesContext = createContext<IAppPropertiesContext>({
 	accountSettingsURL: '',
 	articleAccountSupportURL: '',
 	articleDeactivateKey: '',
@@ -14,9 +34,9 @@ export const AppPropertiesContext = createContext({
 	articleGettingStartedWithLiferayEnterpriseSearchURL: '',
 	articleNotifiedWhenMyActivationKeyIsAboutToExpireURL: '',
 	articleWhatIsMyInstanceSizingValueURL: '',
-	client: null,
+	client: null as unknown as ApolloClient<NormalizedCacheObject>,
 	createTicketURL: '',
-	featureFlags: [] as string[],
+	featureFlags: [],
 	importDate: null,
 	jiraFLSPortalURL: '',
 	jiraFLSProject: '',
@@ -27,11 +47,5 @@ export const AppPropertiesContext = createContext({
 });
 
 export function useAppPropertiesContext() {
-	const context = useContext(AppPropertiesContext);
-
-	type ContextType = Omit<typeof context, 'client'> & {
-		client: ApolloClient<any>;
-	};
-
-	return context as unknown as ContextType;
+	return useContext(AppPropertiesContext);
 }

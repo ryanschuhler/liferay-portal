@@ -10,7 +10,10 @@ const INTERSECTION_OPTIONS = {
 	threshold: 1.0,
 };
 
-export default function useIntersectionObserver() {
+export default function useIntersectionObserver(): [
+	(node: HTMLDivElement) => void,
+	boolean,
+] {
 	const trackedRefCurrent = useRef<HTMLDivElement | null>(null);
 	const [isIntersecting, setIsIntersecting] = useState(false);
 

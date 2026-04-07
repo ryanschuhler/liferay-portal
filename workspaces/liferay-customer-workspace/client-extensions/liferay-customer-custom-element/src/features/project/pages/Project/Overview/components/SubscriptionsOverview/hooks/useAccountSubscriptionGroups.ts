@@ -5,19 +5,42 @@
 
 import {useEffect, useState} from 'react';
 import {useGetAccountSubscriptionGroups} from '~/services/liferay/graphql/account-subscription-groups';
+import {IAccountSubscriptionGroup} from '~/utils/types';
+
+interface IGraphQLAccountSubscriptionGroupsData {
+	c: {
+		accountSubscriptionGroups: {
+			items: IAccountSubscriptionGroup[];
+		};
+	};
+}
 
 export default function useAccountSubscriptionGroups(
-	accountKey,
-	koroneikiAccountLoading
-) {
-	const [lastAccountSubcriptionGroup, setLastAccountSubscriptionGroup] =
-		useState();
+	accountKey: string,
+	koroneikiAccountLoading: boolean
+): [
+	(group: IAccountSubscriptionGroup | undefined) => void,
+	{
+		data: IGraphQLAccountSubscriptionGroupsData | undefined;
+		lastAccountSubscriptionGroup: IAccountSubscriptionGroup | undefined;
+		loading: boolean;
+	},
+] {
+	const [lastAccountSubscriptionGroup, setLastAccountSubscriptionGroup] =
+		useState<IAccountSubscriptionGroup | undefined>();
 
-	const {data, loading} = useGetAccountSubscriptionGroups({
-		filter: `accountKey eq '${accountKey}'`,
-		skip: koroneikiAccountLoading,
-		sort: 'tabOrder:asc',
-	});
+	const {
+		data,
+		loading,
+	}: {data?: IGraphQLAccountSubscriptionGroupsData; loading: boolean} =
+		useGetAccountSubscriptionGroups({
+			filter: `accountKey eq '${accountKey}'`,
+			notifyOnNetworkStatusChange: false,
+			page: 1,
+			pageSize: 100,
+			skip: koroneikiAccountLoading,
+			sort: 'tabOrder:asc',
+		});
 
 	const accountSubscriptionGroups = data?.c.accountSubscriptionGroups.items;
 
@@ -28,9 +51,10 @@ export default function useAccountSubscriptionGroups(
 	}, [accountSubscriptionGroups, loading]);
 
 	return [
-		{lastAccountSubcriptionGroup, setLastAccountSubscriptionGroup},
+		setLastAccountSubscriptionGroup,
 		{
 			data,
+			lastAccountSubscriptionGroup,
 			loading: koroneikiAccountLoading || loading,
 		},
 	];

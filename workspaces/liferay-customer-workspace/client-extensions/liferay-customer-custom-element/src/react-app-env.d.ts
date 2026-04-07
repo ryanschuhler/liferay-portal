@@ -14,7 +14,7 @@ declare module '@liferay/oauth2-provider-web/client' {
 	export function FromUserAgentApplication(
 		userAgentApplicationId: string
 	): Promise<{
-		_getOrRequestToken: () => Promise<string>;
+		_getOrRequestToken: () => Promise<{access_token: string}>;
 		fetch: (url: string, options?: RequestInit) => Promise<Response>;
 	}>;
 }

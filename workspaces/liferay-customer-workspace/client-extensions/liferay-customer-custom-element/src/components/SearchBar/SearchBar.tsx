@@ -6,12 +6,17 @@
 import {ClayButtonWithIcon} from '@clayui/button';
 import {ClayInput} from '@clayui/form';
 import classNames from 'classnames';
-import {memo, useEffect, useState} from 'react';
+import {memo, useState} from 'react';
 import i18n from '~/utils/I18n';
 
-const SearchBar = ({clearSearchTerm, isBusinessEvent, onSearchSubmit}) => {
-	const [term, setTerm] = useState('');
-	const [searching, setSearching] = useState(true);
+interface IProps {
+	isBusinessEvent?: boolean;
+	onSearchSubmit: (term: string) => void;
+}
+
+const SearchBar = ({isBusinessEvent, onSearchSubmit}: IProps) => {
+	const [term, setTerm] = useState<string>('');
+	const [searching, setSearching] = useState<boolean>(true);
 
 	const handleSearchSubmit = () => {
 		if (searching) {
@@ -41,11 +46,11 @@ const SearchBar = ({clearSearchTerm, isBusinessEvent, onSearchSubmit}) => {
 								isBusinessEvent,
 						}
 					)}
-					onChange={(event) => {
+					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
 						setTerm(event.target.value);
 						setSearching(true);
 					}}
-					onKeyPress={(event) => {
+					onKeyUp={(event: React.KeyboardEvent<HTMLInputElement>) => {
 						if (event.key === 'Enter') {
 							handleSearchSubmit();
 						}

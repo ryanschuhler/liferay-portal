@@ -3,53 +3,93 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {Formik} from 'formik';
 import {useEffect, useState} from 'react';
 import {Navigate, useLocation, useOutletContext} from 'react-router-dom';
-import {useGetMyUserAccount} from '~/services/liferay/graphql/user-accounts';
+import {hasAdminOrPartnerManager} from '~/features/project/containers/ActivationKeysTable/utils/hasAdminOrPartnerManager';
+import {hasAdminUserAccount} from '~/features/project/containers/ActivationKeysTable/utils/hasAdminUserAccount';
+import {ACTIVATION_ROOT_ROUTER} from '~/features/project/containers/DeactivateKeysTable/components/Footer/DeactivateKeysTableFooter';
 import {useAppContext} from '~/features/project/context';
+import {IState as IGlobalState} from '~/features/project/context/reducer';
+import {useGetMyUserAccount} from '~/services/liferay/graphql/user-accounts';
 import {getOrRequestToken} from '~/services/liferay/security/auth/getOrRequestToken';
-import {hasAdminOrPartnerManager} from '../ActivationKeysTable/utils/hasAdminOrPartnerManager';
-import {hasAdminUserAccount} from '../ActivationKeysTable/utils/hasAdminUserAccount';
+import {toGraphQLUserAccount} from '~/utils/toGraphQLUserAccount';
+import {IActivationKey, ISelectedKeyData} from '~/utils/types';
+
 import GenerateNewKeySkeleton from './GenerateNewKeySkeleton';
 import ComplimentaryDate from './pages/ComplimentaryDate';
 import RequiredInformation from './pages/RequiredInformation';
 import SelectSubscription from './pages/SelectSubscription';
 import {STEP_TYPES} from './utils/constants/stepType';
 
-import './GenerateNewKey.css';
+interface IProps {
+	hasComplimentaryKey: boolean;
+	productGroupName: string;
+	setHasComplimentaryKey: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-const ACTIVATION_ROOT_ROUTER = 'activation';
+export interface ILocalState {
+	activationKeys?: IActivationKey[];
+	deactivateKeyAlert?: boolean;
+	id?: string;
+	isMultipleKeys?: boolean;
+	newKeyGeneratedAlert?: boolean;
+}
+
+export type IGenerateNewKeyState = IGlobalState & ILocalState;
+
+interface IOutletContext {
+	setHasSideMenu: (hasSideMenu: boolean) => void;
+}
+
+interface IStatusState {
+	deactivate: string;
+	downloadAggregated: string;
+	downloadMultiple: string;
+}
 
 const GenerateNewKey = ({
 	hasComplimentaryKey,
 	productGroupName,
 	setHasComplimentaryKey,
-}) => {
-	const {state} = useLocation();
+}: IProps) => {
+	const {state: locationState} = useLocation();
 	const {data: myAccount} = useGetMyUserAccount();
-	const [oAuthToken, setOAuthToken] = useState();
-	const [{project, userAccount}] = useAppContext();
-	const [selectedKeyData, setSelectedKeyData] = useState();
-	const [step, setStep] = useState(STEP_TYPES.selectDescriptions);
-	const {setHasSideMenu} = useOutletContext();
-	const [status, setStatus] = useState({
+	const [oAuthToken, setOAuthToken] = useState<string | null>(null);
+	const globalState = useAppContext()[0];
+
+	const state: IGenerateNewKeyState = {
+		...globalState,
+		...(locationState as ILocalState),
+	};
+
+	const {project, userAccount} = globalState;
+	const [selectedKeyData, setSelectedKeyData] = useState<
+		ISelectedKeyData | undefined
+	>(undefined);
+	const [step, setStep] = useState<
+		(typeof STEP_TYPES)[keyof typeof STEP_TYPES]
+	>(STEP_TYPES.selectDescriptions);
+	const {setHasSideMenu} = useOutletContext<IOutletContext>();
+	const [status, setStatus] = useState<IStatusState>({
 		deactivate: '',
 		downloadAggregated: '',
 		downloadMultiple: '',
 	});
 
-	const [purposeDescription, setPurposeDescription] = useState('');
-	const [submitKeyAction, setSubmitKeyAction] = useState({});
-	const [licenseEntryTypeName, setLicenseEntryTypeName] = useState('');
-	const [expirationRenewDate, setExpirationRenewDate] = useState('');
-	const [startRenewDate, setStartRenewDate] = useState('');
+	const [purposeDescription, setPurposeDescription] = useState<string>('');
+	const [submitKeyAction, setSubmitKeyAction] = useState<any>({});
+	const [licenseEntryTypeName, setLicenseEntryTypeName] =
+		useState<string>('');
+	const [expirationRenewDate, setExpirationRenewDate] = useState<string>('');
+	const [startRenewDate, setStartRenewDate] = useState<string>('');
 
 	useEffect(() => {
 		const fetchToken = async () => {
 			const token = await getOrRequestToken();
 
 			setOAuthToken(token);
-		}
+		};
 
 		fetchToken();
 	}, []);
@@ -60,9 +100,11 @@ const GenerateNewKey = ({
 
 	const isAdminUserAccount = hasAdminUserAccount(myAccount);
 
+	const convertedUserAccount = toGraphQLUserAccount(userAccount);
+
 	const isAdminOrPartnerManager = hasAdminOrPartnerManager(
 		project,
-		userAccount
+		convertedUserAccount
 	);
 
 	if (!isAdminUserAccount && !isAdminOrPartnerManager) {
@@ -75,29 +117,38 @@ const GenerateNewKey = ({
 
 	const StepLayout = {
 		[STEP_TYPES.generateKeys]: (
-			<RequiredInformation
-				accountKey={project?.accountKey}
-				expirationRenewDate={expirationRenewDate}
-				hasComplimentaryKey={hasComplimentaryKey}
-				licenseEntryTypeName={licenseEntryTypeName}
-				oAuthToken={oAuthToken}
-				purposeDescription={purposeDescription}
-				selectedKeyData={selectedKeyData}
-				setStep={setStep}
-				startRenewDate={startRenewDate}
-				state={state}
-				submitKeyAction={submitKeyAction}
-				urlPreviousPage={urlPreviousPage}
-			/>
+			<Formik
+				initialValues={{}} // Initial values will be handled inside RequiredInformationForm
+				onSubmit={() => {}}
+				validateOnChange
+			>
+				{(formikProps) => (
+					<RequiredInformation
+						accountKey={project?.accountKey as string}
+						expirationRenewDate={expirationRenewDate}
+						hasComplimentaryKey={hasComplimentaryKey}
+						licenseEntryTypeName={licenseEntryTypeName}
+						oAuthToken={oAuthToken as string}
+						purposeDescription={purposeDescription}
+						selectedKeyData={selectedKeyData as ISelectedKeyData}
+						setStep={setStep}
+						startRenewDate={startRenewDate}
+						state={state}
+						submitKeyAction={submitKeyAction}
+						urlPreviousPage={urlPreviousPage}
+						{...(formikProps as any)}
+					/>
+				)}
+			</Formik>
 		),
 		[STEP_TYPES.selectDescriptions]: (
 			<SelectSubscription
-				accountKey={project?.accountKey}
-				activationKeysByStatusPaginatedChecked
-				filterCheckedActivationKeys
+				accountKey={project?.accountKey as string}
+				activationKeysByStatusPaginatedChecked={[]}
+				filterCheckedActivationKeys=""
 				hasComplimentaryKey={hasComplimentaryKey}
-				identifier
-				oAuthToken={oAuthToken}
+				identifier={project?.id || ''}
+				oAuthToken={oAuthToken as string}
 				productGroupName={productGroupName}
 				selectedKeyData={selectedKeyData}
 				setExpirationRenewDate={setExpirationRenewDate}
@@ -113,14 +164,14 @@ const GenerateNewKey = ({
 		),
 		[STEP_TYPES.selectInfoComplimentaryKey]: (
 			<ComplimentaryDate
-				accountKey={project?.accountKey}
+				accountKey={project?.accountKey as string}
 				deactivateKeysStatus={status.deactivate}
-				filterCheckedActivationKeys
-				oAuthToken={oAuthToken}
+				filterCheckedActivationKeys={[]}
+				oAuthToken={oAuthToken as string}
 				productGroupName={productGroupName}
 				purposeDescription={purposeDescription}
 				selectedKeyData={selectedKeyData}
-				setDeactivateKeysStatus={(value) =>
+				setDeactivateKeysStatus={(value: string) =>
 					setStatus((previousStatus) => ({
 						...previousStatus,
 						deactivate: value,

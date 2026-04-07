@@ -9,18 +9,24 @@ import useUserAccountsByAccountExternalReferenceCode from '~/features/project/pa
 import {SUBSCRIPTIONS_STATUS} from '~/features/project/utils/constants';
 import {getSubscriptionStatus} from '~/features/project/utils/getSubscriptionStatus';
 import i18n from '~/utils/I18n';
+import {IAccountSubscription, IKoroneikiAccount} from '~/utils/types';
 
-const LiferayContacts = ({koroneikiAccount, loading}) => {
+interface IProps {
+	koroneikiAccount: IKoroneikiAccount;
+	loading: boolean;
+}
+
+const LiferayContacts = ({koroneikiAccount, loading}: IProps) => {
 	const [{subscriptions}] = useAppContext();
 
 	const hasActiveTAMSubscription =
 		Array.isArray(subscriptions) &&
 		subscriptions
-			?.filter((item) =>
+			?.filter((item: IAccountSubscription) =>
 				item.name?.includes('Technical Account Management')
 			)
 			?.some(
-				(accountSubscription) =>
+				(accountSubscription: IAccountSubscription) =>
 					getSubscriptionStatus(
 						new Date(accountSubscription.startDate),
 						new Date(accountSubscription.endDate)
@@ -29,24 +35,31 @@ const LiferayContacts = ({koroneikiAccount, loading}) => {
 
 	const [, {data: userAccountsData}] =
 		useUserAccountsByAccountExternalReferenceCode(
-			koroneikiAccount?.accountKey
+			koroneikiAccount.accountKey ?? '',
+			!koroneikiAccount?.accountKey
 		);
-
 	const accountMembers =
-		userAccountsData?.accountUserAccountsByExternalReferenceCode.items;
+		(userAccountsData?.accountUserAccountsByExternalReferenceCode
+			?.items as import('~/utils/types').IGraphQLUserAccount[]) ?? [];
 
 	const cxmUser = accountMembers?.find((user) =>
-		user.selectedAccountSummary.roleBriefs.some(
+		user.selectedAccountSummary?.roleBriefs.some(
 			(role) => role.name === 'Customer Experience Manager'
 		)
 	);
 	const solutionArchitectUser = accountMembers?.find((user) =>
-		user.selectedAccountSummary.roleBriefs.some(
+		user.selectedAccountSummary?.roleBriefs.some(
 			(role) => role.name === 'Solution Architect'
 		)
 	);
 
-	const ContactDetails = ({roleKey, user}) => {
+	const ContactDetails = ({
+		roleKey,
+		user,
+	}: {
+		roleKey: string;
+		user?: import('~/utils/types').IGraphQLUserAccount;
+	}) => {
 		if (!user) {
 			return null;
 		}

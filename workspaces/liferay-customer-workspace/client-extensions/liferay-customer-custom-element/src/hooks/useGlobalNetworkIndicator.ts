@@ -12,16 +12,58 @@ import isOperationType from '../utils/isOperationType';
 const DEFAULT_ERROR = {
 	message: i18n.translate('an-unexpected-error-occurred'),
 	title: i18n.translate('error'),
-	type: 'danger',
+	type: 'danger' as const,
 };
 
 const DEFAULT_SUCCESS = {
 	message: i18n.translate('your-request-completed-successfully'),
 	title: i18n.translate('success'),
-	type: 'success',
+	type: 'success' as const,
 };
 
-export default function useGlobalNetworkIndicator(networkStatus: any) {
+interface IToastOptions {
+	message: string;
+	title?: string;
+	type?: 'danger' | 'info' | 'success' | 'warning';
+}
+
+interface IOperation {
+	getContext: () => {
+		displayErrors?:
+			| boolean
+			| Record<string, {message?: string; title?: string; type?: string}>;
+		displayServerError?: boolean;
+		displaySuccess?:
+			| boolean
+			| {message?: string; title?: string; type?: string};
+	};
+	query: {
+		definitions: {kind: string; operation?: string}[];
+	};
+}
+
+interface INetworkStatus {
+	error?: {
+		networkError?: {
+			result?: {
+				title: string;
+			};
+		};
+		operation: IOperation;
+		response?: {
+			exception: {
+				errno: string | number;
+			};
+		}[];
+	};
+	success?: {
+		operation: IOperation;
+	};
+}
+
+export default function useGlobalNetworkIndicator(
+	networkStatus: INetworkStatus
+) {
 	useEffect(() => {
 		const {error: errorStatus, success} = networkStatus;
 
@@ -46,10 +88,10 @@ export default function useGlobalNetworkIndicator(networkStatus: any) {
 			if (displayErrors) {
 				errorStatus.response.forEach(
 					(error: {exception: {errno: string | number}}) => {
-						let errorToast = DEFAULT_ERROR;
+						let errorToast: IToastOptions = DEFAULT_ERROR;
 
 						if (
-							displayErrors &&
+							typeof displayErrors === 'object' &&
 							displayErrors[error.exception.errno]
 						) {
 							const displayError =
@@ -61,7 +103,9 @@ export default function useGlobalNetworkIndicator(networkStatus: any) {
 									DEFAULT_ERROR.message,
 								title:
 									displayError.title || DEFAULT_ERROR.title,
-								type: displayError.type || DEFAULT_ERROR.type,
+								type:
+									(displayError.type as IToastOptions['type']) ||
+									DEFAULT_ERROR.type,
 							};
 						}
 
@@ -80,10 +124,23 @@ export default function useGlobalNetworkIndicator(networkStatus: any) {
 				isOperationType(success.operation, 'mutation');
 
 			if (isValidMutation) {
+				const message =
+					(typeof displaySuccess === 'object' &&
+						displaySuccess.message) ||
+					DEFAULT_SUCCESS.message;
+				const title =
+					(typeof displaySuccess === 'object' &&
+						displaySuccess.title) ||
+					DEFAULT_SUCCESS.title;
+				const type =
+					(typeof displaySuccess === 'object' &&
+						displaySuccess.type) ||
+					DEFAULT_SUCCESS.type;
+
 				Liferay.Util.openToast({
-					message: displaySuccess?.message || DEFAULT_SUCCESS.message,
-					title: displaySuccess?.title || DEFAULT_SUCCESS.title,
-					type: displaySuccess?.type || DEFAULT_SUCCESS.type,
+					message,
+					title,
+					type: type as IToastOptions['type'],
 				});
 			}
 		}

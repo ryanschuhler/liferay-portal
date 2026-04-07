@@ -6,9 +6,17 @@
 import ClayIcon from '@clayui/icon';
 import ClayModal from '@clayui/modal';
 import classNames from 'classnames';
-import i18n from '~/utils/I18n';
 import Button from '~/components/Button';
 import {ALERT_DOWNLOAD_TYPE} from '~/features/project/utils/constants';
+import i18n from '~/utils/I18n';
+
+interface IProps {
+	deactivateKeysConfirm: () => Promise<void>;
+	deactivateKeysStatus: string;
+	isDeactivating: boolean;
+	observer: any;
+	onClose: () => void;
+}
 
 const DeactivateKeysModal = ({
 	deactivateKeysConfirm,
@@ -16,7 +24,7 @@ const DeactivateKeysModal = ({
 	isDeactivating,
 	observer,
 	onClose,
-}) => {
+}: IProps) => {
 	return (
 		<ClayModal center observer={observer}>
 			<div className="pt-4 px-4">

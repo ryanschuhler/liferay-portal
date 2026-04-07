@@ -5,6 +5,6 @@
 
 const CLUSTER = 'cluster';
 
-export function hasCluster(licenseEntryType) {
+export function hasCluster(licenseEntryType: string) {
 	return licenseEntryType === CLUSTER;
 }

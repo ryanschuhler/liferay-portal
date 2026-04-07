@@ -107,7 +107,9 @@ const BusinessEventsItemActivityHistory = () => {
 					user: (
 						<div className="align-items-center d-flex">
 							<Avatar
-								userName={businessEventVersion?.creator?.name}
+								userName={
+									businessEventVersion?.creator?.name || ''
+								}
 							/>
 
 							<div className="font-weight-semi-bold m-0 ml-2 mr-1 text-neutral-10 text-truncate">

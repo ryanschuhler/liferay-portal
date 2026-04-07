@@ -6,8 +6,13 @@
 import {getPascalCase} from '~/features/project/utils/getPascalCase';
 import i18n from '~/utils/I18n';
 import getKebabCase from '~/utils/getKebabCase';
+import {IActivationKey} from '~/utils/types';
 
-export function getProductName(activationKey) {
+export function getProductName(activationKey: IActivationKey) {
+	if (!activationKey) {
+		return '';
+	}
+
 	const formatProductName = getPascalCase(activationKey.productName).replace(
 		'Production',
 		'Prod'

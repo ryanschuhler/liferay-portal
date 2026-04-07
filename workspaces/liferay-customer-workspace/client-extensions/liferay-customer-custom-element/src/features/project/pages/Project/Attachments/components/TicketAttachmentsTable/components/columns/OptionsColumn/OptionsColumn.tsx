@@ -6,8 +6,20 @@
 import {ButtonWithIcon} from '@clayui/core';
 import ClayIcon from '@clayui/icon';
 import {ClayTooltipProvider} from '@clayui/tooltip';
-import i18n from '~/utils/I18n';
 import {ButtonDropDown} from '~/components';
+import {Liferay} from '~/services/liferay';
+import i18n from '~/utils/I18n';
+import {ITicketAttachment} from '~/utils/types';
+
+interface IProps {
+	hasDeletePermissions: boolean;
+	onDownload: (url: string) => void;
+	onOpenChange: (open: boolean) => void;
+	setSelectedTicketAttachment: React.Dispatch<
+		React.SetStateAction<ITicketAttachment | undefined>
+	>;
+	ticketAttachment: ITicketAttachment;
+}
 
 const OptionsColumn = ({
 	hasDeletePermissions,
@@ -15,14 +27,14 @@ const OptionsColumn = ({
 	onOpenChange,
 	setSelectedTicketAttachment,
 	ticketAttachment,
-}) => {
+}: IProps) => {
 	const userOptions = [
 		{
 			customOptionStyle: '',
 			icon: <ClayIcon symbol="download" />,
 			label: i18n.translate('download'),
 			onClick: () => {
-				onDownload(ticketAttachment?.downloadUrl);
+				onDownload(ticketAttachment.downloadUrl || '');
 			},
 		},
 		{
@@ -45,17 +57,17 @@ const OptionsColumn = ({
 						<ButtonWithIcon
 							aria-label={i18n.translate('manage-user-options')}
 							className="text-dark"
-    						displayType="unstyled"
+							displayType="unstyled"
 							small
 							spritemap={Liferay.Icons.spritemap}
 							symbol="ellipsis-v"
 						/>
 					}
 					items={userOptions}
+					label=""
 					menuElementAttrs={{
 						className: 'p-0',
 					}}
-					menuWidth="shrink"
 				/>
 			</span>
 		</ClayTooltipProvider>

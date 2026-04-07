@@ -4,13 +4,13 @@
  */
 
 import {ClayTooltipProvider} from '@clayui/tooltip';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {Navigate, useOutletContext} from 'react-router-dom';
-import {useGetMyUserAccount} from '~/services/liferay/graphql/user-accounts';
-import i18n from '~/utils/I18n';
 import ActionTable from '~/components/ActionTable';
-import {getOrRequestToken} from '~/services/liferay/security/auth/getOrRequestToken';
 import {useAppContext} from '~/features/project/context';
+import {getOrRequestToken} from '~/services/liferay/security/auth/getOrRequestToken';
+import {IActivationKey, IProject} from '~/utils/types';
+
 import useGetActivationKeysData from '../ActivationKeysTable/hooks/useGetActivationKeysData';
 import usePagination from '../ActivationKeysTable/hooks/usePagination';
 import useStatusCountNavigation from '../ActivationKeysTable/hooks/useStatusCountNavigation';
@@ -20,7 +20,6 @@ import {
 	KeyTypeColumn,
 	StatusColumn,
 } from '../ActivationKeysTable/utils/constants/columns-definitions';
-import {getTooltipContentRenderer} from '../ActivationKeysTable/utils/getTooltipContentRenderer';
 import {hasAdminOrPartnerManager} from '../ActivationKeysTable/utils/hasAdminOrPartnerManager';
 import {hasAdminUserAccount} from '../ActivationKeysTable/utils/hasAdminUserAccount';
 import DeactivateKeysSkeleton from './DeactivateKeysTableSkeleton';
@@ -31,11 +30,17 @@ import {DEACTIVATE_COLUMNS} from './utils/constants';
 
 import './DeactivateKeysTable.css';
 
-const DeactivateKeysTable = ({initialFilter, productName}) => {
-	const {data: myAccount} = useGetMyUserAccount();
-	const [oAuthToken, setOAuthToken] = useState();
+interface IProps {
+	initialFilter: string;
+	productName: string;
+}
+
+export function DeactivateKeysTable({initialFilter, productName}: IProps) {
+	const [oAuthToken, setOAuthToken] = useState<string | null>(null);
 	const [{project, userAccount}] = useAppContext();
-	const {setHasSideMenu} = useOutletContext();
+	const {setHasSideMenu} = useOutletContext<{
+		setHasSideMenu: (value: boolean) => void;
+	}>();
 
 	useEffect(() => {
 		const fetchToken = async () => {
@@ -51,11 +56,16 @@ const DeactivateKeysTable = ({initialFilter, productName}) => {
 		setHasSideMenu(false);
 	}, [setHasSideMenu]);
 
+	const activationKeysState = useGetActivationKeysData(
+		project as IProject,
+		initialFilter
+	);
+
 	const {
-		activationKeysState: [activationKeys, setActivationKeys],
+		activationKeysState: [activationKeys],
 		loading,
 		setFilterTerm,
-	} = useGetActivationKeysData(project, initialFilter);
+	} = activationKeysState;
 
 	const {
 		statusfilterByTitle: [statusFilter],
@@ -66,126 +76,131 @@ const DeactivateKeysTable = ({initialFilter, productName}) => {
 		statusFilter
 	);
 
-	const [filters, setFilters] = useFilters(
+	const filterState = useFilters(
 		setFilterTerm,
 		productName,
 		initialFilter
-	);
+	) as [any, React.Dispatch<React.SetStateAction<any>>];
 
-	const [activationKeysIdChecked, setActivationKeysIdChecked] = useState([]);
+	const [activationKeysIdChecked, setActivationKeysIdChecked] = useState<
+		(string | number)[]
+	>([]);
 
 	const activationKeysByStatusPaginatedChecked = useMemo(
 		() =>
-			activationKeys.filter(({id}) =>
-				activationKeysIdChecked.includes(id)
+			activationKeys.filter(
+				(key) => key && activationKeysIdChecked.includes(key.id)
 			) || [],
 		[activationKeys, activationKeysIdChecked]
 	);
 
-	const getDeactivationKeysRows = useCallback(
-		(activationKey) => ({
-			envName: (
-				<div title={[activationKey.name, activationKey.description]}>
-					<p className="font-weight-bold m-0 text-neutral-10 text-truncate">
-						{activationKey.name}
-					</p>
-
-					<p className="font-weight-normal m-0 text-neutral-7 text-paragraph-sm text-truncate">
-						{activationKey.description}
-					</p>
-				</div>
-			),
-			envType: <EnvironmentTypeColumn activationKey={activationKey} />,
-			expirationDate: (
-				<ExpirationDateColumn activationKey={activationKey} />
-			),
-			id: activationKey.id,
-			keyType: <KeyTypeColumn activationKey={activationKey} />,
-			status: <StatusColumn activationKey={activationKey} />,
-		}),
-		[]
+	const isAdminOrPartnerManager = useMemo(
+		() => hasAdminOrPartnerManager(project as IProject, userAccount as any),
+		[project, userAccount]
 	);
 
-	const isAdminUserAccount = hasAdminUserAccount(myAccount);
-
-	const isAdminOrPartnerManager = hasAdminOrPartnerManager(
-		project,
-		userAccount
+	const isAdminUserAccount = useMemo(
+		() => hasAdminUserAccount({myUserAccount: userAccount} as any),
+		[userAccount]
 	);
 
-	if (!isAdminUserAccount && !isAdminOrPartnerManager) {
-		return <Navigate replace={true} to={`/${project?.accountKey}`} />;
+	if (!loading && !isAdminOrPartnerManager && !isAdminUserAccount) {
+		return <Navigate to="/" />;
 	}
 
+	if (loading) {
+		return <DeactivateKeysSkeleton />;
+	}
+
+	const handleCheckboxesChecked: React.Dispatch<
+		React.SetStateAction<(string | number)[]>
+	> = (value) => {
+		if (typeof value === 'function') {
+			setActivationKeysIdChecked(value);
+		}
+		else {
+			setActivationKeysIdChecked(value);
+		}
+	};
+
+	const columns = DEACTIVATE_COLUMNS.map((column) => {
+		if (column.accessor === 'environmentType') {
+			return {
+				...column,
+				render: (_: string, activationKey: IActivationKey) => (
+					<EnvironmentTypeColumn activationKey={activationKey} />
+				),
+			};
+		}
+
+		if (column.accessor === 'expirationDate') {
+			return {
+				...column,
+				render: (_: string, activationKey: IActivationKey) => (
+					<ExpirationDateColumn activationKey={activationKey} />
+				),
+			};
+		}
+
+		if (column.accessor === 'keyType') {
+			return {
+				...column,
+				render: (_: string, activationKey: IActivationKey) => (
+					<KeyTypeColumn activationKey={activationKey} />
+				),
+			};
+		}
+
+		if (column.accessor === 'status') {
+			return {
+				...column,
+				render: (_: string, activationKey: IActivationKey) => (
+					<StatusColumn activationKey={activationKey} />
+				),
+			};
+		}
+
+		return column;
+	});
+
 	return (
-		<div className="deactivate-table">
-			<div className="d-flex flex-column">
-				<div className="text-left">
-					<h3>
-						{i18n.sub('deactivate-x-activation-keys', [
-							productName,
-						])}
-					</h3>
+		<ClayTooltipProvider>
+			<div className="cp-deactivate-keys-table d-flex flex-column h-100 mb-4 px-4">
+				<DeactivationKeysTableHeader
+					activationKeysState={[
+						activationKeys,
+						activationKeysState.activationKeysState[1],
+					]}
+					filterState={filterState}
+					loading={loading}
+				/>
 
-					<p>
-						{i18n.translate(
-							'select-the-activation-key-you-want-to-deactivate'
-						)}
-					</p>
-				</div>
+				<ActionTable
+					checkboxConfig={{
+						checkboxesChecked: activationKeysIdChecked,
+						setCheckboxesChecked: handleCheckboxesChecked,
+					}}
+					columns={columns as any}
+					handleSortChange={() => {}}
+					hasCheckbox={true}
+					hasPagination={true}
+					paginationConfig={paginationConfig}
+					rows={activationKeysByStatusPaginated as any}
+				/>
+
+				<DeactivateKeysTableFooter
+					accountKey={project?.accountKey || ''}
+					activationKeysByStatusPaginatedChecked={
+						activationKeysByStatusPaginatedChecked
+					}
+					activationKeysState={[
+						activationKeys,
+						activationKeysState.activationKeysState[1],
+					]}
+					oAuthToken={oAuthToken as string}
+					productName={productName}
+				/>
 			</div>
-
-			<ClayTooltipProvider
-				contentRenderer={({title}) => getTooltipContentRenderer(title)}
-				delay={100}
-			>
-				<div>
-					<div className="mt-4 py-2">
-						<DeactivationKeysTableHeader
-							activationKeysState={[
-								activationKeys,
-								setActivationKeys,
-							]}
-							filterState={[filters, setFilters]}
-							loading={loading}
-						/>
-					</div>
-
-					{!!activationKeysByStatusPaginated.length && (
-						<ActionTable
-							checkboxConfig={{
-								checkboxesChecked: activationKeysIdChecked,
-								setCheckboxesChecked:
-									setActivationKeysIdChecked,
-							}}
-							className="border-0 cp-activation-key-table"
-							columns={DEACTIVATE_COLUMNS}
-							hasCheckbox
-							hasPagination
-							isLoading={loading}
-							paginationConfig={paginationConfig}
-							rows={activationKeysByStatusPaginated.map(
-								(activationKey) =>
-									getDeactivationKeysRows(activationKey)
-							)}
-						/>
-					)}
-				</div>
-			</ClayTooltipProvider>
-
-			<DeactivateKeysTableFooter
-				accountKey={project?.accountKey}
-				activationKeysByStatusPaginatedChecked={
-					activationKeysByStatusPaginatedChecked
-				}
-				activationKeysState={[setActivationKeys]}
-				oAuthToken={oAuthToken}
-				productName={productName}
-			/>
-		</div>
+		</ClayTooltipProvider>
 	);
-};
-
-DeactivateKeysTable.Skeleton = DeactivateKeysSkeleton;
-
-export default DeactivateKeysTable;
+}

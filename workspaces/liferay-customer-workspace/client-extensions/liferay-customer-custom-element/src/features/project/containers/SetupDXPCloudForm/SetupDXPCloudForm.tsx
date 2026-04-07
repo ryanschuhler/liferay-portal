@@ -3,15 +3,17 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {useQuery} from '@apollo/client';
-import ClayForm, {ClaySelect} from '@clayui/form';
-import ClayIcon from '@clayui/icon';
-import {FieldArray, Formik} from 'formik';
-
+import {ApolloClient, NormalizedCacheObject, useQuery} from '@apollo/client';
+import ClayForm from '@clayui/form';
+import {FieldArray, Formik, FormikErrors, FormikTouched} from 'formik';
 import {useEffect, useMemo, useState} from 'react';
+import {Button, Input, Select} from '~/components';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import SearchBuilder from '~/lib/SearchBuilder';
-import NotificationQueueService from '~/services/actions/notificationAction';
+import SetupHighPriorityContactForm from '~/features/project/containers/HighPriorityContacts/SetupHighPriorityContact';
+import {
+	STATUS_CODE,
+	STATUS_TAG_TYPE_NAMES,
+} from '~/features/project/utils/constants';
 import {
 	HIGH_PRIORITY_CONTACT_CATEGORIES,
 	addContactRoleLiferay,
@@ -21,13 +23,8 @@ import {
 	updateLiferayContact,
 	updateRaysourceContact,
 } from '~/features/project/utils/getHighPriorityContacts';
-import {
-	STATUS_CODE,
-	STATUS_TAG_TYPE_NAMES,
-} from '~/features/project/utils/constants';
-import i18n from '~/utils/I18n';
-import {Button, Input, Select} from '~/components';
-import SetupHighPriorityContactForm from '~/features/project/containers/HighPriorityContacts/SetupHighPriorityContact';
+import SearchBuilder from '~/lib/SearchBuilder';
+import NotificationQueueService from '~/services/actions/notificationAction';
 import {patchAccountSubscriptionGroups} from '~/services/liferay/graphql/account-subscription-groups/queries/patchAccountSubscriptionGroups';
 import {
 	addAdminDXPCloud,
@@ -37,12 +34,15 @@ import {
 	getListTypeDefinitions,
 } from '~/services/liferay/graphql/queries';
 import {getOrRequestToken} from '~/services/liferay/security/auth/getOrRequestToken';
+import i18n from '~/utils/I18n';
 import getInitialDXPAdmin from '~/utils/getInitialDXPAdmin';
 import getKebabCase from '~/utils/getKebabCase';
 import sortLiferayVersions from '~/utils/sortLiferayVersions';
+import {IAdmin, IContact, IDXPValues, IProject} from '~/utils/types';
 import {isLowercaseAndNumbers} from '~/utils/validations.form';
+
 import Layout from '../../../../components/FormLayout';
-import AdminInputs from './AdminInputs';
+import AdminInput from './AdminInput';
 
 import './SetupDXPCloudForm.css';
 
@@ -51,6 +51,29 @@ const MAXIMUM_NUMBER_OF_CHARACTERS = 77;
 
 const HA_DR_FILTER = 'HA DR';
 const STD_DR_FILTER = 'Std DR';
+
+interface IInitialValues {
+	dxp: IDXPValues;
+}
+
+interface ISetupDXPCloudPageProps {
+	client: ApolloClient<NormalizedCacheObject>;
+	dxpVersion: string;
+	errors: FormikErrors<IInitialValues>;
+	handlePage: (isSuccess?: boolean) => void;
+	leftButton: string;
+	listType: string;
+	project: IProject;
+	setFieldValue: (
+		field: string,
+		value: unknown,
+		shouldValidate?: boolean
+	) => Promise<void | FormikErrors<IInitialValues>>;
+	setFormAlreadySubmitted: (value: boolean) => void;
+	subscriptionGroupId: string;
+	touched: FormikTouched<IInitialValues>;
+	values: IInitialValues;
+}
 
 const SetupDXPCloudPage = ({
 	client,
@@ -65,21 +88,30 @@ const SetupDXPCloudPage = ({
 	subscriptionGroupId,
 	touched,
 	values,
-}) => {
+}: ISetupDXPCloudPageProps) => {
 	const [isLoadingSubmitButton, setIsLoadingSubmitButton] = useState(false);
 	const [baseButtonDisabled, setBaseButtonDisabled] = useState(true);
-	const [dxpVersions, setDxpVersions] = useState([]);
-	const {data} = useQuery(getDXPCloudPageInfo, {
+	const [dxpVersions, setDxpVersions] = useState<
+		{key: string; name: string}[]
+	>([]);
+	const {data} = useQuery<{
+		c: {
+			accountSubscriptions: {totalCount: number};
+			dXPCDataCenterRegions: {items: {name: string}[]};
+		};
+	}>(getDXPCloudPageInfo, {
 		variables: {
 			accountSubscriptionsFilter: `(accountKey eq '${project.accountKey}') and (hasDisasterDataCenterRegion eq true or (name eq '${HA_DR_FILTER}' or name eq '${STD_DR_FILTER}'))`,
 		},
 	});
 	const {provisioningServerAPI} = useAppPropertiesContext();
 
-	const [addHighPriorityContact, setAddHighPriorityContact] = useState([]);
-	const [removeHighPriorityContact, setRemoveHighPriorityContact] = useState(
-		[]
-	);
+	const [addHighPriorityContact, setAddHighPriorityContact] = useState<
+		IContact[]
+	>([]);
+	const [removeHighPriorityContact, setRemoveHighPriorityContact] = useState<
+		IContact[]
+	>([]);
 	const [isMultiSelectEmpty, setIsMultiSelectEmpty] = useState(false);
 
 	const [step, setStep] = useState(1);
@@ -108,14 +140,15 @@ const SetupDXPCloudPage = ({
 				const sortedItems = sortLiferayVersions([...items]);
 				setDxpVersions(sortedItems);
 
-				const latestLTS = sortedItems.find((item) =>
+				const latestLTS = sortedItems.find((item: {name: string}) =>
 					item.name.includes('LTS')
 				);
 
 				setFieldValue(
 					'dxp.version',
-					sortedItems.find((item) => item.name === dxpVersion)
-						?.name ||
+					sortedItems.find(
+						(item: {name: string}) => item.name === dxpVersion
+					)?.name ||
 						latestLTS?.name ||
 						sortedItems[0].name
 				);
@@ -123,7 +156,7 @@ const SetupDXPCloudPage = ({
 		};
 
 		fetchListTypeDefinitions();
-	}, [client, dxpVersion, listType]);
+	}, [client, dxpVersion, listType, setFieldValue]);
 
 	const dXPCDataCenterRegions = useMemo(
 		() =>
@@ -134,7 +167,8 @@ const SetupDXPCloudPage = ({
 		[data]
 	);
 
-	const hasDisasterRecovery = data?.c?.accountSubscriptions?.totalCount > 0;
+	const hasDisasterRecovery =
+		(data?.c?.accountSubscriptions?.totalCount ?? 0) > 0;
 
 	useEffect(() => {
 		if (dXPCDataCenterRegions.length) {
@@ -150,13 +184,11 @@ const SetupDXPCloudPage = ({
 				);
 			}
 		}
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [dXPCDataCenterRegions, hasDisasterRecovery]);
+	}, [dXPCDataCenterRegions, hasDisasterRecovery, setFieldValue]);
 
 	useEffect(() => {
 		const hasTouched = !Object.keys(touched).length;
-		const hasError = Object.keys(errors).length;
+		const hasError = !!Object.keys(errors).length;
 
 		setBaseButtonDisabled(hasTouched || hasError);
 	}, [touched, errors]);
@@ -165,7 +197,9 @@ const SetupDXPCloudPage = ({
 		setIsLoadingSubmitButton(true);
 		const dxp = values?.dxp;
 
-		const getDXPCloudActivationSubmitedStatus = async (accountKey) => {
+		const getDXPCloudActivationSubmitedStatus = async (
+			accountKey: string
+		) => {
 			const {data: dxpCloudEnvironmentData} = await client.query({
 				query: getDXPCloudEnvironment,
 				variables: {
@@ -217,25 +251,26 @@ const SetupDXPCloudPage = ({
 						?.id;
 
 				await Promise.all(
-					dxp.admins.map(({email, firstName, github, lastName}) =>
-						client.mutate({
-							context: {
-								displaySuccess: false,
-								type: 'liferay-rest',
-							},
-							mutation: addAdminDXPCloud,
-							variables: {
-								AdminDXPCloud: {
-									dxpCloudEnvironmentId,
-									emailAddress: email,
-									firstName,
-									githubUsername: github,
-									lastName,
-									r_accountEntryToAdminDXPCloud_accountEntryId:
-										project?.id,
+					dxp.admins.map(
+						({email, firstName, github, lastName}: IAdmin) =>
+							client.mutate({
+								context: {
+									displaySuccess: false,
+									type: 'liferay-rest',
 								},
-							},
-						})
+								mutation: addAdminDXPCloud,
+								variables: {
+									AdminDXPCloud: {
+										dxpCloudEnvironmentId,
+										emailAddress: email,
+										firstName,
+										githubUsername: github,
+										lastName,
+										r_accountEntryToAdminDXPCloud_accountEntryId:
+											project?.id,
+									},
+								},
+							})
 					)
 				);
 			}
@@ -256,35 +291,34 @@ const SetupDXPCloudPage = ({
 				},
 			});
 
-			const notificationTemplateService =
-				new NotificationQueueService(client);
+			const notificationTemplateService = new NotificationQueueService(
+				client
+			);
 
 			try {
 				const adminInfo = dxp?.admins?.map(
-					({email, firstName, github, lastName}) => {
+					({email, firstName, github, lastName}: IAdmin) => {
 						return `
-						<strong>Email Address - </strong> ${email}<br>
-						<strong>First Name - </strong>${firstName}<br>
-						<strong>Last Name - </strong>${lastName}<br>
-						<strong>GitHub ID - </strong>${github}<br><br>`;
+							<strong>Email Address - </strong> ${email}<br>
+							<strong>First Name - </strong>${firstName}<br>
+							<strong>Last Name - </strong>${lastName}<br>
+							<strong>GitHub ID - </strong>${github}<br><br>`;
 					}
 				);
 
 				await notificationTemplateService.send(
 					'SETUP-DXP-CLOUD-ENVIRONMENT',
 					{
-						'[%DATE_AND_TIME_SUBMITTED%]':
-							new Date().toUTCString(),
+						'[%DATE_AND_TIME_SUBMITTED%]': new Date().toUTCString(),
+						'[%PROJECT_ADMIN_INFO%]': adminInfo.join(''),
 						'[%PROJECT_CODE%]': project.code,
-						'[%PROJECT_DATA_CENTER_REGION%]':
-							dxp?.dataCenterRegion,
+						'[%PROJECT_DATA_CENTER_REGION%]': dxp?.dataCenterRegion,
 						'[%PROJECT_DISASTER_CENTER_REGION%]':
 							dxp?.disasterDataCenterRegion
 								? `Primary Disaster Center Region - ${dxp?.disasterDataCenterRegion}`
 								: '',
-						'[%PROJECT_ID%]': dxp?.projectId,
+						'[%PROJECT_ID%]': dxp?.projectId ?? '',
 						'[%PROJECT_VERSION%]': dxp?.version,
-						'[%PROJECT_ADMIN_INFO%]': adminInfo.join(''),
 					}
 				);
 			}
@@ -297,24 +331,16 @@ const SetupDXPCloudPage = ({
 			try {
 				const oAuthToken = await getOrRequestToken();
 
-				try {
-					await updateRaysourceContact(
-						addContactRoleRaysource,
-						addHighPriorityContact,
-						oAuthToken,
-						project,
-						provisioningServerAPI
-					);
+				if (oAuthToken) {
+					try {
+						await updateRaysourceContact(
+							addContactRoleRaysource,
+							addHighPriorityContact,
+							oAuthToken,
+							project,
+							provisioningServerAPI
+						);
 
-					await updateLiferayContact(
-						addHighPriorityContact,
-						addContactRoleLiferay,
-						project,
-						client
-					);
-				}
-				catch (error) {
-					if (error.cause === STATUS_CODE.conflict) {
 						await updateLiferayContact(
 							addHighPriorityContact,
 							addContactRoleLiferay,
@@ -322,32 +348,45 @@ const SetupDXPCloudPage = ({
 							client
 						);
 					}
-					else {
-						throw new Error('Error', {cause: error.cause});
+					catch (error: unknown) {
+						const typedError = error as {cause: number};
+
+						if (typedError.cause === STATUS_CODE.conflict) {
+							await updateLiferayContact(
+								addHighPriorityContact,
+								addContactRoleLiferay,
+								project,
+								client
+							);
+						}
+						else {
+							throw new Error('Error', {cause: typedError.cause});
+						}
 					}
+
+					await updateRaysourceContact(
+						removeContactRoleRaysource,
+						removeHighPriorityContact,
+						oAuthToken,
+						project,
+						provisioningServerAPI
+					);
+
+					await updateLiferayContact(
+						removeHighPriorityContact,
+						removeContactRoleLiferay,
+						project,
+						client
+					);
 				}
 
-				await updateRaysourceContact(
-					removeContactRoleRaysource,
-					removeHighPriorityContact,
-					oAuthToken,
-					project,
-					provisioningServerAPI
-				);
-
-				await updateLiferayContact(
-					removeHighPriorityContact,
-					removeContactRoleLiferay,
-					project,
-					client
-				);
-
-				handleDataSubmit();
+				await handleDataSubmit();
 				setIsLoadingSubmitButton(false);
 
 				handlePage(true);
 			}
 			catch (error) {
+				console.error(error);
 				setIsLoadingSubmitButton(false);
 			}
 		}
@@ -362,8 +401,8 @@ const SetupDXPCloudPage = ({
 		}
 	};
 
-	const updateMultiSelectEmpty = (error) => {
-		setIsMultiSelectEmpty(error);
+	const updateMultiSelectEmpty = (error: string | undefined) => {
+		setIsMultiSelectEmpty(!!error);
 	};
 
 	return (
@@ -378,19 +417,26 @@ const SetupDXPCloudPage = ({
 							handleButtonClick();
 						}}
 					>
-						{step === 1 ? leftButton : i18n.translate('previous')}
+						{step !== 1 ? i18n.translate('previous') : leftButton}
 					</Button>
 				),
 				middleButton: (
 					<Button
 						disabled={
-							step === 1
-								? baseButtonDisabled
-								: isMultiSelectEmpty || isLoadingSubmitButton
+							step !== 1
+								? !!isMultiSelectEmpty || isLoadingSubmitButton
+								: baseButtonDisabled || isLoadingSubmitButton
 						}
 						displayType="primary"
 						isLoading={isLoadingSubmitButton}
-						onClick={step === 1 ? handleNextStep : handleSubmit}
+						onClick={() => {
+							if (step === 1) {
+								handleNextStep();
+							}
+							else {
+								handleSubmit();
+							}
+						}}
 					>
 						{step === 1
 							? i18n.translate('next')
@@ -438,7 +484,7 @@ const SetupDXPCloudPage = ({
 									required
 									type="text"
 									validations={[
-										(value) =>
+										(value: string) =>
 											isLowercaseAndNumbers(value),
 									]}
 								/>
@@ -448,12 +494,10 @@ const SetupDXPCloudPage = ({
 										'liferay-dxp-version'
 									)}
 									name="dxp.version"
-									options={dxpVersions.map(
-										(version) => ({
-											label: version.name,
-											value: version.name,
-										})
-									)}
+									options={dxpVersions.map((version) => ({
+										label: version.name,
+										value: version.name,
+									}))}
 									required
 								/>
 
@@ -491,13 +535,15 @@ const SetupDXPCloudPage = ({
 									/>
 								)}
 
-								{values.dxp.admins.map((admin, index) => (
-									<AdminInputs
-										admin={admin}
-										id={index}
-										key={index}
-									/>
-								))}
+								{values.dxp.admins.map(
+									(admin: IAdmin, index: number) => (
+										<AdminInput
+											admin={admin}
+											id={index}
+											key={index}
+										/>
+									)
+								)}
 							</ClayForm.Group>
 
 							{values?.dxp?.admins?.length >
@@ -520,9 +566,7 @@ const SetupDXPCloudPage = ({
 								className="btn-outline-primary cp-btn-add-lxc-sm ml-0 my-2 rounded-xs"
 								disabled={baseButtonDisabled}
 								onClick={() => {
-									push(
-										getInitialDXPAdmin(values?.dxp?.admins)
-									);
+									push(getInitialDXPAdmin());
 									setBaseButtonDisabled(true);
 								}}
 								prependIcon="plus"
@@ -551,7 +595,18 @@ const SetupDXPCloudPage = ({
 	);
 };
 
-const SetupDXPCloudForm = (props) => {
+interface ISetupDXPCloudFormProps {
+	client: ApolloClient<NormalizedCacheObject>;
+	dxpVersion: string;
+	handlePage: (isSuccess?: boolean) => void;
+	leftButton: string;
+	listType: string;
+	project: IProject;
+	setFormAlreadySubmitted: (value: boolean) => void;
+	subscriptionGroupId: string;
+}
+
+const SetupDXPCloudForm = (props: ISetupDXPCloudFormProps) => {
 	return (
 		<Formik
 			initialValues={{
@@ -563,6 +618,7 @@ const SetupDXPCloudForm = (props) => {
 					version: props.dxpVersion || '',
 				},
 			}}
+			onSubmit={() => {}}
 			validateOnChange
 		>
 			{(formikProps) => <SetupDXPCloudPage {...props} {...formikProps} />}

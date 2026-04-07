@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {Badge} from '..';
 import ClayForm from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import ClayMultiSelect from '@clayui/multi-select';
@@ -11,10 +12,33 @@ import classNames from 'classnames';
 import {useField, useFormikContext} from 'formik';
 import {useEffect} from 'react';
 import i18n from '~/utils/I18n';
-import {Badge} from '..';
 import {validateEmailsArray} from '~/utils/validations.form';
 
-const MultiSelect = ({
+export interface IMultiSelectItem {
+	email?: string;
+	label: string;
+	value: string;
+}
+
+interface IProps<T> {
+	filteredSourceItems?: T[];
+	groupStyle?: string;
+	helper?: React.ReactNode;
+	items: T[];
+	label: string;
+	metaErrorCallback: (error: string | undefined) => void;
+	name: string;
+	onChange: (value: string) => void;
+	onItemsChange?: (items: T[]) => void;
+	placeholder?: string;
+	required?: boolean;
+	sourceItems: {email: string}[];
+	type?: string;
+	validations?: Array<(value: unknown) => string | undefined>;
+	values: T[];
+}
+
+const MultiSelect = <T extends IMultiSelectItem>({
 	filteredSourceItems,
 	groupStyle,
 	items,
@@ -25,11 +49,26 @@ const MultiSelect = ({
 	validations,
 	values,
 	...props
-}) => {
+}: IProps<T>) => {
 	const formik = useFormikContext();
 
+	const requiredMultiSelect = (value: number) => {
+		if (!value) {
+			return i18n.sub(
+				'one-or-more-contacts-are-required-please-select-a-contact-for-x',
+				[label]
+			) as string;
+		}
+	};
+
 	const validateMultiSelect = () => {
-		const unfilledField = validations
+		const allValidations = validations ? [...validations] : [];
+
+		if (props.required) {
+			allValidations.push(() => requiredMultiSelect(values.length));
+		}
+
+		const unfilledField = allValidations
 			.map((validation) => validation(values))
 			.filter((error) => !!error);
 
@@ -43,34 +82,18 @@ const MultiSelect = ({
 
 	const [field, meta] = useField({
 		...props,
+		name: props.name,
 		validate: validateMultiSelect,
 	});
 
 	useEffect(() => {
 		formik.setFieldValue(props.name, values);
 		formik.validateField(props.name);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [values]);
+	}, [formik, props.name, values]);
 
 	useEffect(() => {
 		metaErrorCallback(meta.error);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [meta.error]);
-
-	const requiredMultiSelect = (value) => {
-		if (!value) {
-			return i18n.sub(
-				'one-or-more-contacts-are-required-please-select-a-contact-for-x',
-				[label]
-			);
-		}
-	};
-
-	if (props.required) {
-		validations = validations
-			? [...validations, () => requiredMultiSelect(values.length)]
-			: [() => requiredMultiSelect(values.length)];
-	}
+	}, [meta.error, metaErrorCallback]);
 
 	return (
 		<div className="multi-select-container">
@@ -92,14 +115,14 @@ const MultiSelect = ({
 				</label>
 
 				<ClayMultiSelect
-					{...field}
 					{...props}
 					items={items}
-					onChange={(event) => onChange(event?.target?.value)}
+					onBlur={field.onBlur}
+					onChange={onChange}
+					onItemsChange={props.onItemsChange}
 					sourceItems={filteredSourceItems}
-					value={items?.value}
 				>
-					{(item, index) => (
+					{(item: T, index?: number) => (
 						<ClayMultiSelect.Item
 							key={index}
 							textValue={item?.label}
@@ -124,13 +147,11 @@ const MultiSelect = ({
 					)}
 				</ClayMultiSelect>
 
-				{(typeof meta.error === 'string' ||
-					meta.error instanceof String) &&
-					meta.touched && (
-						<Badge>
-							<span className="pl-1">{meta.error}</span>
-						</Badge>
-					)}
+				{typeof meta.error === 'string' && meta.touched && (
+					<Badge>
+						<span className="pl-1">{meta.error as string}</span>
+					</Badge>
+				)}
 			</ClayForm.Group>
 		</div>
 	);

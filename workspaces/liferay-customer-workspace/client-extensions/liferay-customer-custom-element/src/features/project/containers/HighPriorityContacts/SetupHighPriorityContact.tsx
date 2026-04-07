@@ -6,34 +6,36 @@
 import ClayForm from '@clayui/form';
 import ClayLoadingIndicator from '@clayui/loading-indicator';
 import {FieldArray, Formik} from 'formik';
-import {useEffect, useMemo, useState} from 'react';
+import {FC, useEffect, useMemo, useState} from 'react';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
+import {useOnboarding} from '~/features/onboarding/context';
+import {useAppContext} from '~/features/project/context';
 import useUserAccountsByAccountExternalReferenceCode from '~/features/project/pages/Project/TeamMembers/components/TeamMembersTable/hooks/useUserAccountsByAccountExternalReferenceCode';
 import {
 	getAccountRolesId,
 	getContactRoleByFilter,
 } from '~/features/project/utils/getHighPriorityContacts';
-import {useOnboarding} from '~/features/onboarding/context';
-import {useAppContext} from '~/features/project/context';
 import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
+import {IAccountRole, IContact, IGraphQLUserAccount} from '~/utils/types';
+
 import HighPriorityContactsInput from './HighPriorityContactsInput';
 import {useHighPriorityContacts} from './hooks/useHighPriorityContacts';
 
-const mapFilterToContactCategory = (filter) => ({
+const mapFilterToContactCategory = (filter: string) => ({
 	contactCategory: {
 		key: (filter.charAt(0).toLowerCase() + filter.slice(1)).replace(
 			/\s/g,
 			''
 		),
 		name: filter.toLowerCase(),
-		role: getContactRoleByFilter(filter.toLowerCase()),
+		role: getContactRoleByFilter(filter.toLowerCase()) || '',
 	},
 });
 
 const getHighPriorityContactsByFilterRaysource = (
-	highPriorityContactCategory,
-	userAccounts,
-	filter
+	highPriorityContactCategory: any,
+	userAccounts: IGraphQLUserAccount[],
+	filter: string
 ) =>
 	userAccounts
 		.filter((account) =>
@@ -67,7 +69,16 @@ const getHighPriorityContactsByFilterRaysource = (
 			})
 		);
 
-const SetupHighPriorityContact = ({
+interface ISetupHighPriorityContactProps {
+	addContactList: (contactList: IContact[]) => void;
+	disableSubmit: (error: string | undefined, inputName: string) => void;
+	filter: string;
+	isCriticalIncidentCard?: boolean;
+	removedContactList: (contactList: IContact[]) => void;
+	setCurrentContact?: (contactList: IContact[]) => void;
+}
+
+const SetupHighPriorityContact: FC<ISetupHighPriorityContactProps> = ({
 	addContactList,
 	disableSubmit,
 	filter,
@@ -75,14 +86,15 @@ const SetupHighPriorityContact = ({
 	removedContactList,
 	setCurrentContact,
 }) => {
-	const [
-		currentHighPriorityContacts,
-		setCurrentHighPriorityContacts,
-	] = useState([]);
+	const [currentHighPriorityContacts, setCurrentHighPriorityContacts] =
+		useState<IContact[]>([]);
 
-	const [rolesId, setRolesId] = useState();
+	const [, setRolesId] = useState<IAccountRole[] | undefined>();
 	const {client} = useAppPropertiesContext();
-	const {data: currentKoroneikiAccountData, loading: loadingCurrentKoroneikiAccount } = useCurrentKoroneikiAccount();
+	const {
+		data: currentKoroneikiAccountData,
+		loading: loadingCurrentKoroneikiAccount,
+	} = useCurrentKoroneikiAccount();
 	const projectOnboarding = useOnboarding();
 	const projectPortal = useAppContext();
 
@@ -97,7 +109,8 @@ const SetupHighPriorityContact = ({
 	);
 
 	const koroneikiAccount = useMemo(
-		() => currentKoroneikiAccountData?.koroneikiAccountByExternalReferenceCode,
+		() =>
+			currentKoroneikiAccountData?.koroneikiAccountByExternalReferenceCode,
 		[currentKoroneikiAccountData?.koroneikiAccountByExternalReferenceCode]
 	);
 
@@ -106,19 +119,21 @@ const SetupHighPriorityContact = ({
 		currentHighPriorityContacts,
 		highPriorityContactCategory,
 		removedContactList,
-		rolesId,
 	});
 
 	useEffect(() => {
-		getAccountRolesId(project, client)
-			.then(setRolesId)
-			.catch(console.error);
-	}, [client, project, project.accountKey]);
+		if (project) {
+			getAccountRolesId(project, client)
+				.then(setRolesId)
+				.catch(console.error);
+		}
+	}, [client, project]);
 
-	const [
-		,
-		{data: userAccountsData, loading: loadingUserAccountsData},
-	] = useUserAccountsByAccountExternalReferenceCode(project?.accountKey);
+	const [, {data: userAccountsData, loading: loadingUserAccountsData}] =
+		useUserAccountsByAccountExternalReferenceCode(
+			project?.accountKey,
+			!project?.accountKey
+		);
 
 	useEffect(() => {
 		const highPriorityContacts =
@@ -129,18 +144,18 @@ const SetupHighPriorityContact = ({
 				highPriorityContactCategory?.contactCategory?.role
 			) ?? [];
 
-		const currentCriticalIncidentContacts = highPriorityContacts.map(
-			(highPriorityContact, index) => ({
-				email: highPriorityContact?.email,
+		const currentCriticalIncidentContacts: IContact[] =
+			highPriorityContacts.map((highPriorityContact, index) => ({
+				email: highPriorityContact?.email ?? '',
 				filter: highPriorityContact?.role,
 				filterId: highPriorityContact?.roleId,
 				filterLabel: highPriorityContact?.name,
 				id: highPriorityContact?.id,
-				label: highPriorityContact?.name,
+				key: String(highPriorityContact?.id),
+				label: highPriorityContact?.name ?? '',
 				labelRole: highPriorityContact?.labelRole,
 				value: (index + 1).toString(),
-			})
-		);
+			}));
 		setCurrentHighPriorityContacts(currentCriticalIncidentContacts);
 
 		if (setCurrentContact) {
@@ -154,7 +169,10 @@ const SetupHighPriorityContact = ({
 		setCurrentContact,
 	]);
 
-	const handleMetaErrorChange = (error, inputName) => {
+	const handleMetaErrorChange = (
+		error: string | undefined,
+		inputName: string
+	) => {
 		disableSubmit(error, inputName);
 	};
 
@@ -165,7 +183,7 @@ const SetupHighPriorityContact = ({
 	}
 
 	return (
-		<FieldArray>
+		<FieldArray name="activations.criticalIncedentContact">
 			{() => (
 				<ClayForm.Group className="pb-1">
 					<HighPriorityContactsInput
@@ -183,7 +201,17 @@ const SetupHighPriorityContact = ({
 		</FieldArray>
 	);
 };
-const SetupHighPriorityContactForm = ({
+
+interface ISetupHighPriorityContactFormProps {
+	addContactList: (contactList: IContact[]) => void;
+	currentHighPriorityContacts?: (contactList: IContact[]) => void;
+	disableSubmit: (error: string | undefined, inputName: string) => void;
+	filter: string;
+	isCriticalIncidentCard?: boolean;
+	removedContactList: (contactList: IContact[]) => void;
+}
+
+const SetupHighPriorityContactForm: FC<ISetupHighPriorityContactFormProps> = ({
 	addContactList,
 	currentHighPriorityContacts,
 	disableSubmit,
@@ -196,6 +224,7 @@ const SetupHighPriorityContactForm = ({
 				criticalIncedentContact: [],
 			},
 		}}
+		onSubmit={() => {}}
 	>
 		{(formikProps) => (
 			<SetupHighPriorityContact

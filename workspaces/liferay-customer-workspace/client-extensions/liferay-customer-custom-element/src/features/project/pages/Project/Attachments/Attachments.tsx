@@ -5,14 +5,21 @@
 
 import {useEffect} from 'react';
 import {useOutletContext} from 'react-router-dom';
-import i18n from '~/utils/I18n';
 import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
+import i18n from '~/utils/I18n';
+import {IKoroneikiAccount} from '~/utils/types';
+
 import TicketAttachmentsTable from './components/TicketAttachmentsTable/TicketAttachmentsTable';
 
+interface IOutletContext {
+	setHasSideMenu: (hasSideMenu: boolean) => void;
+}
+
 const Attachments = () => {
-	const {setHasSideMenu} = useOutletContext();
+	const {setHasSideMenu} = useOutletContext<IOutletContext>();
 	const {data, loading} = useCurrentKoroneikiAccount();
-	const koroneikiAccount = data?.koroneikiAccountByExternalReferenceCode;
+	const koroneikiAccount: IKoroneikiAccount | undefined =
+		data?.koroneikiAccountByExternalReferenceCode;
 
 	useEffect(() => {
 		setHasSideMenu(true);
@@ -23,10 +30,12 @@ const Attachments = () => {
 			<h1>{i18n.translate('attachments')}</h1>
 
 			<div className="mt-4">
-				<TicketAttachmentsTable
-					koroneikiAccount={koroneikiAccount}
-					loading={loading}
-				/>
+				{koroneikiAccount && (
+					<TicketAttachmentsTable
+						koroneikiAccount={koroneikiAccount}
+						loading={loading}
+					/>
+				)}
 			</div>
 		</>
 	);

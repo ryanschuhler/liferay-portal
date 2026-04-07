@@ -18,6 +18,7 @@ export function getWebContents(
 	subscriptionGroups: IAccountSubscriptionGroup[] | undefined
 ): string[] {
 	const webContents: string[] = [];
+
 	const hasProjectSLA = Object.values(SLA_TYPES).some((slaType) =>
 		slaCurrent?.includes(slaType)
 	);

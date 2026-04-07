@@ -3,14 +3,16 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {IActivationKey} from '~/utils/types';
+
 import {downloadActivationLicenseKey} from './downloadActivationLicenseKey';
 
 export async function getActivationKeyDownload(
-	oAuthToken,
-	provisioningServerAPI,
-	handleAlertStatus,
-	activationKey,
-	projectName
+	oAuthToken: string,
+	provisioningServerAPI: string,
+	handleAlertStatus: (hasSuccessfullyDownloadedKeys: boolean) => void,
+	activationKey: IActivationKey,
+	projectName: string
 ) {
 	const downloadedKey = await downloadActivationLicenseKey(
 		activationKey?.id,
@@ -21,5 +23,5 @@ export async function getActivationKeyDownload(
 		projectName
 	);
 
-	return handleAlertStatus(downloadedKey);
+	return handleAlertStatus(downloadedKey as boolean);
 }

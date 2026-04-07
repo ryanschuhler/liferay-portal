@@ -31,8 +31,10 @@ export default function useGetTicketAttachments(
 			const ticketAttachmentsResponse =
 				await getTicketAttachments(filterQuery);
 
-			setTicketAttachments(ticketAttachmentsResponse.items);
-			setTotalCount(ticketAttachmentsResponse.totalCount);
+			if (ticketAttachmentsResponse) {
+				setTicketAttachments(ticketAttachmentsResponse.items);
+				setTotalCount(ticketAttachmentsResponse.totalCount);
+			}
 		}
 		catch (error) {
 			console.error('Error fetching ticket attachments:', error);

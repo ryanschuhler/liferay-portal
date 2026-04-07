@@ -117,9 +117,7 @@ const isValidMac = (value: string) => {
 
 const maxLength = (value: string, max: number) => {
 	if (value.length > max) {
-		return i18n.sub('this-field-exceeded-x-characters', [
-			max as unknown as string,
-		]);
+		return i18n.sub('this-field-exceeded-x-characters', [max.toString()]);
 	}
 };
 

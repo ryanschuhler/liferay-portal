@@ -7,16 +7,27 @@ import {Button} from '@clayui/core';
 import DropDown from '@clayui/drop-down';
 import ClayIcon from '@clayui/icon';
 import {useCallback, useMemo, useState} from 'react';
-import i18n from '~/utils/I18n';
 import Skeleton from '~/components/Skeleton';
-import getKebabCase from '~/utils/getKebabCase';
 import {SUBSCRIPTIONS_STATUS} from '~/features/project/utils/constants';
+import i18n from '~/utils/I18n';
+import getKebabCase from '~/utils/getKebabCase';
 
 const MAX_SUBSCRIPTION_STATUS = 3;
 
-const SubscriptionStatusDropdown = ({disabled, loading, onClick}) => {
+interface IDropdownItem {
+	active: boolean;
+	label: string;
+}
+
+interface IProps {
+	disabled: boolean;
+	loading: boolean;
+	onClick: (statuses?: string[]) => void;
+}
+
+const SubscriptionStatusDropdown = ({disabled, loading, onClick}: IProps) => {
 	const [active, setActive] = useState(false);
-	const [items, setItems] = useState([
+	const [items, setItems] = useState<IDropdownItem[]>([
 		{
 			active: true,
 			label: SUBSCRIPTIONS_STATUS.active,
@@ -46,18 +57,24 @@ const SubscriptionStatusDropdown = ({disabled, loading, onClick}) => {
 			.join(', ');
 	}, [activeItems]);
 
-	const handleOnClick = (index) => {
-		items[index].active = !items[index].active;
-		const currentActiveItems = items.filter((item) => item.active);
+	const handleOnClick = (index: number) => {
+		setItems((prevItems) => {
+			const newItems = [...prevItems];
+			newItems[index] = {
+				...newItems[index],
+				active: !newItems[index].active,
+			};
+			const currentActiveItems = newItems.filter((item) => item.active);
 
-		if (currentActiveItems.length !== MAX_SUBSCRIPTION_STATUS) {
-			onClick(currentActiveItems.map((item) => item.label));
-		}
-		else {
-			onClick();
-		}
+			if (currentActiveItems.length !== MAX_SUBSCRIPTION_STATUS) {
+				onClick(currentActiveItems.map((item) => item.label));
+			}
+			else {
+				onClick(undefined);
+			}
 
-		setItems([...items]);
+			return newItems;
+		});
 	};
 
 	const handleClickAll = () => {
@@ -113,7 +130,7 @@ const SubscriptionStatusDropdown = ({disabled, loading, onClick}) => {
 							}
 							key={`${item.label}-${index}`}
 							onClick={() => handleOnClick(index)}
-							symbolRight={item.active && 'check'}
+							symbolRight={item.active ? 'check' : undefined}
 						>
 							{i18n.translate(getKebabCase(item.label))}
 						</DropDown.Item>
@@ -127,8 +144,9 @@ const SubscriptionStatusDropdown = ({disabled, loading, onClick}) => {
 						}
 						onClick={() => handleClickAll()}
 						symbolRight={
-							activeItems.length === MAX_SUBSCRIPTION_STATUS &&
-							'check'
+							activeItems.length === MAX_SUBSCRIPTION_STATUS
+								? 'check'
+								: undefined
 						}
 					>
 						{i18n.translate('all')}

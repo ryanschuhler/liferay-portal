@@ -23,7 +23,7 @@ import swrCacheProvider from './utils/swrCacheProvider';
 
 import './main.css';
 
-const AppRoutes = {
+const AppRoutes: Record<string, React.ComponentType> = {
 	attachments: Attachments,
 	onboarding: Onboarding,
 	project: Project,
@@ -32,25 +32,25 @@ const AppRoutes = {
 };
 
 type Properties = {
-	accountSettingsURL: string | null;
-	articleAccountSupportURL: string | null;
-	articleDeactivateKey: string | null;
-	articleDeployingActivationKeysURL: string | null;
-	articleGettingStartedWithLiferayEnterpriseSearchURL: string | null;
-	articleNotifiedWhenMyActivationKeyIsAboutToExpireURL: string | null;
-	articleWhatIsMyInstanceSizingValueURL: string | null;
-	createTicketURL: string | null;
-	featureFlags?: string[];
-	importDate?: Date | null;
-	jiraFLSPortalURL: string | null;
-	jiraFLSProject: string | null;
-	jiraHCPortalURL: string | null;
-	submitSupportTicketURL: string | null;
-	theOverviewPageURL: string | null;
+	accountSettingsURL: string;
+	articleAccountSupportURL: string;
+	articleDeactivateKey: string;
+	articleDeployingActivationKeysURL: string;
+	articleGettingStartedWithLiferayEnterpriseSearchURL: string;
+	articleNotifiedWhenMyActivationKeyIsAboutToExpireURL: string;
+	articleWhatIsMyInstanceSizingValueURL: string;
+	createTicketURL: string;
+	featureFlags: string[];
+	importDate?: string | null;
+	jiraFLSPortalURL: string;
+	jiraFLSProject: string;
+	jiraHCPortalURL: string;
+	submitSupportTicketURL: string;
+	theOverviewPageURL: string;
 };
 
 type APIs = {
-	provisioningServerAPI: string | null;
+	provisioningServerAPI: string;
 };
 
 type CustomerPortalAppProps = {
@@ -63,9 +63,7 @@ const CustomerPortalApp: React.FC<CustomerPortalAppProps> = ({
 	route,
 	...properties
 }) => {
-	const {client, networkStatus} = useApollo(
-		apis.provisioningServerAPI as string
-	);
+	const {client, networkStatus} = useApollo(apis.provisioningServerAPI);
 
 	useGlobalNetworkIndicator(networkStatus);
 
@@ -73,20 +71,18 @@ const CustomerPortalApp: React.FC<CustomerPortalAppProps> = ({
 		return <ClayLoadingIndicator />;
 	}
 
-	const AppRouteComponent = (AppRoutes as any)[route];
+	const AppRouteComponent = AppRoutes[route];
 
 	return (
 		<ApolloProvider client={client}>
 			<AppPropertiesContext.Provider
-				value={
-					{
-						...properties,
-						...apis,
-						client,
-					} as any
-				}
+				value={{
+					...properties,
+					...apis,
+					client,
+				}}
 			>
-				<AppRouteComponent />
+				{AppRouteComponent && <AppRouteComponent />}
 			</AppPropertiesContext.Provider>
 		</ApolloProvider>
 	);
@@ -97,49 +93,46 @@ class CustomerPortalWebComponent extends HTMLElement {
 
 	connectedCallback() {
 		const properties = {
-			accountSettingsURL: super.getAttribute('account-settings-url'),
-			articleAccountSupportURL: super.getAttribute(
-				'article-account-support-url'
-			),
-			articleDeactivateKey: super.getAttribute(
-				'article-deactivate-key-url'
-			),
-			articleDeployingActivationKeysURL: super.getAttribute(
-				'article-deploying-activation-keys-url'
-			),
+			accountSettingsURL:
+				super.getAttribute('account-settings-url') ?? '',
+			articleAccountSupportURL:
+				super.getAttribute('article-account-support-url') ?? '',
+			articleDeactivateKey:
+				super.getAttribute('article-deactivate-key-url') ?? '',
+			articleDeployingActivationKeysURL:
+				super.getAttribute('article-deploying-activation-keys-url') ??
+				'',
 			articleGettingStartedWithLiferayEnterpriseSearchURL:
 				super.getAttribute(
 					'article-getting-started-with-liferay-enterprise-search-url'
-				),
+				) ?? '',
 			articleNotifiedWhenMyActivationKeyIsAboutToExpireURL:
 				super.getAttribute(
 					'article-notified-when-my-activation-key-is-about-to-expire-url'
-				),
-			articleWhatIsMyInstanceSizingValueURL: super.getAttribute(
-				'article-what-is-my-instance-sizing-value-url'
-			),
-			createTicketURL: super.getAttribute('create-ticket-url'),
+				) ?? '',
+			articleWhatIsMyInstanceSizingValueURL:
+				super.getAttribute(
+					'article-what-is-my-instance-sizing-value-url'
+				) ?? '',
+			createTicketURL: super.getAttribute('create-ticket-url') ?? '',
 			featureFlags: (super.getAttribute('feature-flags') ?? '')
 				.split(',')
 				.map((featureflag) => featureflag.trim()),
 			importDate: super.getAttribute('import-date')
-				? new Date(super.getAttribute('import-date') as string)
+				? (super.getAttribute('import-date') as string)
 				: undefined,
-			jiraFLSPortalURL: super.getAttribute('jira-fls-portal-url'),
-			jiraFLSProject: super.getAttribute('jira-fls-project'),
-			jiraHCPortalURL: super.getAttribute('jira-hc-portal-url'),
-			submitSupportTicketURL: super.getAttribute(
-				'submit-support-ticket-url'
-			),
-			theOverviewPageURL: super.getAttribute(
-				'about-the-overview-page-url'
-			),
+			jiraFLSPortalURL: super.getAttribute('jira-fls-portal-url') ?? '',
+			jiraFLSProject: super.getAttribute('jira-fls-project') ?? '',
+			jiraHCPortalURL: super.getAttribute('jira-hc-portal-url') ?? '',
+			submitSupportTicketURL:
+				super.getAttribute('submit-support-ticket-url') ?? '',
+			theOverviewPageURL:
+				super.getAttribute('about-the-overview-page-url') ?? '',
 		};
 
 		const apis = {
-			provisioningServerAPI: super.getAttribute(
-				'provisioning-server-api'
-			),
+			provisioningServerAPI:
+				super.getAttribute('provisioning-server-api') ?? '',
 		};
 
 		if (!this.root) {

@@ -13,7 +13,7 @@ export default function useAccountsSyncBusinessEvents(
 	businessEvent: IBusinessEvent,
 	isEdition: boolean,
 	isRemoval: boolean
-): any {
+): {updateAccountBusinessEvents: () => Promise<Response | undefined>} {
 	const filterQuery = useMemo<string>(() => {
 		let filterQuery = `filter=eventStatus ne 'canceled' and eventStatus ne 'completed' and r_accountEntryToBusinessEvents_accountEntryId eq '${businessEvent.r_accountEntryToBusinessEvents_accountEntryId || ''}'`;
 
@@ -35,6 +35,10 @@ export default function useAccountsSyncBusinessEvents(
 		const businessEventsResponse = await getBusinessEvents(
 			encodeURI(filterQuery)
 		);
+
+		if (!businessEventsResponse) {
+			return;
+		}
 
 		const formattedBusinessEvents = businessEventsResponse.items.map(
 			(businessEvent: IBusinessEvent) => {

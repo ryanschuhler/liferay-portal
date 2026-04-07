@@ -7,14 +7,33 @@ import ClayCard from '@clayui/card';
 import classNames from 'classnames';
 import {StatusTag} from '~/components';
 import {STATUS_TAG_TYPE_NAMES} from '~/features/project/utils/constants';
+import {IProject} from '~/utils/types';
+
+interface IActivationStatusItem {
+	buttonLink?: JSX.Element;
+	dropdownIcon?: JSX.Element;
+	id: string;
+	subtitle: string | JSX.Element;
+	title: string;
+}
+
+interface IProps {
+	activationStatus: IActivationStatusItem;
+	activationStatusDate: string;
+	children?: React.ReactNode;
+	iconPath: any;
+	project: IProject;
+	subscriptionGroupActivationStatus: string | undefined;
+}
 
 const ActivationStatusLayout = ({
 	activationStatus,
 	activationStatusDate,
+	children,
 	iconPath: IconSVG,
 	project,
 	subscriptionGroupActivationStatus,
-}) => {
+}: IProps) => {
 	return (
 		<div className="mb-5">
 			<h2>{activationStatus.title}</h2>
@@ -49,7 +68,7 @@ const ActivationStatusLayout = ({
 								className="col-8 h5 ml-2 px-0"
 								displayType="title"
 								tag="h5"
-								title={null}
+								title=""
 								truncate={false}
 							>
 								{project.name}
@@ -59,6 +78,8 @@ const ActivationStatusLayout = ({
 								</p>
 
 								{activationStatus.buttonLink}
+
+								{children}
 							</ClayCard.Description>
 
 							<div className="d-flex justify-content-between ml-auto">
@@ -66,7 +87,7 @@ const ActivationStatusLayout = ({
 									className="cp-label-activation-status position-absolute"
 									displayType="text"
 									tag="div"
-									title={null}
+									title=""
 									truncate={false}
 								>
 									<div className="align-items-center d-flex">

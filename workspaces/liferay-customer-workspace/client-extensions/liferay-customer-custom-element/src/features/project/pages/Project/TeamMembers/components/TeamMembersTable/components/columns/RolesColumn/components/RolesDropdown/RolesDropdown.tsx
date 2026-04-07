@@ -2,9 +2,10 @@
  * SPDX-FileCopyrightText: (c) 2000 Liferay, Inc. https://liferay.com
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
+
 import {useEffect, useState} from 'react';
-import {ROLE_TYPES} from '~/utils/constants';
 import RoleSelectorDropdown from '~/features/project/components/RoleSelectorDropdown';
+import {ROLE_TYPES} from '~/utils/constants';
 import isSupportSeatRole from '~/utils/isSupportSeatRole';
 
 const partnerMemberRoles = [
@@ -13,6 +14,15 @@ const partnerMemberRoles = [
 	ROLE_TYPES.partnerTechnicalUser.key,
 ];
 
+interface IRolesDropdownProps {
+	accountRoles: any[];
+	availableSupportSeatsCount: number;
+	currentRoleBriefName: string[];
+	hasAccountSupportSeatRole: boolean;
+	onClick: (event: any) => void;
+	supportSeatsCount: number;
+}
+
 const RolesDropdown = ({
 	accountRoles,
 	availableSupportSeatsCount,
@@ -20,19 +30,18 @@ const RolesDropdown = ({
 	hasAccountSupportSeatRole,
 	onClick,
 	supportSeatsCount,
-}) => {
-	const [radioOptions, setRadioOptions] = useState({});
-	const [selectedAccountRoleName, setSelectedAccountRoleName] = useState(
-		currentRoleBriefName
-	);
+}: IRolesDropdownProps) => {
+	const [radioOptions, setRadioOptions] = useState<any>({});
+	const [selectedAccountRoleName, setSelectedAccountRoleName] =
+		useState<string[]>(currentRoleBriefName);
 
 	useEffect(() => {
-		const baseFormatAccount = accountRoles.map((accountRole) => ({
+		const baseFormatAccount = accountRoles.map((accountRole: any) => ({
 			active: selectedAccountRoleName.includes(accountRole.name),
 			disabled: hasAccountSupportSeatRole
 				? supportSeatsCount === 1
 				: isSupportSeatRole(accountRole.name) &&
-				  availableSupportSeatsCount === 0,
+					availableSupportSeatsCount === 0,
 			label: accountRole.name,
 			raysourceName: accountRole.raysourceName,
 			value: accountRole.id,
@@ -40,7 +49,7 @@ const RolesDropdown = ({
 
 		setRadioOptions(
 			baseFormatAccount.reduce(
-				(previousItem, item) => {
+				(previousItem: any, item: any) => {
 					if (!partnerMemberRoles.includes(item.label)) {
 						previousItem[item.label] = item;
 
@@ -58,8 +67,8 @@ const RolesDropdown = ({
 				{
 					partnerMemberRoles: {
 						active: undefined,
-						roles: []
-					}
+						roles: [],
+					},
 				}
 			)
 		);

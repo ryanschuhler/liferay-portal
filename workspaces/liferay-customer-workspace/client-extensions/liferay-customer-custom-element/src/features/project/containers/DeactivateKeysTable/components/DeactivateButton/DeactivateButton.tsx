@@ -5,14 +5,27 @@
 
 import {Button as ClayButton} from '@clayui/core';
 import {useModal} from '@clayui/modal';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import i18n from '~/utils/I18n';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import {putDeactivateKeys} from '~/services/liferay/rest/raysource/LicenseKeys';
-import {ALERT_DOWNLOAD_TYPE, STATUS_CODE} from '~/features/project/utils/constants';
 import ConfirmationMessageModal from '~/features/project/containers/ActivationKeysTable/components/DeactivateButton/ConfirmationMessageModal';
 import DeactivateKeysModal from '~/features/project/containers/ActivationKeysTable/components/DeactivateButton/DeactivateKeysModal';
+import {
+	ALERT_DOWNLOAD_TYPE,
+	STATUS_CODE,
+} from '~/features/project/utils/constants';
+import {putDeactivateKeys} from '~/services/liferay/rest/raysource/LicenseKeys';
+import i18n from '~/utils/I18n';
+
+interface IProps {
+	activationKeysByStatusPaginatedChecked: any[];
+	deactivateKeysStatus: string;
+	filterCheckedActivationKeys: any[];
+	handleDeactivate: () => void;
+	oAuthToken: string;
+	setDeactivateKeysStatus: (status: string) => void;
+	urlPreviousPage: string;
+}
 
 const DeactivateButton = ({
 	activationKeysByStatusPaginatedChecked,
@@ -22,12 +35,12 @@ const DeactivateButton = ({
 	oAuthToken,
 	setDeactivateKeysStatus,
 	urlPreviousPage,
-}) => {
-	const {provisioningServerAPI} = useAppPropertiesContext();
+}: IProps) => {
+	const {provisioningServerAPI}: any = useAppPropertiesContext();
 	const [isDeactivating, setIsDeactivating] = useState(false);
 	const [isVisibleModal, setIsVisibleModal] = useState(false);
 	const [alreadyDeactivated, setAlreadyDeactivated] = useState(false);
-	const {observer, onClose} = useModal({
+	const {observer, onClose}: any = useModal({
 		onClose: () => {
 			setIsVisibleModal(false);
 			setDeactivateKeysStatus('');
@@ -38,10 +51,14 @@ const DeactivateButton = ({
 	const deactivateKeysConfirm = async () => {
 		setIsDeactivating(true);
 
+		const licenseKeyIds = filterCheckedActivationKeys
+			.map((id) => `licenseKeyIds=${id}`)
+			.join('&');
+
 		const response = await putDeactivateKeys(
 			oAuthToken,
 			provisioningServerAPI,
-			filterCheckedActivationKeys
+			licenseKeyIds
 		);
 
 		if (response.status === STATUS_CODE.successNoContent) {
@@ -94,11 +111,11 @@ const DeactivateButton = ({
 				{` ${
 					activationKeysByStatusPaginatedChecked.length > 1
 						? i18n.sub('deactivate-x-keys', [
-								activationKeysByStatusPaginatedChecked.length,
-						  ])
+								activationKeysByStatusPaginatedChecked.length.toString(),
+							])
 						: i18n.sub('deactivate-x-key', [
-								activationKeysByStatusPaginatedChecked.length,
-						  ])
+								activationKeysByStatusPaginatedChecked.length.toString(),
+							])
 				}`}
 			</ClayButton>
 		</>

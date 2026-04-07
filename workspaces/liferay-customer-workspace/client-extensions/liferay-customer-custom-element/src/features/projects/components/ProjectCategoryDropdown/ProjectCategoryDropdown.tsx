@@ -11,11 +11,11 @@ import i18n from '~/utils/I18n';
 
 interface IProps {
 	onSelect: (key: string) => void;
-	projectCategoryItems: ProjectCategoryItem[];
+	projectCategoryItems: IProjectCategoryItem[];
 	selectedProjectCategoryKey: string;
 }
 
-interface ProjectCategoryItem {
+interface IProjectCategoryItem {
 	key: string;
 	label: string;
 }

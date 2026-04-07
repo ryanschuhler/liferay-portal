@@ -8,7 +8,12 @@ import PopoverIcon from '~/features/project/containers/ActivationStatus/DXPCloud
 
 import './ManageUsersButton.css';
 
-const ManageUsersButton = ({href, title}) => (
+interface IProps {
+	href: string;
+	title: string;
+}
+
+const ManageUsersButton = ({href, title}: IProps) => (
 	<a
 		className="align-items-center border border-secondary btn cp-manage-users-button d-flex mr-3 p-2 text-neutral-10 text-nowrap"
 		href={href}

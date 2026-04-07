@@ -5,15 +5,16 @@
 
 import isAccountAdministrator from '~/utils/isAccountAdministrator';
 import isSupportSeatRole from '~/utils/isSupportSeatRole';
+import {IRoleBrief} from '~/utils/types';
 
 import {Liferay} from '../..';
 
 export const userAccountsTypePolicy = {
 	AccountBrief: {
-		keyFields: false,
+		keyFields: [] as const,
 	},
 	OrganizationBrief: {
-		keyFields: false,
+		keyFields: [] as const,
 	},
 	RoleBrief: {
 		fields: {
@@ -42,8 +43,8 @@ export const userAccountsTypePolicy = {
 			},
 			isLiferayStaff: {
 				read(_: unknown, {readField}: {readField: Function}): boolean {
-					return !!(readField('roleBriefs') as any[]).some(
-						(roleBrief: any) =>
+					return !!(readField('roleBriefs') as IRoleBrief[]).some(
+						(roleBrief: IRoleBrief) =>
 							readField('name', roleBrief) === 'Liferay Staff'
 					);
 				},
@@ -57,8 +58,8 @@ export const userAccountsTypePolicy = {
 			},
 			isPartner: {
 				read(_: unknown, {readField}: {readField: Function}): boolean {
-					return !!(readField('roleBriefs') as any[]).some(
-						(roleBrief: any) =>
+					return !!(readField('roleBriefs') as IRoleBrief[]).some(
+						(roleBrief: IRoleBrief) =>
 							readField('name', roleBrief) === 'Partner'
 					);
 				},

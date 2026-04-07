@@ -34,7 +34,7 @@ import {
 	IUserAccount,
 } from '~/utils/types';
 
-import reducer, {ActionPayload, IAction, IState, actionTypes} from './reducer';
+import reducer, {IAction, IState, actionTypes} from './reducer';
 
 const AppContext = createContext<[IState, React.Dispatch<IAction>]>([
 	{
@@ -55,7 +55,11 @@ const AppContext = createContext<[IState, React.Dispatch<IAction>]>([
 	() => {},
 ]);
 
-const AppContextProvider = ({children}: {children: React.ReactNode}) => {
+interface IProps {
+	children: React.ReactNode;
+}
+
+const AppContextProvider = ({children}: IProps) => {
 	const {client} = useAppPropertiesContext();
 	const [state, dispatch] = useReducer<React.Reducer<IState, IAction>>(
 		reducer,
@@ -83,24 +87,21 @@ const AppContextProvider = ({children}: {children: React.ReactNode}) => {
 			const HEADLESS_BASE_URL = `${window.location.origin}/o/`;
 
 			try {
-				const businessEventsResponse = await fetcher(
-					`${HEADLESS_BASE_URL}c/businessevents?${filterQuery}`,
-					{
-						headers: {
-							'Accept-Language':
-								Liferay.ThemeDisplay.getBCP47LanguageId(),
-							'Content-Type': 'application/json',
-							'x-csrf-token': Liferay.authToken,
-						},
-						method: 'GET',
-					}
-				);
-
-				const items = businessEventsResponse.items as IBusinessEvent[];
+				const businessEventsResponse = await fetcher<{
+					items: IBusinessEvent[];
+				}>(`${HEADLESS_BASE_URL}c/businessevents?${filterQuery}`, {
+					headers: {
+						'Accept-Language':
+							Liferay.ThemeDisplay.getBCP47LanguageId(),
+						'Content-Type': 'application/json',
+						'x-csrf-token': Liferay.authToken,
+					},
+					method: 'GET',
+				});
 
 				dispatch({
-					payload: items,
-					type: actionTypes.UPDATE_BUSINESS_EVENTS as keyof typeof actionTypes,
+					payload: businessEventsResponse?.items ?? [],
+					type: actionTypes.UPDATE_BUSINESS_EVENTS,
 				});
 			}
 			catch (error) {
@@ -154,12 +155,12 @@ const AppContextProvider = ({children}: {children: React.ReactNode}) => {
 					isAccountAdmin: isAccountAdministrator,
 					isOmniAdmin,
 					isProvisioning: isAccountProvisioning,
-					isStaff: isStaff as boolean,
+					isStaff: isStaff ?? false,
 				};
 
 				dispatch({
 					payload: userAccount,
-					type: actionTypes.UPDATE_USER_ACCOUNT as keyof typeof actionTypes,
+					type: actionTypes.UPDATE_USER_ACCOUNT,
 				});
 
 				return userAccount;
@@ -198,18 +199,15 @@ const AppContextProvider = ({children}: {children: React.ReactNode}) => {
 				}
 			}
 
-			const currentUserProjectAccess: {
-				denyAccess: boolean;
-				hasProjectAccess: boolean;
-			} = {
+			const currentUserProjectAccess = {
 				denyAccess,
 				hasProjectAccess:
 					userAccount.isOmniAdmin || userProjectAccess || !denyAccess,
 			};
 
 			dispatch({
-				payload: currentUserProjectAccess as unknown as ActionPayload,
-				type: actionTypes.UPDATE_USER_PROJECT_ACCESS as keyof typeof actionTypes,
+				payload: currentUserProjectAccess,
+				type: actionTypes.UPDATE_USER_PROJECT_ACCESS,
 			});
 
 			return currentUserProjectAccess;
@@ -232,13 +230,13 @@ const AppContextProvider = ({children}: {children: React.ReactNode}) => {
 			if (projects) {
 				const currentProject = {
 					...projects.c.koroneikiAccounts.items[0],
-					id: accountBrief.id,
+					id: accountBrief.id.toString(),
 					name: accountBrief.name,
 				};
 
 				dispatch({
 					payload: currentProject,
-					type: actionTypes.UPDATE_PROJECT as keyof typeof actionTypes,
+					type: actionTypes.UPDATE_PROJECT,
 				});
 			}
 		};
@@ -258,38 +256,39 @@ const AppContextProvider = ({children}: {children: React.ReactNode}) => {
 			});
 
 			if (dataSubscriptions) {
-				const items = dataSubscriptions?.c?.accountSubscriptions?.items;
+				const items =
+					dataSubscriptions?.c?.accountSubscriptions?.items ?? [];
 
-				const hasExperienceSubscription = items?.some(({name}) =>
-					EXPERIENCE_SUBSCRIPTIONS.includes(name as string)
+				const hasExperienceSubscription = items.some(({name}) =>
+					EXPERIENCE_SUBSCRIPTIONS.includes(name)
 				);
 
-				const hasLegacySubscription = items?.some(({name}) =>
-					LEGACY_SUBSCRIPTIONS.includes(name as string)
+				const hasLegacySubscription = items.some(({name}) =>
+					LEGACY_SUBSCRIPTIONS.includes(name)
 				);
 
-				const hasPlanSubscription = items?.some(({name}) =>
-					PLAN_SUBSCRIPTIONS.includes(name as string)
+				const hasPlanSubscription = items.some(({name}) =>
+					PLAN_SUBSCRIPTIONS.includes(name)
 				);
 
 				dispatch({
-					payload: items as unknown as IAccountSubscription[],
-					type: actionTypes.UPDATE_SUBSCRIPTIONS as keyof typeof actionTypes,
+					payload: items,
+					type: actionTypes.UPDATE_SUBSCRIPTIONS,
 				});
 
 				dispatch({
-					payload: hasExperienceSubscription as boolean,
-					type: actionTypes.UPDATE_HAS_EXPERIENCE_SUBSCRIPTION as keyof typeof actionTypes,
+					payload: hasExperienceSubscription,
+					type: actionTypes.UPDATE_HAS_EXPERIENCE_SUBSCRIPTION,
 				});
 
 				dispatch({
-					payload: hasLegacySubscription as boolean,
-					type: actionTypes.UPDATE_HAS_LEGACY_SUBSCRIPTION as keyof typeof actionTypes,
+					payload: hasLegacySubscription,
+					type: actionTypes.UPDATE_HAS_LEGACY_SUBSCRIPTION,
 				});
 
 				dispatch({
-					payload: hasPlanSubscription as boolean,
-					type: actionTypes.UPDATE_HAS_PLAN_SUBSCRIPTION as keyof typeof actionTypes,
+					payload: hasPlanSubscription,
+					type: actionTypes.UPDATE_HAS_PLAN_SUBSCRIPTION,
 				});
 			}
 		};
@@ -310,11 +309,12 @@ const AppContextProvider = ({children}: {children: React.ReactNode}) => {
 
 			if (dataSubscriptionGroups) {
 				const items =
-					dataSubscriptionGroups?.c?.accountSubscriptionGroups?.items;
+					dataSubscriptionGroups?.c?.accountSubscriptionGroups
+						?.items ?? [];
 
 				dispatch({
-					payload: items as unknown as IAccountSubscriptionGroup[],
-					type: actionTypes.UPDATE_SUBSCRIPTION_GROUPS as keyof typeof actionTypes,
+					payload: items,
+					type: actionTypes.UPDATE_SUBSCRIPTION_GROUPS,
 				});
 			}
 		};
@@ -332,8 +332,8 @@ const AppContextProvider = ({children}: {children: React.ReactNode}) => {
 				dispatch({
 					payload:
 						data.structuredContentFolders?.items[0]
-							?.structuredContents?.items,
-					type: actionTypes.UPDATE_STRUCTURED_CONTENTS as keyof typeof actionTypes,
+							?.structuredContents?.items ?? [],
+					type: actionTypes.UPDATE_STRUCTURED_CONTENTS,
 				});
 			}
 		};

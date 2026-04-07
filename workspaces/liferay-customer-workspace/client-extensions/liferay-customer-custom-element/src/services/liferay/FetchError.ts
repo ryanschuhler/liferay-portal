@@ -4,7 +4,7 @@
  */
 
 class FetcherError extends Error {
-	public info: any;
+	public info: unknown;
 	public status?: number;
 
 	constructor(message: string) {

@@ -5,10 +5,16 @@
 
 import {FORMAT_DATE_TYPES} from './constants';
 import getDateCustomFormat from './getDateCustomFormat';
+import {ICommerceOrderItem} from './types';
 
-export default function getActivationStatusDateRange(orderItems: any[]) {
+export default function getActivationStatusDateRange(
+	orderItems: ICommerceOrderItem[]
+) {
 	const dates = orderItems.reduce(
-		(dateAccumulator, orderItem) => ({
+		(
+			dateAccumulator: {endDates: string[]; startDates: string[]},
+			orderItem: ICommerceOrderItem
+		) => ({
 			endDates: [...dateAccumulator.endDates, orderItem.options.endDate],
 			startDates: [
 				...dateAccumulator.startDates,
@@ -19,16 +25,12 @@ export default function getActivationStatusDateRange(orderItems: any[]) {
 	);
 	const earliestStartDate = new Date(
 		Math.min(
-			...dates.startDates.map(
-				(date: string | number | Date) => new Date(date)
-			)
+			...dates.startDates.map((date: string) => new Date(date).getTime())
 		)
 	).toString();
 	const farthestEndDate = new Date(
 		Math.max(
-			...dates.endDates.map(
-				(date: string | number | Date) => new Date(date)
-			)
+			...dates.endDates.map((date: string) => new Date(date).getTime())
 		)
 	).toString();
 	const activationStatusDateRange = `${getDateCustomFormat(

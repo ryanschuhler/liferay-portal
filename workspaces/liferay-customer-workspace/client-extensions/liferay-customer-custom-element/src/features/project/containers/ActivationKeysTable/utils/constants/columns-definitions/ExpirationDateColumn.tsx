@@ -7,8 +7,13 @@ import {getLicenseKeyPermanentStatus} from '~/features/project/containers/Genera
 import i18n from '~/utils/I18n';
 import {FORMAT_DATE_TYPES} from '~/utils/constants';
 import getDateCustomFormat from '~/utils/getDateCustomFormat';
+import {IActivationKey} from '~/utils/types';
 
-const ExpirationDateColumn = ({activationKey}) => {
+interface IProps {
+	activationKey: IActivationKey;
+}
+
+const ExpirationDateColumn = ({activationKey}: IProps) => {
 	const isPermanentLicenseKey = getLicenseKeyPermanentStatus(
 		activationKey?.startDate,
 		activationKey?.expirationDate
@@ -18,11 +23,11 @@ const ExpirationDateColumn = ({activationKey}) => {
 		return (
 			<p
 				className="cp-activation-key-cell-small font-weight-bold m-0 text-neutral-10"
-				title={[i18n.translate('this-key-does-not-expire')]}
+				title={i18n.translate('this-key-does-not-expire')}
 			>
 				{getDateCustomFormat(
 					FORMAT_DATE_TYPES.day2DMonthSYearN,
-					activationKey.startDate
+					activationKey?.startDate
 				)}
 
 				<br></br>
@@ -36,14 +41,14 @@ const ExpirationDateColumn = ({activationKey}) => {
 		<p className="font-weight-bold m-0 text-neutral-10">
 			{getDateCustomFormat(
 				FORMAT_DATE_TYPES.day2DMonthSYearN,
-				activationKey.startDate
+				activationKey?.startDate
 			)}
 
 			<br></br>
 
 			{getDateCustomFormat(
 				FORMAT_DATE_TYPES.day2DMonthSYearN,
-				activationKey.expirationDate
+				activationKey?.expirationDate
 			)}
 		</p>
 	);

@@ -4,12 +4,18 @@
  */
 
 import {useCallback} from 'react';
-import i18n from '~/utils/I18n';
 import {VirtualCluster} from '~/assets';
+import i18n from '~/utils/I18n';
+import {IActivationKey} from '~/utils/types';
+
 import {hasCluster} from '../../hasCluster';
 import {hasVirtualCluster} from '../../index';
 
-const KeyTypeColumn = ({activationKey}) => {
+interface IProps {
+	activationKey: IActivationKey;
+}
+
+const KeyTypeColumn = ({activationKey}: IProps) => {
 	const hasVirtualClusterForActivationKeys = hasVirtualCluster(
 		activationKey?.licenseEntryType
 	);
@@ -45,9 +51,10 @@ const KeyTypeColumn = ({activationKey}) => {
 					{hasVirtualClusterForActivationKeys ||
 					hasClusterForActivationKeys
 						? i18n.sub('x-cluster-nodes-keys', [
-								activationKey.maxClusterNodes,
-						  ])
-						: activationKey.hostName || '-'}
+								activationKey?.maxClusterNodes?.toString() ||
+									'0',
+							])
+						: activationKey?.hostName || '-'}
 				</p>
 			</div>
 		</div>

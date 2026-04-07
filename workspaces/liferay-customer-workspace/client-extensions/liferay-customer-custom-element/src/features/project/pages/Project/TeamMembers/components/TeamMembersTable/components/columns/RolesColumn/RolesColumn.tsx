@@ -4,11 +4,23 @@
  */
 
 import {ClayTooltipProvider} from '@clayui/tooltip';
+import React from 'react';
+import RolesDropdown from '~/features/project/components/RolesDropdown/RolesDropdown';
 import i18n from '~/utils/I18n';
 import getKebabCase from '~/utils/getKebabCase';
-import RolesDropdown from './components/RolesDropdown';
+import {IAccountRole, IRole} from '~/utils/types';
 
-const RolesColumn = ({
+export interface IProps {
+	accountRoles: IAccountRole[];
+	availableSupportSeatsCount: number;
+	currentRoleBriefName: string[];
+	edit: boolean;
+	hasAccountSupportSeatRole: boolean;
+	onClick: (role: IRole | IRole[]) => void;
+	supportSeatsCount: number;
+}
+
+const RolesColumn: React.FC<IProps> = ({
 	accountRoles,
 	availableSupportSeatsCount,
 	currentRoleBriefName,
@@ -16,7 +28,7 @@ const RolesColumn = ({
 	hasAccountSupportSeatRole,
 	onClick,
 	supportSeatsCount,
-}) => {
+}: IProps) => {
 	const roleProductNames = currentRoleBriefName
 		.map((roleBriefName) => {
 			return i18n.translate(getKebabCase(roleBriefName));
@@ -25,7 +37,7 @@ const RolesColumn = ({
 
 	return edit ? (
 		<RolesDropdown
-			accountRoles={accountRoles}
+			accountRoles={accountRoles as any}
 			availableSupportSeatsCount={availableSupportSeatsCount}
 			currentRoleBriefName={currentRoleBriefName}
 			hasAccountSupportSeatRole={hasAccountSupportSeatRole}
@@ -34,7 +46,7 @@ const RolesColumn = ({
 		/>
 	) : (
 		<div className="d-flex">
-			<ClayTooltipProvider delay={100}>
+			<ClayTooltipProvider>
 				<p className="m-0 pt-1 text-truncate" title={roleProductNames}>
 					{roleProductNames}
 				</p>

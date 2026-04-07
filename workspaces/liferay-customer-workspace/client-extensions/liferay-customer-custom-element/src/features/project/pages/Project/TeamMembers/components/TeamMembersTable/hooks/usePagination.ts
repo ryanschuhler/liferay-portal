@@ -5,7 +5,11 @@
 
 import {useMemo, useState} from 'react';
 import i18n from '~/utils/I18n';
-export default function usePagination(teamMembers) {
+import {IGraphQLUserAccount} from '~/utils/types';
+
+export default function usePagination<T extends IGraphQLUserAccount>(
+	teamMembers: T[]
+) {
 	const [activePage, setActivePage] = useState(1);
 	const [itemsPerPage, setItemsPerPage] = useState(5);
 	const paginationConfig = useMemo(

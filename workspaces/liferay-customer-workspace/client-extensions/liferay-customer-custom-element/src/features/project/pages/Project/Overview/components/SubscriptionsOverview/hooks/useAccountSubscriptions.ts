@@ -6,22 +6,45 @@
 import {useEffect, useState} from 'react';
 import {SUBSCRIPTIONS_STATUS} from '~/features/project/utils/constants';
 import {useLazyGetAccountSubscriptions} from '~/services/liferay/graphql/account-subscriptions';
+import {IAccountSubscription, IAccountSubscriptionGroup} from '~/utils/types';
 
 export const getCurrentDate = new Date().toISOString().slice(0, 10);
 
+interface IGraphQLAccountSubscriptionsData {
+	c: {
+		accountSubscriptions: {
+			items: IAccountSubscription[];
+		};
+	};
+}
+
 export default function useAccountSubscriptions(
-	accountSubcriptionGroup,
-	accountSubscriptionGroupsLoading
-) {
-	const [lastSubscriptionStatus, setLastSubscriptionStatus] = useState([
-		SUBSCRIPTIONS_STATUS.active,
-	]);
+	accountSubcriptionGroup: IAccountSubscriptionGroup | undefined,
+	accountSubscriptionGroupsLoading: boolean
+): [
+	React.Dispatch<React.SetStateAction<string[]>>,
+	{data: IGraphQLAccountSubscriptionsData | undefined; loading: boolean},
+] {
+	const [lastSubscriptionStatus, setLastSubscriptionStatus] = useState<
+		string[]
+	>([SUBSCRIPTIONS_STATUS.active]);
 
-	const [handleGetAccountSubscriptions, {called, data, loading}] =
-		useLazyGetAccountSubscriptions();
+	const [handleGetAccountSubscriptions, {called, data, loading}]: [
+		(
+			options?: import('@apollo/client').LazyQueryHookOptions<
+				IGraphQLAccountSubscriptionsData,
+				import('@apollo/client').OperationVariables
+			>
+		) => void,
+		{
+			called: boolean;
+			data?: IGraphQLAccountSubscriptionsData;
+			loading: boolean;
+		},
+	] = useLazyGetAccountSubscriptions();
 
-	const getSubscriptionStatusFilter = (subscriptionStatuses) => {
-		const filters = [];
+	const getSubscriptionStatusFilter = (subscriptionStatuses: string[]) => {
+		const filters: string[] = [];
 
 		if (subscriptionStatuses.includes(SUBSCRIPTIONS_STATUS.active)) {
 			filters.push(
@@ -40,7 +63,9 @@ export default function useAccountSubscriptions(
 		return filters.join(' or ');
 	};
 
-	const getSubscriptionGroupERCFilter = (group) => {
+	const getSubscriptionGroupERCFilter = (
+		group: IAccountSubscriptionGroup | undefined
+	) => {
 		if (!group?.externalReferenceCode) {
 			return '';
 		}

@@ -4,10 +4,18 @@
  */
 
 import ClayModal from '@clayui/modal';
-import i18n from '~/utils/I18n';
 import Button from '~/components/Button';
+import i18n from '~/utils/I18n';
 
-const ConfirmationMessageModal = ({confirmKeyNoLongerVisible, observer}) => {
+interface IProps {
+	confirmKeyNoLongerVisible: () => void;
+	observer: any;
+}
+
+const ConfirmationMessageModal = ({
+	confirmKeyNoLongerVisible,
+	observer,
+}: IProps) => {
 	return (
 		<ClayModal center observer={observer}>
 			<div className="pt-4 px-4">

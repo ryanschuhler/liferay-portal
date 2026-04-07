@@ -9,19 +9,20 @@ import classNames from 'classnames';
 import {useState} from 'react';
 
 import './ButtonDropDown.css';
+
 interface IItem {
 	customOptionStyle?: string;
 	disabled?: boolean;
-	icon?: any;
+	icon?: React.ReactNode;
 	label: string;
 	onClick?: () => void;
 	tooltip?: string;
-	trigger?: any;
+	trigger?: React.ReactNode;
 }
 
 interface IProps {
 	align?: number;
-	customDropDownButton?: any;
+	customDropDownButton?: React.ReactElement;
 	items: IItem[];
 	label: string;
 	menuElementAttrs?: React.HTMLAttributes<HTMLDivElement>;

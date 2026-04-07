@@ -5,7 +5,7 @@
 
 export default function concatPageSizePagination(
 	clearOnFirstPage?: boolean,
-	keyArgs?: boolean
+	keyArgs: false | undefined = false
 ) {
 	return {
 		keyArgs,

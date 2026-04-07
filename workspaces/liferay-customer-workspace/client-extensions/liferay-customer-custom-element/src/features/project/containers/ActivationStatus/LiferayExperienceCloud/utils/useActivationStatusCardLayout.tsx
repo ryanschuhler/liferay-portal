@@ -5,16 +5,29 @@
 
 import {ButtonWithIcon} from '@clayui/core';
 import {Align} from '@clayui/drop-down';
-
-import i18n from '~/utils/I18n';
 import {Button, ButtonDropDown} from '~/components';
+import {Liferay} from '~/services/liferay';
+import {useGetAccountSubscriptions} from '~/services/liferay/graphql/account-subscriptions/queries/useGetAccountSubscriptions';
+import i18n from '~/utils/I18n';
 import {SAAS_EXPERIENCE} from '~/utils/constants';
 import {
-	STATUS_TAG_TYPES,
-	STATUS_TAG_TYPE_NAMES,
-} from '~/features/project/utils/constants';
+	ILiferayExperienceCloudEnvironment,
+	IProject,
+	IUserAccount,
+} from '~/utils/types';
+
+// import {formatedSubscriptions} from '~/utils/formatedSubscriptions';
+
+import {STATUS_TAG_TYPE_NAMES} from '../../../../utils/constants';
 import ActivationCardLink from '../../ActivationCardLink';
-import {useGetAccountSubscriptions} from '~/services/liferay/graphql/account-subscriptions';
+
+interface IActivationStatusItem {
+	buttonLink?: JSX.Element;
+	dropdownIcon?: JSX.Element;
+	id: string;
+	subtitle: string;
+	title: string;
+}
 
 const ACCEPTED_SUBSCRIPTIONS = ['Business Plan', 'Enterprise Plan'];
 
@@ -23,16 +36,16 @@ const formatedSubscriptions = () =>
 		.map((projectName) => `'${projectName}'`)
 		.join(',');
 
-export default function getActivationStatusCardLayout(
-	lxcEnvironment,
-	project,
-	onNotActivatedClick,
-	onInProgressClick,
-	userAccount
-) {
+const useActivationStatusCardLayout = (
+	lxcEnvironment: ILiferayExperienceCloudEnvironment | undefined,
+	project: IProject,
+	onNotActivatedClick: () => void,
+	onInProgressClick: () => void,
+	userAccount: IUserAccount
+): Record<string, IActivationStatusItem> => {
 	const SAAS_CLOUD_ERCS = [
 		`${project?.accountKey}_liferay-saas`,
-        `${project?.accountKey}_liferay-cloud`
+		`${project?.accountKey}_liferay-cloud`,
 	];
 
 	const ercFilter = `accountSubscriptionGroupERC in ('${SAAS_CLOUD_ERCS.join("', '")}')`;
@@ -46,10 +59,10 @@ export default function getActivationStatusCardLayout(
 	});
 
 	const hasDevInstance =
-		!!subscriptionsData?.c.accountSubscriptions.items.length;
-	
+		!!subscriptionsData?.c?.accountSubscriptions?.items?.length;
+
 	const isNewSaaSSubscriptionCustomer =
-		!!newSaaSSubscriptionsData?.c.accountSubscriptions.items.length;
+		!!newSaaSSubscriptionsData?.c?.accountSubscriptions?.items?.length;
 
 	return {
 		[STATUS_TAG_TYPE_NAMES.active]: {
@@ -59,7 +72,9 @@ export default function getActivationStatusCardLayout(
 						<ActivationCardLink
 							linkText={i18n.translate('go-to-liferay-saas')}
 							url={`https://${lxcEnvironment?.projectId}${
-								isNewSaaSSubscriptionCustomer ? '.liferay.net' : '.lxc.liferay.com'
+								isNewSaaSSubscriptionCustomer
+									? '.liferay.net'
+									: '.lxc.liferay.com'
 							}`}
 						/>
 					)}
@@ -68,7 +83,9 @@ export default function getActivationStatusCardLayout(
 						<ActivationCardLink
 							linkText={i18n.translate('go-to-uat')}
 							url={`https://${lxcEnvironment?.projectId}-uat${
-								isNewSaaSSubscriptionCustomer ? '.liferay.net' : '.lxc.liferay.com'
+								isNewSaaSSubscriptionCustomer
+									? '.liferay.net'
+									: '.lxc.liferay.com'
 							}`}
 						/>
 					)}
@@ -77,7 +94,9 @@ export default function getActivationStatusCardLayout(
 						<ActivationCardLink
 							linkText={i18n.translate('go-to-dev')}
 							url={`https://${lxcEnvironment?.projectId}-dev${
-								isNewSaaSSubscriptionCustomer ? '.liferay.net' : '.lxc.liferay.com'
+								isNewSaaSSubscriptionCustomer
+									? '.liferay.net'
+									: '.lxc.liferay.com'
 							}`}
 						/>
 					)}
@@ -92,46 +111,47 @@ export default function getActivationStatusCardLayout(
 					)}
 				</div>
 			),
-			id: STATUS_TAG_TYPES.active,
+			id: STATUS_TAG_TYPE_NAMES.active,
 			subtitle: i18n.translate(
 				'your-liferay-saas-project-is-set-up-if-you-need-to-submit-additional-workspaces-please-create-a-support-ticket'
 			),
 			title: i18n.translate('liferay-saas-activation'),
 		},
 		[STATUS_TAG_TYPE_NAMES.inProgress]: {
-			dropdownIcon: (userAccount.isStaff &&
-				userAccount.isProvisioning) && (
-				<ButtonDropDown
-					align={Align.BottomRight}
-					customDropDownButton={
-						<ButtonWithIcon
-							aria-label={i18n.translate('set-to-active')}
-							className="text-secondary"
-    						displayType="unstyled"
-							small
-							spritemap={Liferay.Icons.spritemap}
-							symbol="caret-bottom"
-						/>
-					}
-					items={[
-						{
-							label: i18n.translate('set-to-active'),
-							onClick: () => onInProgressClick(),
-						},
-					]}
-					menuElementAttrs={{
-						className: 'p-0 cp-activation-key-icon rounded-xs',
-					}}
-				/>
-			),
-			id: STATUS_TAG_TYPES.inProgress,
+			dropdownIcon:
+				userAccount.isStaff && userAccount.isProvisioning ? (
+					<ButtonDropDown
+						align={Align.BottomRight}
+						customDropDownButton={
+							<ButtonWithIcon
+								aria-label={i18n.translate('set-to-active')}
+								className="text-secondary"
+								displayType="unstyled"
+								small
+								spritemap={Liferay.Icons.spritemap}
+								symbol="caret-bottom"
+							/>
+						}
+						items={[
+							{
+								label: i18n.translate('set-to-active'),
+								onClick: () => onInProgressClick(),
+							},
+						]}
+						label=""
+						menuElementAttrs={{
+							className: 'p-0 cp-activation-key-icon rounded-xs',
+						}}
+					/>
+				) : undefined,
+			id: STATUS_TAG_TYPE_NAMES.inProgress,
 			subtitle: i18n.translate(
 				'your-liferay-saas-project-is-being-set-up-and-will-be-available-soon'
 			),
 			title: i18n.translate('liferay-saas-activation'),
 		},
 		[STATUS_TAG_TYPE_NAMES.notActivated]: {
-			buttonLink: userAccount.isAccountAdmin && (
+			buttonLink: userAccount.isAccountAdmin ? (
 				<Button
 					appendIcon="order-arrow-right"
 					className="btn btn-link font-weight-semi-bold p-0 text-brand-primary text-paragraph"
@@ -140,12 +160,14 @@ export default function getActivationStatusCardLayout(
 				>
 					{i18n.translate('finish-activation')}
 				</Button>
-			),
-			id: STATUS_TAG_TYPES.notActivated,
+			) : undefined,
+			id: STATUS_TAG_TYPE_NAMES.notActivated,
 			subtitle: i18n.translate(
 				'almost-there-setup-liferay-saas-by-finishing-the-activation-form'
 			),
 			title: i18n.translate('liferay-saas-activation'),
 		},
 	};
-}
+};
+
+export default useActivationStatusCardLayout;

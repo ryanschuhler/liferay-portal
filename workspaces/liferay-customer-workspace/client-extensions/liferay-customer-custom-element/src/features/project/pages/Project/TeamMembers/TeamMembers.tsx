@@ -6,53 +6,66 @@
 import {useQuery} from '@apollo/client';
 import {useEffect} from 'react';
 import {useOutletContext} from 'react-router-dom';
-import SearchBuilder from '~/lib/SearchBuilder';
 import IncidentContactCard from '~/features/project/containers/IncidentContactCard';
-import i18n from '~/utils/I18n';
 import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
+import SearchBuilder from '~/lib/SearchBuilder';
 import {getAccountSubscriptionGroups} from '~/services/liferay/graphql/queries';
+import i18n from '~/utils/I18n';
+import {IKoroneikiAccount} from '~/utils/types';
+
 import ManageProductUsers from './components/ManageProductUsers/ManageProductUsers';
 import TeamMembersTable from './components/TeamMembersTable/TeamMembersTable';
 
-const targetProducts = [
-	'Analytics Cloud',
-	'Liferay Cloud'
-];
+interface IAccountSubscriptionGroup {
+	activationStatus: string;
+	hasActivation: boolean;
+	name: string;
+}
+
+interface IOutletContext {
+	setHasSideMenu: (hasSideMenu: boolean) => void;
+}
+
+const targetProducts = ['Analytics Cloud', 'Liferay Cloud'];
 
 const TeamMembers = () => {
-	const {setHasSideMenu} = useOutletContext();
-	const {data: dataCurrentKoroneikiAccount, loading: loadingCurrentKoroneikiAccount} = useCurrentKoroneikiAccount();
-	const koroneikiAccount = dataCurrentKoroneikiAccount?.koroneikiAccountByExternalReferenceCode;
+	const {setHasSideMenu} = useOutletContext<IOutletContext>();
+	const {
+		data: dataCurrentKoroneikiAccount,
+		loading: loadingCurrentKoroneikiAccount,
+	} = useCurrentKoroneikiAccount();
+	const koroneikiAccount: IKoroneikiAccount | undefined =
+		dataCurrentKoroneikiAccount?.koroneikiAccountByExternalReferenceCode;
 
-	const {data: dataSubscriptionGroups, loading: loadingSubscriptionGroups} = useQuery(
-		getAccountSubscriptionGroups,
-		{
-			skip: loadingCurrentKoroneikiAccount,
+	const {data: dataSubscriptionGroups, loading: loadingSubscriptionGroups} =
+		useQuery(getAccountSubscriptionGroups, {
+			skip: loadingCurrentKoroneikiAccount || !koroneikiAccount,
 			variables: {
 				filter: new SearchBuilder()
-					.eq('accountKey', koroneikiAccount?.accountKey)
+					.eq('accountKey', koroneikiAccount!.accountKey)
 					.and()
 					.eq('hasActivation', true)
 					.build(),
 			},
-		}
-	);
+		});
 
-	const accountSubscriptionGroups =
+	const accountSubscriptionGroups: IAccountSubscriptionGroup[] | undefined =
 		dataSubscriptionGroups?.c?.accountSubscriptionGroups?.items;
 
+	const hasActiveProduct: boolean =
+		accountSubscriptionGroups?.some(
+			(item) =>
+				targetProducts?.includes(item?.name) &&
+				item?.hasActivation &&
+				item?.activationStatus === 'Active'
+		) ?? false;
+
+	const loading: boolean =
+		loadingCurrentKoroneikiAccount || loadingSubscriptionGroups;
+
 	const accountSubscriptionGroupsNames = accountSubscriptionGroups?.map(
-		(group) => group?.name
+		(item) => item.name
 	);
-
-	const hasActiveProduct = accountSubscriptionGroups?.some(
-		(item) =>
-			targetProducts?.includes(item?.name) &&
-			item?.hasActivation &&
-			item?.activationStatus === 'Active'
-	);
-
-	const loading = loadingCurrentKoroneikiAccount || loadingSubscriptionGroups;
 
 	useEffect(() => {
 		setHasSideMenu(true);
@@ -70,23 +83,23 @@ const TeamMembers = () => {
 
 			<div className="mt-4">
 				<TeamMembersTable
-					koroneikiAccount={koroneikiAccount}
-					loading={loading}
+					koroneikiAccount={koroneikiAccount as IKoroneikiAccount}
+					koroneikiAccountLoading={loading}
 				/>
 
 				<ManageProductUsers
-					koroneikiAccount={koroneikiAccount}
+					koroneikiAccount={koroneikiAccount as IKoroneikiAccount}
 					loading={loading}
 				/>
 
 				{hasActiveProduct && (
-						<IncidentContactCard
-							accountSubscriptionGroupsNames={accountSubscriptionGroupsNames}
-							hasActiveProduct={hasActiveProduct}
-							koroneikiAccount={koroneikiAccount}
-							loading={loading}
-						/>
-					)}
+					<IncidentContactCard
+						accountSubscriptionGroupsNames={
+							accountSubscriptionGroupsNames
+						}
+						hasActiveProduct={hasActiveProduct}
+					/>
+				)}
 			</div>
 		</>
 	);

@@ -4,12 +4,21 @@
  */
 
 import ClayForm from '@clayui/form';
-import i18n from '~/utils/I18n';
 import {Input} from '~/components';
 import useBannedDomains from '~/hooks/useBannedDomains';
+import i18n from '~/utils/I18n';
 import {isValidEmail} from '~/utils/validations.form';
 
-const IncidentReportInput = ({activation, id}) => {
+interface IActivation {
+	email: string;
+}
+
+interface IProps {
+	activation: IActivation;
+	id: number;
+}
+
+const IncidentReportInput = ({activation, id}: IProps) => {
 	const bannedDomains = useBannedDomains(activation.email);
 
 	return (
@@ -24,7 +33,9 @@ const IncidentReportInput = ({activation, id}) => {
 				placeholder="user@company.com"
 				required
 				type="email"
-				validations={[(value) => isValidEmail(value, bannedDomains)]}
+				validations={[
+					(value: string) => isValidEmail(value, bannedDomains),
+				]}
 			/>
 		</ClayForm>
 	);

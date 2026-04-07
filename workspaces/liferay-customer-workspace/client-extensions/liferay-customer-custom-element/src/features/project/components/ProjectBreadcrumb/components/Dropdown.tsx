@@ -4,35 +4,36 @@
  */
 
 import {Button} from '@clayui/core';
-import ClayDropDown from '@clayui/drop-down';
+import ClayDropDown, {Align} from '@clayui/drop-down';
 import ClayIcon from '@clayui/icon';
 import classNames from 'classnames';
 import {useMemo, useState} from 'react';
+import {IKoroneikiAccount} from '~/utils/types';
 
 import DropdownChildren from './DropdownChildren';
 import ProjectNameTruncate from './ProjectNameTruncate';
 
 type KoroneikiAccountsType = {
-	items: any[];
+	items: IKoroneikiAccount[];
 	lastPage: number;
 	page: number;
 	pageSize: number;
 	totalCount: number;
 };
 
-type DropdownProps = {
+interface IProps {
 	fetching: boolean;
 	initialTotalCount: number;
 	koroneikiAccounts: KoroneikiAccountsType;
 	onIntersecting: () => void;
-	onSearch: () => void;
+	onSearch: (searchTerm: string) => void;
 	searching: boolean;
-	selectedKoroneikiAccount: any;
-};
+	selectedKoroneikiAccount: IKoroneikiAccount;
+}
 
 const MAX_ITEM_BEFORE_FILTER = 5;
 
-const Dropdown: React.FC<DropdownProps> = ({
+const Dropdown: React.FC<IProps> = ({
 	fetching,
 	initialTotalCount,
 	koroneikiAccounts,
@@ -53,7 +54,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 	return (
 		<ClayDropDown
 			active={active}
-			alignmentPosition={['br', 'tl'] as any}
+			alignmentPosition={Align.BottomLeft}
 			closeOnClickOutside
 			hasRightSymbols
 			menuElementAttrs={{

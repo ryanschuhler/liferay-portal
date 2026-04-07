@@ -35,6 +35,13 @@ export const liferayTypePolicies = {
 	Mutationc: {
 		merge: true,
 	},
+	OrderItemPage: {
+		fields: {
+			items: {
+				keyArgs: false as const,
+			},
+		},
+	},
 	Query: {
 		fields: {
 			...accountRolesQueryTypePolicy,

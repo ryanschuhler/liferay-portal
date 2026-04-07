@@ -23,6 +23,7 @@ interface IProps {
 		string,
 		{
 			child?: React.ReactNode;
+			disabled?: boolean;
 			title: string;
 			type?: 'divider' | 'component' | 'item';
 		}[]

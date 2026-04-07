@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {ApolloClient, InMemoryCache, TypePolicies} from '@apollo/client';
+import {ApolloClient, InMemoryCache} from '@apollo/client';
 import {BatchHttpLink} from '@apollo/client/link/batch-http';
 import {setContext} from '@apollo/client/link/context';
 import {onError} from '@apollo/client/link/error';
@@ -21,7 +21,7 @@ const LiferayURI = `${Liferay.ThemeDisplay.getPortalURL()}/o`;
 const {link, useApolloNetworkStatusReducer} = createNetworkStatusNotifier();
 const {initialState, reducer} = networkIndicator;
 
-const liferaBatchLink = new BatchHttpLink({
+const liferayBatchLink = new BatchHttpLink({
 	uri: `${LiferayURI}/graphql`,
 });
 
@@ -76,7 +76,7 @@ export default function useApollo(provisioningServerAPI: string) {
 	useEffect(() => {
 		const init = async () => {
 			const cache = new InMemoryCache({
-				typePolicies: liferayTypePolicies as unknown as TypePolicies,
+				typePolicies: liferayTypePolicies as any,
 			});
 
 			await persistCache({
@@ -103,7 +103,7 @@ export default function useApollo(provisioningServerAPI: string) {
 						(operation) =>
 							operation.getContext().type === 'liferay-rest',
 						liferayRestLink,
-						liferaBatchLink
+						liferayBatchLink
 					)
 				),
 			});

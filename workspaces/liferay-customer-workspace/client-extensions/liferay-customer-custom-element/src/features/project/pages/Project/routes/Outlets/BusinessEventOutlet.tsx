@@ -12,12 +12,12 @@ import {getBusinessEvent} from '~/services/liferay/graphql/queries';
 import i18n from '~/utils/I18n';
 import {IBusinessEvent, IProject} from '~/utils/types';
 
-interface BusinessEventOutletProps {
+interface IBusinessEventOutletProps {
 	project: IProject | null;
 	skip: boolean;
 }
 
-const BusinessEventOutlet: React.FC<BusinessEventOutletProps> = ({
+const BusinessEventOutlet: React.FC<IBusinessEventOutletProps> = ({
 	project,
 	skip,
 }) => {
@@ -55,8 +55,7 @@ const BusinessEventOutlet: React.FC<BusinessEventOutletProps> = ({
 				});
 
 				if (
-					data?.businessEvent
-						?.r_accountEntryToBusinessEvents_accountEntryId ===
+					data?.businessEvent?.r_accountEntryToBusinessEvents_accountEntryId?.toString() ===
 					project.id
 				) {
 					setIsValidBusinessEvent(true);

@@ -23,7 +23,9 @@ export default function useGetBusinessEventVersions(filterQuery: string): {
 			const businessEventVersionsResponse =
 				await getBusinessEventVersions(filterQuery);
 
-			setBusinessEventVersions(businessEventVersionsResponse.items);
+			if (businessEventVersionsResponse) {
+				setBusinessEventVersions(businessEventVersionsResponse.items);
+			}
 		}
 		catch (error) {
 			console.error('Error fetching business event versions:', error);

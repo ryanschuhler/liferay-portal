@@ -10,27 +10,42 @@ import {getOrRequestToken} from '~/services/liferay/security/auth/getOrRequestTo
 
 const EnterpriseSearch = () => {
 	const [oAuthToken, setOAuthToken] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 	const [{project}] = useAppContext();
 
 	useEffect(() => {
 		const fetchToken = async () => {
-			const token = await getOrRequestToken();
+			try {
+				const token = await getOrRequestToken();
 
-			setOAuthToken(token);
+				setOAuthToken(token);
+			}
+			catch (error) {
+				console.error(error);
+			}
+			finally {
+				setIsLoading(false);
+			}
 		};
 
 		fetchToken();
 	}, []);
 
+	if (isLoading || !project) {
+		return <ActivationKeysLayout.Skeleton />;
+	}
+
 	return (
 		<ActivationKeysLayout>
-			<ActivationKeysLayout.Inputs
-				accountKey={project?.accountKey}
-				accountSubscriptionGroupName="enterprise-search"
-				oAuthToken={oAuthToken}
-				productTitle="Enterprise Search"
-				projectName={project?.name}
-			/>
+			{oAuthToken && (
+				<ActivationKeysLayout.Inputs
+					accountKey={project.accountKey}
+					accountSubscriptionGroupName="enterprise-search"
+					oAuthToken={oAuthToken}
+					productTitle="Enterprise Search"
+					projectName={project.name}
+				/>
+			)}
 		</ActivationKeysLayout>
 	);
 };

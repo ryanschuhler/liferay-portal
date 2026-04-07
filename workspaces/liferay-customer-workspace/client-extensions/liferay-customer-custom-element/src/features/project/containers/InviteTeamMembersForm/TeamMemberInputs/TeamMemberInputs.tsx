@@ -6,22 +6,48 @@
 import {ClayInput} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import {useEffect, useMemo, useState} from 'react';
+import {Input} from '~/components';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
+import RoleSelectorDropdown from '~/features/project/components/RoleSelectorDropdown';
+import {IRadioOptions} from '~/features/project/components/RoleSelectorDropdown/RoleSelectorDropdown';
+import useUserAccountsByAccountExternalReferenceCode from '~/features/project/pages/Project/TeamMembers/components/TeamMembersTable/hooks/useUserAccountsByAccountExternalReferenceCode';
+import useBannedDomains from '~/hooks/useBannedDomains';
 import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
 import useProvisioningLicenseKeys from '~/hooks/useProvisioningLicenseKeys';
-import RoleSelectorDropdown from '~/features/project/components/RoleSelectorDropdown';
-import useUserAccountsByAccountExternalReferenceCode from '~/features/project/pages/Project/TeamMembers/components/TeamMembersTable/hooks/useUserAccountsByAccountExternalReferenceCode';
 import i18n from '~/utils/I18n';
-import {Input} from '~/components';
-import useBannedDomains from '~/hooks/useBannedDomains';
 import {ROLE_TYPES} from '~/utils/constants';
 import {liferayDomains} from '~/utils/constants/liferayDomains';
 import {
-	isLiferayDomain,
-	isValidEmail,
-} from '~/utils/validations.form';
+	IAccountRole,
+	IGraphQLUserAccount,
+	IInvite,
+	IOption,
+	IRole,
+} from '~/utils/types';
+import {isLiferayDomain, isValidEmail} from '~/utils/validations.form';
 
-const FETCH_DELAY_AFTER_TYPING = 500;
+interface IInitialValues {
+	invites: IInvite[];
+}
+
+interface IKoroneikiAccountData {
+	koroneikiAccountByExternalReferenceCode: {
+		accountKey: string;
+	};
+}
+
+interface IProps {
+	administratorsAssetsAvailable: number;
+	disableError: boolean;
+	errors: import('formik').FormikErrors<IInitialValues>;
+	id: number;
+	invite: IInvite;
+	options: IOption[];
+	placeholderEmail: string;
+	selectOnChange: (roleSelected: IRadioOptions) => void;
+	setRoleSelectorFilled: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 const partnerMemberRoles = [
 	ROLE_TYPES.partnerMarketingUser.key,
 	ROLE_TYPES.partnerSalesUser.key,
@@ -31,82 +57,120 @@ const partnerMemberRoles = [
 const TeamMemberInputs = ({
 	administratorsAssetsAvailable,
 	disableError,
-	errors,
+	errors = {},
 	id,
 	invite,
 	options,
 	placeholderEmail,
 	selectOnChange,
 	setRoleSelectorFilled,
-}) => {
+}: IProps) => {
 	const {accountSettingsURL} = useAppPropertiesContext();
 	const provisioningService = useProvisioningLicenseKeys();
 
-	const [radioOptions, setRadioOptions] = useState({});
-	const [selectedAccountRoleName, setSelectedAccountRoleName] = useState([]);
-	const [updateModal, setUpdateModal] = useState(0);
+	const [radioOptions, setRadioOptions] = useState<IRadioOptions>({
+		partnerMemberRoles: {
+			active: false,
+			roles: [],
+		},
+	});
+	const [selectedAccountRoleName, setSelectedAccountRoleName] = useState<
+		string[]
+	>([]);
+	const [updateModal, setUpdateModal] = useState<number>(0);
 
 	useEffect(() => {
 		setTimeout(() => setUpdateModal(new Date().getTime()), 500);
 	}, []);
 
-	const bannedDomains = useBannedDomains(
-		invite?.email,
-		FETCH_DELAY_AFTER_TYPING
-	);
+	const bannedDomains = useBannedDomains(invite?.email);
 
 	const {data} = useCurrentKoroneikiAccount();
-	const koroneikiAccount = data?.koroneikiAccountByExternalReferenceCode;
+	const koroneikiAccount:
+		| IKoroneikiAccountData['koroneikiAccountByExternalReferenceCode']
+		| undefined = data?.koroneikiAccountByExternalReferenceCode;
 
-	const [
-		,
-		{data: userAccountsData},
-	] = useUserAccountsByAccountExternalReferenceCode(
-		koroneikiAccount?.accountKey
-	);
-
-	const currentDomain = userAccountsData?.accountUserAccountsByExternalReferenceCode.items
-		.map(({emailAddress}) => emailAddress.split('@')[1])
-		.flat();
-
-	const [, domain] = invite?.email.split('@');
-
-	const mathEmail = currentDomain?.includes(domain) || false;
-
-	const isEmailValid = !!errors.invites?.[id]?.email;
-
-	const warningMessage =
-		invite?.email.length > 1 && !mathEmail && !isEmailValid;
-
-	const validateEmail = useMemo(async () => {
-		if (isValidEmail(invite?.email, bannedDomains)) {
-			return isValidEmail(invite?.email, bannedDomains);
-		}
-
-		const hasLiferayDomain = liferayDomains.includes(domain);
-
-		if (hasLiferayDomain) {
-			const emailExistsInOkta = await provisioningService.getUserInOkta(
-				invite?.email
-			);
-
-			if (!emailExistsInOkta) {
-				return isLiferayDomain(invite?.email);
-			}
-
-			return false;
-		}
-	}, [bannedDomains, invite?.email, provisioningService]);
-
-	const isAdministratorOrRequestorRoleSelected =
-		invite?.role?.some(role => 
-			role.name === ROLE_TYPES.requester.name ||
-			role.name === ROLE_TYPES.admin.name
+	const [, {data: userAccountsData}] =
+		useUserAccountsByAccountExternalReferenceCode(
+			koroneikiAccount?.accountKey || '',
+			!koroneikiAccount?.accountKey
 		);
 
-	const optionsFormatted = useMemo(
+	const currentDomain =
+		userAccountsData?.accountUserAccountsByExternalReferenceCode.items
+			.map(({emailAddress}: IGraphQLUserAccount) =>
+				emailAddress ? emailAddress.split('@')[1] : ''
+			)
+			.filter(Boolean)
+			.flat();
+
+	const [, domain] = invite?.email.split('@') || [];
+
+	const isEmailValid = !!(
+		errors.invites as import('formik').FormikErrors<IInvite>[]
+	)?.[id]?.email;
+
+	const warningMessage =
+		(invite?.email.length || 0) > 1 &&
+		!(currentDomain || []).includes(domain || '') &&
+		!isEmailValid;
+
+	const [oktaValidationError, setOktaValidationError] = useState<
+		string | undefined
+	>(undefined);
+
+	useEffect(() => {
+		const validateOkta = async () => {
+			if (!invite?.email || isValidEmail(invite?.email, bannedDomains)) {
+				setOktaValidationError(undefined);
+
+				return;
+			}
+
+			const hasLiferayDomain = liferayDomains.includes(domain as any);
+
+			if (hasLiferayDomain) {
+				if (!provisioningService) {
+					return;
+				}
+
+				const emailExistsInOkta =
+					await provisioningService.getUserInOkta(invite.email);
+
+				if (!emailExistsInOkta) {
+					setOktaValidationError(isLiferayDomain(invite.email));
+				}
+				else {
+					setOktaValidationError(undefined);
+				}
+			}
+			else {
+				setOktaValidationError(undefined);
+			}
+		};
+
+		validateOkta();
+	}, [invite?.email, bannedDomains, provisioningService, domain]);
+
+	const validateEmail = useMemo(() => {
+		const emailError = isValidEmail(invite?.email, bannedDomains);
+
+		if (emailError) {
+			return emailError;
+		}
+
+		return oktaValidationError;
+	}, [invite?.email, bannedDomains, oktaValidationError]);
+
+	const isAdministratorOrRequestorRoleSelected = invite?.role?.some(
+		(role: IAccountRole) =>
+			role.name === ROLE_TYPES.requester.name ||
+			role.name === ROLE_TYPES.admin.name
+	);
+
+	const optionsFormatted: IAccountRole[] = useMemo(
 		() =>
-			options.map((option) => {
+			options.map((option: IOption) => {
 				const isAdministratorOrRequestorRole =
 					option.label === ROLE_TYPES.requester.name ||
 					option.label === ROLE_TYPES.admin.name;
@@ -119,7 +183,9 @@ const TeamMemberInputs = ({
 						administratorsAssetsAvailable === 0 &&
 						isAdministratorOrRequestorRole &&
 						!isAdministratorOrRequestorRoleSelected,
-				};
+					id: option.value as number,
+					name: option.label,
+				} as IAccountRole;
 			}),
 		[
 			administratorsAssetsAvailable,
@@ -132,9 +198,10 @@ const TeamMemberInputs = ({
 	useEffect(() => {
 		setRadioOptions(
 			optionsFormatted.reduce(
-				(previousItem, item) => {
-					if (!partnerMemberRoles.includes(item.label)) {
-						previousItem[item.label] = item;
+				(previousItem: IRadioOptions, item: IAccountRole) => {
+					if (!partnerMemberRoles.includes(item.label || '')) {
+						previousItem[item.label || ''] =
+							item as unknown as IRole;
 
 						return previousItem;
 					}
@@ -143,15 +210,15 @@ const TeamMemberInputs = ({
 					previousItem.partnerMemberRoles.active = previousItem
 						.partnerMemberRoles.active
 						? true
-						: item.active;
+						: item.active || false;
 
 					return previousItem;
 				},
 				{
 					partnerMemberRoles: {
 						active: false,
-						roles: []
-					}
+						roles: [],
+					},
 				}
 			)
 		);
@@ -215,6 +282,7 @@ const TeamMemberInputs = ({
 						<RoleSelectorDropdown
 							isTeamMemberInviteForm
 							key={updateModal}
+							onClick={() => {}}
 							radioOptions={radioOptions}
 							selectOnChange={selectOnChange}
 							selectedAccountRoleName={selectedAccountRoleName}
@@ -246,7 +314,7 @@ const TeamMemberInputs = ({
 
 						{` ${i18n.sub(
 							'part-of-your-organization-it-looks-like-x-is-a-new-domain-name',
-							[`${domain}`]
+							[domain || '']
 						)}`}
 
 						<ul className="mb-0">

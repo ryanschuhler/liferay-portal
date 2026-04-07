@@ -7,17 +7,22 @@ import i18n from '~/utils/I18n';
 
 import FetcherError from './FetchError';
 
+export interface IFetcherOptions extends RequestInit {
+	resolveAsJson?: boolean;
+}
+
 export async function fetcher<T = any>(
 	url: string | URL,
-	options?: RequestInit
+	options?: IFetcherOptions
 ): Promise<T | undefined> {
+	const {resolveAsJson = true, ...fetchOptions} = options || {};
 
 	// eslint-disable-next-line @liferay/portal/no-global-fetch
 	const response = await fetch(url, {
-		...options,
+		...fetchOptions,
 		headers: {
-			...options?.headers,
-			...(options?.method === 'POST' && {
+			...fetchOptions?.headers,
+			...(fetchOptions?.method === 'POST' && {
 				'Content-Type': 'application/json',
 			}),
 		},
@@ -28,11 +33,15 @@ export async function fetcher<T = any>(
 			i18n.translate('an-unexpected-error-occurred')
 		);
 
-		error.info = await response.json();
+		error.info = (await response.json()) as unknown;
 		error.status = response.status;
 		console.error(error.info, JSON.stringify({options, url}, null, 2));
 
 		throw error;
+	}
+
+	if (!resolveAsJson) {
+		return response as unknown as T;
 	}
 
 	if (response.status !== 204) {
@@ -40,9 +49,14 @@ export async function fetcher<T = any>(
 	}
 }
 
+export type BaseFetcherType = <T>(
+	url: string | URL,
+	options?: IFetcherOptions
+) => Promise<T | undefined>;
+
 const baseFetcher =
-	<T = any>(baseURL: string | URL, baseOptions?: RequestInit) =>
-	(url: string | URL, options?: RequestInit) =>
+	(baseURL: string | URL, baseOptions?: IFetcherOptions): BaseFetcherType =>
+	<T>(url: string | URL, options?: IFetcherOptions) =>
 		fetcher<T>(`${baseURL}${url}`, {
 			...baseOptions,
 			...options,

@@ -9,13 +9,33 @@ import {ClayCheckbox} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import {ClayTooltipProvider} from '@clayui/tooltip';
 import {Fragment, useMemo, useState} from 'react';
+import {useOnboarding} from '~/features/onboarding/context';
+import RadioRoles from '~/features/project/components/RadioRoles';
+import {useAppContext} from '~/features/project/context';
 import i18n from '~/utils/I18n';
 import getKebabCase from '~/utils/getKebabCase';
-import {useOnboarding} from '~/features/onboarding/context';
-import {useAppContext} from '~/features/project/context';
-import RadioRoles from '../RadioRoles';
+import {IProject, IRole} from '~/utils/types';
 
-import './/RoleSelectorDropdown.css';
+import './RoleSelectorDropdown.css';
+
+export interface IRadioOptions {
+	partnerMemberRoles: {
+		active: boolean;
+		roles: IRole[];
+	};
+	[key: string]: IRole | any;
+}
+
+interface IProps {
+	isTeamMemberInviteForm?: boolean;
+	onClick: (accountRole: IRole | IRole[]) => void;
+	radioOptions: IRadioOptions;
+	selectOnChange?: (radioOptions: IRadioOptions) => void;
+	selectedAccountRoleName: string[];
+	setRadioOptions: React.Dispatch<React.SetStateAction<IRadioOptions>>;
+	setRoleSelectorFilled?: React.Dispatch<React.SetStateAction<boolean>>;
+	setSelectedAccountRoleName: React.Dispatch<React.SetStateAction<string[]>>;
+}
 
 const RoleSelectorDropdown = ({
 	isTeamMemberInviteForm,
@@ -26,30 +46,34 @@ const RoleSelectorDropdown = ({
 	setRadioOptions,
 	setRoleSelectorFilled,
 	setSelectedAccountRoleName,
-}) => {
+}: IProps) => {
 	const [atLeastOneFieldIsFilled, setAtLeastOneFieldIsFilled] =
-		useState(false);
-	const [active, setActive] = useState(false);
+		useState<boolean>(false);
+	const [active, setActive] = useState<boolean>(false);
 
-	const projectPortal = useAppContext();
-	const projectOnboarding = useOnboarding();
+	const [projectPortalState] = useAppContext();
+	const [projectOnboardingState] = useOnboarding();
 
-	const project = useMemo(
-		() => projectPortal?.[0].project || projectOnboarding?.[0].project,
-		[projectOnboarding, projectPortal]
+	const project: IProject | undefined = useMemo(
+		() => projectPortalState.project || projectOnboardingState.project,
+		[projectOnboardingState, projectPortalState]
 	);
 
-	const isPartnerProject = project?.partner;
+	const isPartnerProject: boolean = project?.partner ?? false;
 
-	const handleOnClick = (accountRoleItems) => {
-		const isPartnerMember = accountRoleItems.partnerMemberRoles.active;
+	const handleOnClick = (accountRoleItems: IRadioOptions) => {
+		const isPartnerMember: boolean =
+			accountRoleItems.partnerMemberRoles.active;
 
 		if (isPartnerMember) {
-			const memberRoles = accountRoleItems.partnerMemberRoles.roles;
-			const updatedMemberRoles = memberRoles.filter(
-				(role) => role.active
+			const memberRoles: IRole[] =
+				accountRoleItems.partnerMemberRoles.roles;
+			const updatedMemberRoles: IRole[] = memberRoles.filter(
+				(role: IRole) => role.active
 			);
-			const roleLabelsList = updatedMemberRoles.map((role) => role.label);
+			const roleLabelsList: string[] = updatedMemberRoles
+				.map((role: IRole) => role.label)
+				.filter((label): label is string => !!label);
 
 			if (!isTeamMemberInviteForm) {
 				onClick(updatedMemberRoles);
@@ -59,11 +83,17 @@ const RoleSelectorDropdown = ({
 		}
 
 		if (!isPartnerMember) {
-			const accountRoleItem = Object.values(accountRoleItems).filter(
-				(role) => role.active
-			);
+			const accountRoleItem: IRole[] = Object.values(
+				accountRoleItems
+			).filter(
+				(role: IRole) => typeof role === 'object' && role.active
+			) as IRole[];
 
-			if (accountRoleItem[0].label !== selectedAccountRoleName[0]) {
+			if (
+				!!accountRoleItem.length &&
+				accountRoleItem[0].label &&
+				accountRoleItem[0].label !== selectedAccountRoleName[0]
+			) {
 				if (!isTeamMemberInviteForm) {
 					onClick(accountRoleItem[0]);
 				}
@@ -73,7 +103,7 @@ const RoleSelectorDropdown = ({
 		}
 	};
 
-	const atLeastOnePartnerMemberSelected = useMemo(() => {
+	const atLeastOnePartnerMemberSelected: boolean = useMemo(() => {
 		if (radioOptions.partnerMemberRoles?.active) {
 			if (
 				radioOptions.partnerMemberRoles?.roles.some(
@@ -99,7 +129,7 @@ const RoleSelectorDropdown = ({
 			onActiveChange={setActive}
 			trigger={
 				<Button
-					aria-label={selectedAccountRoleName[0]}
+					aria-label={selectedAccountRoleName[0] || ''}
 					className="align-items-center bg-white d-flex justify-content-between w-100"
 					displayType="secondary"
 					outline
@@ -107,12 +137,17 @@ const RoleSelectorDropdown = ({
 				>
 					<div className="text-truncate">
 						{i18n.translate(
-							getKebabCase(selectedAccountRoleName[0])
+							getKebabCase(
+								(selectedAccountRoleName[0] as string) ?? ''
+							)
 						)
 							? i18n.translate(
-									getKebabCase(selectedAccountRoleName[0])
+									getKebabCase(
+										(selectedAccountRoleName[0] as string) ??
+											''
+									)
 								)
-							: selectedAccountRoleName[0]}
+							: selectedAccountRoleName[0] || ''}
 					</div>
 
 					<span className="inline-item inline-item-after mt-1">
@@ -121,8 +156,9 @@ const RoleSelectorDropdown = ({
 				</Button>
 			}
 		>
-			{Object.keys(radioOptions).map((key, index) => {
-				const accountRole = radioOptions[key];
+			{Object.keys(radioOptions).map((key: string, index: number) => {
+				const accountRole: IRole | IRadioOptions['partnerMemberRoles'] =
+					radioOptions[key];
 
 				return (
 					<Fragment key={index}>
@@ -131,52 +167,68 @@ const RoleSelectorDropdown = ({
 								{isPartnerProject && (
 									<RadioRoles
 										className="pr-6"
-										key={index}
 										onChange={() => {
-											const newObject = {...radioOptions};
+											const newObject: IRadioOptions = {
+												...radioOptions,
+											};
 
 											Object.keys(radioOptions).forEach(
-												(roleLabel) => {
-													newObject[
-														roleLabel
-													].active =
+												(roleLabel: string) => {
+													(
+														newObject[
+															roleLabel
+														] as IRole
+													).active =
 														roleLabel === key;
 												}
 											);
 
-											newObject.partnerMemberRoles.roles = newObject.partnerMemberRoles.roles.map(
-												(role) => ({
-													...role,
-													active: false,
-												})
-											);
+											newObject.partnerMemberRoles.active =
+												true;
+											newObject.partnerMemberRoles.roles =
+												newObject.partnerMemberRoles.roles.map(
+													(role: IRole) => ({
+														...role,
+														active: false,
+													})
+												);
 
 											setRadioOptions(newObject);
 											setAtLeastOneFieldIsFilled(false);
 										}}
-										selected={accountRole.active}
+										selected={
+											(
+												accountRole as IRadioOptions['partnerMemberRoles']
+											).active
+										}
+										value={
+											(accountRole as IRole).label || key
+										}
 									>
 										{i18n.translate('partner-member')}
 									</RadioRoles>
 								)}
 
-								{accountRole.roles.map(
-									(role, accountRoleIndex) => (
+								{(
+									accountRole as IRadioOptions['partnerMemberRoles']
+								).roles?.map(
+									(role: IRole, accountRoleIndex: number) => (
 										<ClayCheckbox
-											checked={role.active}
+											checked={!!role.active}
 											className="pr-6"
 											disabled={
-												role.disabled ||
+												!!role.disabled ||
 												!radioOptions.partnerMemberRoles
 													.active
 											}
 											key={accountRoleIndex}
 											onChange={() => {
-												const newObject = {
-													...radioOptions,
-												};
+												const newObject: IRadioOptions =
+													{
+														...radioOptions,
+													};
 
-												const partnerMemberRole =
+												const partnerMemberRole: IRole =
 													newObject.partnerMemberRoles
 														.roles[
 														accountRoleIndex
@@ -188,14 +240,16 @@ const RoleSelectorDropdown = ({
 												if (partnerMemberRole.active) {
 													Object.keys(
 														newObject
-													).forEach((key) => {
+													).forEach((key: string) => {
 														if (
 															key !==
 															'partnerMemberRoles'
 														) {
-															newObject[
-																key
-															].active = false;
+															(
+																newObject[
+																	key
+																] as IRole
+															).active = false;
 														}
 													});
 												}
@@ -203,9 +257,9 @@ const RoleSelectorDropdown = ({
 												setRadioOptions(newObject);
 
 												const activeMemberRoles = (
-													role
+													role: IRole
 												) => role.active;
-												const atLeastOneMemberIsFilled =
+												const atLeastOneMemberIsFilled: boolean =
 													radioOptions.partnerMemberRoles.roles.some(
 														activeMemberRoles
 													);
@@ -216,10 +270,15 @@ const RoleSelectorDropdown = ({
 											}}
 										>
 											{i18n.translate(
-												getKebabCase(role.label)
+												getKebabCase(
+													(role.label as string) ?? ''
+												)
 											)
 												? i18n.translate(
-														getKebabCase(role.label)
+														getKebabCase(
+															(role.label as string) ??
+																''
+														)
 													)
 												: role.label}
 										</ClayCheckbox>
@@ -229,29 +288,37 @@ const RoleSelectorDropdown = ({
 						) : (
 							<RadioRoles
 								className="pr-6"
-								disabled={accountRole.disabled}
+								disabled={(accountRole as IRole).disabled}
 								onChange={() => {
-									const newObject = {...radioOptions};
+									const newObject: IRadioOptions = {
+										...radioOptions,
+									};
 
 									Object.keys(radioOptions).forEach(
-										(roleLabel) => {
-											newObject[roleLabel].active =
-												roleLabel === key;
+										(roleLabel: string) => {
+											(
+												newObject[roleLabel] as IRole
+											).active = roleLabel === key;
 										}
 									);
 
 									newObject.partnerMemberRoles.roles =
 										newObject.partnerMemberRoles.roles.map(
-											(role) => ({...role, active: false})
+											(role: IRole) => ({
+												...role,
+												active: false,
+											})
 										);
 
 									setRadioOptions(newObject);
 
-									const accountRoleActiveItem = Object.values(
-										newObject
-									).filter((role) => role.active);
+									const accountRoleActiveItem: IRole[] = (
+										Object.values(newObject) as IRole[]
+									).filter((role: IRole) => !!role.active);
 
 									if (
+										!!accountRoleActiveItem.length &&
+										accountRoleActiveItem[0].label &&
 										selectedAccountRoleName.includes(
 											accountRoleActiveItem[0].label
 										)
@@ -263,14 +330,24 @@ const RoleSelectorDropdown = ({
 									}
 								}}
 								selected={
-									accountRole.active && accountRole.label
+									!!(accountRole as IRole).active &&
+									!!(accountRole as IRole).label
 								}
+								value={(accountRole as IRole).label || key}
 							>
-								{i18n.translate(getKebabCase(accountRole.label))
+								{i18n.translate(
+									getKebabCase(
+										((accountRole as IRole)
+											.label as string) ?? ''
+									)
+								)
 									? i18n.translate(
-											getKebabCase(accountRole.label)
+											getKebabCase(
+												((accountRole as IRole)
+													.label as string) ?? ''
+											)
 										)
-									: accountRole.label}
+									: (accountRole as IRole).label || ''}
 							</RadioRoles>
 						)}
 					</Fragment>
@@ -282,11 +359,14 @@ const RoleSelectorDropdown = ({
 					aria-label={i18n.translate('apply')}
 					className="btn btn-sm px-2 py-2 w-100"
 					data-tooltip-align="right"
-					disabled={!atLeastOneFieldIsFilled}
+					disabled={
+						!atLeastOneFieldIsFilled ||
+						!atLeastOnePartnerMemberSelected
+					}
 					onClick={() => {
-						if (isTeamMemberInviteForm) {
+						if (isTeamMemberInviteForm && selectOnChange) {
 							selectOnChange(radioOptions);
-							setRoleSelectorFilled(true);
+							setRoleSelectorFilled?.(true);
 						}
 
 						handleOnClick(radioOptions);

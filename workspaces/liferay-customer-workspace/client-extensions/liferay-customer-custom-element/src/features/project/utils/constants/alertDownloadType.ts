@@ -6,4 +6,4 @@
 export const ALERT_DOWNLOAD_TYPE = {
 	danger: 'danger',
 	success: 'success',
-};
+} as const;

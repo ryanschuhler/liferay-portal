@@ -14,12 +14,12 @@ import './NavSegment.css';
 interface IProps {
 	disabled?: boolean;
 	items?: {
-		key: string;
+		key?: string;
 		label: string;
 	}[];
 	loading?: boolean;
 	maxItemsLoading?: number;
-	onSelect: (index: number | {key: string; label: string}) => void;
+	onSelect: (index: number | {key?: string; label: string}) => void;
 	selectedIndex?: number;
 }
 
@@ -51,7 +51,7 @@ const NavSegment: React.FC<IProps> = ({
 		[...new Array(maxItemsLoading)].map((_, index) => (
 			<Nav.Item key={index}>
 				<Nav.Link>
-					<Skeleton align="left" height={20} width={100} />
+					<Skeleton align="start" height={20} width={100} />
 				</Nav.Link>
 			</Nav.Item>
 		));

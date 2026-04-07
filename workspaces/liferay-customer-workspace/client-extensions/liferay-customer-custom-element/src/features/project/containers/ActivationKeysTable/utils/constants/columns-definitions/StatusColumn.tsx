@@ -5,13 +5,19 @@
 
 import ClayIcon from '@clayui/icon';
 import ClaySticker from '@clayui/sticker';
+import {IActivationKey} from '~/utils/types';
+
 import {getStatusActivationTag} from '../../index';
 
-const StatusColumn = ({activationKey}) => {
+interface IProps {
+	activationKey: IActivationKey;
+}
+
+const StatusColumn = ({activationKey}: IProps) => {
 	return (
 		<div
 			className="w-100"
-			title={[getStatusActivationTag(activationKey)?.title]}
+			title={getStatusActivationTag(activationKey)?.title}
 		>
 			<ClaySticker
 				className="bg-transparent"

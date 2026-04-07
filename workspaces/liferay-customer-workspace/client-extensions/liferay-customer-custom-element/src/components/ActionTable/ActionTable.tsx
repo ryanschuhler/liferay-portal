@@ -14,16 +14,16 @@ import TableSkeleton from './components/Skeleton/Skeleton';
 
 import './ActionTable.css';
 
-interface IColumn {
+export interface IColumn {
 	accessor: string;
-	align?: 'center' | 'left' | 'right' | undefined;
+	align?: 'center' | 'start' | 'end' | undefined;
 	bodyClass?: string;
 	disableCustomClickOnRow?: boolean;
 	expanded?: boolean;
 	filterIdentifier?: string;
 	header: {
 		description?: string;
-		name: string;
+		name: string | React.ReactNode;
 		noWrap?: boolean;
 		styles?: string;
 	};
@@ -56,9 +56,10 @@ interface IPaginationConfig {
 }
 
 interface IProps {
-	checkboxConfig: ICheckboxConfig;
+	checkboxConfig?: ICheckboxConfig;
+	className?: string;
 	columns: IColumn[];
-	handleSortChange: Function;
+	handleSortChange: (columnName: string) => void;
 	hasCheckbox: boolean;
 	hasPagination: boolean;
 	hasSorting?: boolean;
@@ -165,11 +166,11 @@ const Table: React.FC<IProps> = ({
 
 						{columns.map((column) => (
 							<ClayTable.Cell
-								align={column.align}
 								className={
 									column.header.styles ||
 									'bg-neutral-1 font-weight-bold text-neutral-8'
 								}
+								columnTextAlignment={column.align}
 								headingCell
 								key={column.accessor}
 								noWrap={column.header.noWrap}
@@ -248,11 +249,8 @@ const Table: React.FC<IProps> = ({
 
 								{columns.map((column, columnIndex) => (
 									<ClayTable.Cell
-										align={column.align}
 										className={column.bodyClass}
-										columnTextAlignment={
-											column.align as any
-										}
+										columnTextAlignment={column.align}
 										expanded={column.expanded}
 										key={`${rowIndex}-${columnIndex}`}
 										noWrap={column.noWrap}

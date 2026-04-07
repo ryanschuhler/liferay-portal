@@ -7,50 +7,64 @@ import ClayLoadingIndicator from '@clayui/loading-indicator';
 import {useEffect, useMemo, useState} from 'react';
 import {HashRouter, Route, Routes} from 'react-router-dom';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import getKebabCase from '~/utils/getKebabCase';
-import {useAppContext} from '~/features/project/context';
-import BusinessEventAdd from '~/features/project/pages/Project/BusinessEvents/pages/BusinessEventsAdd';
-import DeactivateKeysTable from '~/features/project/containers/DeactivateKeysTable';
+import {DeactivateKeysTable} from '~/features/project/containers/DeactivateKeysTable';
 import GenerateNewKey from '~/features/project/containers/GenerateNewKey';
+import {useAppContext} from '~/features/project/context';
 import {actionTypes} from '~/features/project/context/reducer';
 import Layout from '~/features/project/layouts/BaseLayout';
-import {PRODUCT_TYPES} from '~/features/project/utils/constants';
+import BusinessEventAdd from '~/features/project/pages/Project/BusinessEvents/pages/BusinessEventsAdd';
+import useMyUserAccountByAccountExternalReferenceCode from '~/features/project/pages/Project/TeamMembers/components/TeamMembersTable/hooks/useMyUserAccountByAccountExternalReferenceCode';
+import {
+	PRODUCT_TYPES,
+	WEB_CONTENT_DXP_VERSION_TYPES,
+} from '~/features/project/utils/constants';
 import {getWebContents} from '~/features/project/utils/getWebContents';
+import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
+import {Liferay} from '~/services/liferay';
+import getKebabCase from '~/utils/getKebabCase';
+import {IKoroneikiAccount} from '~/utils/types';
+
 import Commerce from '../ActivationKeys/Commerce';
 import EnterpriseSearch from '../ActivationKeys/EnterpriseSearch';
 import AnalyticsCloud from '../AnalyticsCloud';
 import Attachments from '../Attachments';
+import BusinessEvents from '../BusinessEvents';
+import BusinessEventsItemActivityHistory from '../BusinessEvents/pages/BusinessEventsItem/BusinessEventsItemActivityHistory';
+import BusinessEventsItemDetails from '../BusinessEvents/pages/BusinessEventsItem/BusinessEventsItemDetails';
+import BusinessEventsItemEdit from '../BusinessEvents/pages/BusinessEventsItem/BusinessEventsItemEdit';
 import CloudNative from '../CloudNative';
 import DXP from '../DXP';
 import DXPCloud from '../DXPCloud';
 import LiferayExperienceCloud from '../LiferayExperienceCloud';
 import Overview from '../Overview';
 import Portal from '../Portal';
+import ProjectUsage from '../ProjectUsage';
 import RenewTable from '../RenewTable';
 import TeamMembers from '../TeamMembers';
 import ActivationOutlet from './Outlets/ActivationOutlet';
 import BusinessEventOutlet from './Outlets/BusinessEventOutlet';
 import ProductOutlet from './Outlets/ProductOutlet';
-import ProjectUsage from '../ProjectUsage';
-import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
-import useMyUserAccountByAccountExternalReferenceCode from '~/features/project/pages/Project/TeamMembers/components/TeamMembersTable/hooks/useMyUserAccountByAccountExternalReferenceCode';
-import BusinessEvents from '../BusinessEvents';
-import BusinessEventsItemActivityHistory from '../BusinessEvents/pages/BusinessEventsItem/BusinessEventsItemActivityHistory';
-import BusinessEventsItemDetails from '../BusinessEvents/pages/BusinessEventsItem/BusinessEventsItemDetails';
-import BusinessEventsItemEdit from '../BusinessEvents/pages/BusinessEventsItem/BusinessEventsItemEdit';
 
 const ProjectRoutes = () => {
-	const [hasComplimentaryKey, setHasComplimentaryKey] = useState(false);
+	const [hasComplimentaryKey, setHasComplimentaryKey] =
+		useState<boolean>(false);
 
 	const [
-		{hasExperienceSubscription, hasLegacySubscription, hasPlanSubscription, project, subscriptionGroups, subscriptions},
+		{
+			hasExperienceSubscription,
+			hasLegacySubscription,
+			hasPlanSubscription,
+			project,
+			subscriptionGroups,
+			subscriptions,
+		},
 		dispatch,
 	] = useAppContext();
 	const {featureFlags} = useAppPropertiesContext();
 
 	const {data: koroneikiData, loading: koroneikiAccountLoading} =
 		useCurrentKoroneikiAccount();
-	const koroneikiAccount =
+	const koroneikiAccount: IKoroneikiAccount | undefined =
 		koroneikiData?.koroneikiAccountByExternalReferenceCode;
 
 	if (koroneikiAccount) {
@@ -63,21 +77,16 @@ const ProjectRoutes = () => {
 		expires.setDate(expires.getDate() + 30);
 
 		if (Liferay?.Util?.Cookie) {
-			Liferay.Util.Cookie.set?.(
-				cookieKey,
-				cookieValue,
-				Liferay?.Util?.Cookie?.TYPES?.FUNCTIONAL,
-				{
-					expires,
-					secure: true,
-				}
-			);
+			Liferay.Util.Cookie.set?.(cookieKey, cookieValue, {
+				expires,
+				secure: true,
+			});
 		}
 	}
 
 	const {data: myUserAccountData, loading: loggedUserAccountLoading} =
 		useMyUserAccountByAccountExternalReferenceCode(
-			koroneikiAccount?.accountKey,
+			koroneikiAccount?.accountKey || '',
 			koroneikiAccountLoading
 		);
 	const loggedUserAccount = myUserAccountData?.myUserAccount;
@@ -88,13 +97,13 @@ const ProjectRoutes = () => {
 		subscriptions === undefined;
 
 	const isProjectUsageEnabled =
-		(hasPlanSubscription || hasLegacySubscription) &&
-		  (featureFlags.includes('LRSD-6322') ||
-		  	loggedUserAccount?.isLiferayStaff ||
-		  	loggedUserAccount?.isPartner) ||
-		hasExperienceSubscription &&
-		  (featureFlags.includes('LRSD-12003') ||
-			  loggedUserAccount?.isLiferayStaff);
+		((hasPlanSubscription || hasLegacySubscription) &&
+			(featureFlags.includes('LRSD-6322') ||
+				loggedUserAccount?.isLiferayStaff ||
+				loggedUserAccount?.isPartner)) ||
+		(hasExperienceSubscription &&
+			(featureFlags.includes('LRSD-12003') ||
+				loggedUserAccount?.isLiferayStaff));
 
 	const hasSLASubscription = useMemo(
 		() =>
@@ -108,7 +117,7 @@ const ProjectRoutes = () => {
 		if (project && subscriptionGroups) {
 			dispatch({
 				payload: getWebContents(
-					project.dxpVersion,
+					project.dxpVersion as keyof typeof WEB_CONTENT_DXP_VERSION_TYPES,
 					project.slaCurrent,
 					subscriptionGroups
 				),
@@ -174,6 +183,7 @@ const ProjectRoutes = () => {
 										hasComplimentaryKey={
 											hasComplimentaryKey
 										}
+										isDXPTable={false}
 										isRenewTable
 									/>
 								}
@@ -229,8 +239,8 @@ const ProjectRoutes = () => {
 										hasComplimentaryKey={
 											hasComplimentaryKey
 										}
-										isDXPTable
-										isRenewTable
+										isDXPTable={true}
+										isRenewTable={true}
 									/>
 								}
 								path="dxp-renew"
@@ -239,7 +249,9 @@ const ProjectRoutes = () => {
 
 						<Route
 							element={
-								<ProductOutlet product={PRODUCT_TYPES.dxpCloud} />
+								<ProductOutlet
+									product={PRODUCT_TYPES.dxpCloud}
+								/>
 							}
 						>
 							<Route
@@ -279,17 +291,19 @@ const ProjectRoutes = () => {
 						<Route
 							element={
 								<ProductOutlet
-									product={
-										PRODUCT_TYPES.cloudNative
-									}
+									product={PRODUCT_TYPES.cloudNative}
 								/>
 							}
 						>
 							<Route
-								element={<CloudNative />}
-								path={getKebabCase(
-									PRODUCT_TYPES.cloudNative
-								)}
+								element={
+									<CloudNative
+										hasComplimentaryKey={
+											hasComplimentaryKey
+										}
+									/>
+								}
+								path={getKebabCase(PRODUCT_TYPES.cloudNative)}
 							/>
 						</Route>
 
@@ -323,17 +337,39 @@ const ProjectRoutes = () => {
 					{hasSLASubscription && (
 						<Route path="business-events">
 							<Route element={<BusinessEvents />} index />
-							<Route element={<BusinessEventAdd />} path="new"/>
-							<Route path=":id" element={<BusinessEventOutlet project={project} skip={!project} />}>
-								<Route element={<BusinessEventsItemDetails />} index />
-								<Route element={<BusinessEventsItemEdit />} path="edit"/>
-								<Route element={<BusinessEventsItemActivityHistory />} path="activity-history"/>
+							<Route element={<BusinessEventAdd />} path="new" />
+							<Route
+								element={
+									<BusinessEventOutlet
+										project={project || null}
+										skip={!project}
+									/>
+								}
+								path=":id"
+							>
+								<Route
+									element={<BusinessEventsItemDetails />}
+									index
+								/>
+								<Route
+									element={<BusinessEventsItemEdit />}
+									path="edit"
+								/>
+								<Route
+									element={
+										<BusinessEventsItemActivityHistory />
+									}
+									path="activity-history"
+								/>
 							</Route>
 						</Route>
 					)}
 
 					{isProjectUsageEnabled && (
-						<Route element={<ProjectUsage />} path="project-usage" />
+						<Route
+							element={<ProjectUsage />}
+							path="project-usage"
+						/>
 					)}
 
 					<Route

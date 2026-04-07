@@ -7,7 +7,9 @@ export async function FromUserAgentApplication(
 	_userAgentApplicationId: string
 ) {
 	return {
-		_getOrRequestToken: async () => 'mock-token',
+		_getOrRequestToken: async () => ({
+			access_token: 'mock-token',
+		}),
 		fetch: async (url: string, options?: RequestInit) =>
 			fetch(url, options),
 	};

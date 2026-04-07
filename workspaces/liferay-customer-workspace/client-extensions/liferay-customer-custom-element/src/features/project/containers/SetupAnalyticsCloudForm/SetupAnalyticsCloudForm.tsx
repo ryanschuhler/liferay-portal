@@ -3,9 +3,15 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {useQuery} from '@apollo/client';
+import {ApolloClient, NormalizedCacheObject, useQuery} from '@apollo/client';
 import ClayForm, {ClayCheckbox} from '@clayui/form';
-import {FieldArray, Formik} from 'formik';
+import {
+	FieldArray,
+	Formik,
+	FormikErrors,
+	FormikTouched,
+	FormikValues,
+} from 'formik';
 import {useEffect, useMemo, useState} from 'react';
 import {Button, Input, Select} from '~/components';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
@@ -37,6 +43,13 @@ import i18n from '~/utils/I18n';
 import getInitialAnalyticsInvite from '~/utils/getInitialAnalyticsInvite';
 import getKebabCase from '~/utils/getKebabCase';
 import {
+	IAccountSubscription,
+	IActivationValues,
+	IAnalyticsCloudWorkspace,
+	IContact,
+	IProject,
+} from '~/utils/types';
+import {
 	isValidEmail,
 	isValidEmailDomain,
 	isValidFriendlyURL,
@@ -45,15 +58,74 @@ import {
 
 import Layout from '../../../../components/FormLayout';
 import SetupHighPriorityContactForm from '../HighPriorityContacts/SetupHighPriorityContact';
-import IncidentReportInput from './IncidentReportInput';
 
 const BLANK_TEXT = '< none >';
-const FETCH_DELAY_AFTER_TYPING = 500;
-const INITIAL_SETUP_ADMIN_COUNT = 1;
 const MAX_LENGTH = 255;
 
-const getAnalyticsCloudSubmittedStatus = async (client, accountKey) => {
-	const {data} = await client.query({
+interface IFormikInitialValues {
+	activations: IActivationValues;
+}
+
+interface ISetupAnalyticsCloudPageProps {
+	client: ApolloClient<NormalizedCacheObject>;
+	errors: FormikErrors<IFormikInitialValues>;
+	handlePage: (success?: boolean) => void;
+	leftButton: string;
+	project: IProject;
+	setFieldValue: (
+		field: string,
+		value: unknown,
+		shouldValidate?: boolean
+	) => Promise<void> | Promise<FormikErrors<IFormikInitialValues>>;
+	setFormAlreadySubmitted: React.Dispatch<React.SetStateAction<boolean>>;
+	subscriptionGroupId: string;
+	touched: FormikTouched<IFormikInitialValues>;
+	values: IFormikInitialValues;
+}
+
+interface ISetupAnalyticsCloudFormProps {
+	client: ApolloClient<NormalizedCacheObject>;
+	handlePage: (success?: boolean) => void;
+	leftButton: string;
+	project: IProject;
+	setFormAlreadySubmitted: React.Dispatch<React.SetStateAction<boolean>>;
+	subscriptionGroupId: string;
+}
+
+interface IGetAnalyticsCloudWorkspaceData {
+	c: {
+		analyticsCloudWorkspaces: {
+			items: IAnalyticsCloudWorkspace[];
+		};
+	};
+}
+
+interface IAnalyticsCloudDataCenterLocation {
+	name: string;
+}
+
+interface IGetAnalyticsCloudPageInfoData {
+	c: {
+		accountSubscriptions: {
+			items: IAccountSubscription[];
+		};
+		analyticsCloudDataCenterLocations: {
+			items: IAnalyticsCloudDataCenterLocation[];
+		};
+	};
+}
+
+interface IAddAnalyticsCloudWorkspaceData {
+	createAnalyticsCloudWorkspace: {
+		id: string;
+	};
+}
+
+const getAnalyticsCloudSubmittedStatus = async (
+	client: ApolloClient<NormalizedCacheObject>,
+	accountKey: string
+) => {
+	const {data} = await client.query<IGetAnalyticsCloudWorkspaceData>({
 		query: getAnalyticsCloudWorkspace,
 		variables: {
 			filter: SearchBuilder.eq('accountKey', accountKey),
@@ -74,18 +146,21 @@ const SetupAnalyticsCloudPage = ({
 	subscriptionGroupId,
 	touched,
 	values,
-}) => {
-	const [isLoadingSubmitButton, setIsLoadingSubmitButton] = useState(false);
-	const [baseButtonDisabled, setBaseButtonDisabled] = useState(true);
-	const [addHighPriorityContact, setAddHighPriorityContact] = useState([]);
+}: ISetupAnalyticsCloudPageProps) => {
+	const [isLoadingSubmitButton, setIsLoadingSubmitButton] =
+		useState<boolean>(false);
+	const [baseButtonDisabled, setBaseButtonDisabled] = useState<boolean>(true);
+	const [addHighPriorityContact, setAddHighPriorityContact] = useState<
+		IContact[]
+	>([]);
 	const [termAndConditionsChecked, setTermAndConditionsChecked] =
-		useState(false);
-	const [removeHighPriorityContact, setRemoveHighPriorityContact] = useState(
-		[]
-	);
+		useState<boolean>(false);
+	const [removeHighPriorityContact, setRemoveHighPriorityContact] = useState<
+		IContact[]
+	>([]);
 	const [currentHighPriorityContacts, setCurrentHighPriorityContacts] =
-		useState([]);
-	const [step, setStep] = useState(1);
+		useState<IContact[]>([]);
+	const [step, setStep] = useState<number>(1);
 
 	const handlePreviousStep = () => {
 		setStep(step - 1);
@@ -94,34 +169,38 @@ const SetupAnalyticsCloudPage = ({
 	const handleNextStep = () => {
 		setStep(step + 1);
 	};
-	const [isMultiSelectEmpty, setIsMultiSelectEmpty] = useState(false);
+	const [isMultiSelectEmpty, setIsMultiSelectEmpty] =
+		useState<boolean>(false);
 
 	const bannedDomainsOwnerEmail = useBannedDomains(
-		values?.activations?.ownerEmailAddress,
-		FETCH_DELAY_AFTER_TYPING
+		values?.activations?.ownerEmailAddress
 	);
 
 	const bannedDomainsAllowedDomains = useBannedDomains(
-		values?.activations?.allowedEmailDomains,
-		FETCH_DELAY_AFTER_TYPING
+		values?.activations?.allowedEmailDomains
 	);
 
 	useEffect(() => {}, [values?.activations?.allowedEmailDomains]);
 
-	const {data} = useQuery(getAnalyticsCloudPageInfo, {
-		variables: {
-			accountSubscriptionsFilter: `(accountKey eq '${project?.accountKey}') and (hasDisasterDataCenterRegion eq true)`,
-		},
-	});
+	const {data} = useQuery<IGetAnalyticsCloudPageInfoData>(
+		getAnalyticsCloudPageInfo,
+		{
+			variables: {
+				accountSubscriptionsFilter: `(accountKey eq '${project?.accountKey}') and (hasDisasterDataCenterRegion eq true)`,
+			},
+		}
+	);
 
 	const {provisioningServerAPI} = useAppPropertiesContext();
 
 	const analyticsDataCenterLocations = useMemo(
 		() =>
-			data?.c?.analyticsCloudDataCenterLocations?.items.map(({name}) => ({
-				label: i18n.translate(getKebabCase(name)),
-				value: name,
-			})) || [],
+			data?.c?.analyticsCloudDataCenterLocations?.items.map(
+				({name}: IAnalyticsCloudDataCenterLocation) => ({
+					label: i18n.translate(getKebabCase(name)),
+					value: name,
+				})
+			) || [],
 		[data]
 	);
 
@@ -147,13 +226,13 @@ const SetupAnalyticsCloudPage = ({
 		const hasTouched = !Object.keys(touched).length;
 		const hasError = Object.keys(errors).length;
 
-		setBaseButtonDisabled(hasTouched || hasError);
+		setBaseButtonDisabled(hasTouched || hasError > 0);
 	}, [touched, errors]);
 
 	const emailsCriticalIncident = currentHighPriorityContacts
 		.concat(addHighPriorityContact)
 		.filter(
-			(contact) =>
+			(contact: IContact) =>
 				!removeHighPriorityContact.some(
 					({email}) => email === contact.email
 				)
@@ -176,27 +255,31 @@ const SetupAnalyticsCloudPage = ({
 		}
 
 		const handleDataSubmit = async () => {
-			const {data} = await client.mutate({
-				context: {
-					displaySuccess: false,
-					type: 'liferay-rest',
-				},
-				mutation: addAnalyticsCloudWorkspace,
-				variables: {
-					analyticsCloudWorkspace: {
-						accountKey: project.accountKey,
-						allowedEmailDomains: analyticsCloud.allowedEmailDomains,
-						dataCenterLocation: analyticsCloud.dataCenterLocation,
-						ownerEmailAddress: analyticsCloud.ownerEmailAddress,
-						r_accountEntryToAnalyticsCloudWorkspace_accountEntryId:
-							project?.id,
-						timeZone: analyticsCloud.timeZone,
-						workspaceFriendlyUrl:
-							analyticsCloud.workspaceFriendlyUrl,
-						workspaceName: analyticsCloud.workspaceName,
+			const {data} = await client.mutate<IAddAnalyticsCloudWorkspaceData>(
+				{
+					context: {
+						displaySuccess: false,
+						type: 'liferay-rest',
 					},
-				},
-			});
+					mutation: addAnalyticsCloudWorkspace,
+					variables: {
+						analyticsCloudWorkspace: {
+							accountKey: project.accountKey,
+							allowedEmailDomains:
+								analyticsCloud.allowedEmailDomains,
+							dataCenterLocation:
+								analyticsCloud.dataCenterLocation,
+							ownerEmailAddress: analyticsCloud.ownerEmailAddress,
+							r_accountEntryToAnalyticsCloudWorkspace_accountEntryId:
+								project?.id,
+							timeZone: analyticsCloud.timeZone,
+							workspaceFriendlyUrl:
+								analyticsCloud.workspaceFriendlyUrl,
+							workspaceName: analyticsCloud.workspaceName,
+						},
+					},
+				}
+			);
 
 			if (data) {
 				const analyticsCloudWorkspaceId =
@@ -219,6 +302,28 @@ const SetupAnalyticsCloudPage = ({
 					},
 				});
 
+				await Promise.all(
+					analyticsCloud?.incidentReportContact?.map(
+						({email}: IContact) => {
+							return client.mutate({
+								context: {
+									displaySuccess: false,
+									type: 'liferay-rest',
+								},
+								mutation: addIncidentReportAnalyticsCloud,
+								variables: {
+									IncidentReportContactAnalyticsCloud: {
+										analyticsCloudWorkspaceId,
+										emailAddress: email,
+										r_accountEntryToIncidentReportContactAC_accountEntryId:
+											project.id,
+									},
+								},
+							});
+						}
+					)
+				);
+
 				const notificationTemplateService =
 					new NotificationQueueService(client);
 
@@ -226,23 +331,19 @@ const SetupAnalyticsCloudPage = ({
 					'SETUP-ANALYTICS-CLOUD-ENVIRONMENT',
 					{
 						'[%AC_DATA_CENTER_LOCATION%]':
-							analyticsCloud.dataCenterLocation,
+							analyticsCloud.dataCenterLocation ?? '',
 						'[%AC_DATA_TIME%]': new Date().toUTCString(),
 						'[%AC_EMAIL_DOMAINS%]':
-							analyticsCloud.allowedEmailDomains ||
-							BLANK_TEXT,
+							analyticsCloud.allowedEmailDomains || BLANK_TEXT,
 						'[%AC_INCIDENT_REPORT_CONTACT%]':
 							emailsCriticalIncident,
-						'[%AC_OWNER_EMAIL%]':
-							analyticsCloud.ownerEmailAddress,
+						'[%AC_OWNER_EMAIL%]': analyticsCloud.ownerEmailAddress,
 						'[%AC_TIME_ZONE%]':
 							analyticsCloud.timeZone || BLANK_TEXT,
 						'[%AC_WORKSPACE_FRIENDLY_URL%]':
-							analyticsCloud.workspaceFriendlyUrl ||
-							BLANK_TEXT,
-						'[%AC_WORKSPACE_NAME%]':
-							analyticsCloud.workspaceName,
-						'[%PROJECT_ID%]': project?.code,
+							analyticsCloud.workspaceFriendlyUrl || BLANK_TEXT,
+						'[%AC_WORKSPACE_NAME%]': analyticsCloud.workspaceName,
+						'[%PROJECT_ID%]': project?.code || BLANK_TEXT,
 						'[%PROJECT_SALESFORCE_ACCOUNT_LINK%]':
 							project?.salesforceAccountKey
 								? 'https://liferay.lightning.force.com/lightning/r/Account/' +
@@ -260,268 +361,256 @@ const SetupAnalyticsCloudPage = ({
 			}
 		};
 
-				try {
-					setIsLoadingSubmitButton(true);
+		try {
+			const oAuthToken = await getOrRequestToken();
 
-					const oAuthToken = await getOrRequestToken();
+			try {
+				await updateRaysourceContact(
+					addContactRoleRaysource,
+					addHighPriorityContact,
+					oAuthToken as string,
+					project as unknown as import('~/utils/types').IProject,
+					provisioningServerAPI
+				);
 
-					try {
-						await updateRaysourceContact(
-							addContactRoleRaysource,
-							addHighPriorityContact,
-							oAuthToken,
-							project,
-							provisioningServerAPI
-						);
+				await updateLiferayContact(
+					addHighPriorityContact,
+					addContactRoleLiferay,
+					project as unknown as import('~/utils/types').IProject,
+					client
+				);
+			}
+			catch (error: unknown) {
+				const typedError = error as {cause: number};
 
-						await updateLiferayContact(
-							addHighPriorityContact,
-							addContactRoleLiferay,
-							project,
-							client
-						);
-					}
-					catch (error) {
-						if (error.cause === STATUS_CODE.conflict) {
-							await updateLiferayContact(
-								addHighPriorityContact,
-								addContactRoleLiferay,
-								project,
-								client
-							);
-						}
-						else {
-							throw new Error('Error', {cause: error.cause});
-						}
-					}
-
-					await updateRaysourceContact(
-						removeContactRoleRaysource,
-						removeHighPriorityContact,
-						oAuthToken,
-						project,
-						provisioningServerAPI
-					);
-
+				if (typedError.cause === STATUS_CODE.conflict) {
 					await updateLiferayContact(
-						removeHighPriorityContact,
-						removeContactRoleLiferay,
-						project,
+						addHighPriorityContact,
+						addContactRoleLiferay,
+						project as unknown as import('~/utils/types').IProject,
 						client
 					);
-
-					handleDataSubmit();
-					setIsLoadingSubmitButton(false);
-
-					handlePage(true);
 				}
-				catch (error) {
-					setIsLoadingSubmitButton(false);
+				else {
+					throw new Error('Error', {cause: typedError.cause});
 				}
-		};
+			}
 
-		const handleButtonClick = () => {
+			await updateRaysourceContact(
+				removeContactRoleRaysource,
+				removeHighPriorityContact,
+				oAuthToken as string,
+				project as unknown as import('~/utils/types').IProject,
+				provisioningServerAPI
+			);
 
-			// eslint-disable-next-line no-unused-expressions
-			step === 1 ? handlePage(false) : handlePreviousStep();
-		};
+			await updateLiferayContact(
+				removeHighPriorityContact,
+				removeContactRoleLiferay,
+				project as unknown as import('~/utils/types').IProject,
+				client
+			);
 
-		const updateMultiSelectEmpty = (error) => {
-			setIsMultiSelectEmpty(error);
-		};
+			await handleDataSubmit();
+			setIsLoadingSubmitButton(false);
 
-		return (
-			<>
-				<Layout
-					className="pt-1 px-3"
-				footerProps={{
-					leftButton: (
-						<Button
-							borderless
-							className="text-neutral-10"
-							onClick={() => {
-								handleButtonClick();
-							}}
-						>
-							{step === 1
-								? leftButton
-								: i18n.translate('previous')}
-						</Button>
-					),
-					middleButton: (
-						<Button
-							disabled={
-								step === 1
-									? baseButtonDisabled ||
-										!termAndConditionsChecked
-									: isMultiSelectEmpty ||
-										isLoadingSubmitButton
+			handlePage(true);
+		}
+		catch (error) {
+			console.error(error);
+			setIsLoadingSubmitButton(false);
+		}
+	};
+
+	const handleButtonClick = () => {
+		if (step === 1) {
+			handlePage(false);
+		}
+		else {
+			handlePreviousStep();
+		}
+	};
+
+	const updateMultiSelectEmpty = (
+		error: string | undefined,
+		_inputName: string
+	) => {
+		setIsMultiSelectEmpty(!!error);
+	};
+
+	return (
+		<Layout
+			className="pt-1 px-3"
+			footerProps={{
+				leftButton: (
+					<Button
+						borderless
+						className="text-neutral-10"
+						onClick={() => {
+							handleButtonClick();
+						}}
+					>
+						{step !== 1 ? i18n.translate('previous') : leftButton}
+					</Button>
+				),
+				middleButton: (
+					<Button
+						disabled={
+							step !== 1
+								? isMultiSelectEmpty || isLoadingSubmitButton
+								: baseButtonDisabled ||
+									!termAndConditionsChecked ||
+									isLoadingSubmitButton
+						}
+						displayType="primary"
+						isLoading={isLoadingSubmitButton}
+						onClick={() => {
+							if (step === 1) {
+								handleNextStep();
 							}
-							displayType="primary"
-							isLoading={isLoadingSubmitButton}
-							onClick={step === 1 ? handleNextStep : handleSubmit}
-						>
-							{step === 1
-								? i18n.translate('next')
-								: i18n.translate('submit')}
-						</Button>
-					),
-				}}
-				headerProps={{
-					helper: i18n.translate(
-						'we-ll-need-a-few-details-to-finish-creating-your-analytics-cloud-workspace'
-					),
-					title: i18n.translate('set-up-analytics-cloud'),
-				}}
-			>
-				{step === 1 && (
-					<div>
-						<FieldArray
-							name="activations.incidentReportContact"
-							render={() => (
-								<>
-									<ClayForm.Group className="pb-1">
-										<div>
-											<h4 className="ml-3 text-neutral-10">
-												{project.name}
-											</h4>
-										</div>
+							else {
+								handleSubmit();
+							}
+						}}
+					>
+						{step === 1
+							? i18n.translate('next')
+							: i18n.translate('submit')}
+					</Button>
+				),
+			}}
+			headerProps={{
+				helper: i18n.translate(
+					'we-ll-need-a-few-details-to-finish-creating-your-analytics-cloud-workspace'
+				),
+				title: i18n.translate('set-up-analytics-cloud'),
+			}}
+		>
+			{step === 1 && (
+				<FieldArray
+					name="activations.incidentReportContact"
+					render={({pop: _pop, push: _push}) => (
+						<>
+							<ClayForm.Group className="pb-1">
+								<div>
+									<h4 className="ml-3 text-neutral-10">
+										{project.name}
+									</h4>
+								</div>
 
-										<Input
-											groupStyle="pb-1"
-											helper={i18n.translate(
-												'this-user-will-create-and-manage-the-analytics-cloud-workspace-and-must-have-a-liferay-com-account-the-owner-email-can-be-updated-via-a-support-ticket-if-needed'
-											)}
-											label={i18n.translate(
-												'owner-email'
-											)}
-											name="activations.ownerEmailAddress"
-											placeholder="user@company.com"
-											required
-											type="email"
-											validations={[
-												(value) =>
-													isValidEmail(
-														value,
-														bannedDomainsOwnerEmail
-													),
-											]}
-										/>
+								<Input
+									groupStyle="pb-1"
+									helper={i18n.translate(
+										'this-user-will-create-and-manage-the-analytics-cloud-workspace-and-must-have-a-liferay-com-account-the-owner-email-can-be-updated-via-a-support-ticket-if-needed'
+									)}
+									label={i18n.translate('owner-email')}
+									name="activations.ownerEmailAddress"
+									placeholder="user@company.com"
+									required
+									type="email"
+									validations={[
+										(value: string) =>
+											isValidEmail(
+												value,
+												bannedDomainsOwnerEmail
+											),
+									]}
+								/>
 
-										<Input
-											groupStyle="pb-1"
-											label={i18n.translate(
-												'workspace-name'
-											)}
-											name="activations.workspaceName"
-											placeholder="superbank1"
-											required
-											type="text"
-											validations={[
-												(value) =>
-													maxLength(
-														value,
-														MAX_LENGTH
-													),
-											]}
-										/>
+								<Input
+									groupStyle="pb-1"
+									label={i18n.translate('workspace-name')}
+									name="activations.workspaceName"
+									placeholder="superbank1"
+									required
+									type="text"
+									validations={[
+										(value: string) =>
+											maxLength(value, MAX_LENGTH),
+									]}
+								/>
 
-										<Select
-											groupStyle="pb-1"
-											helper={i18n.translate(
-												'select-a-server-location-for-your-data-to-be-stored'
-											)}
-											key={analyticsDataCenterLocations}
-											label={i18n.translate(
-												'data-center-location'
-											)}
-											name="activations.dataCenterLocation"
-											options={
-												analyticsDataCenterLocations
-											}
-											required
-										/>
+								<Select
+									groupStyle="pb-1"
+									helper={i18n.translate(
+										'select-a-server-location-for-your-data-to-be-stored'
+									)}
+									key={analyticsDataCenterLocations.length}
+									label={i18n.translate(
+										'data-center-location'
+									)}
+									name="activations.dataCenterLocation"
+									options={analyticsDataCenterLocations}
+									required
+								/>
 
-										{hasDisasterRecovery && (
-											<Select
-												groupStyle="mb-0 pt-2"
-												label={i18n.translate(
-													'Disaster Recovery Data Center Location'
-												)}
-												name="activations.disasterDataCenterLocation"
-												options={
-													analyticsDataCenterLocations
-												}
-												required
-											/>
+								{hasDisasterRecovery && (
+									<Select
+										groupStyle="mb-0 pt-2"
+										label={i18n.translate(
+											'Disaster Recovery Data Center Location'
 										)}
+										name="activations.disasterDataCenterLocation"
+										options={analyticsDataCenterLocations}
+										required
+									/>
+								)}
 
-										<Input
-											groupStyle="pb-1"
-											helper={i18n.translate(
-												'please-note-that-the-friendly-url-cannot-be-changed-once-added'
-											)}
-											label={i18n.translate(
-												'workspace-friendly-url'
-											)}
-											name="activations.workspaceFriendlyUrl"
-											placeholder="/myurl"
-											type="text"
-											validations={[
-												(value) =>
-													isValidFriendlyURL(value),
-											]}
-										/>
+								<Input
+									groupStyle="pb-1"
+									helper={i18n.translate(
+										'please-note-that-the-friendly-url-cannot-be-changed-once-added'
+									)}
+									label={i18n.translate(
+										'workspace-friendly-url'
+									)}
+									name="activations.workspaceFriendlyUrl"
+									placeholder="/myurl"
+									type="text"
+									validations={[
+										(value: string) =>
+											isValidFriendlyURL(value),
+									]}
+								/>
 
-										<Input
-											groupStyle="pb-1"
-											helper={i18n.translate(
-												'anyone-with-an-email-address-at-the-provided-domains-can-request-access-to-your-workspace-if-multiple-separate-domains-by-commas'
-											)}
-											label={i18n.translate(
-												'allowed-email-domains'
-											)}
-											name="activations.allowedEmailDomains"
-											placeholder="@mycompany.com"
-											type="text"
-											validations={[
-												() =>
-													isValidEmailDomain(
-														bannedDomainsAllowedDomains
-													),
-											]}
-										/>
+								<Input
+									groupStyle="pb-1"
+									helper={i18n.translate(
+										'anyone-with-an-email-address-at-the-provided-domains-can-request-access-to-your-workspace-if-multiple-separate-domains-by-commas'
+									)}
+									label={i18n.translate(
+										'allowed-email-domains'
+									)}
+									name="activations.allowedEmailDomains"
+									placeholder="@mycompany.com"
+									type="text"
+									validations={[
+										(_value: string) =>
+											isValidEmailDomain(
+												bannedDomainsAllowedDomains
+											),
+									]}
+								/>
 
-										<Input
-											groupStyle="pb-1"
-											helper={i18n.translate(
-												'enter-the-timezone-to-be-used-for-all-data-reporting-in-your-workspace'
-											)}
-											label={i18n.translate('time-zone')}
-											name="activations.timeZone"
-											placeholder="UTC-04:00"
-											type="text"
-										/>
+								<Input
+									groupStyle="pb-1"
+									helper={i18n.translate(
+										'enter-the-timezone-to-be-used-for-all-data-reporting-in-your-workspace'
+									)}
+									label={i18n.translate('time-zone')}
+									name="activations.timeZone"
+									placeholder="UTC-04:00"
+									type="text"
+								/>
 
-										<div className="ml-3">
+								<div className="ml-3">
+									<div className="d-flex">
+										<div className="pr-2 pt-1">
 											<ClayCheckbox
 												checked={
 													termAndConditionsChecked
 												}
-												label={
-													<div
-														dangerouslySetInnerHTML={{
-															__html: i18n.sub(
-																'by-checking-this-box-and-clicking-next-below-i-as-an-authorized-representative-of-x-acknowledge-that-x-accepts-the-x-terms-and-conditions-and-privacy-policy-x-these-terms-will-govern-x-s-use-of-liferay-analytics-cloud-unless-x-has-entered-into-a-separate-agreement-with-liferay-that-governs-x-s-use-of-liferay-analytics-cloud',
-																[
-																	project.name,
-																	'<a href="https://www.liferay.com/documents/d/guest/1012410" rel="noreferrer noopener" target="_blank">',
-																	'</a>',
-																]
-															),
-														}}
-													/>
-												}
+												id="terms-checkbox"
 												onChange={() =>
 													setTermAndConditionsChecked(
 														(
@@ -532,34 +621,48 @@ const SetupAnalyticsCloudPage = ({
 												}
 											/>
 										</div>
-									</ClayForm.Group>
-								</>
-							)}
-						/>
-					</div>
-				)}
 
-				{step === 2 && (
-					<div>
-						<SetupHighPriorityContactForm
-							addContactList={setAddHighPriorityContact}
-							currentHighPriorityContacts={
-								setCurrentHighPriorityContacts
-							}
-							disableSubmit={updateMultiSelectEmpty}
-							filter={
-								HIGH_PRIORITY_CONTACT_CATEGORIES.criticalIncident
-							}
-							removedContactList={setRemoveHighPriorityContact}
-						/>
-					</div>
-				)}
-			</Layout>
-		</>
+										<label
+											dangerouslySetInnerHTML={{
+												__html: i18n.sub(
+													`by-checking-this-box-and-clicking-next-below-i-as-an-authorized-representative-of-x-acknowledge-that-x-accepts-the-x-terms-and-conditions-and-privacy-policy-x-these-terms-will-govern-x-s-use-of-liferay-analytics-cloud-unless-x-has-entered-into-a-separate-agreement-with-liferay-that-governs-x-s-use-of-liferay-analytics-cloud`,
+													[
+														project.name,
+														'<a href="https://www.liferay.com/documents/d/guest/1012410" rel="noreferrer noopener" target="_blank">',
+														'</a>',
+													]
+												),
+											}}
+											htmlFor="terms-checkbox"
+										/>
+									</div>
+								</div>
+							</ClayForm.Group>
+						</>
+					)}
+				/>
+			)}
+
+			{step === 2 && (
+				<div>
+					<SetupHighPriorityContactForm
+						addContactList={setAddHighPriorityContact}
+						currentHighPriorityContacts={
+							setCurrentHighPriorityContacts
+						}
+						disableSubmit={updateMultiSelectEmpty}
+						filter={
+							HIGH_PRIORITY_CONTACT_CATEGORIES.criticalIncident
+						}
+						removedContactList={setRemoveHighPriorityContact}
+					/>
+				</div>
+			)}
+		</Layout>
 	);
 };
 
-const SetupAnalyticsCloudForm = (props) => {
+const SetupAnalyticsCloudForm = (props: ISetupAnalyticsCloudFormProps) => {
 	return (
 		<Formik
 			initialValues={{
@@ -570,14 +673,19 @@ const SetupAnalyticsCloudForm = (props) => {
 					incidentReportContact: [getInitialAnalyticsInvite()],
 					ownerEmailAddress: '',
 					timeZone: '',
+					workspaceFriendlyUrl: '',
 					workspaceName: '',
 					workspaceURL: '',
 				},
 			}}
+			onSubmit={() => {}}
 			validateOnChange
 		>
-			{(formikProps) => (
-				<SetupAnalyticsCloudPage {...props} {...formikProps} />
+			{(formikProps: FormikValues) => (
+				<SetupAnalyticsCloudPage
+					{...props}
+					{...(formikProps as unknown as ISetupAnalyticsCloudPageProps)}
+				/>
 			)}
 		</Formik>
 	);

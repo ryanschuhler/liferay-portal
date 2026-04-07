@@ -15,7 +15,7 @@ export const SUBSCRIPTION_TYPES = {
 		'Other',
 	],
 	PurchasedAndProvisioned: ['Portal', 'Liferay Self-Hosted'],
-} as const;
+};
 
 export const PRODUCT_DISPLAY_EXCEPTION = {
 	blankProducts: [
@@ -49,8 +49,8 @@ export const PRODUCT_DISPLAY_EXCEPTION = {
 		'Pro Plan',
 	],
 	nonBlankProducts: ['Contact', 'Mobile Device'],
-	purchasedProduct: [],
-} as const;
+	purchasedProduct: [] as string[],
+};
 
 export const PRODUCT_DISPLAY_EXCEPTION_INSTANCE_SIZE = {
 	purchasedProductInstanceSize: [
@@ -60,4 +60,4 @@ export const PRODUCT_DISPLAY_EXCEPTION_INSTANCE_SIZE = {
 		'Extended Premium Support - Liferay DXP 7.1',
 		'Extended Premium Support - Liferay DXP 7.2',
 	],
-} as const;
+};

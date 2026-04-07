@@ -5,9 +5,34 @@
 
 import {ButtonWithIcon} from '@clayui/core';
 import {ClayTooltipProvider} from '@clayui/tooltip';
-import i18n from '~/utils/I18n';
 import {ButtonDropDown} from '~/components';
+import {Liferay} from '~/services/liferay';
+import i18n from '~/utils/I18n';
+
 import MenuUserActions from './components/MenuUserActions';
+
+interface IUserAccount {
+	emailAddress?: string;
+}
+
+interface IUserOption {
+	customOptionStyle: string;
+	disabled?: boolean;
+	label: string;
+	onClick: () => void;
+	tooltip?: string;
+}
+
+interface IProps {
+	edit: boolean;
+	highPriorityContactsNames: string[];
+	onCancel: () => void;
+	onEdit: () => void;
+	onRemove: () => void;
+	onSave: () => void;
+	saveDisabled: boolean;
+	userAccount: IUserAccount;
+}
 
 const OptionsColumn = ({
 	edit,
@@ -18,8 +43,8 @@ const OptionsColumn = ({
 	onSave,
 	saveDisabled,
 	userAccount,
-}) => {
-	const userOptions = [
+}: IProps) => {
+	const userOptions: IUserOption[] = [
 		{
 			customOptionStyle: 'pr-5',
 			label: i18n.translate('edit'),
@@ -30,7 +55,7 @@ const OptionsColumn = ({
 		{
 			customOptionStyle: 'pr-5',
 			disabled: highPriorityContactsNames.includes(
-				userAccount.emailAddress
+				userAccount.emailAddress ?? ''
 			),
 			label: i18n.translate('remove'),
 			onClick: () => onRemove(),
@@ -54,17 +79,17 @@ const OptionsColumn = ({
 						<ButtonWithIcon
 							aria-label={i18n.translate('manage-user-options')}
 							className="text-secondary"
-    						displayType="unstyled"
+							displayType="unstyled"
 							small
 							spritemap={Liferay.Icons.spritemap}
 							symbol="ellipsis-v"
 						/>
 					}
 					items={userOptions}
+					label=""
 					menuElementAttrs={{
 						className: 'p-0',
 					}}
-					menuWidth="shrink"
 				/>
 			</span>
 		</ClayTooltipProvider>

@@ -5,9 +5,10 @@
 
 import {ApolloClient} from '@apollo/client';
 import {getAccountRoles} from '~/services/liferay/graphql/queries';
-import {IAccountRole, IProject} from '~/utils/types';
+import {IAccountRole, IKoroneikiAccount, IProject} from '~/utils/types';
 
-import {ROLE_TYPES, SLA_TYPES} from './constants';
+import {ROLE_TYPES} from './constants';
+import {hasPrioritySLA} from './slaUtils';
 
 const getCurrentRoleType = (roleKey: string) => {
 	const roleValues = Object.values(ROLE_TYPES);
@@ -15,26 +16,26 @@ const getCurrentRoleType = (roleKey: string) => {
 	return roleValues.find((roleType) => roleType.key === roleKey);
 };
 
-export function getRolesFiltered(items: any[], project: IProject) {
-	const hasPrioritySLA =
-		project?.slaCurrent?.includes(SLA_TYPES.global) ||
-		project?.slaCurrent?.includes(SLA_TYPES.gold) ||
-		project?.slaCurrent?.includes(SLA_TYPES.platinum) ||
-		project?.slaCurrent?.includes(SLA_TYPES.premier) ||
-		project?.slaCurrent?.includes(SLA_TYPES.standard) ||
-		project?.slaCurrent?.includes(SLA_TYPES.strategic);
+export function getRolesFiltered(
+	items: IAccountRole[],
+	project: Partial<IKoroneikiAccount> | Partial<IProject>
+) {
+	const prioritySLA = hasPrioritySLA(project?.slaCurrent);
 
-	const isProjectPartner = project?.partner;
+	const isProjectPartner =
+		'partner' in project
+			? project.partner
+			: !!(project as any).partnershipCurrent;
 
 	if (items) {
 		const roles: IAccountRole[] = items?.reduce(
-			(rolesAccumulator, role) => {
+			(rolesAccumulator: IAccountRole[], role: IAccountRole) => {
 				let isValidRole = true;
 
-				const roleType = getCurrentRoleType(role.name);
+				const roleType = getCurrentRoleType(role.name || '');
 
 				if (roleType?.raysourceName) {
-					if (!hasPrioritySLA) {
+					if (!prioritySLA) {
 						isValidRole = role.name !== ROLE_TYPES.requester.key;
 					}
 
@@ -47,7 +48,7 @@ export function getRolesFiltered(items: any[], project: IProject) {
 							ROLE_TYPES.partnerTechnicalUser.key,
 						];
 
-						isValidRole = !partnerRoles.includes(role.name);
+						isValidRole = !partnerRoles.includes(role.name || '');
 					}
 
 					if (role.name === ROLE_TYPES.partnerMember.key) {

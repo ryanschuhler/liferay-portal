@@ -8,7 +8,11 @@ import i18n from '~/utils/I18n';
 
 import './SwitchSLACardButton.css';
 
-const SwitchSLACardButton = ({handleClick}) => (
+interface IProps {
+	handleClick: () => void;
+}
+
+const SwitchSLACardButton = ({handleClick}: IProps) => (
 	<ClayButtonWithIcon
 		aria-label={i18n.translate('switch-sla-card')}
 		className="bg-white cp-switch-sla-card-button d-none p-1 position-absolute rounded-circle shadow-lg"

@@ -8,7 +8,7 @@ import classNames from 'classnames';
 
 import {STATUS_DISPLAY} from './utils/constants/statusDisplays';
 
-const StatusTag = ({currentStatus}: {currentStatus: string}) => {
+const StatusTag = ({currentStatus}: {currentStatus: string | number}) => {
 	const statusDisplay = STATUS_DISPLAY[currentStatus];
 
 	return (

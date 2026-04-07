@@ -12,7 +12,7 @@ export const ACTIVATION_STATUS = {
 		title: i18n.translate('activated'),
 	},
 	all: {
-		color: 'none',
+		color: 'unstyled',
 		id: 'all',
 		title: i18n.translate('all'),
 	},
@@ -26,4 +26,4 @@ export const ACTIVATION_STATUS = {
 		id: 'notActivated',
 		title: i18n.translate('not-activated'),
 	},
-};
+} as const;

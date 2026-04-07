@@ -4,11 +4,16 @@
  */
 
 import {memo} from 'react';
+
 import {getInitials} from './utils/getInitials';
 
 const AVATAR_SIZE_IN_PX = 40;
 
-const Avatar = ({userName}) => {
+interface IProps {
+	userName: string;
+}
+
+const Avatar = ({userName}: IProps) => {
 	const uiAvatarsURL = `https://ui-avatars.com/api/${getInitials(
 		userName
 	)}/128/0B5FFF/FFFFFF/2/0.33/true/true/true`;

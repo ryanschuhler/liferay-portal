@@ -4,13 +4,19 @@
  */
 
 import ClayForm from '@clayui/form';
-import i18n from '~/utils/I18n';
 import {Input} from '~/components';
 import useBannedDomains from '~/hooks/useBannedDomains';
+import i18n from '~/utils/I18n';
+import {ILXCAdmin} from '~/utils/types';
 import {isValidEmail} from '~/utils/validations.form';
 
-const AdminInputs = ({admin, id}) => {
-	const bannedDomains = useBannedDomains(admin?.email, 500);
+interface IProps {
+	admin: ILXCAdmin;
+	id: number;
+}
+
+const AdminInput = ({admin, id}: IProps) => {
+	const bannedDomains = useBannedDomains(admin?.email);
 
 	return (
 		<ClayForm className="mb-0 pb-1">
@@ -30,10 +36,12 @@ const AdminInputs = ({admin, id}) => {
 				placeholder="email@example.com"
 				required
 				type="email"
-				validations={[(value) => isValidEmail(value, bannedDomains)]}
+				validations={[
+					(value: string) => isValidEmail(value, bannedDomains),
+				]}
 			/>
 		</ClayForm>
 	);
 };
 
-export default AdminInputs;
+export default AdminInput;

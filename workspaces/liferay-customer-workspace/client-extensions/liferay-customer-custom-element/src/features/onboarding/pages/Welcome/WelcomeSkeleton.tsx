@@ -20,7 +20,7 @@ const WelcomeSkeleton = () => {
 				<div className="p-4">
 					<Skeleton className="mb-4" height={8} width={105} />
 
-					<Skeleton align="left" height={16} width={425} />
+					<Skeleton align="start" height={16} width={425} />
 				</div>
 			}
 		>

@@ -8,7 +8,7 @@ const FilterIcon = ({
 	handleSortChange,
 }: {
 	columnName: string;
-	handleSortChange: Function;
+	handleSortChange: (columnName: string) => void;
 }) => (
 	<svg
 		className="align-self-center"

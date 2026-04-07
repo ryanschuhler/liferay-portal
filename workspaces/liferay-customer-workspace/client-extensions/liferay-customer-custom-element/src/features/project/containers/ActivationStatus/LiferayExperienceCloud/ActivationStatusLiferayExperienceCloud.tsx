@@ -2,23 +2,40 @@
  * SPDX-FileCopyrightText: (c) 2000 Liferay, Inc. https://liferay.com
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
+
 import ClayAlert from '@clayui/alert';
 import {useModal} from '@clayui/modal';
 import {useState} from 'react';
-
 import {DXPIcon} from '~/assets';
-import {useGetAccountSubscriptionGroups} from '~/services/liferay/graphql/account-subscription-groups/queries/useGetAccountSubscriptionGroups';
 import {ALERT_UPDATE_LIFERAY_EXPERIENCE_CLOUD_STATUS} from '~/features/project/containers/ActivationKeysTable/utils/constants/alertUpdateLiferayExperienceCloud';
+import {IAction} from '~/features/project/context/reducer';
 import {
 	AUTO_CLOSE_ALERT_TIME,
 	STATUS_TAG_TYPE_NAMES,
 } from '~/features/project/utils/constants';
+import {useGetAccountSubscriptionGroups} from '~/services/liferay/graphql/account-subscription-groups/queries/useGetAccountSubscriptionGroups';
+import {
+	IAccountSubscriptionGroup,
+	ILiferayExperienceCloudEnvironment,
+	IProject,
+	IUserAccount,
+} from '~/utils/types';
+
 import ActivationStatusLayout from '../Layout';
 import LiferayExperienceCloudModal from './LiferayExperienceCloudModal';
 import SetupLiferayExperienceCloudModal from './components/SetupLXCModal';
 import useActivationStatusDate from './hooks/useActivationStatusDate';
 import useOnCloseSetupModal from './hooks/useOnCloseSetupModal';
-import getActivationStatusCardLayout from './utils/getActivationStatusCardLayout';
+import useActivationStatusCardLayout from './utils/useActivationStatusCardLayout';
+
+interface IProps {
+	dispatch: React.Dispatch<IAction>;
+	lxcEnvironment: ILiferayExperienceCloudEnvironment | undefined;
+	project: IProject;
+	subscriptionGroupLxcEnvironment: IAccountSubscriptionGroup;
+	subscriptionGroups: IAccountSubscriptionGroup[];
+	userAccount: IUserAccount;
+}
 
 const ActivationStatusLiferayExperienceCloud = ({
 	dispatch,
@@ -27,7 +44,7 @@ const ActivationStatusLiferayExperienceCloud = ({
 	subscriptionGroupLxcEnvironment,
 	subscriptionGroups,
 	userAccount,
-}) => {
+}: IProps) => {
 	const [isVisibleSetupLxcModal, setIsVisibleSetupLxcModal] = useState(false);
 	const [hasFinishedUpdate, setHasFinishedUpdate] = useState(false);
 	const [visible, setVisible] = useState(false);
@@ -37,7 +54,7 @@ const ActivationStatusLiferayExperienceCloud = ({
 
 	const {activationStatusDate} = useActivationStatusDate(project);
 
-	const currentActivationStatus = getActivationStatusCardLayout(
+	const currentActivationStatus = useActivationStatusCardLayout(
 		lxcEnvironment,
 		project,
 		() => setIsVisibleSetupLxcModal(true),
@@ -45,16 +62,18 @@ const ActivationStatusLiferayExperienceCloud = ({
 		userAccount
 	);
 
-	const {
-		observer: observerStatusModal,
-		onClose: onCloseStatusModal,
-	} = useModal({
-		onClose: () => setVisible(false),
-	});
+	const {observer: observerStatusModal, onClose: onCloseStatusModal} =
+		useModal({
+			onClose: () => setVisible(false),
+		});
 
 	const {data: dataSubscriptionGroups} = useGetAccountSubscriptionGroups({
-		fetchPolicy: 'network-only',
 		filter: `accountKey eq '${project.accountKey}'`,
+		notifyOnNetworkStatusChange: false,
+		page: 1,
+		pageSize: 100,
+		skip: false,
+		sort: '',
 	});
 
 	const {handleSubmitLxcEnvironment, observer} = useOnCloseSetupModal(
@@ -79,7 +98,8 @@ const ActivationStatusLiferayExperienceCloud = ({
 					onClose={handleSubmitLxcEnvironment}
 					project={project}
 					subscriptionGroupLxcId={
-						subscriptionGroupLxcEnvironment.accountSubscriptionGroupId
+						subscriptionGroupLxcEnvironment.accountSubscriptionGroupId?.toString() ||
+						''
 					}
 				/>
 			)}

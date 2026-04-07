@@ -9,7 +9,9 @@ export async function getOrRequestToken() {
 	const oauth2Client = await OAuth2.FromUserAgentApplication(
 		'liferay-customer-etc-spring-boot-oaua'
 	);
-	const response = await oauth2Client._getOrRequestToken();
+	const response = (await oauth2Client._getOrRequestToken()) as {
+		access_token?: string;
+	};
 
-	return Object(response).access_token ? Object(response).access_token : null;
+	return response.access_token ?? null;
 }

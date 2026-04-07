@@ -6,7 +6,13 @@
 import {Button} from '@clayui/core';
 import i18n from '~/utils/I18n';
 
-const MenuUserActions = ({onCancel, onSave, saveDisabled}) => (
+interface IProps {
+	onCancel: () => void;
+	onSave: () => void;
+	saveDisabled: boolean;
+}
+
+const MenuUserActions = ({onCancel, onSave, saveDisabled}: IProps) => (
 	<div className="align-items-center d-flex">
 		<Button
 			aria-label={i18n.translate('cancel')}

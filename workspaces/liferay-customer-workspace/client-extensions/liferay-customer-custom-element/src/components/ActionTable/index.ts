@@ -4,3 +4,4 @@
  */
 
 export {default} from './ActionTable';
+export type {IColumn} from './ActionTable';

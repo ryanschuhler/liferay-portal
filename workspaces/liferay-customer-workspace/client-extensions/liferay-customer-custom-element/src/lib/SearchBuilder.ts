@@ -19,7 +19,7 @@ export type Operators =
 	| 'ne'
 	| 'startsWith';
 
-export interface SearchBuilderConstructor {
+export interface ISearchBuilderConstructor {
 	useURIEncode?: boolean;
 }
 
@@ -33,7 +33,7 @@ export default class SearchBuilder {
 	private query: string = '';
 	private useURIEncode?: boolean = true;
 
-	constructor({useURIEncode}: SearchBuilderConstructor = {}) {
+	constructor({useURIEncode}: ISearchBuilderConstructor = {}) {
 		this.useURIEncode = useURIEncode;
 	}
 

@@ -5,24 +5,33 @@
 
 import ClayIcon from '@clayui/icon';
 import i18n from '~/utils/I18n';
-import {TOOLTIP_CLASSNAMES_TYPES} from './constants';
+import {IActivationKey} from '~/utils/types';
+
 import {
 	downloadAggregatedActivationKey,
 	downloadMultipleActivationKey,
 	downloadSelectedKeysDetails,
 } from './downloadActivationLicenseKey';
 
+interface IActionItem {
+	disabled?: boolean;
+	icon: JSX.Element;
+	label: string;
+	onClick: () => void | Promise<void | boolean>;
+	tooltip?: string;
+}
+
 export function getActivationKeysDownloadItems(
-	isAbleToDownloadAggregateKeys,
-	selectedKeysIDs,
-	oAuthToken,
-	provisioningServerAPI,
-	handleMultipleAlertStatus,
-	handleAlertStatus,
-	selectedKeysObjects,
-	projectName
-) {
-	const dropdownItemsSelectedDownload = [
+	isAbleToDownloadAggregateKeys: boolean,
+	selectedKeysIDs: string,
+	oAuthToken: string,
+	provisioningServerAPI: string,
+	handleMultipleAlertStatus: (downloaded: boolean) => void,
+	handleAlertStatus: (downloaded: boolean) => void,
+	selectedKeysObjects: IActivationKey[],
+	projectName: string
+): IActionItem[] {
+	const dropdownItemsSelectedDownload: IActionItem[] = [
 		{
 			disabled: !isAbleToDownloadAggregateKeys,
 			icon: (
@@ -30,17 +39,18 @@ export function getActivationKeysDownloadItems(
 			),
 			label: i18n.translate('aggregate-key-single-file'),
 			onClick: async () => {
-				const downloadedAggregated = await downloadAggregatedActivationKey(
-					selectedKeysIDs,
-					oAuthToken,
-					provisioningServerAPI,
-					selectedKeysObjects,
-					projectName
-				);
+				const downloadedAggregated =
+					await downloadAggregatedActivationKey(
+						selectedKeysIDs,
+						oAuthToken,
+						provisioningServerAPI,
+						selectedKeysObjects,
+						projectName
+					);
 
-				return handleAlertStatus(downloadedAggregated);
+				return handleAlertStatus(downloadedAggregated ?? false);
 			},
-			tooltip: TOOLTIP_CLASSNAMES_TYPES.dropDownItem,
+			tooltip: 'dropdown-item',
 		},
 		{
 			icon: <ClayIcon className="mr-1 text-neutral-4" symbol="list" />,
@@ -53,16 +63,14 @@ export function getActivationKeysDownloadItems(
 					projectName
 				);
 
-				return handleMultipleAlertStatus(downloadedMultiple);
+				return handleMultipleAlertStatus(downloadedMultiple ?? false);
 			},
-			tooltip: TOOLTIP_CLASSNAMES_TYPES.dropDownItem,
+			tooltip: 'dropdown-item',
 		},
 	];
 
 	dropdownItemsSelectedDownload.push({
-		icon: (
-			<ClayIcon className="mr-1 text-neutral-4" symbol="download" />
-		),
+		icon: <ClayIcon className="mr-1 text-neutral-4" symbol="download" />,
 		label: i18n.translate('export-selected-key-details-csv'),
 		onClick: async () => {
 			const downloadedAggregated = await downloadSelectedKeysDetails(
@@ -71,7 +79,7 @@ export function getActivationKeysDownloadItems(
 				provisioningServerAPI
 			);
 
-			return handleAlertStatus(downloadedAggregated);
+			return handleAlertStatus(downloadedAggregated ?? false);
 		},
 	});
 

@@ -5,10 +5,23 @@
 
 import {useModal} from '@clayui/core';
 import {useEffect, useState} from 'react';
-import i18n from '~/utils/I18n';
+import {Skeleton} from '~/components';
 import {LOGO_PATH_TYPES} from '~/services/liferay/graphql/account-subscription-groups/utils/constants/logoPathTypes';
+import i18n from '~/utils/I18n';
+import {IAccountSubscription, IAccountSubscriptionGroup} from '~/utils/types';
+
 import AccountSubscriptionCard from './components/AccountSubscriptionCard/AccountSubscriptionCard';
 import AccountSubscriptionModal from './components/AccountSubscriptionModal/AccountSubscriptionModal';
+
+interface IProps {
+	IsPortalOrDXP: boolean;
+	accountKey: string;
+	accountSubscriptionGroup: IAccountSubscriptionGroup;
+	accountSubscriptions: IAccountSubscription[];
+	loading: boolean;
+	maxCardsLoading?: number;
+	selectedAccountSubscriptionGroup: IAccountSubscriptionGroup;
+}
 
 const AccountSubscriptionsList = ({
 	IsPortalOrDXP,
@@ -18,24 +31,22 @@ const AccountSubscriptionsList = ({
 	loading,
 	maxCardsLoading = 4,
 	selectedAccountSubscriptionGroup,
-}) => {
-	const [
-		currentAccountSubscription,
-		setCurrentAccountSubscription,
-	] = useState();
+}: IProps) => {
+	const [currentAccountSubscription, setCurrentAccountSubscription] =
+		useState<IAccountSubscription | undefined>(undefined);
 
 	const {observer, onOpenChange, open} = useModal();
 
-	useEffect(() => onOpenChange(!!currentAccountSubscription), [
-		currentAccountSubscription,
-		onOpenChange,
-	]);
+	useEffect(
+		() => onOpenChange(!!currentAccountSubscription),
+		[currentAccountSubscription, onOpenChange]
+	);
 
 	if (loading) {
 		return (
 			<div className="d-flex flex-column">
 				{[...new Array(maxCardsLoading)].map((_, index) => (
-					<AccountSubscriptionCard key={index} loading />
+					<Skeleton className="mb-4" height={150} key={index} />
 				))}
 			</div>
 		);
@@ -51,7 +62,7 @@ const AccountSubscriptionsList = ({
 
 	return (
 		<div className="d-flex flex-column">
-			{open && (
+			{open && currentAccountSubscription && (
 				<AccountSubscriptionModal
 					IsPortalOrDXP={IsPortalOrDXP}
 					accountKey={accountKey}
@@ -60,14 +71,14 @@ const AccountSubscriptionsList = ({
 						currentAccountSubscription.productKey
 					}
 					externalReferenceCode={
-						currentAccountSubscription?.externalReferenceCode
+						currentAccountSubscription.externalReferenceCode
 					}
 					observer={observer}
 					onClose={() => onOpenChange(false)}
 					title={
 						selectedAccountSubscriptionGroup?.name === 'Other'
-							? `${currentAccountSubscription?.name}`
-							: `${selectedAccountSubscriptionGroup?.name} ${currentAccountSubscription?.name}`
+							? `${currentAccountSubscription.name}`
+							: `${selectedAccountSubscriptionGroup?.name} ${currentAccountSubscription.name}`
 					}
 				/>
 			)}
@@ -76,10 +87,12 @@ const AccountSubscriptionsList = ({
 				<AccountSubscriptionCard
 					{...accountSubscription}
 					IsPortalOrDXP={IsPortalOrDXP}
+					accountKey={accountKey}
 					key={index}
+					loading={loading}
 					logoPath={
 						LOGO_PATH_TYPES[
-							selectedAccountSubscriptionGroup?.name?.trim()
+							selectedAccountSubscriptionGroup?.name?.trim() as keyof typeof LOGO_PATH_TYPES
 						]
 					}
 					onClick={() =>

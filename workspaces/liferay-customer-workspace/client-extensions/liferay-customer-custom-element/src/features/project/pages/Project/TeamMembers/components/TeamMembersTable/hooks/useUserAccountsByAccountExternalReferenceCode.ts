@@ -8,6 +8,12 @@ import {useMemo} from 'react';
 import useSearchTerm from '~/hooks/useSearchTerm';
 import {useGetUserAccountsByAccountExternalReferenceCode} from '~/services/liferay/graphql/user-accounts';
 import {addContactRoleNameByEmailByProject} from '~/services/liferay/rest/raysource/TeamMembers';
+import {
+	IAccountRole,
+	IGraphQLUserAccount,
+	IProject,
+	IRoleBrief,
+} from '~/utils/types';
 
 import {
 	getRaysourceContactRoleName,
@@ -17,7 +23,7 @@ import useDeleteUserAccount from './useDeleteUserAccount';
 import useSupportSeatsCount from './useSupportSeatsCount';
 import useUpdateUserAccount from './useUpdateUserAccount';
 
-const getFilter = (searchTerm) => {
+const getFilter = (searchTerm: string) => {
 	if (searchTerm) {
 		return `(contains(name, '${searchTerm}') or contains(emailAddress, '${searchTerm}') or userGroupRoleNames/any(s:contains(s, '${searchTerm}')))`;
 	}
@@ -26,17 +32,48 @@ const getFilter = (searchTerm) => {
 };
 
 export default function useUserAccountsByAccountExternalReferenceCode(
-	externalReferenceCode,
-	skip
-) {
+	externalReferenceCode: string | undefined,
+	skip: boolean
+): [
+	number | undefined,
+	{
+		data: {
+			accountUserAccountsByExternalReferenceCode: {
+				items: IGraphQLUserAccount[];
+				totalCount: number;
+			};
+		};
+		loading: boolean;
+		refetch: (variables?: Record<string, unknown>) => Promise<unknown>;
+		remove: (userAccount: IGraphQLUserAccount) => void;
+		search: (searchTerm: string) => void;
+		searching: boolean;
+		update: (
+			userAccount: IGraphQLUserAccount,
+			currentAccountRoles: IRoleBrief[],
+			newAccountRoleItem: IAccountRole | IAccountRole[],
+			oAuthToken: string,
+			provisioningServerAPI: string,
+			project: IProject,
+			assignUserAccountWithAccountRole: (
+				variables: Record<string, unknown>
+			) => Promise<unknown>,
+			setCurrentUserEditing: () => void
+		) => void;
+		updating: boolean;
+	},
+] {
 	const {
 		data: userAccountData,
 		networkStatus,
 		refetch,
 	} = useGetUserAccountsByAccountExternalReferenceCode(
-		externalReferenceCode,
+		externalReferenceCode ?? '',
 		{
+			filter: getFilter(''),
 			notifyOnNetworkStatusChange: true,
+			page: 1,
+			pageSize: 9999,
 			skip: skip || !externalReferenceCode,
 		}
 	);
@@ -45,9 +82,9 @@ export default function useUserAccountsByAccountExternalReferenceCode(
 		const items = (
 			userAccountData?.accountUserAccountsByExternalReferenceCode
 				?.items ?? []
-		).filter((account) => {
+		).filter((account: IGraphQLUserAccount) => {
 			const accountBriefByExternalReferenceCode =
-				account.accountBriefs.find(
+				account.accountBriefs?.find(
 					(accountBrief) =>
 						accountBrief.externalReferenceCode ===
 						externalReferenceCode
@@ -55,7 +92,7 @@ export default function useUserAccountsByAccountExternalReferenceCode(
 
 			if (
 				accountBriefByExternalReferenceCode &&
-				accountBriefByExternalReferenceCode.roleBriefs.some(
+				accountBriefByExternalReferenceCode.roleBriefs?.some(
 					(roleBrief) => roleBrief.name === 'Provisioning'
 				)
 			) {
@@ -87,52 +124,56 @@ export default function useUserAccountsByAccountExternalReferenceCode(
 		updateContactRoles,
 	} = useUpdateUserAccount();
 
-	const supportSeatsCount = useSupportSeatsCount(
+	const supportSeatsCount: number | undefined = useSupportSeatsCount(
 		data?.accountUserAccountsByExternalReferenceCode,
 		networkStatus === NetworkStatus.loading
 	);
 
-	const [, onSearch] = useSearchTerm((searchTerm) => {
+	const [, onSearch] = useSearchTerm((searchTerm: string) => {
 		refetch({
 			filter: getFilter(searchTerm),
 		});
 	});
 
-	const remove = (userAccount) => {
+	const remove = (userAccount: IGraphQLUserAccount) => {
 		const contactRoleNameURLParameters =
-			userAccount.selectedAccountSummary.roleBriefs?.map((roleBrief) =>
+			userAccount.roleBriefs?.map((roleBrief) =>
 				getRaysourceContactRoleNameURLParameter(roleBrief.name)
-			);
+			) || [];
+
+		const variables = {
+			contactEmail: userAccount.emailAddress || '',
+			contactRoleNames: contactRoleNameURLParameters.join('&'),
+			externalReferenceCode,
+		};
 
 		deleteContactRoles({
-			onCompleted: (_, {variables}) =>
+			onCompleted: () =>
 				deleteUserAccount({
 					variables: {
 						emailAddress: variables.contactEmail,
 						externalReferenceCode: variables.externalReferenceCode,
 					},
 				}),
-			variables: {
-				contactEmail: userAccount.emailAddress,
-				contactRoleNames: contactRoleNameURLParameters.join('&'),
-				externalReferenceCode,
-			},
+			variables,
 		});
 	};
 
 	const update = (
-		userAccount,
-		currentAccountRoles,
-		newAccountRoleItem,
-		oAuthToken,
-		provisioningServerAPI,
-		project,
-		assignUserAccountWithAccountRole,
-		setCurrentUserEditing
+		userAccount: IGraphQLUserAccount,
+		currentAccountRoles: IRoleBrief[],
+		newAccountRoleItem: IAccountRole | IAccountRole[],
+		oAuthToken: string,
+		provisioningServerAPI: string,
+		project: IProject,
+		assignUserAccountWithAccountRole: (
+			variables: Record<string, unknown>
+		) => Promise<unknown>,
+		setCurrentUserEditing: () => void
 	) => {
 		const newContactRoleNameURLParameter =
 			getRaysourceContactRoleNameURLParameter(
-				newAccountRoleItem.raysourceName
+				(newAccountRoleItem as IAccountRole).raysourceName || ''
 			);
 
 		const currentContactRoleNameURLParameters = currentAccountRoles.map(
@@ -151,7 +192,7 @@ export default function useUserAccountsByAccountExternalReferenceCode(
 				newAccountRoleItem.map((accountRole) => {
 					const newAccountRoleRaysourceNameURLParameter =
 						getRaysourceContactRoleNameURLParameter(
-							accountRole.raysourceName
+							accountRole.raysourceName || ''
 						);
 
 					updateContactRoles({
@@ -167,7 +208,7 @@ export default function useUserAccountsByAccountExternalReferenceCode(
 													userAccount.emailAddress,
 												externalReferenceCode,
 												newAccountRoleId:
-													accountRole.value,
+													accountRole.id,
 											},
 										}),
 									variables: {
@@ -194,7 +235,7 @@ export default function useUserAccountsByAccountExternalReferenceCode(
 				const nonConflictingCurrentAccountRoles =
 					currentAccountRoles.filter((currentRole) => {
 						return !newAccountRoleItem.some(
-							(newRole) => currentRole.name === newRole.label
+							(newRole) => newRole.label === currentRole.name
 						);
 					});
 
@@ -217,7 +258,7 @@ export default function useUserAccountsByAccountExternalReferenceCode(
 					nonConflictingNewAccountRoleItem.map((accountRole) => {
 						const oldAccountRoleRaysourceNameURLParameter =
 							getRaysourceContactRoleNameURLParameter(
-								accountRole.raysourceName
+								accountRole.raysourceName || ''
 							);
 
 						updateContactRoles({
@@ -234,7 +275,7 @@ export default function useUserAccountsByAccountExternalReferenceCode(
 															userAccount.emailAddress,
 														externalReferenceCode,
 														newAccountRoleId:
-															accountRole.value,
+															accountRole.id,
 													},
 												}),
 											variables: {
@@ -263,7 +304,7 @@ export default function useUserAccountsByAccountExternalReferenceCode(
 					!nonConflictingNewAccountRoleItem.length &&
 					nonConflictingCurrentAccountRoles.length
 				) {
-					newAccountRoleItem.map((accountRole) => {
+					newAccountRoleItem.map(() => {
 						nonConflictingCurrentAccountRoles.map(
 							(currentAccountRole) => {
 								deleteContactRoles({
@@ -275,8 +316,9 @@ export default function useUserAccountsByAccountExternalReferenceCode(
 												emailAddress:
 													userAccount.emailAddress,
 												externalReferenceCode,
-												newAccountRoleId:
-													accountRole.value,
+												newAccountRoleId: (
+													newAccountRoleItem as IAccountRole[]
+												)[0].id,
 											},
 										}),
 									variables: {
@@ -297,8 +339,8 @@ export default function useUserAccountsByAccountExternalReferenceCode(
 					nonConflictingNewAccountRoleItem.length &&
 					!nonConflictingCurrentAccountRoles.length
 				) {
-					const firstName = userAccount?.name.split(' ')[0];
-					const lastName = userAccount?.name.split(' ')[1];
+					const firstName = userAccount?.name?.split(' ')[0] || '';
+					const lastName = userAccount?.name?.split(' ')[1] || '';
 
 					nonConflictingNewAccountRoleItem?.map(
 						async (accountRole) => {
@@ -310,12 +352,12 @@ export default function useUserAccountsByAccountExternalReferenceCode(
 
 							const oldAccountRoleRaysourceName =
 								getRaysourceContactRoleName(
-									accountRole.raysourceName
+									accountRole.raysourceName || ''
 								);
 
 							await addContactRoleNameByEmailByProject(
 								project.accountKey,
-								encodeURI(userAccount.emailAddress),
+								encodeURI(userAccount.emailAddress || ''),
 								firstName,
 								lastName,
 								oAuthToken,
@@ -327,9 +369,9 @@ export default function useUserAccountsByAccountExternalReferenceCode(
 								context,
 								variables: {
 									accountKey: project.accountKey,
-									accountRoleId: accountRole.value,
+									accountRoleId: accountRole.id,
 									emailAddress: encodeURI(
-										userAccount.emailAddress
+										userAccount.emailAddress || ''
 									),
 								},
 							});
@@ -355,8 +397,7 @@ export default function useUserAccountsByAccountExternalReferenceCode(
 											currentAccountRole.id,
 										emailAddress: userAccount.emailAddress,
 										externalReferenceCode,
-										newAccountRoleId:
-											newAccountRoleItem.value,
+										newAccountRoleId: newAccountRoleItem.id,
 									},
 								}),
 							variables: {

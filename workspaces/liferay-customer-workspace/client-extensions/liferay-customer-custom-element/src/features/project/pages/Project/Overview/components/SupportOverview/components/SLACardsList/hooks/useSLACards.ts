@@ -4,12 +4,20 @@
  */
 
 import {useMemo} from 'react';
+import {IKoroneikiAccount} from '~/utils/types';
 
 import {SLA_LABELS} from '../utils/constants/slaLabels';
 import getSLACard from '../utils/getSLACard';
 
-export default function useSLACards(koroneikiAccount) {
-	return useMemo(() => {
+interface ISLACardData {
+	endDate: string;
+	label: string;
+	startDate: string;
+	title: string;
+}
+
+export default function useSLACards(koroneikiAccount: IKoroneikiAccount) {
+	return useMemo<ISLACardData[] | undefined>(() => {
 		if (koroneikiAccount) {
 			const {
 				slaCurrent,
@@ -23,17 +31,17 @@ export default function useSLACards(koroneikiAccount) {
 				slaFutureStartDate,
 			} = koroneikiAccount;
 
-			const slaCards = [];
+			const slaCards: ISLACardData[] = [];
 
 			if (slaCurrent) {
 				slaCards.push(
 					getSLACard(
-						slaCurrent === slaFuture
+						(slaCurrent === slaFuture
 							? slaFutureEndDate
-							: slaCurrentEndDate,
-						slaCurrent === slaExpired
+							: slaCurrentEndDate) || '',
+						(slaCurrent === slaExpired
 							? slaExpiredStartDate
-							: slaCurrentStartDate,
+							: slaCurrentStartDate) || '',
 						slaCurrent,
 						SLA_LABELS.current
 					)
@@ -43,8 +51,8 @@ export default function useSLACards(koroneikiAccount) {
 			if (!!slaFuture && slaFuture !== slaCurrent) {
 				slaCards.push(
 					getSLACard(
-						slaFutureEndDate,
-						slaFutureStartDate,
+						slaFutureEndDate || '',
+						slaFutureStartDate || '',
 						slaFuture,
 						SLA_LABELS.future
 					)
@@ -54,8 +62,8 @@ export default function useSLACards(koroneikiAccount) {
 			if (!!slaExpired && slaExpired !== slaCurrent) {
 				slaCards.push(
 					getSLACard(
-						slaExpiredEndDate,
-						slaExpiredStartDate,
+						slaExpiredEndDate || '',
+						slaExpiredStartDate || '',
 						slaExpired,
 						SLA_LABELS.expired
 					)

@@ -7,11 +7,32 @@ import ClayDropDown from '@clayui/drop-down';
 import {useEffect} from 'react';
 import useIntersectionObserver from '~/hooks/useIntersectionObserver';
 import i18n from '~/utils/I18n';
+import {IKoroneikiAccount} from '~/utils/types';
 
 import DropdownItems from './DropdownItems';
 import Search from './Search';
 
-const DropdownChildren = ({
+type KoroneikiAccountsType = {
+	items: IKoroneikiAccount[];
+	lastPage: number;
+	page: number;
+	pageSize: number;
+	totalCount: number;
+};
+
+interface IProps {
+	dropdownProjectsExceeded: boolean;
+	fetching: boolean;
+	initialTotalCount: number;
+	koroneikiAccounts: KoroneikiAccountsType;
+	koroneikiAccountsItems: IKoroneikiAccount[];
+	onIntersecting: (page: number) => void;
+	onSearch: (searchTerm: string) => void;
+	searching: boolean;
+	selectedKoroneikiAccount: IKoroneikiAccount;
+}
+
+const DropdownChildren: React.FC<IProps> = ({
 	dropdownProjectsExceeded,
 	fetching,
 	initialTotalCount,
@@ -21,7 +42,7 @@ const DropdownChildren = ({
 	onSearch,
 	searching,
 	selectedKoroneikiAccount,
-}: any) => {
+}) => {
 	const [trackedRef, isIntersecting] = useIntersectionObserver();
 
 	const isLastPage = koroneikiAccounts?.page === koroneikiAccounts?.lastPage;
@@ -74,7 +95,7 @@ const DropdownChildren = ({
 
 					{dropdownProjectsExceeded && !isLastPage && (
 						<ClayDropDown.Section className="px-3">
-							<div ref={trackedRef as any}>&nbsp;</div>
+							<div ref={trackedRef}>&nbsp;</div>
 						</ClayDropDown.Section>
 					)}
 				</ClayDropDown.ItemList>

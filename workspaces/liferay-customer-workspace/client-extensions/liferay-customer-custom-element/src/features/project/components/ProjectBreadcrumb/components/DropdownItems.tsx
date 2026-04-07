@@ -7,12 +7,13 @@ import ClayDropDown from '@clayui/drop-down';
 import {Fragment} from 'react';
 import {IconBreadcrumbs} from '~/assets';
 import {Liferay} from '~/services/liferay';
+import {IKoroneikiAccount} from '~/utils/types';
 
 import ProjectNameTruncate from './ProjectNameTruncate';
 
 type DropdownItemsProps = {
-	koroneikiAccounts: any[];
-	selectedKoroneikiAccount: any;
+	koroneikiAccounts: IKoroneikiAccount[];
+	selectedKoroneikiAccount: IKoroneikiAccount;
 };
 
 const getHref = (accountKey: string) => {

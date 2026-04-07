@@ -6,13 +6,13 @@
 import i18n from '~/utils/I18n';
 import getKebabCase from '~/utils/getKebabCase';
 
-export function getEnvironmentType(productName) {
+export function getEnvironmentType(productName: string): string {
 	const formatProductName = productName?.substr(
 		productName?.indexOf(' ') + 1
 	);
 
 	const translateProductName = i18n.translate(
-		getKebabCase(formatProductName)
+		getKebabCase(formatProductName) as string
 	);
 
 	return translateProductName;

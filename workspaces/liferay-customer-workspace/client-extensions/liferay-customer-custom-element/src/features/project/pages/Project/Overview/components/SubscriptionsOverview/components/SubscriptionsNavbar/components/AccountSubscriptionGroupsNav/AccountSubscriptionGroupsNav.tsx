@@ -4,8 +4,19 @@
  */
 
 import NavSegment from '~/components/NavSegment/NavSegment';
+import {IAccountSubscriptionGroup} from '~/utils/types';
+
 import AccountSubscriptionGroupsDropdown from './components/AccountSubscriptionGroupsDropdown/AccountSubscriptionGroupsDropdown';
 import useIsTablet from './hooks/useIsTablet';
+
+interface IProps {
+	accountSubscriptionGroups: IAccountSubscriptionGroup[];
+	disabled: boolean;
+	loading: boolean;
+	onSelect: (index: number) => void;
+	selectedItemIndex: number;
+	setSelectedItemIndex: (index: number) => void;
+}
 
 const AccountSubscriptionGroupsNav = ({
 	accountSubscriptionGroups,
@@ -14,7 +25,7 @@ const AccountSubscriptionGroupsNav = ({
 	onSelect,
 	selectedItemIndex,
 	setSelectedItemIndex,
-}) => {
+}: IProps) => {
 	const isTablet = useIsTablet();
 
 	const getItems = () =>
@@ -23,9 +34,11 @@ const AccountSubscriptionGroupsNav = ({
 			label: accountSubscriptionGroup.name,
 		}));
 
-	const handleOnSelect = (currentIndex) => {
-		onSelect(accountSubscriptionGroups[currentIndex]);
-		setSelectedItemIndex(currentIndex);
+	const handleOnSelect = (arg: number | {key?: string; label: string}) => {
+		if (typeof arg === 'number') {
+			onSelect(arg);
+			setSelectedItemIndex(arg);
+		}
 	};
 
 	if (accountSubscriptionGroups?.length === 1) {

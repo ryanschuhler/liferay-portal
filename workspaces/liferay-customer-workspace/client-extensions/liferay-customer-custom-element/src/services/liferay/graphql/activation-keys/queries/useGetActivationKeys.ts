@@ -4,6 +4,13 @@
  */
 
 import {gql, useQuery} from '@apollo/client';
+import {IActivationKey} from '~/utils/types';
+
+export interface IActivationKeysData {
+	getActivationKeys: {
+		items: IActivationKey[];
+	};
+}
 
 const GET_ACTIVATION_KEYS = gql`
 	query getActivationKeys(
@@ -56,7 +63,7 @@ export function useGetActivationKeys(
 		skip: false,
 	}
 ) {
-	return useQuery(GET_ACTIVATION_KEYS, {
+	return useQuery<IActivationKeysData>(GET_ACTIVATION_KEYS, {
 		context: {
 			type: 'raysource-rest',
 		},

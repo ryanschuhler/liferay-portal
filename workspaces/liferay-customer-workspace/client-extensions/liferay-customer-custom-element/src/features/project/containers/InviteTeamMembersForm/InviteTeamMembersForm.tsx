@@ -6,11 +6,12 @@
 import {useMutation} from '@apollo/client';
 import ClayForm from '@clayui/form';
 import classNames from 'classnames';
-import {FieldArray, Formik} from 'formik';
+import {FieldArray, Formik, FormikErrors, FormikTouched} from 'formik';
 import {useEffect, useState} from 'react';
 import {Badge, Button} from '~/components';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
 import {STATUS_CODE} from '~/features/project/utils/constants';
+import {IToastOptions, Liferay} from '~/services/liferay';
 import {
 	addTeamMembersInvitation,
 	assignUserAccountWithAccount,
@@ -20,26 +21,53 @@ import {
 } from '~/services/liferay/graphql/queries';
 import {addContactRoleNameByEmailByProject} from '~/services/liferay/rest/raysource/TeamMembers';
 import i18n from '~/utils/I18n';
-import {ROLE_TYPES, SLA_TYPES} from '~/utils/constants';
+import {ROLE_TYPES} from '~/utils/constants';
 import getInitialInvite from '~/utils/getInitialInvite';
 import getProjectRoles from '~/utils/getProjectRoles';
 import isSupportSeatRole from '~/utils/isSupportSeatRole';
+import {hasPrioritySLA} from '~/utils/slaUtils';
+import {IAccountRole, IInvite, IOption, IProject} from '~/utils/types';
 
 import Layout from '../../../../components/FormLayout';
 import TeamMemberInputs from './TeamMemberInputs';
-
-import './InviteTeamMembersForm.css';
 
 const INITIAL_INVITES_COUNT = 1;
 const MAXIMUM_SUPPORT_SEATS_DEFAULT = -1;
 const MAXIMUM_INVITES_COUNT = 10;
 const UNLIMITED_SUPPORT_SEATS = 9999;
 
-const DEFAULT_WARNING = {
+const DEFAULT_WARNING: IToastOptions = {
 	message: i18n.translate('one-or-more-requests-may-have-failed'),
 	title: i18n.translate('Warning'),
 	type: 'warning',
 };
+
+interface IInitialValues {
+	invites: IInvite[];
+}
+
+interface IInviteTeamMembersPageProps {
+	availableSupportSeatsCount: number;
+	errors: FormikErrors<IInitialValues>;
+	handlePage: () => void;
+	leftButton: string;
+	mutateUserData: (data: unknown) => void;
+	oAuthToken: string | null;
+	project: IProject;
+	setFieldValue: import('formik').FormikProps<IInitialValues>['setFieldValue'];
+	setTouched: import('formik').FormikProps<IInitialValues>['setTouched'];
+	touched: FormikTouched<IInitialValues>;
+	values: IInitialValues;
+}
+
+interface IInviteTeamMembersFormProps {
+	availableSupportSeatsCount: number;
+	handlePage: () => void;
+	leftButton: string;
+	mutateUserData: (data: unknown) => void;
+	oAuthToken: string | null;
+	project: IProject;
+}
 
 const InviteTeamMembersPage = ({
 	availableSupportSeatsCount = 0,
@@ -53,7 +81,7 @@ const InviteTeamMembersPage = ({
 	setTouched,
 	touched,
 	values,
-}) => {
+}: IInviteTeamMembersPageProps) => {
 	const {articleAccountSupportURL, client, provisioningServerAPI} =
 		useAppPropertiesContext();
 
@@ -69,25 +97,24 @@ const InviteTeamMembersPage = ({
 	);
 	const [deleteUserAccount] = useMutation(deleteAccountUserAccount);
 
-	const [baseButtonDisabled, setBaseButtonDisabled] = useState(true);
-	const [hasInitialError, setInitialError] = useState();
-	const [accountMemberRole, setAccountMemberRole] = useState();
-	const [accountRolesOptions, setAccountRolesOptions] = useState([]);
-	const [accountRoles, setAccountRoles] = useState([]);
-	const [availableAdminsRoles, setAvailableAdminsRoles] = useState(1);
+	const [baseButtonDisabled, setBaseButtonDisabled] = useState<boolean>(true);
+	const [hasInitialError, setInitialError] = useState<boolean>(false);
+	const [accountMemberRole, setAccountMemberRole] = useState<
+		IAccountRole | undefined
+	>(undefined);
+	const [accountRolesOptions, setAccountRolesOptions] = useState<IOption[]>(
+		[]
+	);
+	const [accountRoles, setAccountRoles] = useState<IAccountRole[]>([]);
+	const [availableAdminsRoles, setAvailableAdminsRoles] = useState<number>(1);
 	const [isLoadingUserInvitation, setIsLoadingUserInvitation] =
-		useState(false);
-	const [showEmptyEmailError, setshowEmptyEmailError] = useState(false);
-	const [roleSelectorFilled, setRoleSelectorFilled] = useState(false);
+		useState<boolean>(false);
+	const [showEmptyEmailError, setshowEmptyEmailError] =
+		useState<boolean>(false);
+	const [roleSelectorFilled, setRoleSelectorFilled] =
+		useState<boolean>(false);
 
-	const projectHasPrioritySLA =
-		project?.slaCurrent?.includes(SLA_TYPES.global) ||
-		project?.slaCurrent?.includes(SLA_TYPES.gold) ||
-		project?.slaCurrent?.includes(SLA_TYPES.platinum) ||
-		project?.slaCurrent?.includes(SLA_TYPES.premier) ||
-		project?.slaCurrent?.includes(SLA_TYPES.standard) ||
-		project?.slaCurrent?.includes(SLA_TYPES.strategic);
-
+	const projectHasPrioritySLA = hasPrioritySLA(project?.slaCurrent);
 
 	const isUnlimitedSupportSeats =
 		project.maxRequestors === MAXIMUM_SUPPORT_SEATS_DEFAULT;
@@ -124,7 +151,7 @@ const InviteTeamMembersPage = ({
 				setAccountRolesOptions(
 					roles?.map((role) => ({
 						disabled: false,
-						label: role.name,
+						label: role.name ?? '',
 						value: role.id,
 					}))
 				);
@@ -132,18 +159,21 @@ const InviteTeamMembersPage = ({
 		};
 
 		getRoles();
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [availableSupportSeatsCount, client, setFieldValue]);
+	}, [availableSupportSeatsCount, client, project, setFieldValue]);
 
 	useEffect(() => {
 		if (values && accountRoles?.length) {
 			const totalAdmins = values.invites?.reduce(
-				(totalInvites, currentInvite) => {
+				(totalInvites: number, currentInvite: IInvite) => {
 					if (
-						currentInvite?.role?.name ===
-							ROLE_TYPES.requester.name ||
-						currentInvite?.role?.name === ROLE_TYPES.admin.name
+						currentInvite?.role?.some(
+							(role: IAccountRole) =>
+								role.name === ROLE_TYPES.requester.name
+						) ||
+						currentInvite?.role?.some(
+							(role: IAccountRole) =>
+								role.name === ROLE_TYPES.admin.name
+						)
 					) {
 						return ++totalInvites;
 					}
@@ -159,8 +189,6 @@ const InviteTeamMembersPage = ({
 				? setAvailableAdminsRoles(UNLIMITED_SUPPORT_SEATS)
 				: setAvailableAdminsRoles(remainingAdmins);
 		}
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [values, project, accountRoles, availableSupportSeatsCount]);
 
 	useEffect(() => {
@@ -168,18 +196,20 @@ const InviteTeamMembersPage = ({
 			values?.invites?.filter(({email}) => email)?.length || 0;
 		const totalEmails = values?.invites?.length || 0;
 		const failedEmails =
-			errors?.invites?.filter((email) => email)?.length || 0;
+			(errors?.invites as unknown[])?.filter((email) => email)?.length ||
+			0;
 
 		const hasSupportSeatRoleInvited = values?.invites?.some((invite) =>
-			invite.role.some((roleSelected) =>
-				isSupportSeatRole(roleSelected.name)
+			invite.role?.some((roleSelected: IAccountRole) =>
+				isSupportSeatRole(roleSelected.name || '')
 			)
 		);
-		const supportSeatRoleInvitedCount = values?.invites.flatMap((invite) =>
-			invite.role.filter((roleSelected) =>
-				isSupportSeatRole(roleSelected.name)
-			)
-		).length;
+		const supportSeatRoleInvitedCount =
+			values?.invites.flatMap((invite) =>
+				invite.role?.filter((roleSelected: IAccountRole) =>
+					isSupportSeatRole(roleSelected.name || '')
+				)
+			).length || 0;
 
 		if (inviteMembers) {
 			const successfullyEmails = totalEmails - failedEmails;
@@ -229,7 +259,7 @@ const InviteTeamMembersPage = ({
 		setIsLoadingUserInvitation(true);
 
 		let displaySuccess = true;
-		const invitedAccounts = [];
+		const invitedAccounts: IInvite[] = [];
 
 		const context = {
 			displayErrors: false,
@@ -276,7 +306,7 @@ const InviteTeamMembersPage = ({
 							},
 						});
 					}
-					catch (error) {
+					catch (error: unknown) {
 						console.error(
 							`Failed to update name for ${inviteMember.email}`,
 							error
@@ -286,7 +316,7 @@ const InviteTeamMembersPage = ({
 							...DEFAULT_WARNING,
 							message: i18n.sub(
 								'user-x-was-invited-successfully-but-there-was-a-problem-updating-their-name',
-								[inviteMember.givenName]
+								[inviteMember.givenName as string]
 							),
 						});
 					}
@@ -296,15 +326,17 @@ const InviteTeamMembersPage = ({
 
 				for (const inviteRole of invitedMemberRoles) {
 					try {
-						await addContactRoleNameByEmailByProject(
-							project.accountKey,
-							encodeURI(inviteMember.email),
-							inviteMember.givenName,
-							inviteMember.familyName,
-							oAuthToken,
-							provisioningServerAPI,
-							inviteRole.raysourceName
-						);
+						if (oAuthToken) {
+							await addContactRoleNameByEmailByProject(
+								project.accountKey,
+								encodeURI(inviteMember.email),
+								inviteMember.givenName,
+								inviteMember.familyName,
+								oAuthToken,
+								provisioningServerAPI,
+								inviteRole.raysourceName || ''
+							);
+						}
 
 						await assignUserAccountWithAccountRole({
 							context,
@@ -315,8 +347,10 @@ const InviteTeamMembersPage = ({
 							},
 						});
 					}
-					catch (error) {
-						if (error.cause === STATUS_CODE.conflict) {
+					catch (error: unknown) {
+						const typedError = error as {cause: number};
+
+						if (typedError.cause === STATUS_CODE.conflict) {
 							await assignUserAccountWithAccountRole({
 								context,
 								variables: {
@@ -335,14 +369,14 @@ const InviteTeamMembersPage = ({
 								},
 							});
 
-							throw new Error('Error', {cause: error.cause});
+							throw new Error('Error', {cause: typedError.cause});
 						}
 					}
 				}
 
 				invitedAccounts.push(inviteMember);
 			}
-			catch (error) {
+			catch (error: unknown) {
 				console.error(error);
 
 				displaySuccess = false;
@@ -350,31 +384,33 @@ const InviteTeamMembersPage = ({
 				Liferay.Util.openToast({
 					...DEFAULT_WARNING,
 					message: i18n.sub('unable-to-invite-x', [
-						inviteMember.givenName,
+						inviteMember.givenName as string,
 					]),
 				});
 			}
 		}
 
 		if (invitedAccounts.length) {
-			const newMembersData = await addTeamMemberInvitation({
+			const teamMembersInvitation = invitedAccounts.flatMap(
+				({email, familyName, givenName, role}: IInvite) =>
+					(role || []).map((roleInvited) => ({
+						email,
+						familyName,
+						givenName,
+						r_accountEntryToDXPCloudEnvironment_accountEntryId:
+							project?.id,
+						role: roleInvited,
+					}))
+			);
+
+			const {data: newMembersData} = await addTeamMemberInvitation({
 				context: {
 					displaySuccess,
 					type: 'liferay-rest',
 				},
 				notifyOnNetworkStatusChange: false,
 				variables: {
-					TeamMembersInvitation: invitedAccounts.flatMap(
-						({email, familyName, givenName, role}) =>
-							role?.map((roleInvited) => ({
-								email,
-								familyName,
-								givenName,
-								r_accountEntryToDXPCloudEnvironment_accountEntryId:
-									project?.id,
-								role: roleInvited,
-							}))
-					),
+					TeamMembersInvitation: teamMembersInvitation,
 				},
 			});
 
@@ -428,7 +464,7 @@ const InviteTeamMembersPage = ({
 			}}
 		>
 			{hasInitialError && (
-				<Badge>
+				<Badge badgeClassName="pl-1">
 					<span className="pl-1">
 						{i18n.translate(
 							'add-at-least-one-user-s-email-to-send-an-invitation'
@@ -455,73 +491,74 @@ const InviteTeamMembersPage = ({
 							</div>
 
 							<ClayForm.Group className="m-0">
-								{values?.invites?.map((invite, index) => (
-									<TeamMemberInputs
-										administratorsAssetsAvailable={
-											availableAdminsRoles
-										}
-										disableError={hasInitialError}
-										errors={errors}
-										id={index}
-										invite={invite}
-										key={index}
-										options={accountRolesOptions}
-										placeholderEmail={`username@${
-											project?.code?.toLowerCase() ||
-											'example'
-										}.com`}
-										selectOnChange={(roleSelected) => {
-											const isPartnerMember =
-												roleSelected.partnerMemberRoles
-													.active;
-
-											if (isPartnerMember) {
-												const memberRoles =
+								{(values?.invites || []).map(
+									(invite: IInvite, index: number) => (
+										<TeamMemberInputs
+											administratorsAssetsAvailable={
+												availableAdminsRoles
+											}
+											disableError={hasInitialError}
+											errors={errors}
+											id={index}
+											invite={invite}
+											key={index}
+											options={accountRolesOptions}
+											placeholderEmail={`username@${
+												project?.code?.toLowerCase() ||
+												'example'
+											}.com`}
+											selectOnChange={(
+												roleSelected: Record<
+													string,
+													any
+												>
+											) => {
+												const isPartnerMember =
 													roleSelected
 														.partnerMemberRoles
-														.roles;
-												const updatedMemberRoles =
-													memberRoles.filter(
-														(role) => role.active
-													);
+														?.active;
 
-												return updatedMemberRoles?.map(
-													(updateRole, roleIndex) => {
+												let updatedRoles = [];
+
+												if (isPartnerMember) {
+													updatedRoles =
+														roleSelected.partnerMemberRoles.roles.filter(
+															(role: any) =>
+																role.active
+														);
+												}
+												else {
+													updatedRoles =
+														Object.values(
+															roleSelected
+														).filter(
+															(role: any) =>
+																role.active
+														);
+												}
+
+												updatedRoles.forEach(
+													(
+														role: any,
+														roleIndex: number
+													) => {
 														setFieldValue(
 															`invites[${index}].role[${roleIndex}]`,
 															accountRoles?.find(
 																({id}) =>
 																	id ===
-																	+updateRole.value
+																	role.value
 															)
 														);
 													}
 												);
+											}}
+											setRoleSelectorFilled={
+												setRoleSelectorFilled
 											}
-
-											const accountRoleItem =
-												Object.values(
-													roleSelected
-												).filter((role) => role.active);
-
-											return accountRoleItem?.map(
-												(updateRole, roleIndex) => {
-													setFieldValue(
-														`invites[${index}].role[${roleIndex}]`,
-														accountRoles?.find(
-															({id}) =>
-																id ===
-																+updateRole.value
-														)
-													);
-												}
-											);
-										}}
-										setRoleSelectorFilled={
-											setRoleSelectorFilled
-										}
-									/>
-								))}
+										/>
+									)
+								)}
 							</ClayForm.Group>
 
 							{showEmptyEmailError && (
@@ -535,7 +572,7 @@ const InviteTeamMembersPage = ({
 							)}
 
 							<div className="ml-3 my-4">
-								{values?.invites?.length > 1 && (
+								{(values?.invites?.length || 0) > 1 && (
 									<Button
 										className="mr-3 py-2 text-brandy-secondary"
 										displayType="secondary"
@@ -543,10 +580,18 @@ const InviteTeamMembersPage = ({
 											const removedItem = pop();
 
 											if (
-												removedItem.role.name ===
-													ROLE_TYPES.admin.name ||
-												removedItem.role.name ===
-													ROLE_TYPES.requester.name
+												removedItem &&
+												(removedItem.role?.some(
+													(role: IAccountRole) =>
+														role.name ===
+														ROLE_TYPES.admin.name
+												) ||
+													removedItem.role?.some(
+														(role: IAccountRole) =>
+															role.name ===
+															ROLE_TYPES.requester
+																.name
+													))
 											) {
 												setAvailableAdminsRoles(
 													(previousAdmins) =>
@@ -557,11 +602,12 @@ const InviteTeamMembersPage = ({
 										prependIcon="hr"
 										small
 									>
+										{' '}
 										{i18n.translate('remove-this-member')}
 									</Button>
 								)}
 
-								{values?.invites?.length <
+								{(values?.invites?.length || 0) <
 									MAXIMUM_INVITES_COUNT && (
 									<Button
 										className="btn-outline-primary cp-btn-add-members py-2 rounded-xs"
@@ -574,9 +620,13 @@ const InviteTeamMembersPage = ({
 
 											if (!hasEmptyEmails) {
 												push(
-													getInitialInvite([
-														accountMemberRole,
-													])
+													getInitialInvite(
+														accountMemberRole
+															? [
+																	accountMemberRole,
+																]
+															: []
+													)
 												);
 											}
 										}}
@@ -602,10 +652,11 @@ const InviteTeamMembersPage = ({
 													)
 										}
 										  ${i18n.sub('available-x-of-x', [
-												availableAdminsRoles < 0
+												(availableAdminsRoles < 0
 													? 0
-													: availableAdminsRoles,
-												project.maxRequestors,
+													: availableAdminsRoles
+												).toString(),
+												project.maxRequestors.toString(),
 											])}`}
 									</h5>
 
@@ -613,11 +664,15 @@ const InviteTeamMembersPage = ({
 										{project.maxRequestors > 1
 											? i18n.sub(
 													'only-x-members-for-this-project-including-yourself-can-have-role-permissions-administrators-requesters-to-open-support-tickets',
-													[project.maxRequestors]
+													[
+														project.maxRequestors.toString(),
+													]
 												)
 											: i18n.sub(
 													'only-x-member-for-this-project-including-yourself-can-have-role-permissions-administrators-requesters-to-open-support-tickets',
-													[project.maxRequestors]
+													[
+														project.maxRequestors.toString(),
+													]
 												)}
 
 										<a
@@ -641,14 +696,15 @@ const InviteTeamMembersPage = ({
 	);
 };
 
-const InviteTeamMembersForm = (props) => {
+const InviteTeamMembersForm = (props: IInviteTeamMembersFormProps) => {
 	return (
 		<Formik
 			initialValues={{
 				invites: [...new Array(INITIAL_INVITES_COUNT)].map(() =>
-					getInitialInvite()
+					getInitialInvite([])
 				),
 			}}
+			onSubmit={() => {}}
 			validateOnChange
 		>
 			{(formikProps) => (

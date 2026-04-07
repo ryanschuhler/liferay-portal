@@ -8,11 +8,15 @@ import {getCloudSubscriptionLicenseKey} from '~/services/liferay/rest/raysource/
 import downloadFromBlob from '~/utils/downloadFromBlob';
 
 export async function downloadCloudSubscriptionLicense(
-	oAuthToken,
-	provisioningServerAPI,
-	subscriptionUuid,
-	projectName
-) {
+	oAuthToken: string | undefined,
+	provisioningServerAPI: string,
+	subscriptionUuid: string,
+	projectName: string
+): Promise<boolean> {
+	if (!oAuthToken) {
+		return false;
+	}
+
 	const license = await getCloudSubscriptionLicenseKey(
 		oAuthToken,
 		provisioningServerAPI,
@@ -20,7 +24,9 @@ export async function downloadCloudSubscriptionLicense(
 	);
 
 	if (license.status === STATUS_CODE.success) {
-		const {license: base64License} = await license.json();
+		const {license: base64License} = (await license.json()) as {
+			license: string;
+		};
 
 		const byteCharacters = atob(base64License);
 		const byteNumbers = new Array(byteCharacters.length);
@@ -41,4 +47,6 @@ export async function downloadCloudSubscriptionLicense(
 
 		return downloadFromBlob(licenseBlob, fileName);
 	}
+
+	return false;
 }

@@ -16,9 +16,9 @@ interface IProps extends React.ComponentPropsWithoutRef<typeof ClayInput> {
 	badgeClassName?: string;
 	disableError?: boolean;
 	groupStyle?: string;
-	helper?: any;
+	helper?: React.ReactNode;
 	label: string;
-	validations?: Function[];
+	validations?: ((value: string) => string | undefined)[];
 }
 
 const Input = ({

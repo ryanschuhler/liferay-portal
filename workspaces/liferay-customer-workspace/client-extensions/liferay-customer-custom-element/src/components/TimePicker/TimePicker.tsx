@@ -33,7 +33,7 @@ interface IProps {
 	required?: boolean;
 	showPopover?: boolean;
 	text?: string;
-	validations?: ((value: any) => string | undefined)[];
+	validations?: ((value: TimeInput) => string | undefined)[];
 }
 
 const TimePicker: React.FC<IProps> = ({

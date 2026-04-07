@@ -11,30 +11,67 @@ import {useLocation, useOutletContext} from 'react-router-dom';
 import ActionTable from '~/components/ActionTable';
 import RoundedGroupButtons from '~/components/RoundedGroupButtons';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import {ALERT_DOWNLOAD_TYPE} from '~/features/project/utils/constants/alertDownloadType';
+import {ALERT_DOWNLOAD_TYPE} from '~/features/project/utils/constants';
+import {Liferay} from '~/services/liferay';
 import i18n from '~/utils/I18n';
+import {IActivationKey, IProject} from '~/utils/types';
 
 import {getLicenseKeyPermanentStatus} from '../GenerateNewKey/utils/licenseKeyPermanentStatus';
 import DownloadAlert from './components/DownloadAlert';
-import ActivationKeysTableHeader from './components/Header';
+import ActivationKeysTableHeader from './components/Header/ActivationKeysTableHeader';
 import useFilters from './components/Header/hooks/useFilters';
-import ModalKeyDetails from './components/ModalKeyDetails';
+import ModalKeyDetails from './components/ModalKeyDetails/ModalKeyDetails';
 import useGetActivationKeysData from './hooks/useGetActivationKeysData';
 import usePagination from './hooks/usePagination';
 import useStatusCountNavigation from './hooks/useStatusCountNavigation';
-import {ACTIVATE_COLUMNS} from './utils/constants';
 import {ALERT_ACTIVATION_AGGREGATED_KEYS_DOWNLOAD_TEXT} from './utils/constants/alertAggregateKeysDownloadText';
-import {
-	EnvironmentTypeColumn,
-	ExpirationDateColumn,
-	KeyTypeColumn,
-	StatusColumn,
-} from './utils/constants/columns-definitions';
-import {downloadActivationLicenseKey} from './utils/downloadActivationLicenseKey';
+import {ACTIVATE_COLUMNS} from './utils/constants/columns';
+import {EnvironmentTypeColumn} from './utils/constants/columns-definitions/EnvironmentTypeColumn';
+import {ExpirationDateColumn} from './utils/constants/columns-definitions/ExpirationDateColumn';
+import {KeyTypeColumn} from './utils/constants/columns-definitions/KeyTypeColumn';
+import {StatusColumn} from './utils/constants/columns-definitions/StatusColumn';
 import {getActivationKeyDownload} from './utils/getActivationKeyDownload';
 import {getTooltipContentRenderer} from './utils/getTooltipContentRenderer';
 
-import './ActivationKeysTable.css';
+import type {DownloadStatusType} from './components/DownloadAlert';
+import type {ActivationKeysLicenseFilterType} from './hooks/usePagination';
+
+interface IPaginationConfig {
+	activePage: number;
+	currentPage: number;
+	itemsPerPage: number;
+	labels: {
+		paginationResults: string;
+		perPageItems: string;
+		selectPerPageItems: string;
+	};
+	listItemsPerPage: {label: number}[];
+	onItemsPerPageChange: (itemsPerPage: number) => void;
+	onPageChange: (page: number) => void;
+	setActivePage: React.Dispatch<React.SetStateAction<number>>;
+	setItemsPerPage: React.Dispatch<React.SetStateAction<number>>;
+	showDeltasDropDown: boolean;
+	totalCount: number;
+	totalPages: number;
+}
+
+interface IProps {
+	hasComplimentaryKey: boolean;
+	initialFilter: string;
+	isRenewTable?: boolean;
+	oAuthToken: string;
+	productName: string;
+	project: IProject;
+	setActivationKeysChecked?: React.Dispatch<
+		React.SetStateAction<IActivationKey[]>
+	>;
+	setKeysSelectedCount?: React.Dispatch<React.SetStateAction<number>>;
+	setRenewKeysFilterChecked?: React.Dispatch<React.SetStateAction<string>>;
+}
+
+interface IOutletContext {
+	setHasSideMenu: (hasSideMenu: boolean) => void;
+}
 
 const messageNewKeyGeneratedAlert = i18n.translate(
 	'activation-key-was-generated-successfully'
@@ -47,23 +84,24 @@ const messageDeactivateKey = i18n.translate(
 const ActivationKeysTable = ({
 	hasComplimentaryKey,
 	initialFilter,
-	isRenewTable,
+	isRenewTable = false,
 	oAuthToken,
 	productName,
 	project,
-	setActivationKeysChecked,
-	setKeysSelectedCount,
-	setRenewKeysFilterChecked,
-}) => {
+	setActivationKeysChecked = () => {},
+	setKeysSelectedCount = () => {},
+	setRenewKeysFilterChecked = () => {},
+}: IProps) => {
 	const {provisioningServerAPI} = useAppPropertiesContext();
-	const [isVisibleModal, setIsVisibleModal] = useState(false);
-	const [downloadStatus, setDownloadStatus] = useState('');
+	const [isVisibleModal, setIsVisibleModal] = useState<boolean>(false);
+	const [downloadStatus, setDownloadStatus] =
+		useState<DownloadStatusType>('');
 	const [
 		activationKeysFilteredByRenewable,
 		setActivationKeysFilteredByRenewable,
-	] = useState([]);
+	] = useState<IActivationKey[]>([]);
 	const {state} = useLocation();
-	const {setHasSideMenu} = useOutletContext();
+	const {setHasSideMenu} = useOutletContext<IOutletContext>();
 
 	const messageNewKeyGeneratedAlertForComplimentary = i18n.translate(
 		state?.isMultipleKeys
@@ -76,11 +114,14 @@ const ActivationKeysTable = ({
 	}, [setHasSideMenu]);
 
 	const [newKeyGeneratedAlertStatus, setNewKeyGeneratedAlertStatus] =
-		useState(state?.newKeyGeneratedAlert ? 'success' : '');
+		useState<DownloadStatusType>(
+			state?.newKeyGeneratedAlert ? 'success' : ''
+		);
 
-	const [deactivatedKeyAlertStatus, setDeactivatedKeyAlertStatus] = useState(
-		state?.deactivateKeyAlert ? 'success' : ''
-	);
+	const [deactivatedKeyAlertStatus, setDeactivatedKeyAlertStatus] =
+		useState<DownloadStatusType>(
+			state?.deactivateKeyAlert ? 'success' : ''
+		);
 
 	const {
 		activationKeysState: [activationKeys, setActivationKeys],
@@ -90,48 +131,63 @@ const ActivationKeysTable = ({
 
 	useEffect(() => {
 		if (activationKeys) {
-			const filteredKeys = activationKeys.filter((activationKey) => {
-				const isPermanentLicenseKey = getLicenseKeyPermanentStatus(
-					activationKey?.startDate,
-					activationKey?.expirationDate
-				);
+			const filteredKeys = activationKeys.filter(
+				(activationKey: IActivationKey) => {
+					const isPermanentLicenseKey = getLicenseKeyPermanentStatus(
+						activationKey?.startDate,
+						activationKey?.expirationDate
+					);
 
-				return !isPermanentLicenseKey;
-			});
+					return !isPermanentLicenseKey;
+				}
+			);
 			setActivationKeysFilteredByRenewable(filteredKeys);
 		}
 	}, [activationKeys]);
 
 	const {
 		navigationGroupButtons,
-		statusfilterByTitle: [statusFilter, setStatusFilter],
+		statusfilterByTitle: [statusFilterValue, setStatusFilter],
 	} = useStatusCountNavigation(activationKeys);
 
-	const [allActivationKeys, setAllActivationKeys] = useState([]);
-	const [hasRenewalSubscription, setHasRenewalSubscription] = useState('');
+	const [allActivationKeys, setAllActivationKeys] = useState<
+		IActivationKey[]
+	>([]);
+	const [hasRenewalSubscription, setHasRenewalSubscription] =
+		useState<boolean>(false);
 	const [filters, setFilters] = useFilters(
 		setFilterTerm,
 		productName,
 		initialFilter
 	);
 
-	const {activationKeysByStatusPaginated, paginationConfig} = usePagination(
+	const {
+		activationKeysByStatusPaginated,
+		paginationConfig: rawPaginationConfig,
+	} = usePagination(
 		isRenewTable ? activationKeysFilteredByRenewable : activationKeys,
-		statusFilter,
+		statusFilterValue as ActivationKeysLicenseFilterType,
 		setAllActivationKeys
 	);
 
-	const [currentActivationKey, setCurrentActivationKey] = useState();
-	const [activationKeysIdChecked, setActivationKeysIdChecked] = useState([]);
+	const paginationConfig: IPaginationConfig = rawPaginationConfig;
+
+	const [currentActivationKey, setCurrentActivationKey] = useState<
+		IActivationKey | undefined
+	>(undefined);
+	const [activationKeysIdChecked, setActivationKeysIdChecked] = useState<
+		(string | number)[]
+	>([]);
 
 	const {observer, onClose} = useModal({
 		onClose: () => setIsVisibleModal(false),
 	});
 
-	const activationKeysByStatusPaginatedChecked = useMemo(
+	const activationKeysByStatusPaginatedChecked: IActivationKey[] = useMemo(
 		() =>
-			activationKeys.filter(({id}) =>
-				activationKeysIdChecked.includes(id)
+			activationKeys.filter(
+				(key: IActivationKey) =>
+					key && activationKeysIdChecked.includes(key.id)
 			) || [],
 		[activationKeys, activationKeysIdChecked]
 	);
@@ -158,7 +214,7 @@ const ActivationKeysTable = ({
 
 	useEffect(() => {
 		const hasRenewSubscription = allActivationKeys.some(
-			(item) =>
+			(item: IActivationKey) =>
 				!getLicenseKeyPermanentStatus(
 					item?.startDate,
 					item?.expirationDate
@@ -168,16 +224,19 @@ const ActivationKeysTable = ({
 		setHasRenewalSubscription(hasRenewSubscription);
 	}, [allActivationKeys]);
 
-	const handleAlertStatus = useCallback((hasSuccessfullyDownloadedKeys) => {
-		setDownloadStatus(
-			hasSuccessfullyDownloadedKeys
-				? ALERT_DOWNLOAD_TYPE.success
-				: ALERT_DOWNLOAD_TYPE.danger
-		);
-	}, []);
+	const handleAlertStatus = useCallback(
+		(hasSuccessfullyDownloadedKeys: boolean) => {
+			setDownloadStatus(
+				hasSuccessfullyDownloadedKeys
+					? (ALERT_DOWNLOAD_TYPE.success as DownloadStatusType)
+					: (ALERT_DOWNLOAD_TYPE.danger as DownloadStatusType)
+			);
+		},
+		[]
+	);
 
 	const getActivationKeysRows = useCallback(
-		(activationKey) => ({
+		(activationKey: IActivationKey) => ({
 			customClickOnRow: () => {
 				setCurrentActivationKey(activationKey);
 				setIsVisibleModal(true);
@@ -197,12 +256,14 @@ const ActivationKeysTable = ({
 						)
 					}
 					small
-					spritemap={Liferay.Icons.spritemap}
+					spritemap={(Liferay as any).Icons.spritemap}
 					symbol="download"
 				/>
 			),
 			envName: (
-				<div title={[activationKey.name, activationKey.description]}>
+				<div
+					title={`${activationKey.name}, ${activationKey.description}`}
+				>
 					<p className="font-weight-bold m-0 text-neutral-10 text-truncate">
 						{activationKey.name}
 					</p>
@@ -225,39 +286,37 @@ const ActivationKeysTable = ({
 
 	return (
 		<>
-			{isVisibleModal && (
+			{isVisibleModal && currentActivationKey && (
 				<ModalKeyDetails
 					currentActivationKey={currentActivationKey}
-					downloadActivationLicenseKey={downloadActivationLicenseKey}
-					isVisibleModal={isVisibleModal}
 					oAuthToken={oAuthToken}
 					observer={observer}
 					onClose={onClose}
 					productName={productName}
 					project={project}
+					provisioningServerAPI={provisioningServerAPI}
 				/>
 			)}
 			<ClayTooltipProvider
-				contentRenderer={({title}) => getTooltipContentRenderer(title)}
+				contentRenderer={({title}: {title: string}) =>
+					getTooltipContentRenderer(title)
+				}
 				delay={100}
 			>
 				<div>
 					<div className="align-center cp-activation-key-container d-flex justify-content-between mb-2">
 						<h3 className="m-0">
 							{isRenewTable
-								? i18n.sub(
-										'renew-x-activation-key',
-										productName
-									)
+								? i18n.sub('renew-x-activation-key', [
+										productName,
+									])
 								: i18n.translate('activation-keys')}
 						</h3>
 
 						{!isRenewTable && (
-							<RoundedGroupButtons
+							<RoundedGroupButtons<ActivationKeysLicenseFilterType>
 								groupButtons={navigationGroupButtons}
-								handleOnChange={(value) =>
-									setStatusFilter(value)
-								}
+								handleOnChange={setStatusFilter}
 							/>
 						)}
 					</div>
@@ -279,7 +338,9 @@ const ActivationKeysTable = ({
 								isRenewTable
 									? activationKeysFilteredByRenewable
 									: activationKeys,
-								setActivationKeys,
+								setActivationKeys as React.Dispatch<
+									React.SetStateAction<IActivationKey[]>
+								>,
 							]}
 							filterState={[filters, setFilters]}
 							hasRenewalSubscription={hasRenewalSubscription}
@@ -287,7 +348,7 @@ const ActivationKeysTable = ({
 							loading={loading}
 							oAuthToken={oAuthToken}
 							productName={productName}
-							project={project}
+							project={project as IProject}
 							setRenewKeysFilterChecked={
 								setRenewKeysFilterChecked
 							}
@@ -303,12 +364,13 @@ const ActivationKeysTable = ({
 							}}
 							className="border-0 cp-activation-key-table"
 							columns={ACTIVATE_COLUMNS}
+							handleSortChange={() => {}}
 							hasCheckbox
 							hasPagination
 							isLoading={loading}
 							paginationConfig={paginationConfig}
 							rows={activationKeysByStatusPaginated.map(
-								(activationKey) =>
+								(activationKey: IActivationKey) =>
 									getActivationKeysRows(activationKey)
 							)}
 						/>

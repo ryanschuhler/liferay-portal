@@ -4,7 +4,7 @@
  */
 
 export default function useDownload() {
-	const onDownload = (downloadUrl) => {
+	const onDownload = (downloadUrl: string) => {
 		if (downloadUrl) {
 			window.open(downloadUrl, '_blank');
 		}

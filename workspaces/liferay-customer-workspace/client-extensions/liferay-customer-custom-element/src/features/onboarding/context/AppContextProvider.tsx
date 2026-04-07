@@ -18,7 +18,12 @@ import {
 import {ROLE_TYPES, ROUTE_TYPES} from '~/utils/constants';
 import {getAccountKey} from '~/utils/getAccountKey';
 import {isValidPage} from '~/utils/page.validation';
-import {IAccountBrief, IOrganizationBrief, IProject} from '~/utils/types';
+import {
+	IAccountBrief,
+	IOrganizationBrief,
+	IProject,
+	IUserAccount,
+} from '~/utils/types';
 
 import {ONBOARDING_STEP_TYPES} from '../utils/constants';
 import reducer, {
@@ -100,20 +105,18 @@ const AppContextProvider = ({children}: {children: React.ReactNode}) => {
 						organization.name === 'Liferay Staff'
 				);
 
-				const userAccount = {
+				const userAccount: IUserAccount = {
 					...data.userAccount,
 					isAccountAdmin: isAccountAdministrator,
 					isOmniAdmin,
 					isProvisioning: isAccountProvisioning,
-					isStaff,
+					isStaff: isStaff ?? false,
 				};
 
-				const action: IOnboardingAction = {
+				dispatch({
 					payload: userAccount,
-					type: actionTypes.UPDATE_USER_ACCOUNT as keyof typeof actionTypes,
-				};
-
-				dispatch(action);
+					type: actionTypes.UPDATE_USER_ACCOUNT,
+				});
 
 				return userAccount;
 			}
@@ -133,16 +136,14 @@ const AppContextProvider = ({children}: {children: React.ReactNode}) => {
 			if (projects) {
 				const project = {
 					...projects.c?.koroneikiAccounts?.items[0],
-					id: accountBrief.id,
+					id: accountBrief.id.toString(),
 					name: accountBrief.name,
 				} as IProject;
 
-				const action: IOnboardingAction = {
+				dispatch({
 					payload: project,
-					type: actionTypes.UPDATE_PROJECT as keyof typeof actionTypes,
-				};
-
-				dispatch(action);
+					type: actionTypes.UPDATE_PROJECT,
+				});
 
 				return project;
 			}
@@ -159,13 +160,12 @@ const AppContextProvider = ({children}: {children: React.ReactNode}) => {
 			});
 
 			if (data) {
-				const items = data.c?.accountSubscriptionGroups?.items;
-				const action: IOnboardingAction = {
-					payload: items,
-					type: actionTypes.UPDATE_SUBSCRIPTION_GROUPS as keyof typeof actionTypes,
-				};
+				const items = data.c?.accountSubscriptionGroups?.items ?? [];
 
-				dispatch(action);
+				dispatch({
+					payload: items,
+					type: actionTypes.UPDATE_SUBSCRIPTION_GROUPS,
+				});
 			}
 		};
 
@@ -183,12 +183,10 @@ const AppContextProvider = ({children}: {children: React.ReactNode}) => {
 					data.c?.dXPCloudEnvironments?.items?.length
 				);
 
-				const action: IOnboardingAction = {
+				dispatch({
 					payload: status,
-					type: actionTypes.UPDATE_DXP_CLOUD_ACTIVATION_SUBMITTED_STATUS as keyof typeof actionTypes,
-				};
-
-				dispatch(action);
+					type: actionTypes.UPDATE_DXP_CLOUD_ACTIVATION_SUBMITTED_STATUS,
+				});
 			}
 		};
 
@@ -208,12 +206,10 @@ const AppContextProvider = ({children}: {children: React.ReactNode}) => {
 					data.c?.analyticsCloudWorkspaces?.items?.length
 				);
 
-				const action: IOnboardingAction = {
+				dispatch({
 					payload: status,
-					type: actionTypes.UPDATE_ANALYTICS_CLOUD_ACTIVATION_SUBMITTED_STATUS as keyof typeof actionTypes,
-				};
-
-				dispatch(action);
+					type: actionTypes.UPDATE_ANALYTICS_CLOUD_ACTIVATION_SUBMITTED_STATUS,
+				});
 			}
 		};
 
@@ -232,12 +228,10 @@ const AppContextProvider = ({children}: {children: React.ReactNode}) => {
 					data.c?.liferayExperienceCloudEnvironments?.items?.length
 				);
 
-				const action: IOnboardingAction = {
+				dispatch({
 					payload: status,
-					type: actionTypes.UPDATE_LIFERAY_EXPERIENCE_CLOUD_ACTIVATION_SUBMITTED_STATUS as keyof typeof actionTypes,
-				};
-
-				dispatch(action);
+					type: actionTypes.UPDATE_LIFERAY_EXPERIENCE_CLOUD_ACTIVATION_SUBMITTED_STATUS,
+				});
 			}
 		};
 

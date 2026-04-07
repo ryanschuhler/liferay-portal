@@ -32,7 +32,7 @@ interface IProps {
 	onChange?: (date: string) => void;
 	placeholder?: string;
 	required?: boolean;
-	validations?: ((value: any) => string | undefined)[];
+	validations?: ((value: string) => string | undefined)[];
 	years?: IYears;
 	yearsCheck?: boolean;
 }

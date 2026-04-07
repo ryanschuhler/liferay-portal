@@ -4,20 +4,21 @@
  */
 
 import {useGetAccountRolesByAccountExternalReferenceCode} from '~/services/liferay/graphql/account-roles';
+import {IKoroneikiAccount} from '~/utils/types';
 
 export default function useAccountRolesByAccountExternalReferenceCode(
-	koroneikiAccount,
-	loading,
-	skip
+	koroneikiAccount: IKoroneikiAccount | undefined,
+	loading: boolean,
+	skip: boolean
 ) {
-	const getFilter = () => {
+	const getFilter = (): string => {
 		const filters = ["name ne 'Provisioning'"];
 
-		if (!koroneikiAccount?.hasPrioritySLA) {
+		if (koroneikiAccount?.slaCurrent === undefined) {
 			filters.push(`name ne 'Requester'`);
 		}
 
-		if (!koroneikiAccount?.partner) {
+		if (koroneikiAccount?.partnershipCurrent === undefined) {
 			filters.push(`not (contains(name , 'Partner'))`);
 		}
 
@@ -25,9 +26,10 @@ export default function useAccountRolesByAccountExternalReferenceCode(
 	};
 
 	return useGetAccountRolesByAccountExternalReferenceCode(
-		koroneikiAccount?.accountKey,
+		koroneikiAccount?.accountKey || '',
 		{
 			filter: getFilter(),
+			notifyOnNetworkStatusChange: false,
 			skip: loading || skip,
 		}
 	);

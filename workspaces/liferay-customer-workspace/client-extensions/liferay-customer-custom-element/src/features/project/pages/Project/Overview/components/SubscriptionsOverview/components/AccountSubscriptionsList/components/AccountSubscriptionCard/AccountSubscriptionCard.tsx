@@ -5,7 +5,7 @@
 
 import ClayCard from '@clayui/card';
 import classNames from 'classnames';
-import {memo, useMemo} from 'react';
+import {FunctionComponent, SVGProps, memo, useMemo} from 'react';
 import {Skeleton, StatusTag} from '~/components';
 import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
 import PopoverIconButton from '~/features/project/components/PopoverIconButton';
@@ -21,10 +21,21 @@ import {
 	SUBSCRIPTION_TYPES,
 } from '~/utils/constants/subscriptionCardsCount';
 import getDateCustomFormat from '~/utils/getDateCustomFormat';
+import {
+	IAccountSubscription,
+	IAccountSubscriptionGroup,
+	ICommerceOrderItem,
+} from '~/utils/types';
 
 import useOrderItems from '../AccountSubscriptionModal/hooks/useOrderItems';
 
-import './AccountSubscriptionCard.css';
+interface IProps extends IAccountSubscription {
+	IsPortalOrDXP: boolean;
+	loading: boolean;
+	logoPath: FunctionComponent<SVGProps<SVGSVGElement>>;
+	onClick: () => void;
+	selectedAccountSubscriptionGroup: IAccountSubscriptionGroup;
+}
 
 const AccountSubscriptionCard = ({
 	IsPortalOrDXP,
@@ -33,12 +44,12 @@ const AccountSubscriptionCard = ({
 	onClick,
 	selectedAccountSubscriptionGroup,
 	...accountSubscription
-}) => {
+}: IProps) => {
 	const {theOverviewPageURL} = useAppPropertiesContext();
 
 	const {data: accountSubscriptionUsageData} = useGetAccountSubscriptionUsage(
-		accountSubscription?.accountKey,
-		accountSubscription?.productKey,
+		accountSubscription.accountKey,
+		accountSubscription.productKey,
 		IsPortalOrDXP
 	);
 
@@ -53,14 +64,12 @@ const AccountSubscriptionCard = ({
 
 	const now = new Date();
 
-	const {
-		data
-	} = useOrderItems(accountSubscription.externalReferenceCode, 1000);
+	const {data} = useOrderItems(accountSubscription.externalReferenceCode);
 
-	data?.orderItems?.items?.map((item) => {
+	data?.orderItems?.items?.map((item: ICommerceOrderItem) => {
 		if (
-			now > new Date(item.options?.startDate) &&
-			now < new Date(item.options?.endDate)
+			now > new Date(item.options.startDate) &&
+			now < new Date(item.options.endDate)
 		) {
 			quantity += item.quantity;
 		}
@@ -86,14 +95,16 @@ const AccountSubscriptionCard = ({
 		),
 	};
 
-	const displayQuantityOnCard = (subscriptionType, productName) => {
+	const displayQuantityOnCard = (
+		subscriptionType: string,
+		productName: string
+	) => {
 		const isPurchasedAndProvisioned =
 			SUBSCRIPTION_TYPES.PurchasedAndProvisioned.includes(
 				subscriptionType
 			);
 		const isPurchased =
 			SUBSCRIPTION_TYPES.Purchased.includes(subscriptionType);
-
 		if (isPurchasedAndProvisioned) {
 			if (PRODUCT_DISPLAY_EXCEPTION.blankProducts.includes(productName)) {
 				return DisplayOnCard.Blank;
@@ -127,20 +138,23 @@ const AccountSubscriptionCard = ({
 	};
 
 	const keysProvisionedContent = displayQuantityOnCard(
-		selectedAccountSubscriptionGroup?.name,
-		accountSubscription?.name
+		selectedAccountSubscriptionGroup?.name || '',
+		accountSubscription?.name || ''
 	);
 
 	const DisplayOnCardInstanceSize = {
 		Blank: null,
-		PurchasedAndProvisioned: accountSubscription.instanceSize > 0 && (
+		PurchasedAndProvisioned: !!accountSubscription.instanceSize && (
 			<span className="align-items-center d-flex justify-content-start m-0">
 				{accountSubscription.instanceSize}
 			</span>
 		),
 	};
 
-	const displayInstanceSizeOnCard = (subscriptionType, productName) => {
+	const displayInstanceSizeOnCard = (
+		subscriptionType: string,
+		productName: string
+	) => {
 		const isPurchasedAndProvisioned =
 			SUBSCRIPTION_TYPES.PurchasedAndProvisioned.includes(
 				subscriptionType
@@ -153,15 +167,17 @@ const AccountSubscriptionCard = ({
 				? DisplayOnCardInstanceSize.Blank
 				: DisplayOnCardInstanceSize.PurchasedAndProvisioned;
 		}
+
+		return null;
 	};
 
 	const keysProvisionedContentInstanceSize = displayInstanceSizeOnCard(
-		selectedAccountSubscriptionGroup?.name,
-		accountSubscription?.name
+		selectedAccountSubscriptionGroup?.name || '',
+		accountSubscription?.name || ''
 	);
 
 	const isPurchased = SUBSCRIPTION_TYPES.Purchased.includes(
-		selectedAccountSubscriptionGroup?.name
+		selectedAccountSubscriptionGroup?.name || ''
 	);
 
 	const accountSubscriptionGroupName =

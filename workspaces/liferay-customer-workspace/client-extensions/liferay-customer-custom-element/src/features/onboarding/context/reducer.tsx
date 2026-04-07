@@ -16,20 +16,28 @@ export const actionTypes = {
 	UPDATE_PROJECT: 'UPDATE_PROJECT',
 	UPDATE_SUBSCRIPTION_GROUPS: 'UPDATE_SUBSCRIPTION_GROUPS',
 	UPDATE_USER_ACCOUNT: 'UPDATE_USER_ACCOUNT',
-};
+} as const;
 
-export type ActionPayload =
-	| string
-	| IProject
-	| IUserAccount
-	| IAccountSubscriptionGroup[]
-	| boolean
-	| undefined;
-
-export interface IOnboardingAction {
-	payload: ActionPayload;
-	type: keyof typeof actionTypes;
-}
+export type IOnboardingAction =
+	| {payload: number; type: typeof actionTypes.CHANGE_STEP}
+	| {
+			payload: boolean;
+			type: typeof actionTypes.UPDATE_ANALYTICS_CLOUD_ACTIVATION_SUBMITTED_STATUS;
+	  }
+	| {
+			payload: boolean;
+			type: typeof actionTypes.UPDATE_DXP_CLOUD_ACTIVATION_SUBMITTED_STATUS;
+	  }
+	| {
+			payload: boolean;
+			type: typeof actionTypes.UPDATE_LIFERAY_EXPERIENCE_CLOUD_ACTIVATION_SUBMITTED_STATUS;
+	  }
+	| {payload: IProject; type: typeof actionTypes.UPDATE_PROJECT}
+	| {
+			payload: IAccountSubscriptionGroup[];
+			type: typeof actionTypes.UPDATE_SUBSCRIPTION_GROUPS;
+	  }
+	| {payload: IUserAccount; type: typeof actionTypes.UPDATE_USER_ACCOUNT};
 
 export interface IOnboardingState {
 	analyticsCloudActivationSubmittedStatus: boolean | undefined;
@@ -47,33 +55,30 @@ const reducer = (
 ): IOnboardingState => {
 	switch (action.type) {
 		case actionTypes.CHANGE_STEP:
-			return {...state, step: action.payload as unknown as number};
+			return {...state, step: action.payload};
 		case actionTypes.UPDATE_PROJECT:
-			return {...state, project: action.payload as IProject};
+			return {...state, project: action.payload};
 		case actionTypes.UPDATE_USER_ACCOUNT:
-			return {...state, userAccount: action.payload as IUserAccount};
+			return {...state, userAccount: action.payload};
 		case actionTypes.UPDATE_SUBSCRIPTION_GROUPS:
 			return {
 				...state,
-				subscriptionGroups:
-					action.payload as IAccountSubscriptionGroup[],
+				subscriptionGroups: action.payload,
 			};
 		case actionTypes.UPDATE_DXP_CLOUD_ACTIVATION_SUBMITTED_STATUS:
 			return {
 				...state,
-				dxpCloudActivationSubmittedStatus: action.payload as boolean,
+				dxpCloudActivationSubmittedStatus: action.payload,
 			};
 		case actionTypes.UPDATE_LIFERAY_EXPERIENCE_CLOUD_ACTIVATION_SUBMITTED_STATUS:
 			return {
 				...state,
-				liferayExperienceCloudActivationSubmittedStatus:
-					action.payload as boolean,
+				liferayExperienceCloudActivationSubmittedStatus: action.payload,
 			};
 		case actionTypes.UPDATE_ANALYTICS_CLOUD_ACTIVATION_SUBMITTED_STATUS:
 			return {
 				...state,
-				analyticsCloudActivationSubmittedStatus:
-					action.payload as boolean,
+				analyticsCloudActivationSubmittedStatus: action.payload,
 			};
 		default:
 			return state;

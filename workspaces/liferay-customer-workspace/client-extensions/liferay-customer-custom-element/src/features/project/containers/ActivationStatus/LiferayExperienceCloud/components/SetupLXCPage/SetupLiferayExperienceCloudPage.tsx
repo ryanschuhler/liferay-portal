@@ -4,25 +4,45 @@
  */
 
 import ClayForm from '@clayui/form';
-import {FieldArray} from 'formik';
+import {FieldArray, FormikErrors, FormikTouched} from 'formik';
 import {useEffect, useState} from 'react';
-import {HIGH_PRIORITY_CONTACT_CATEGORIES} from '~/features/project/utils/getHighPriorityContacts';
-import i18n from '~/utils/I18n';
-import {
-	Button,
-	Input,
-	Select,
-} from '~/components';
-import SetupHighPriorityContactForm from '~/features/project/containers/HighPriorityContacts/SetupHighPriorityContact';
+import {Button, Input, Select} from '~/components';
 import Layout from '~/components/FormLayout';
+import SetupHighPriorityContactForm from '~/features/project/containers/HighPriorityContacts/SetupHighPriorityContact';
+import {HIGH_PRIORITY_CONTACT_CATEGORIES} from '~/features/project/utils/getHighPriorityContacts';
 import useBannedDomains from '~/hooks/useBannedDomains';
+import i18n from '~/utils/I18n';
+import {IContact, ILXCAdmin, ILXCValues, IProject} from '~/utils/types';
 import {isValidEmail} from '~/utils/validations.form';
-import getInitialLxcAdmins from '../../utils/getInitialLxcAdmins';
-import AdminInputs from '../AdminsInput';
+
 import useGetPrimaryRegionList from '../../hooks/useGetPrimaryRegionList';
 import useSubmitLXCEnvironment from '../../hooks/useSubmitLXCEnvironment';
+import getInitialLxcAdmins from '../../utils/getInitialLxcAdmins';
+import AdminInput from '../AdminInput';
 
 const INITIAL_SETUP_ADMIN_COUNT = 1;
+
+interface IInitialValues {
+	lxc: ILXCValues;
+}
+
+interface IProps {
+	errors: FormikErrors<IInitialValues>;
+	handleChangeForm: (isSuccess: boolean) => void;
+	handleOnLeftButtonClick: () => void;
+	leftButton: string;
+	project: IProject;
+	setFieldValue: (
+		field: string,
+		value: unknown,
+		shouldValidate?: boolean
+	) => Promise<void> | Promise<FormikErrors<IInitialValues>>;
+	setFormAlreadySubmitted: (value: boolean) => void;
+	subscriptionGroupLxcId: string;
+	touched: FormikTouched<IInitialValues>;
+	values: IInitialValues;
+}
+
 const SetupLiferayExperienceCloudPage = ({
 	errors,
 	handleChangeForm,
@@ -34,17 +54,27 @@ const SetupLiferayExperienceCloudPage = ({
 	subscriptionGroupLxcId,
 	touched,
 	values,
-}) => {
-	const [isLoadingSubmitButton, setIsLoadingSubmitButton] = useState(false);
-	const [baseButtonDisabled, setBaseButtonDisabled] = useState(true);
-	const [inputErrors, setInputErrors] = useState({});
-	const [step, setStep] = useState(1);
-	const [addHighPriorityContact, setAddHighPriorityContact] = useState({
+}: IProps) => {
+	const [isLoadingSubmitButton, setIsLoadingSubmitButton] =
+		useState<boolean>(false);
+	const [baseButtonDisabled, setBaseButtonDisabled] = useState<boolean>(true);
+	const [inputErrors, setInputErrors] = useState<Record<string, boolean>>({});
+	const [step, setStep] = useState<number>(1);
+	const [addHighPriorityContact, setAddHighPriorityContact] = useState<{
+		criticalIncident: IContact[];
+		privacyBreach: IContact[];
+		securityBreach: IContact[];
+	}>({
 		criticalIncident: [],
 		privacyBreach: [],
 		securityBreach: [],
 	});
-	const [removeHighPriorityContact, setRemoveHighPriorityContact] = useState({
+
+	const [removeHighPriorityContact, setRemoveHighPriorityContact] = useState<{
+		criticalIncident: IContact[];
+		privacyBreach: IContact[];
+		securityBreach: IContact[];
+	}>({
 		criticalIncident: [],
 		privacyBreach: [],
 		securityBreach: [],
@@ -59,23 +89,29 @@ const SetupLiferayExperienceCloudPage = ({
 	};
 
 	const bannedDomains = useBannedDomains(
-		values?.lxc?.incidentManagementEmail,
-		500
+		values?.lxc?.incidentManagementEmail
 	);
+
 	const handleButtonClick = () => {
-		// eslint-disable-next-line no-unused-expressions
 		step === 1 ? handleOnLeftButtonClick() : handlePreviousStep();
 	};
 
 	const handleHighPriorityContacts = (
-		contactList,
-		highPriorityCategory,
-		handleSetState
+		contactList: IContact[],
+		highPriorityCategory: keyof typeof addHighPriorityContact,
+		handleSetState: React.Dispatch<
+			React.SetStateAction<typeof addHighPriorityContact>
+		>
 	) => {
 		handleSetState((previousContacts) => {
 			const updatedContacts = {...previousContacts};
 
-			if (!updatedContacts.hasOwnProperty(highPriorityCategory)) {
+			if (
+				!Object.prototype.hasOwnProperty.call(
+					updatedContacts,
+					highPriorityCategory
+				)
+			) {
 				updatedContacts[highPriorityCategory] = [];
 			}
 
@@ -119,12 +155,12 @@ const SetupLiferayExperienceCloudPage = ({
 
 	useEffect(() => {
 		const hasTouched = !Object.keys(touched).length;
-		const hasError = Object.keys(errors).length;
+		const hasError = !!Object.keys(errors).length;
 
 		setBaseButtonDisabled(hasTouched || hasError);
 	}, [touched, errors]);
 
-	const handleLoadingSubmitButton = (state) => {
+	const handleLoadingSubmitButton = (state: boolean) => {
 		return setIsLoadingSubmitButton(state);
 	};
 
@@ -147,10 +183,13 @@ const SetupLiferayExperienceCloudPage = ({
 		values
 	);
 
-	const updateMultiSelectEmpty = (error, inputName) => {
+	const updateMultiSelectEmpty = (
+		error: string | undefined,
+		inputName: string
+	) => {
 		setInputErrors((prevErrors) => ({
 			...prevErrors,
-			[inputName]: error,
+			[inputName]: !!error,
 		}));
 	};
 
@@ -232,7 +271,7 @@ const SetupLiferayExperienceCloudPage = ({
 
 									<Select
 										groupStyle="mb-0"
-										key={primaryRegionList}
+										key={primaryRegionList.length}
 										label={i18n.translate('primary-region')}
 										name="lxc.primaryRegion"
 										options={primaryRegionList}
@@ -241,13 +280,15 @@ const SetupLiferayExperienceCloudPage = ({
 								</ClayForm.Group>
 
 								<ClayForm.Group className="mb-0">
-									{values.lxc.admins.map((admin, index) => (
-										<AdminInputs
-											admin={admin}
-											id={index}
-											key={index}
-										/>
-									))}
+									{values.lxc.admins.map(
+										(admin: ILXCAdmin, index: number) => (
+											<AdminInput
+												admin={admin}
+												id={index}
+												key={index}
+											/>
+										)
+									)}
 								</ClayForm.Group>
 							</ClayForm.Group>
 
@@ -270,9 +311,7 @@ const SetupLiferayExperienceCloudPage = ({
 							<Button
 								className="cp-btn-add-dxp-cloud ml-3 my-2 rounded-xs"
 								onClick={() => {
-									push(
-										getInitialLxcAdmins(values?.lxc?.admins)
-									);
+									push(getInitialLxcAdmins());
 									setBaseButtonDisabled(true);
 								}}
 								prependIcon="plus"
@@ -286,13 +325,15 @@ const SetupLiferayExperienceCloudPage = ({
 							<ClayForm.Group className="mb-0 pb-1">
 								<Input
 									groupStyle="pb-1"
-									label={i18n.translate('analytics-cloud-owner-s-email-address')}
+									label={i18n.translate(
+										'analytics-cloud-owner-s-email-address'
+									)}
 									name="lxc.analyticsCloudOwnersEmailAddress"
 									placeholder="email@example.com"
 									required
 									type="text"
 									validations={[
-										(value) =>
+										(value: string) =>
 											isValidEmail(value, bannedDomains),
 									]}
 								/>
@@ -305,7 +346,7 @@ const SetupLiferayExperienceCloudPage = ({
 			{step === 2 && (
 				<div>
 					<SetupHighPriorityContactForm
-						addContactList={(contactList) =>
+						addContactList={(contactList: IContact[]) =>
 							handleHighPriorityContacts(
 								contactList,
 								'criticalIncident',
@@ -316,7 +357,7 @@ const SetupLiferayExperienceCloudPage = ({
 						filter={
 							HIGH_PRIORITY_CONTACT_CATEGORIES.criticalIncident
 						}
-						removedContactList={(contactList) =>
+						removedContactList={(contactList: IContact[]) =>
 							handleHighPriorityContacts(
 								contactList,
 								'criticalIncident',
@@ -326,7 +367,7 @@ const SetupLiferayExperienceCloudPage = ({
 					/>
 
 					<SetupHighPriorityContactForm
-						addContactList={(contactList) =>
+						addContactList={(contactList: IContact[]) =>
 							handleHighPriorityContacts(
 								contactList,
 								'privacyBreach',
@@ -335,7 +376,7 @@ const SetupLiferayExperienceCloudPage = ({
 						}
 						disableSubmit={updateMultiSelectEmpty}
 						filter={HIGH_PRIORITY_CONTACT_CATEGORIES.privacyBreach}
-						removedContactList={(contactList) =>
+						removedContactList={(contactList: IContact[]) =>
 							handleHighPriorityContacts(
 								contactList,
 								'privacyBreach',
@@ -345,7 +386,7 @@ const SetupLiferayExperienceCloudPage = ({
 					/>
 
 					<SetupHighPriorityContactForm
-						addContactList={(contactList) =>
+						addContactList={(contactList: IContact[]) =>
 							handleHighPriorityContacts(
 								contactList,
 								'securityBreach',
@@ -354,7 +395,7 @@ const SetupLiferayExperienceCloudPage = ({
 						}
 						disableSubmit={updateMultiSelectEmpty}
 						filter={HIGH_PRIORITY_CONTACT_CATEGORIES.securityBreach}
-						removedContactList={(contactList) =>
+						removedContactList={(contactList: IContact[]) =>
 							handleHighPriorityContacts(
 								contactList,
 								'securityBreach',

@@ -3,43 +3,26 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-type CICType = {
-	category?: {
-		[key: string]: string;
-	};
-	email: string;
-	filterId?: number;
-	id: number;
-	key: number;
-	label: string;
-	value: number;
-};
-
-type CICCategoryType = {
-	contactCategory: {[key: string]: string};
-};
-
-type roleIDType = {
-	__typename: string;
-	displayName: string;
-	id: number;
-	roleId: number;
-};
+import {IContact} from '~/utils/types';
 
 const useHighPriorityContacts = ({
 	addContactList,
 	currentHighPriorityContacts,
 	highPriorityContactCategory,
 	removedContactList,
-	rolesId,
 }: {
-	addContactList: (newValue: CICType[]) => void;
-	currentHighPriorityContacts: CICType[];
-	highPriorityContactCategory: CICCategoryType;
-	removedContactList: (newValue: CICType[]) => void;
-	rolesId: roleIDType[];
+	addContactList: (newValue: IContact[]) => void;
+	currentHighPriorityContacts: IContact[];
+	highPriorityContactCategory: {
+		contactCategory: {
+			key: string;
+			name: string;
+			role: string;
+		};
+	};
+	removedContactList: (newValue: IContact[]) => void;
 }) => {
-	const addContacts = (contacts: CICType[], currentContacts: CICType[]) => {
+	const addContacts = (contacts: IContact[], currentContacts: IContact[]) => {
 		const contactsWithoutCategory = contacts.filter(
 			(contact) =>
 				!currentContacts.some(
@@ -50,17 +33,13 @@ const useHighPriorityContacts = ({
 		return contactsWithoutCategory.map((newContact) => ({
 			...newContact,
 			category: highPriorityContactCategory.contactCategory,
-			filterId: rolesId?.filter(
-				(role) =>
-					role.displayName ===
-					highPriorityContactCategory.contactCategory.role
-			)[0]?.id,
+			filterId: '',
 		}));
 	};
 
 	const deleteContacts = (
-		currentContactsList: CICType[],
-		newContactsList: CICType[]
+		currentContactsList: IContact[],
+		newContactsList: IContact[]
 	) => {
 		return currentContactsList.filter(
 			(currentContact) =>
@@ -70,7 +49,7 @@ const useHighPriorityContacts = ({
 		);
 	};
 
-	const updateContacts = (contacts: CICType[]) => {
+	const updateContacts = (contacts: IContact[]) => {
 		const addedContacts = addContacts(
 			contacts,
 			currentHighPriorityContacts

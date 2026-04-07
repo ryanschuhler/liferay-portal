@@ -9,7 +9,7 @@ import classNames from 'classnames';
 interface IProps {
 	alertType?: 'danger' | 'info' | 'success' | 'warning';
 	badgeClassName?: string;
-	children?: any;
+	children?: React.ReactNode;
 }
 
 const Badge = ({

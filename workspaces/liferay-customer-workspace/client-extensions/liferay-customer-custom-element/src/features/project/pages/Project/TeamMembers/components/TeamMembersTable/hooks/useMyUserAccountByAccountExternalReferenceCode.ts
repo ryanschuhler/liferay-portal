@@ -7,10 +7,11 @@ import {useMemo} from 'react';
 import {useGetMyUserAccount} from '~/services/liferay/graphql/user-accounts';
 import isAccountAdministrator from '~/utils/isAccountAdministrator';
 import isSupportSeatRole from '~/utils/isSupportSeatRole';
+import {IGraphQLUserAccount, IRoleBrief} from '~/utils/types';
 
 export default function useMyUserAccountByAccountExternalReferenceCode(
-	externalReferenceCode,
-	koroneikiAccountLoading
+	externalReferenceCode: string,
+	koroneikiAccountLoading: boolean
 ) {
 	const {data, loading} = useGetMyUserAccount({
 		skip: koroneikiAccountLoading,
@@ -18,27 +19,27 @@ export default function useMyUserAccountByAccountExternalReferenceCode(
 
 	const selectedAccountSummary = useMemo(
 		() =>
-			data?.myUserAccount?.accountBriefs?.find(
+			(data?.myUserAccount as IGraphQLUserAccount)?.accountBriefs?.find(
 				(accountBrief) =>
 					accountBrief?.externalReferenceCode ===
 					externalReferenceCode
 			),
-		[data?.myUserAccount?.accountBriefs, externalReferenceCode]
+		[data?.myUserAccount, externalReferenceCode]
 	);
 
-	const hasAdministratorRole = useMemo(
+	const hasAdministratorRole: boolean = useMemo(
 		() =>
-			selectedAccountSummary?.roleBriefs?.some(({name}) =>
+			selectedAccountSummary?.roleBriefs?.some(({name}: IRoleBrief) =>
 				isAccountAdministrator(name)
-			),
+			) ?? false,
 		[selectedAccountSummary?.roleBriefs]
 	);
 
-	const hasSupportSeatRole = useMemo(
+	const hasSupportSeatRole: boolean = useMemo(
 		() =>
-			selectedAccountSummary?.roleBriefs?.some(({name}) =>
+			selectedAccountSummary?.roleBriefs?.some(({name}: IRoleBrief) =>
 				isSupportSeatRole(name)
-			),
+			) ?? false,
 		[selectedAccountSummary?.roleBriefs]
 	);
 

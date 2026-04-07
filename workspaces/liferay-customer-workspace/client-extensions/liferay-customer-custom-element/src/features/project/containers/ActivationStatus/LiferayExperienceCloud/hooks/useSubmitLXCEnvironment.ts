@@ -26,16 +26,17 @@ import {
 } from '~/services/liferay/graphql/liferay-experience-cloud-environments';
 import {getLiferayExperienceCloudEnvironments} from '~/services/liferay/graphql/queries';
 import {getOrRequestToken} from '~/services/liferay/security/auth/getOrRequestToken';
+import {ILXCAdmin, ILXCValues, IProject} from '~/utils/types';
 
 export default function useSubmitLXCEnvironment(
-	handleChangeForm,
-	project,
-	setFormAlreadySubmitted,
-	addHighPriorityContactList,
-	removeHighPriorityContactList,
-	subscriptionGroupLxcId,
-	handleLoadingSubmitButton,
-	values
+	handleChangeForm: (isSuccess: boolean) => void,
+	project: IProject,
+	setFormAlreadySubmitted: (value: boolean) => void,
+	addHighPriorityContactList: any[],
+	removeHighPriorityContactList: any[],
+	subscriptionGroupLxcId: string,
+	handleLoadingSubmitButton: (isLoading: boolean) => void,
+	values: {lxc: ILXCValues}
 ) {
 	const {client, provisioningServerAPI} = useAppPropertiesContext();
 
@@ -122,13 +123,13 @@ export default function useSubmitLXCEnvironment(
 
 					await Promise.all(
 						lxcActivationFields?.admins?.map(
-							({email, fullName}) => {
+							({email, fullName, github}: ILXCAdmin) => {
 								return createAdminLiferayExperienceCloud({
 									variables: {
 										AdminLiferayExperienceCloud: {
 											emailAddress: email,
 											fullName,
-											githubUsername: '...',
+											githubUsername: github,
 											liferayExperienceCloudEnvironmentId,
 											r_accountEntryToAdminLiferayExperienceCloud_accountEntryId:
 												project.id,
@@ -140,16 +141,16 @@ export default function useSubmitLXCEnvironment(
 					);
 
 					const adminInfo = lxcActivationFields?.admins?.map(
-						({email, fullName}) => {
+						({email, fullName}: ILXCAdmin) => {
 							const [firstName, ...lastNames] =
 								fullName.split(' ');
 							const lastName = lastNames.join(' ');
 
 							return `
-								<strong>First Name -</strong> ${firstName}<br>
-								<strong>Last Name - </strong>${lastName}<br>
-								<strong>Email Address - </strong>${email}
-								<br><br>`;
+									<strong>First Name -</strong> ${firstName}<br>
+									<strong>Last Name - </strong>${lastName}<br>
+									<strong>Email Address - </strong>${email}
+									<br><br>`;
 						}
 					);
 
@@ -164,10 +165,11 @@ export default function useSubmitLXCEnvironment(
 							'[%DATE_AND_TIME_SUBMITTED%]':
 								new Date().toUTCString(),
 							'[%PROJECT_ADMIN%]': adminInfo.join(''),
-							'[%PROJECT_CODE%]': project.code,
+							'[%PROJECT_CODE%]': project.code || '',
 							'[%PROJECT_DATA_CENTER_REGION%]':
 								lxcActivationFields.primaryRegion,
-							'[%PROJECT_ID%]': lxcActivationFields.projectId,
+							'[%PROJECT_ID%]':
+								lxcActivationFields.projectId ?? '',
 						}
 					);
 				}
@@ -186,7 +188,7 @@ export default function useSubmitLXCEnvironment(
 				await updateRaysourceContact(
 					addContactRoleRaysource,
 					addHighPriorityContactList,
-					oAuthToken,
+					oAuthToken as string,
 					project,
 					provisioningServerAPI
 				);
@@ -198,7 +200,7 @@ export default function useSubmitLXCEnvironment(
 					client
 				);
 			}
-			catch (error) {
+			catch (error: any) {
 				if (error.cause === STATUS_CODE.conflict) {
 					await updateLiferayContact(
 						addHighPriorityContactList,
@@ -215,7 +217,7 @@ export default function useSubmitLXCEnvironment(
 			await updateRaysourceContact(
 				removeContactRoleRaysource,
 				removeHighPriorityContactList,
-				oAuthToken,
+				oAuthToken as string,
 				project,
 				provisioningServerAPI
 			);

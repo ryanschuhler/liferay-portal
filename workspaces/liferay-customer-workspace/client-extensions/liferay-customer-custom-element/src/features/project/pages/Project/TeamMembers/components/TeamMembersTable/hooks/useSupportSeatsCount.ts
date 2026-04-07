@@ -4,9 +4,19 @@
  */
 
 import {useEffect, useState} from 'react';
+import {IGraphQLUserAccount} from '~/utils/types';
 
-export default function useSupportSeatsCount(userAccounts, searching) {
-	const [supportSeatsCount, setSupportSeatsCount] = useState();
+interface IUserAccountsData {
+	items: IGraphQLUserAccount[];
+}
+
+export default function useSupportSeatsCount(
+	userAccounts: IUserAccountsData | undefined,
+	searching: boolean
+) {
+	const [supportSeatsCount, setSupportSeatsCount] = useState<
+		number | undefined
+	>();
 
 	useEffect(() => {
 		if (!searching) {

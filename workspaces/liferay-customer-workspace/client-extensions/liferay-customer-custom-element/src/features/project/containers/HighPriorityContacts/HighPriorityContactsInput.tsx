@@ -3,14 +3,24 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {MultiSelect, Skeleton} from '~/components';
 import ClayForm from '@clayui/form';
-import {useEffect, useState} from 'react';
+import {FC, useCallback, useEffect, useState} from 'react';
+import {MultiSelect, Skeleton} from '~/components';
 import useUserAccountsByAccountExternalReferenceCode from '~/features/project/pages/Project/TeamMembers/components/TeamMembersTable/hooks/useUserAccountsByAccountExternalReferenceCode';
 import i18n from '~/utils/I18n';
 import getKebabCase from '~/utils/getKebabCase';
+import {IContact, IGraphQLUserAccount, IKoroneikiAccount} from '~/utils/types';
 
-const HighPriorityContactsInput = ({
+interface IProps {
+	currentHighPriorityContacts: IContact[];
+	disableSubmit: (error: string | undefined, inputName: string) => void;
+	inputName: string;
+	isCriticalIncidentCard?: boolean;
+	koroneikiAccount: IKoroneikiAccount | undefined;
+	setContactList: (contactList: IContact[]) => void;
+}
+
+const HighPriorityContactsInput: FC<IProps> = ({
 	currentHighPriorityContacts,
 	disableSubmit,
 	inputName,
@@ -18,51 +28,53 @@ const HighPriorityContactsInput = ({
 	koroneikiAccount,
 	setContactList,
 }) => {
-	const [sourceItems, setSourceItems] = useState([]);
+	const [sourceItems, setSourceItems] = useState<IContact[]>([]);
 	const loaded = sourceItems.length;
-	const [items, setItems] = useState([]);
-	const [
-		,
-		{data: userAccountsData, search},
-	] = useUserAccountsByAccountExternalReferenceCode(
-		koroneikiAccount?.accountKey
-	);
+	const [items, setItems] = useState<IContact[]>([]);
+	const [, {data: userAccountsData, search}] =
+		useUserAccountsByAccountExternalReferenceCode(
+			koroneikiAccount?.accountKey,
+			!koroneikiAccount?.accountKey
+		);
 
-	const handleMetaErrorChange = (error) => {
+	const handleMetaErrorChange = (error: string | undefined) => {
 		disableSubmit(error, inputName);
 	};
 
-	const handleMultiSelectChange = (value) => {
+	const handleMultiSelectChange = (value: string) => {
 		search(value);
 	};
 
 	useEffect(() => {
 		setItems(currentHighPriorityContacts);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentHighPriorityContacts]);
+
+	const setCriticalIncidentContactList = useCallback(
+		(contactList: IContact[]) => {
+			return setContactList(contactList);
+		},
+		[setContactList]
+	);
 
 	useEffect(() => {
 		setCriticalIncidentContactList(items);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [items, sourceItems]);
-
-	const setCriticalIncidentContactList = (contactList) => {
-		return setContactList(contactList);
-	};
+	}, [items, setCriticalIncidentContactList]);
 
 	useEffect(() => {
-		const teamMembers = userAccountsData?.accountUserAccountsByExternalReferenceCode?.items.map(
-			(account) => {
-				const {emailAddress, id, name} = account;
+		const teamMembers: IContact[] =
+			userAccountsData?.accountUserAccountsByExternalReferenceCode?.items.map(
+				(account: IGraphQLUserAccount) => {
+					const {emailAddress, id, name} = account;
 
-				return {
-					email: emailAddress,
-					id,
-					label: name,
-					value: id,
-				};
-			}
-		);
+					return {
+						email: emailAddress ?? '',
+						id,
+						key: id,
+						label: name ?? '',
+						value: id,
+					};
+				}
+			) ?? [];
 		setSourceItems(teamMembers);
 	}, [userAccountsData]);
 

@@ -14,16 +14,7 @@ import {
 	deleteContactRoleNameByEmailByProject,
 } from '~/services/liferay/rest/raysource/TeamMembers';
 import i18n from '~/utils/I18n';
-import {IAccountRole, IProject} from '~/utils/types';
-
-interface IContact {
-	category: {role: string};
-	email: string;
-	filter?: string[];
-	filterId?: string;
-	label: string;
-}
-
+import {IAccountRole, IContact, IProject} from '~/utils/types';
 const addContactRoleLiferay = async (
 	item: IContact,
 	project: IProject,
@@ -55,7 +46,7 @@ const addContactRoleRaysource = (
 		item.label,
 		oAuthToken,
 		provisioningServerAPI,
-		item.category.role
+		item.category?.role ?? ''
 	);
 };
 

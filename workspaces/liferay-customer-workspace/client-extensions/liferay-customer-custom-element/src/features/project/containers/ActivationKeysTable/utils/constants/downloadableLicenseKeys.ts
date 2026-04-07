@@ -7,9 +7,19 @@ const MINIMUM_LICENSE_VERSION = 4;
 const PRODUCTION_VERSION = 7.1;
 const PRODUCTION_ENVIRONMENT = 'production';
 
-const isQuarterlyVersion = (version) => /^\d{4}\.Q[1-4]$/.test(version ?? '');
+export interface ISelectedKey {
+	expirationDate: string | Date;
+	licenseEntryType: string;
+	licenseVersion: number;
+	productVersion: string;
+	sizing: string;
+	startDate: string | Date;
+}
 
-const getVersionNumber = (version) => {
+const isQuarterlyVersion = (version: string) =>
+	/^\d{4}\.Q[1-4]$/.test(version ?? '');
+
+const getVersionNumber = (version: string) => {
 	if (isQuarterlyVersion(version)) {
 		return NaN;
 	}
@@ -19,15 +29,21 @@ const getVersionNumber = (version) => {
 	return match ? Number(match[1]) : NaN;
 };
 
-const isQuarterlyOrAbove71DXPVersion = (version) =>
+const isQuarterlyOrAbove71DXPVersion = (version: string) =>
 	isQuarterlyVersion(version) ||
 	getVersionNumber(version) >= PRODUCTION_VERSION;
 
 export const DOWNLOADABLE_LICENSE_KEYS = {
-	above71DXPVersion: (firstSelectedKey, selectedKey) =>
+	above71DXPVersion: (
+		firstSelectedKey: ISelectedKey,
+		selectedKey: ISelectedKey
+	) =>
 		isQuarterlyOrAbove71DXPVersion(firstSelectedKey?.productVersion) &&
 		isQuarterlyOrAbove71DXPVersion(selectedKey?.productVersion),
-	below71DXPVersion: (firstSelectedKey, selectedKey) =>
+	below71DXPVersion: (
+		firstSelectedKey: ISelectedKey,
+		selectedKey: ISelectedKey
+	) =>
 		getVersionNumber(firstSelectedKey?.productVersion) <
 			PRODUCTION_VERSION &&
 		firstSelectedKey?.expirationDate === selectedKey?.expirationDate &&

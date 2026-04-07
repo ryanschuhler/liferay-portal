@@ -5,31 +5,37 @@
 
 import classNames from 'classnames';
 import {useEffect, useMemo, useRef, useState} from 'react';
-import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
-import i18n from '~/utils/I18n';
 import {Button} from '~/components';
-import getKebabCase from '~/utils/getKebabCase';
+import {useAppPropertiesContext} from '~/contexts/AppPropertiesContext';
 import {useAppContext} from '~/features/project/context';
+import useMyUserAccountByAccountExternalReferenceCode from '~/features/project/pages/Project/TeamMembers/components/TeamMembersTable/hooks/useMyUserAccountByAccountExternalReferenceCode';
 import {MENU_TYPES, PRODUCT_TYPES} from '~/features/project/utils/constants';
+import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
+import i18n from '~/utils/I18n';
+import getKebabCase from '~/utils/getKebabCase';
+import {IAccountSubscriptionGroup, IKoroneikiAccount} from '~/utils/types';
+
 import SideMenuSkeleton from './SideMenuSkeleton';
 import MenuItem from './components/MenuItem';
-import useCurrentKoroneikiAccount from '~/hooks/useCurrentKoroneikiAccount';
-import useMyUserAccountByAccountExternalReferenceCode from '~/features/project/pages/Project/TeamMembers/components/TeamMembersTable/hooks/useMyUserAccountByAccountExternalReferenceCode';
+import {navigationIcons} from './utils/navigationIcons';
 
 import './SideMenu.css';
 
 const ACTIVATION_PATH = 'activation';
 
-const expandGroupForSideMenu = (group) => {
+type IconKey = keyof typeof navigationIcons;
+
+const expandGroupForSideMenu = (group: IAccountSubscriptionGroup) => {
 	if (group.name === 'Liferay Cloud' && group.activationProductName) {
-		const productNames = group.activationProductName.split(',')
-			.map(name => name.trim())
-			.filter(name => name.length > 0);
+		const productNames = group.activationProductName
+			.split(',')
+			.map((name) => name.trim())
+			.filter((name) => !!name.length);
 
 		return productNames.map((productName) => ({
 			...group,
+			displayName: productName,
 			name: productName,
-			displayName: productName
 		}));
 	}
 
@@ -46,30 +52,32 @@ const SideMenu = () => {
 		},
 	] = useAppContext();
 	const [isOpenedProductsMenu, setIsOpenedProductsMenu] = useState(false);
-	const [menuItemActiveStatus, setMenuItemActiveStatus] = useState([]);
+	const [menuItemActiveStatus, setMenuItemActiveStatus] = useState<boolean[]>(
+		[]
+	);
 	const {featureFlags} = useAppPropertiesContext();
 
 	const {data: koroneikiData, loading: koroneikiAccountLoading} =
 		useCurrentKoroneikiAccount();
-	const koroneikiAccount =
+	const koroneikiAccount: IKoroneikiAccount | undefined =
 		koroneikiData?.koroneikiAccountByExternalReferenceCode;
 
 	const {data: myUserAccountData} =
 		useMyUserAccountByAccountExternalReferenceCode(
-			koroneikiAccount?.accountKey,
+			koroneikiAccount?.accountKey || '',
 			koroneikiAccountLoading
 		);
 	const loggedUserAccount = myUserAccountData?.myUserAccount;
 
-	const activationMenuRef = useRef();
+	const activationMenuRef = useRef<HTMLUListElement>(null);
 
 	const activationSubscriptionGroups = useMemo(
 		() =>
-			subscriptionGroups?.filter((subscriptionGroup) => {
-				return (
-					subscriptionGroup.hasActivation
-				);
-			}),
+			subscriptionGroups?.filter(
+				(subscriptionGroup: IAccountSubscriptionGroup) => {
+					return subscriptionGroup.hasActivation;
+				}
+			),
 		[subscriptionGroups]
 	);
 
@@ -86,41 +94,63 @@ const SideMenu = () => {
 		[koroneikiAccount]
 	);
 
-  	const isProjectUsageEnabled =
-		(hasPlanSubscription || hasLegacySubscription) &&
-		  (featureFlags.includes('LRSD-6322') ||
-		  	loggedUserAccount?.isLiferayStaff ||
-		  	loggedUserAccount?.isPartner) ||
-		hasExperienceSubscription &&
-		  (featureFlags.includes('LRSD-12003') ||
-			  loggedUserAccount?.isLiferayStaff);
+	const isProjectUsageEnabled =
+		((hasPlanSubscription || hasLegacySubscription) &&
+			(featureFlags.includes('LRSD-6322') ||
+				loggedUserAccount?.isLiferayStaff ||
+				loggedUserAccount?.isPartner)) ||
+		(hasExperienceSubscription &&
+			(featureFlags.includes('LRSD-12003') ||
+				loggedUserAccount?.isLiferayStaff));
 
-	const accountSubscriptionGroupsMenuItem = useMemo(
-		() => {
-			const expandedGroups = activationSubscriptionGroups?.flatMap(expandGroupForSideMenu);
+	const accountSubscriptionGroupsMenuItem = useMemo(() => {
+		const expandedGroups = activationSubscriptionGroups?.flatMap(
+			expandGroupForSideMenu
+		);
 
-			return expandedGroups?.sort(
-				(a, b) => {
-					const aDisplayName = a.displayName || a.activationProductName || a.name;
-					const bDisplayName = b.displayName || b.activationProductName || b.name;
+		return expandedGroups
+			?.sort(
+				(
+					a: IAccountSubscriptionGroup,
+					b: IAccountSubscriptionGroup
+				) => {
+					const aDisplayName =
+						a.displayName || a.activationProductName || a.name;
+					const bDisplayName =
+						b.displayName || b.activationProductName || b.name;
 
-					return aDisplayName.localeCompare(bDisplayName);
+					return (aDisplayName || '').localeCompare(
+						bDisplayName || ''
+					);
 				}
-			).map(
-				({ displayName, activationProductName, name}, index) => {
-					const itemDisplayName = displayName || activationProductName || name;
+			)
+			.map(
+				(
+					{
+						activationProductName,
+						displayName,
+						name,
+					}: IAccountSubscriptionGroup,
+					index: number
+				) => {
+					const itemDisplayName =
+						displayName || activationProductName || name;
 
-					const redirectPage = getKebabCase(itemDisplayName);
+					const redirectPage = getKebabCase(itemDisplayName || '');
 
-					const iconKey = activationProductName.split(',')
+					const iconKey: IconKey = (activationProductName || '')
+						.split(',')
 						.includes(PRODUCT_TYPES.dxpCloud)
-							? 'lxc'
-							: activationProductName.split(',')
-								.includes(PRODUCT_TYPES.liferayExperienceCloud)
-									? 'experienceCloud'
-									: redirectPage.split('-')[0];
+						? 'lxc'
+						: (activationProductName || '')
+									.split(',')
+									.includes(
+										PRODUCT_TYPES.liferayExperienceCloud
+									)
+							? 'experienceCloud'
+							: (redirectPage.split('-')[0] as IconKey);
 
-					const menuUpdateStatus = (isActive) =>
+					const menuUpdateStatus = (isActive: boolean) =>
 						setMenuItemActiveStatus(
 							(previousMenuItemActiveStatus) => {
 								const menuItemStatus = [
@@ -148,12 +178,11 @@ const SideMenu = () => {
 					);
 				}
 			);
-		}, [activationSubscriptionGroups]
-	);
+	}, [activationSubscriptionGroups]);
 
 	useEffect(() => {
 		const expandedHeightProducts = isOpenedProductsMenu
-			? accountSubscriptionGroupsMenuItem?.length * 48
+			? (accountSubscriptionGroupsMenuItem?.length as number) * 48
 			: 0;
 
 		if (activationMenuRef?.current) {
@@ -178,13 +207,14 @@ const SideMenu = () => {
 					</MenuItem>
 				</div>
 
-				{accountSubscriptionGroupsMenuItem.length > 0 && (
+				{(accountSubscriptionGroupsMenuItem?.length || 0) > 0 && (
 					<li>
 						<div className="d-flex">
 							<Button
 								appendIcon={
-									!!activationSubscriptionGroups.length &&
-									'angle-right-small'
+									activationSubscriptionGroups.length
+										? 'angle-right-small'
+										: undefined
 								}
 								appendIconClassName="ml-auto"
 								className={classNames(
@@ -236,9 +266,7 @@ const SideMenu = () => {
 						iconKey="attachments"
 						to={getKebabCase(MENU_TYPES.attachments)}
 					>
-						{i18n.translate(
-							getKebabCase(MENU_TYPES.attachments)
-						)}
+						{i18n.translate(getKebabCase(MENU_TYPES.attachments))}
 					</MenuItem>
 				</div>
 
@@ -257,7 +285,9 @@ const SideMenu = () => {
 							iconKey="businessEvents"
 							to={getKebabCase(MENU_TYPES.businessEvents)}
 						>
-							{i18n.translate(getKebabCase(MENU_TYPES.businessEvents))}
+							{i18n.translate(
+								getKebabCase(MENU_TYPES.businessEvents)
+							)}
 						</MenuItem>
 					</div>
 				)}

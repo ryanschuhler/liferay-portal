@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-const getPerpetualValidStartDate = (startDate) => {
+const getPerpetualValidStartDate = (startDate: string | Date) => {
 	const perpetualStartDateLimit = '1971-01-01T00:00:00Z';
 
 	const perpetualStartDateValidation =

@@ -6,6 +6,21 @@
 import AccountSubscriptionGroupsNav from './components/AccountSubscriptionGroupsNav/AccountSubscriptionGroupsNav';
 import SubscriptionStatusDropdown from './components/SubscriptionStatusDropdown/SubscriptionStatusDropdown';
 
+interface IAccountSubscriptionGroup {
+	externalReferenceCode?: string;
+	name: string;
+}
+
+interface IProps {
+	accountSubscriptionGroups: IAccountSubscriptionGroup[];
+	disabled: boolean;
+	loading: boolean;
+	onClickDropdownItem: (value: string[] | undefined) => void;
+	onSelectNavItem: (index: number) => void;
+	selectedItemIndex: number;
+	setSelectedItemIndex: (index: number) => void;
+}
+
 const SubscriptionsNavbar = ({
 	accountSubscriptionGroups,
 	disabled,
@@ -14,7 +29,7 @@ const SubscriptionsNavbar = ({
 	onSelectNavItem,
 	selectedItemIndex,
 	setSelectedItemIndex,
-}) => (
+}: IProps) => (
 	<div>
 		<AccountSubscriptionGroupsNav
 			accountSubscriptionGroups={accountSubscriptionGroups}

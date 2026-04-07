@@ -4,7 +4,7 @@
  */
 
 export default function isOperationType(
-	operation: {query: {definitions: any[]}},
+	operation: {query: {definitions: {kind: string; operation?: string}[]}},
 	type: string
 ) {
 	return operation.query.definitions.some(

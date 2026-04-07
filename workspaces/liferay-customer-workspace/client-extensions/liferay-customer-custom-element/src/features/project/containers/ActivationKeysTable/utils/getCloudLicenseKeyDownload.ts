@@ -6,12 +6,12 @@
 import {downloadCloudSubscriptionLicense} from './downloadCloudSubscriptionLicense';
 
 export async function getCloudLicenseKeyDownload(
-	oAuthToken,
-	provisioningServerAPI,
-	handleAlertStatus,
-	subscriptionUuid,
-	projectName
-) {
+	oAuthToken: string | undefined,
+	provisioningServerAPI: string,
+	handleAlertStatus: (hasSuccessfullyDownloadedKeys: boolean) => void,
+	subscriptionUuid: string,
+	projectName: string
+): Promise<void> {
 	const downloadedKey = await downloadCloudSubscriptionLicense(
 		oAuthToken,
 		provisioningServerAPI,

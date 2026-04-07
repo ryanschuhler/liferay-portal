@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import './Skeleton.css';
 
 interface IProps {
-	align?: 'left' | 'right' | 'center';
+	align?: 'start' | 'end' | 'center';
 	className?: string;
 	count?: number;
 	height?: number;
@@ -17,7 +17,7 @@ interface IProps {
 }
 
 const Skeleton: React.FC<IProps> = ({
-	align = 'left',
+	align = 'start',
 	className = '',
 	count = 1,
 	height = undefined,
@@ -35,8 +35,8 @@ const Skeleton: React.FC<IProps> = ({
 							'rounded-sm': shape === 'rounded',
 						},
 						{
-							'ml-auto': align === 'right',
-							'mr-auto': align === 'left',
+							'ml-auto': align === 'end',
+							'mr-auto': align === 'start',
 							'mx-auto': align === 'center',
 						},
 						{
