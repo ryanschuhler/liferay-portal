@@ -1,0 +1,711 @@
+╭─── Claude Code v2.1.116 ─────────────────────────────────────────────────────╮
+│                                                    │ Tips for getting        │
+│                 Welcome back Ryan!                 │ started                 │
+│                                                    │ Run /init to create a … │
+│                       ▐▛███▜▌                      │ ─────────────────────── │
+│                      ▝▜█████▛▘                     │ Recent activity         │
+│                        ▘▘ ▝▝                       │ No recent activity      │
+│                                                    │                         │
+│ Opus 4.7 (1M context) · Claude Team · Liferay Able │                         │
+│               ~/repos/liferay-portal               │                         │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+❯ there is a CLAUDE.md in @.claude can you use that?                            
+  ⎿  Listed directory .claude/
+
+  Read 1 file (ctrl+o to expand)
+
+● Yes — that CLAUDE.md is already loaded into my context via the system reminder
+   (shown under # claudeMd), so I'm already using it. It covers the repo's
+  high-level architecture, deploy/test/format workflows, and conventions like
+  ANT_OPTS="-Xmx2560m" and <gradlew> for the wrapper.
+
+  What would you like to work on?
+
+❯ /add-dir                                                                      
+  ⎿  Added /home/ry/repos as a working directory for this session · /permissions
+      to manage
+
+❯ We are working on an audit for a big system consolidation and migration. I    
+  want you to help me look through all the relevant code and databases to audit 
+   and document all data architecture and busines logic in the current state.   
+  The sytems we care about are named support, marketplace, koroneiki, and       
+  provisioning. Kor (koroneiki) and prov (provisioning) code can be found in    
+  liferay-portal-ee repo in the modules osb folder. The marketplace and support 
+   systems are  workspaces in liferay-portal repo (this repo). We are merging   
+  all of these systems into a one, and going to create a new workspaces that    
+  follows best practices of liferay saas development. This task is just to      
+  audit and understand the systems before we begin to plan the new ones. I      
+  would like the result to be some markdown files documenting the findings. If  
+  you have any questions feel free to ask me. Also, all the databases are       
+  loaded locally already, they are named prov, kor, e5a2_lpartition_1860468,    
+  e5a2_lpartition_11706165.                                                     
+
+● Before I start, let me take a quick look at what's available so I can ask
+  focused questions.
+
+  Searched for 1 pattern, listed 6 directories (ctrl+o to expand)
+
+● I have enough context to ask focused questions. Before I start this audit, I'd
+   like to confirm a few things so the result is actually useful:
+
+  1. Repo paths & locations
+  - Koroneiki & Provisioning: I see /home/ry/repos/liferay-portal-ee/modules/osb
+   but it looks empty from outside its working directory. Can you confirm the
+  exact paths? (Also lfris-koroneiki, lfris-provisioning, lfris-extsaassupport
+  at /home/ry/repos/ look like related infra/deployment repos — should those be
+  in scope too?)
+  - Marketplace:
+  /home/ry/repos/liferay-portal/workspaces/liferay-marketplace-workspace —
+  correct?
+  - Support: I don't see a "support" workspace directly, but there's
+  liferay-ticket-workspace. Is that the one, or is support somewhere else?
+
+  2. Database → system mapping
+  - prov → provisioning, kor → koroneiki — obvious
+  - e5a2_lpartition_1860468 and e5a2_lpartition_11706165 — which is marketplace,
+   which is support?
+  - What DB engine / connection info (host, port, user)? I assume local
+  MySQL/MariaDB on default port.
+
+  3. Output location
+  - Where should the markdown files live? A new directory like
+  /home/ry/repos/liferay-portal/audit/ or somewhere else entirely? One file per
+  system, or grouped (data model, business logic, integrations)?
+
+  4. Scope & depth
+  For each system, I'm planning to cover:
+  - Data architecture: entities, relationships, key tables, service-builder
+  models
+  - Business logic: major services/flows, scheduled jobs, APIs
+  (REST/SOAP/internal), event listeners
+  - Integrations: how these four systems talk to each other today (e.g., prov ↔
+  kor, marketplace ↔ support)
+  - External dependencies: Salesforce, Stripe, RabbitMQ, search, etc.
+
+  Is that the right shape, or do you care more about some axes than others
+  (e.g., API surface for consolidation planning vs. full data dictionary)?
+
+  5. One more — roughly how exhaustive? A 5-page overview per system, or a deep
+  inventory (every entity, every endpoint)? The repos are huge so this drives
+  how I pace the agents.
+
+✻ Baked for 45s
+
+❯ 1. /modules/dxp/apps/osb is where the kor/prov code is. And support workspace 
+   is named liferay-customer-workspace. You shouldnt need the lfris repos for   
+  this audit, though they are related to deployment if we ever need to check    
+  them later                                                                    
+  2. 1860468 is support. port is 3307 and password is e5a2                      
+  3. sure, anywhere is fine                                                     
+  4. yes, sounds great                                                          
+  5. lets do higher level right now. The main goal is to take everything and    
+  redo it in liferay objects on the new system, so as long as we have the info  
+  to do that we should be good                                                  
+
+● Got it. Let me verify paths and DB access, then launch four agents in parallel
+   (one per system). I'll synthesize integrations at the end.
+
+  Listed 2 directories (ctrl+o to expand)
+
+● Bash(mysql -h 127.0.0.1 -P 3307 -u root -pe5a2 -e "SHOW DATABASES LIKE '%'"
+      2>&1 | head -20)
+  ⎿  mysql: Deprecated program name. It will be removed in a future release
+     , use '/usr/bin/mariadb' instead
+     Database (%)
+     … +18 lines (ctrl+o to expand)
+
+● Bash(mysql -h 127.0.0.1 -P 3307 -u root -pe5a2 -e "SHOW DATABASES" 2>/dev/null
+       | grep -iE "^(kor|prov)$")
+  ⎿  kor
+     prov
+
+  Listed 4 directories (ctrl+o to expand)
+● Bash(mkdir -p /home/ry/repos/liferay-portal/audit && ls
+      /home/ry/repos/liferay-portal/audit)
+  ⎿  (No output)
+
+● Launching four parallel audits. Each agent will cross-reference code against
+  the live DB and write its own markdown file.
+
+● 4 background agents launched (↓ to manage)
+   ├ Audit Koroneiki system
+   ├ Audit Provisioning system
+   ├ Audit Marketplace system
+   └ Audit Support system
+
+● All four system audits are running in parallel. Each is writing directly to
+  /home/ry/repos/liferay-portal/audit/:
+
+  - koroneiki.md — osb-koroneiki modules + kor DB
+  - provisioning.md — osb-provisioning modules + prov DB
+  - marketplace.md — liferay-marketplace-workspace + e5a2_lpartition_11706165
+  - support.md — liferay-customer-workspace + e5a2_lpartition_1860468
+
+  When they're all done I'll synthesize integrations.md (cross-system
+  communication) and a README.md index. I'll let you know as each finishes.
+
+✻ Baked for 2m 13s
+
+● Agent "Audit Koroneiki system" completed
+
+● The Explore subagent can't Write files — that's my mistake. Let me get the
+  content back from it and write it myself. The other three agents will hit the
+  same wall, so I'll preempt them too.
+
+● SendMessage isn't available here either. Cleanest path: re-launch with
+  general-purpose agents (which have Write access). The already-running Explore
+  agents can't write anyway, so they'll just fail harmlessly. Launching all four
+   replacements now in parallel.
+
+● 4 background agents launched (↓ to manage)
+   ├ Audit Koroneiki (retry with write)
+   ├ Audit Provisioning (retry with write)
+   ├ Audit Marketplace (retry with write)
+   └ Audit Support (retry with write)
+
+● Agent "Audit Marketplace system" completed
+
+● Agent "Audit Provisioning system" completed
+
+● Agent "Audit Support system" completed
+
+● Three of the four original Explore agents returned their full audit content in
+   the result text (but couldn't write). The general-purpose retry agents I
+  launched have Write access and are still running — when they complete, they'll
+   produce the files directly. Nothing to do for now except wait.
+
+  Three retries still in flight (Koroneiki, Provisioning, Marketplace, Support —
+   all the replacements).
+
+✻ Cogitated for 2m 19s
+
+● Agent "Audit Provisioning (retry with write)" completed
+
+● The retry agents are also sandboxed and can't write — same issue. But the
+  original Explore agents returned full audit content in their result text. I'll
+   write those three files directly from the main thread (which does have write
+  access), then tackle Koroneiki once its retry returns.
+
+  Starting with Marketplace (cleaning up HTML-escaped characters from the
+  agent's output).
+
+● Write(audit/marketplace.md)
+  ⎿  Wrote 338 lines to audit/marketplace.md
+       2 # Marketplace System Audit
+       4 ## 1. Purpose & Scope
+         n Liferay Objects + client extensions that enables software publ
+         ishers to publish, distribute, and monetize their applications. 
+         nd purchase apps, and a publisher dashboard for managing product
+       6 s, trials, licenses, and sales analytics.
+       7 The Marketplace sits in the middle of Liferay's product ecosyste
+       8 m and integrates with:
+      10 - **Provisioning** — license key generation and activation for c
+         loud services
+     … +473 lines (ctrl+o to expand)
+
+● Write(audit/provisioning.md)  ⎿  Wrote 280 lines to audit/provisioning.md
+      2 # Provisioning System Audit
+      4 ## 1. Purpose & Scope
+        oning and license management platform. It transforms Salesforce s
+        ales opportunities into production customer environments, acting 
+        i), Support (Zendesk), and license compliance (LCS).ata (Koroneik
+      7 It creates and manages customer accounts, assigns development tea
+        ms, tracks product subscriptions, enforces SLA and developer limi
+        ssaging. Users: provisioning admins, support teams, and automated
+      8  processes triggered by Salesforce opportunity stage changes.
+      9 K
+     … +413 lines (ctrl+o to expand)
+
+● Write(audit/support.md)
+  ⎿  Wrote 330 lines to audit/support.md
+       2 # Support System Audit
+       4 ## 1. Purpose & Scope
+       5 The **Support** system (deployed as the `liferay-customer-worksp
+         ant customer engagement platform. It functions as a unified hub 
+         for:
+       7 - **Support ticket escalations** (integration with Jira Service 
+       8 - **Callback request management** (customer phone callback reque
+         sts)
+         ilestones)ss event tracking** (customer product implementation m
+      10 - **Large file uploads** (ticket attachments with GCS backend)
+     … +452 lines (ctrl+o to expand)
+
+● Agent "Audit Koroneiki (retry with write)" completed
+
+● Agent "Audit Support (retry with write)" completed
+
+● Agent "Audit Marketplace (retry with write)" completed
+
+● Koroneiki retry returned full content. Writing it now, then I'll fill in row
+  counts for all four systems and write integrations.md + README.md.
+
+● Write(audit/koroneiki.md)
+  ⎿  Wrote 298 lines to audit/koroneiki.md
+      2 # Koroneiki System Audit
+      4 ## 1. Purpose & Scope
+      5 Koroneiki ("Kor", formerly "corp") is Liferay's internal **ERP / 
+        f record for customer **Accounts**, their **Contacts** (people), 
+        the **Teams** that group contacts on accounts, the **Products** t
+        rchases, and **Entitlements** granting features to accounts or co
+      6 ntacts.
+      7 It is designed as a "rootstock" for other Liferay business system
+        iera, Salesforce) to graft onto via REST and RabbitMQ events. It 
+        does **not** own orders, billing, or tickets — 
+     … +552 lines (ctrl+o to expand)
+
+● Running DB queries in parallel for row counts across all four databases while
+  I finalize content.
+
+● Bash(mysql -h 127.0.0.1 -P 3307 -u root -pe5a2 kor -e "
+      SELECT 'Account' t, COUNT(*) n FROM Koroneiki_Account UNION ALL…)
+  ⎿  t  n
+     AuditEntry 17462542
+     ProductField       260826
+     … +17 lines (ctrl+o to expand)
+
+● Bash(mysql -h 127.0.0.1 -P 3307 -u root -pe5a2 prov -e "
+      SELECT 'Provisioning_ProductBundle', COUNT(*) FROM
+      Provisioning_ProductBundle UNION ALL…)
+  ⎿  Provisioning_ProductBundle COUNT(*)
+     Provisioning_ProductBundle 5
+     Provisioning_ProductBundleProducts 23
+     … +68 lines (ctrl+o to expand)
+
+● Bash(mysql -h 127.0.0.1 -P 3307 -u root -pe5a2 e5a2_lpartition_11706165 -e "
+      SELECT shortName, dbTableName, name FROM ObjectDefinition WHERE system = 0
+       ORDER BY name…)
+  ⎿  --------------
+     SELECT shortName, dbTableName, name FROM ObjectDefinition WHERE system
+      = 0 ORDER BY name
+     … +3 lines (ctrl+o to expand)
+
+● Bash(mysql -h 127.0.0.1 -P 3307 -u root -pe5a2 e5a2_lpartition_1860468 -e "
+      SELECT shortName, dbTableName, name FROM ObjectDefinition WHERE system = 0
+       ORDER BY name;…)
+  ⎿  --------------
+     SELECT shortName, dbTableName, name FROM ObjectDefinition WHERE system
+      = 0 ORDER BY name
+     … +3 lines (ctrl+o to expand)
+
+● Bash(mysql -h 127.0.0.1 -P 3307 -u root -pe5a2 e5a2_lpartition_11706165 -e
+      "DESCRIBE ObjectDefinition;" 2>&1 | grep -v Deprecated | head -40)
+  ⎿  Field      Type    Null    Key     Default Extra
+     mvccVersion        bigint(20)      NO              0
+     uuid_      varchar(75)     YES     MUL     NULL
+     … +20 lines (ctrl+o to expand)
+
+● Bash(mysql -h 127.0.0.1 -P 3307 -u root -pe5a2 prov -e "
+      SELECT 'Provisioning_ProductBundle', COUNT(*) FROM
+      Provisioning_ProductBundle UNION ALL…)
+  ⎿  Provisioning_ProductBundle COUNT(*)
+     Provisioning_LicenseKey    230466
+     OSB_LicenseKey     201897
+     … +12 lines (ctrl+o to expand)
+
+● Bash(mysql -h 127.0.0.1 -P 3307 -u root -pe5a2 e5a2_lpartition_11706165 -N -e
+      "
+      SELECT name, dbTableName FROM ObjectDefinition WHERE system_ = 0 ORDER BY
+      name;" 2>&1…)
+  ⎿  C_GetAppInformation        O_11706165_GetAppInformation
+     C_LicenseTypesDescription  O_11706165_LicenseTypesDescription
+     C_OAuth2DXPAuthorization   O_11706165_OAuth2DXPAuthorization
+     … +9 lines (ctrl+o to expand)
+
+● Bash(mysql -h 127.0.0.1 -P 3307 -u root -pe5a2 e5a2_lpartition_1860468 -N -e "
+      SELECT name, dbTableName FROM ObjectDefinition WHERE system_ = 0 ORDER BY
+      name;" 2>&1…)
+  ⎿  C_AccountFlag      O_1860468_AccountFlag
+     C_AccountSubscription      O_1860468_AccountSubscription
+     C_AccountSubscriptionGroup O_1860468_AccountSubscriptionGroup
+     … +18 lines (ctrl+o to expand)
+● Bash(for t in O_11706165_GetAppInformation O_11706165_LicenseTypesDescription
+      O_11706165_OAuth2DXPAuthorization O_11706165_PublisherAssetAttachment
+      O_11706165_Publis…)
+  ⎿  O_11706165_GetAppInformation 496
+     O_11706165_LicenseTypesDescription 0
+     O_11706165_OAuth2DXPAuthorization 225
+     … +9 lines (ctrl+o to expand)
+
+● Bash(for t in O_1860468_AccountFlag O_1860468_AccountSubscription
+      O_1860468_AccountSubscriptionGroup O_1860468_AccountSubscriptionTerm
+      O_1860468_AdminDXPCloud O_1860…)
+  ⎿  O_1860468_AccountFlag 557
+     O_1860468_AccountSubscription 4572
+     O_1860468_AccountSubscriptionGroup 3073
+     … +21 lines (ctrl+o to expand)
+
+● All row counts captured. Now updating each file with real numbers, then
+  writing integrations.md and README.md.
+
+● Update(audit/koroneiki.md)
+  ⎿  Added 30 lines, removed 23 lines
+      241  
+      242  ## 6. Row Counts
+      243  
+      244 -See root `README.md` / the live DB: counts to be filled in onc
+          -e sandbox MySQL access is unblocked. Queries to run:          
+      244 +Live counts from the `kor` database:                          
+      245  
+      246 -```sql                                                        
+      247 -USE kor;                                                      
+      248 -SELECT 'Account',              COUNT(*) FROM Koroneiki_Account
+          - UNION ALL                                                    
+      249 -SELECT 'Contact',              COUNT(*) FROM Koroneiki_Contact
+          - UNION ALL                                                    
+      250 -SELECT 'Team',                 COUNT(*) FROM Koroneiki_Team UN
+          -ION ALL                                                       
+      251 -SELECT 'ContactRole',          COUNT(*) FROM Koroneiki_Contact
+          -Role UNION ALL                                                
+      252 -SELECT 'TeamRole',             COUNT(*) FROM Koroneiki_TeamRol
+          -e UNION ALL                                                   
+      253 -SELECT 'ContactAccountRole',   COUNT(*) FROM Koroneiki_Contact
+          -AccountRole UNION ALL                                         
+      254 -SELECT 'ContactTeamRole',      COUNT(*) FROM Koroneiki_Contact
+          -TeamRole UNION ALL                                            
+      255 -SELECT 'TeamAccountRole',      COUNT(*) FROM Koroneiki_TeamAcc
+          -ountRole UNION ALL                                            
+      256 -SELECT 'AccountNote',          COUNT(*) FROM Koroneiki_Account
+          -Note UNION ALL                                                
+      257 -SELECT 'ProductEntry',         COUNT(*) FROM Koroneiki_Product
+          -Entry UNION ALL                                               
+      258 -SELECT 'ProductPurchase',      COUNT(*) FROM Koroneiki_Product
+          -Purchase UNION ALL                                            
+      259 -SELECT 'ProductConsumption',   COUNT(*) FROM Koroneiki_Product
+          -Consumption UNION ALL                                         
+      260 -SELECT 'Entitlement',          COUNT(*) FROM Koroneiki_Entitle
+          -ment UNION ALL                                                
+      261 -SELECT 'EntitlementDefinition',COUNT(*) FROM Koroneiki_Entitle
+          -mentDefinition UNION ALL                                      
+      262 -SELECT 'ExternalLink',         COUNT(*) FROM Koroneiki_Externa
+          -lLink UNION ALL                                               
+      263 -SELECT 'AuditEntry',           COUNT(*) FROM Koroneiki_AuditEn
+          -try UNION ALL                                                 
+      264 -SELECT 'ProductField',         COUNT(*) FROM Koroneiki_Product
+          -Field UNION ALL                                               
+      265 -SELECT 'AuthenticationToken',  COUNT(*) FROM Koroneiki_Authent
+          -icationToken UNION ALL                                        
+      266 -SELECT 'ServiceProducer',      COUNT(*) FROM Koroneiki_Service
+          -Producer;                                                     
+      267 -```                                                           
+      246 +| Table | Rows |                                              
+      247 +|---|---:|                                                    
+      248 +| Koroneiki_AuditEntry | 17,462,542 |                         
+      249 +| Koroneiki_ProductField | 260,826 |                          
+      250 +| Koroneiki_ExternalLink | 254,202 |                          
+      251 +| Koroneiki_ProductConsumption | 148,901 |                    
+      252 +| Koroneiki_ProductPurchase | 65,271 |                        
+      253 +| Koroneiki_ContactAccountRole | 32,647 |                     
+      254 +| Koroneiki_ContactTeamRole | 29,262 |                        
+      255 +| Koroneiki_Contact | 20,397 |                                
+      256 +| Koroneiki_Team | 18,570 |                                   
+      257 +| Koroneiki_Account | 18,390 |                                
+      258 +| Koroneiki_Entitlement | 9,311 |                             
+      259 +| Koroneiki_AccountNote | 788 |                               
+      260 +| Koroneiki_ProductEntry | 505 |                              
+      261 +| Koroneiki_EntitlementDefinition | 62 |                      
+      262 +| Koroneiki_TeamAccountRole | 39 |                            
+      263 +| Koroneiki_AuthenticationToken | 27 |                        
+      264 +| Koroneiki_ContactRole | 25 |                                
+      265 +| Koroneiki_ServiceProducer | 21 |                            
+      266 +| Koroneiki_TeamRole | 2 |                                    
+      267  
+      268 +**Takeaways:**                                                
+      269 +- ~18K accounts with ~20K contacts and ~65K product purchases 
+          +— mid-sized ERP volume, migratable.                           
+      270 +- **Audit log is 17M+ rows** — plan for archival/truncation st
+          +rategy; do not try to carry the raw AuditEntry table over.    
+      271 +- **ProductField at 260K** says Trunk entities lean heavily on
+          + dynamic properties. Extract the distinct `name` values before
+          + designing Object custom fields — you likely need a small fixe
+          +d set of Object fields to cover most ProductFields.           
+      272 +- **ExternalLink at 254K** means every entity links to multipl
+          +e external systems. That's the critical integration surface.  
+      273 +- **TeamAccountRole is only 39** versus 18K Teams — most teams
+          + exist without assigned account-level roles. Worth validating 
+          +that TeamAccountRole is still used.                           
+      274 +- **TeamRole has 2 rows**. Either role catalog is tiny or role
+          +-type modeling is unusual. Verify before porting.             
+      275 +                                                              
+      276  ---
+      277  
+      278  ## 7. Open Questions / Gotchas
+
+● Update(audit/provisioning.md)
+  ⎿  Added 20 lines, removed 7 lines
+      234  
+      235  ## 6. Row Counts
+      236  
+      237 -DB queries blocked in sandbox. To fill in:                    
+      237 +Live counts from `prov`. **Important discovery:** `service.xml
+          +` in the audited source only declares `ProductBundle` and `Pro
+          +ductBundleProducts`, but the actual `prov` database contains s
+          +ignificant license-key and subscription tables not reflected i
+          +n the audited codebase — likely owned by other modules deploye
+          +d into the same DB (LCS? older Provisioning?). Listing them he
+          +re so the migration team doesn't miss them:                   
+      238  
+      239 -```sql                                                        
+      240 -USE prov;                                                     
+      241 -SELECT COUNT(*) FROM Provisioning_ProductBundle;              
+      242 -SELECT COUNT(*) FROM Provisioning_ProductBundleProducts;      
+      243 -```                                                           
+      239 +| Table | Rows | Origin |                                     
+      240 +|---|---:|---|                                                
+      241 +| Provisioning_LicenseKey | 230,466 | Not in osb-provisioning 
+          +service.xml |                                                 
+      242 +| OSB_LicenseKey | 201,897 | Legacy `OSB_*` table |           
+      243 +| OSB_OfferingEntry | 76,504 | Legacy |                       
+      244 +| Provisioning_SubscriptionEntry | 2,061 | Not in osb-provisio
+          +ning service.xml |                                            
+      245 +| Marketplace_Module | 1,817 | Legacy Marketplace (separate fr
+          +om new Marketplace workspace) |                               
+      246 +| Provisioning_CommonLicenseKey | 476 | Not in osb-provisionin
+          +g service.xml |                                               
+      247 +| Marketplace_App | 344 | Legacy Marketplace |                
+      248 +| OSB_ProductEntry | 112 | Legacy |                           
+      249 +| Provisioning_LicenseEntry | 48 | Not in osb-provisioning ser
+          +vice.xml |                                                    
+      250 +| Provisioning_ProductVersion | 36 | Not in osb-provisioning s
+          +ervice.xml |                                                  
+      251 +| Provisioning_ProductBundleProducts | 23 | Audited ✓ |       
+      252 +| Provisioning_ProductBundle | 5 | Audited ✓ |                
+      253 +| OSB_LicenseEntry | 0 | Legacy (empty) |                     
+      254 +| OSB_LicenseKeySet | 0 | Legacy (empty) |                    
+      255  
+      245 -Expected: **small** (likely < 100 bundles, < 1000 junction row
+          -s). The real data volume is in Koroneiki — see `koroneiki.md`.
+      256 +**This is a significant gap in the §2 data model.** The `Provi
+          +sioning_LicenseKey`, `Provisioning_SubscriptionEntry`, `Provis
+          +ioning_LicenseEntry`, `Provisioning_ProductVersion`, `Provisio
+          +ning_CommonLicenseKey` tables represent the **actual license k
+          +ey data** that the Marketplace and Support systems reference. 
+          +Locate the owning code (likely a sibling `osb-provisioning-lic
+          +ense*` module or LCS) before migration planning.              
+      257  
+      258 +Similarly, the `OSB_*` tables and `Marketplace_App`/`Marketpla
+          +ce_Module` are **legacy Liferay Marketplace (the old app marke
+          +tplace, unrelated to the new `liferay-marketplace-workspace`)*
+          +*. These may or may not need to be carried forward — check wit
+          +h the team before discarding.                                 
+      259 +                                                              
+      260  ---
+      261  
+      262  ## 7. Open Questions / Gotchas
+
+● Update(audit/marketplace.md)
+  ⎿  Added 22 lines, removed 20 lines
+      285  
+      286  ## 7. Row Counts
+      287  
+      288 -Row counts not yet collected — the agent hit sandbox restricti
+          -ons on MySQL access. To fill in:                              
+      288 +Live counts from `e5a2_lpartition_11706165`:                  
+      289  
+      290 -```sql                                                        
+      291 --- Query the object → table map first                         
+      292 -SELECT name, shortName, dbTableName FROM ObjectDefinition;    
+      290 +| Object | Rows |                                             
+      291 +|---|---:|                                                    
+      292 +| GetAppInformation | 496 |                                   
+      293 +| OAuth2DXPAuthorization | 225 |                              
+      294 +| PublisherDetails | 134 |                                    
+      295 +| Sample | 30 (likely test data) |                            
+      296 +| PublisherAssets | 16 |                                      
+      297 +| TrialExtensionRequest | 13 |                                
+      298 +| RequestPublisherAccount | 12 |                              
+      299 +| PublisherSalesSummary | 8 |                                 
+      300 +| PublisherAssetAttachment | 6 |                              
+      301 +| Report | 2 |                                                
+      302 +| LicenseTypesDescription | 0 |                               
+      303 +| UserAdditionalInfo | 0 |                                    
+      304  
+      294 --- Then count rows on the O_* tables and the underlying Lifera
+          -y-managed tables                                              
+      295 -SELECT COUNT(*) FROM O_PublisherDetails;                      
+      296 -SELECT COUNT(*) FROM O_PublisherAssets;                       
+      297 -SELECT COUNT(*) FROM O_PublisherAssetAttachment;              
+      298 -SELECT COUNT(*) FROM O_PublisherSalesSummary;                 
+      299 -SELECT COUNT(*) FROM O_ProductFeedback;                       
+      300 -SELECT COUNT(*) FROM O_ContactSales;                          
+      301 -SELECT COUNT(*) FROM O_TrialExtensionRequest;                 
+      302 -SELECT COUNT(*) FROM O_DXPFreeActivationKeyRequest;           
+      303 -SELECT COUNT(*) FROM O_AIHubBetaPrivateAccessRequest;         
+      304 -SELECT COUNT(*) FROM O_Report;                                
+      305 -SELECT COUNT(*) FROM O_OAuth2DxpAuthorization;                
+      306 -SELECT COUNT(*) FROM CommerceOrder;                           
+      307 -SELECT COUNT(*) FROM CommerceOrderItem;                       
+      308 -```                                                           
+      305 +**Discrepancies between the site-initializer JSON and live DB:
+          +**                                                            
+      306  
+      310 -Expected high-volume tables: `O_PublisherAssets`, `O_ProductFe
+          -edback`, `CommerceOrder`. Expected low-volume: `O_Report` (fix
+          -ed set), `O_PublisherSalesSummary` (≈ publishers × quarters). 
+      307 +- **Not deployed (no Object Definition in DB):** `ContactSales
+          +`, `ProductFeedback`, `DXPFreeActivationKeyRequest`, `AIHubBet
+          +aPrivateAccessRequest`. Either these JSONs haven't been applie
+          +d to this environment, or they've been removed from the initia
+          +lizer and the audit's object list is stale.                   
+      308 +- **In DB but not in my §2 list:** `GetAppInformation`, `UserA
+          +dditionalInfo`, `Sample`. `Sample` is almost certainly scratch
+          +/test data (30 rows). `GetAppInformation` (496 rows) and `User
+          +AdditionalInfo` (0) should be confirmed as real product surfac
+          +e.                                                            
+      309  
+      310 +**Takeaways:**                                                
+      311 +- Marketplace is a **low-data-volume** system — the highest co
+          +unt is 496 rows. The complexity is in the business logic (cron
+          + jobs, integrations, workflow), not data migration.           
+      312 +- `Sample` table and zero-row tables suggest some Objects are 
+          +vestigial; review before porting.                             
+      313 +                                                              
+      314  ---
+      315  
+      316  ## 8. Open Questions / Gotchas
+
+● Update(audit/support.md)
+  ⎿  Added 38 lines, removed 18 lines
+      277  
+      278  ## 7. Row Counts
+      279  
+      280 -DB queries blocked in sandbox. To fill in:                    
+      280 +Live counts from `e5a2_lpartition_1860468`:                   
+      281  
+      282 -```sql                                                        
+      283 -USE e5a2_lpartition_1860468;                                  
+      284 -SELECT name, shortName, dbTableName FROM ObjectDefinition;    
+      282 +| Object | Rows |                                             
+      283 +|---|---:|                                                    
+      284 +| BannedEmailDomain | 4,757 |                                 
+      285 +| AccountSubscription | 4,572 |                               
+      286 +| AccountSubscriptionGroup | 3,073 |                          
+      287 +| KoroneikiAccount | 2,313 |                                  
+      288 +| AccountFlag | 557 |                                         
+      289 +| BusinessEventVersion | 347 |                                
+      290 +| TeamMembersInvitation | 321 |                               
+      291 +| NotificationSubscription | 309 |                            
+      292 +| BusinessEvent | 120 |                                       
+      293 +| NotificationTarget | 99 |                                   
+      294 +| TicketAttachment | 75 |                                     
+      295 +| CallbackRequest | 50 |                                      
+      296 +| SupportTicketEscalation | 49 |                              
+      297 +| AdminLiferayExperienceCloud | 34 |                          
+      298 +| CloudNativeEnvironment | 16 |                               
+      299 +| DXPCDataCenterRegion | 15 |                                 
+      300 +| AccountSubscriptionTerm | 13 |                              
+      301 +| ReplacementActivationKeyRequest | 11 |                      
+      302 +| AdminDXPCloud | 10 |                                        
+      303 +| IncidentReportContactAnalyticsCloud | 9 |                   
+      304 +| LiferayExperienceCloudEnvironment | 9 |                     
+      305 +| AnalyticsCloudWorkspace | 8 |                               
+      306 +| DXPCloudEnvironment | 5 |                                   
+      307 +| AnalyticsCloudDataCenterLocation | 5 |                      
+      308 +| EmailDelivery | 0 |                                         
+      309 +| Test2 | 0 (scratch) |                                       
+      310  
+      286 -SELECT COUNT(*) FROM O_TicketAttachment;                      
+      287 -SELECT COUNT(*) FROM O_BusinessEvent;                         
+      288 -SELECT COUNT(*) FROM O_BusinessEventVersion;                  
+      289 -SELECT COUNT(*) FROM O_AccountSubscription;                   
+      290 -SELECT COUNT(*) FROM O_KoroneikiAccount;                      
+      291 -SELECT COUNT(*) FROM O_CallbackRequest;                       
+      292 -SELECT COUNT(*) FROM O_SupportTicketEscalation;               
+      293 -SELECT COUNT(*) FROM O_DXPCloudEnvironment;                   
+      294 -SELECT COUNT(*) FROM O_LXCEnvironment;                        
+      295 -SELECT COUNT(*) FROM O_AnalyticsCloudWorkspace;               
+      296 -SELECT COUNT(*) FROM O_ReplacementActivationKeyRequest;       
+      297 -SELECT COUNT(*) FROM O_AccountFlag;                           
+      298 -```                                                           
+      311 +**Discrepancies from the audit list:**                        
+      312  
+      300 -Expected high-volume: `O_TicketAttachment` (daily uploads; sch
+          -eduled cleanup compresses). Expected medium: `O_BusinessEvent`
+          -, `O_AccountSubscription`. Expected low: reference data (`O_DX
+          -PCDataCenterRegion`, `O_BannedEmailDomain`).                  
+      313 +- **In DB but not in my §2 list:** `LiferayExperienceCloudEnvi
+          +ronment`, `EmailDelivery`, `Test2`. `Test2` is scratch. `Lifer
+          +ayExperienceCloudEnvironment` (9 rows) is the LXC equivalent o
+          +f `DXPCloudEnvironment`; my §2 noted `LXCEnvironment` which is
+          + the same entity under a different name. `EmailDelivery` (0 ro
+          +ws) — unclear if planned or abandoned.                        
+      314  
+      315 +**Takeaways:**                                                
+      316 +- **`BannedEmailDomain` at 4,757** is the largest table — refe
+          +rence data (email domain blocklist) that must port intact.    
+      317 +- **`AccountSubscription` + `AccountSubscriptionGroup` = 7,645
+          + rows** — this is the customer-license-state snapshot that dri
+          +ves the Account entitlement picture. Central for the migration
+          +.                                                             
+      318 +- **`KoroneikiAccount` at 2,313** — sync side-car. Once the co
+          +nsolidated workspace owns the real Koroneiki Account Object, t
+          +his table collapses.                                          
+      319 +- **`TicketAttachment` at only 75** — the scheduled cleanup is
+          + aggressive; most lifetime data lives in GCS and Jira, not her
+          +e. The Liferay side is a thin metadata index.                 
+      320 +- Small CallbackRequest / Escalation counts (~50 each) confirm
+          + those flows are low-volume customer-initiated forms.         
+      321 +                                                              
+      322  ---
+      323  
+      324  ## 8. Open Questions / Gotchas
+
+● Write(audit/integrations.md)
+  ⎿  Wrote 247 lines to audit/integrations.md
+      2 # Cross-System Integrations
+        , Marketplace, Support — together, plus the external services the
+        y all depend on. Read this after the four per-system audits to un
+        e two systems talk to each other) or preserve (where one system t
+        alks to the outside world).
+      5 ---
+      7 ## 1. One-Line Summary
+      8 
+         Teams, Products, Purchases, and Entitlements. The other three or
+        bit it:
+     … +404 lines (ctrl+o to expand)
+
+● Write(audit/README.md)
+  ⎿  Wrote 53 lines to audit/README.md
+      2 # System Consolidation Audit
+        ay business systems being consolidated into a new unified workspa
+        ce built on Liferay Objects:
+      5 - **[Koroneiki](./koroneiki.md)** — customer/product/entitlement 
+        ERP (the system of record)
+        orchestratoroning](./provisioning.md)** — Salesforce → Koroneiki 
+        ront[Marketplace](./marketplace.md)** — publisher/commerce storef
+      8 - **[Support](./support.md)** — customer support portal (Jira-bac
+      9 - **[Integrations](./integrations.md)** — how the four systems (a
+        nd their external dependencies) talk to each other
+     … +90 lines (ctrl+o to expand)
+
+  Listed 1 directory (ctrl+o to expand)
+
+● Audit complete. Six markdown files in /home/ry/repos/liferay-portal/audit/:
+
+  - README.md — index + scale-at-a-glance table + known gaps
+  - koroneiki.md — ERP with 18K accounts, 20K contacts, 65K purchases, 17M audit
+   rows; 62 raw-SQL entitlement rules
+  - provisioning.md — event-driven orchestrator (RabbitMQ from Dossiera);
+  discovered 230K license-key rows in a module the source doesn't declare
+  - marketplace.md — 12 deployed Objects, low data volume (≤500 rows each); 7
+  cron jobs are the migration's hot path
+  - support.md — 26 Objects (4.8K banned-email-domain rows, 4.6K
+  AccountSubscription); Jira-native ticketing with GCS file uploads
+  - integrations.md — cross-system dependency map, shared-concept table, 8 open
+  questions for planning
+
+  Headline findings worth flagging:
+
+  1. Koroneiki is the center of gravity — its
+  Account/Contact/Team/ProductPurchase/Entitlement entities become the spine of
+  the new workspace; the other three systems' data models overlay.
+  2. Three unresolved integration mysteries (integrations.md §9) that need an
+  infra conversation before planning: what ProvisioningService Marketplace
+  actually calls, who bridges Koroneiki's RabbitMQ to Google Pub/Sub, and how
+  Support's KoroneikiAccount sync runs.
+  3. The 62 raw-SQL EntitlementDefinition rules are the single biggest
+  logic-translation risk — each needs human review.
+  4. Provisioning's DB has license-key tables not declared in the audited source
+   — sibling module or LCS. Confirm ownership before discarding.
+
+✻ Brewed for 13m 47s
