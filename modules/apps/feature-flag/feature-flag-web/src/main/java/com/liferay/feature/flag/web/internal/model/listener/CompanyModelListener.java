@@ -20,11 +20,15 @@ import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.PortalPreferencesLocalService;
 import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
+import com.liferay.portal.kernel.util.EnvPropertiesUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portlet.PortalPreferencesWrapper;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -85,7 +89,16 @@ public class CompanyModelListener extends BaseModelListener<Company> {
 			featureFlagsBag.getFeatureFlags(
 				FeatureFlagType.DEPRECATION.getPredicate());
 
+		Set<String> explicitlyConfiguredKeys =
+			_getExplicitlyConfiguredFeatureFlagKeys();
+
 		for (FeatureFlag deprecationFeatureFlag : deprecationFeatureFlags) {
+			if (explicitlyConfiguredKeys.contains(
+					StringUtil.toLowerCase(deprecationFeatureFlag.getKey()))) {
+
+				continue;
+			}
+
 			_featureFlagsBagProvider.setEnabled(
 				companyId, deprecationFeatureFlag.getKey(), false);
 		}
@@ -98,6 +111,31 @@ public class CompanyModelListener extends BaseModelListener<Company> {
 
 		_portalPreferencesLocalService.updatePreferences(
 			companyId, PortletKeys.PREFS_OWNER_TYPE_COMPANY, portalPreferences);
+	}
+
+	private Set<String> _getExplicitlyConfiguredFeatureFlagKeys() {
+		Set<String> keys = new HashSet<>();
+
+		String propertyPrefix =
+			FeatureFlagConstants.PORTAL_PROPERTY_KEY_FEATURE_FLAG + ".";
+
+		EnvPropertiesUtil.loadEnvOverrides(
+			"LIFERAY_",
+			(key, value) -> {
+				if (key.startsWith(propertyPrefix)) {
+					keys.add(key.substring(propertyPrefix.length()));
+				}
+			});
+
+		for (String key : System.getProperties().stringPropertyNames()) {
+			if (key.startsWith(propertyPrefix)) {
+				keys.add(
+					StringUtil.toLowerCase(
+						key.substring(propertyPrefix.length())));
+			}
+		}
+
+		return keys;
 	}
 
 	@Reference
