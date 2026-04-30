@@ -28,7 +28,6 @@ function main {
 			--exclude "node_modules_cache" \
 			--exclude "package.json" \
 			--exclude "poshi" \
-			--exclude "quickstart" \
 			--exclude "test.properties" \
 			--exclude "themes" \
 			--exclude "yarn.lock" \
