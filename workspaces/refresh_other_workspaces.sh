@@ -21,12 +21,14 @@ function main {
 			--exclude "README.md" \
 			--exclude "build.gradle" \
 			--exclude "client-extensions" \
+			--exclude "docker-compose.yaml" \
 			--exclude "gradle-local.properties" \
 			--exclude "language" \
 			--exclude "modules" \
 			--exclude "node_modules" \
 			--exclude "node_modules_cache" \
 			--exclude "package.json" \
+			--exclude "portal-env.properties" \
 			--exclude "poshi" \
 			--exclude "test.properties" \
 			--exclude "themes" \
