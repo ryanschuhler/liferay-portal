@@ -7,9 +7,12 @@ source _common.sh
 function main {
 	cd ..
 
-	./gradlew \
-		deploy \
-		-Ddeploy.docker.container.id="$(docker ps --filter name=liferay --quiet)"
+	local project_name
+
+	project_name="$(basename "$(pwd)")"
+
+	./gradlew deploy \
+		-Ddeploy.docker.container.id="$(docker ps --quiet --filter "name=${project_name}-liferay")"
 }
 
 main "${@}"

@@ -1,42 +1,45 @@
 #!/bin/bash
 
-cd "$(dirname "${BASH_SOURCE[0]}")"
+set -euo pipefail
 
-source _common.sh
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+WORKSPACE_DIR="${SCRIPT_DIR}/.."
+
+PATCHING_DIR="${WORKSPACE_DIR}/build/docker/patching"
 
 function main {
 	local hotfix_url=${1:-}
 
-	if [[ -z ${hotfix_url} ]]
+	if [ -z "${hotfix_url}" ]
 	then
-		hotfix_url=$(get_gradle_property liferay.workspace.hotfix.url || true)
+		hotfix_url="$("${SCRIPT_DIR}/get_property.sh" liferay.workspace.hotfix.url 2>/dev/null || true)"
 	fi
 
-	if [[ -z ${hotfix_url} ]]
+	if [ -z "${hotfix_url}" ]
 	then
 		exit 0
 	fi
-
-	mkdir --parents ../build/docker/patching
-
-	cd ../build/docker/patching
 
 	local hotfix_file
 
-	hotfix_file=$(basename "${hotfix_url%%\?*}")
+	hotfix_file="$(basename "${hotfix_url%%\?*}")"
 
-	if [[ -f ${hotfix_file} ]]
+	local dest="${PATCHING_DIR}/${hotfix_file}"
+
+	if [ -f "${dest}" ]
 	then
-		echo "Hotfix is already present at ${hotfix_file}."
-
+		echo "Hotfix already present: ${dest}"
 		exit 0
 	fi
 
-	echo "Downloading ${hotfix_file}."
+	mkdir --parents "${PATCHING_DIR}"
 
-	curl --fail --location --output "${hotfix_file}" "${hotfix_url}"
+	echo "Downloading ${hotfix_file} to ${dest}..."
 
-	echo "Downloaded ${hotfix_file}."
+	curl --fail --location --output "${dest}" "${hotfix_url}"
+
+	echo "Hotfix ready at ${dest}"
 }
 
 main "${@}"

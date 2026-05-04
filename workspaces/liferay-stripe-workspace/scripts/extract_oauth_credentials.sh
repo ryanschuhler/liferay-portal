@@ -5,35 +5,45 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 source _common.sh
 
 function main {
-	local oauth_application_name=${1:-}
+	local site_initializer="${1}"
 
-	if [[ -z ${oauth_application_name} ]]
-	then
-		echo "The OAuth application name was not provided." >&2
-
+	if [ -z "${site_initializer}" ]; then
+		echo "Usage: $(basename "${0}") <route-name>"
 		exit 1
 	fi
 
-	cd ..
+	local project_name
 
-	touch .env
+	project_name="$(basename "$(cd .. && pwd)")"
 
-	sed --in-place --regexp-extended "/^OAUTH_CLIENT_(ID|SECRET)=/d" .env
+	local container="${project_name}-liferay"
+	local routes_base="/opt/liferay/routes/default"
+	local routes="${routes_base}/${site_initializer}"
 
 	local client_id
 
-	client_id=$(docker exec liferay cat "/opt/liferay/routes/default/${oauth_application_name}/${oauth_application_name}.oauth2.headless.server.client.id")
+	client_id="$(docker exec "${container}" cat "${routes}/${site_initializer}-oahs.oauth2.headless.server.client.id")"
 
 	local client_secret
 
-	client_secret=$(docker exec liferay cat "/opt/liferay/routes/default/${oauth_application_name}/${oauth_application_name}.oauth2.headless.server.client.secret")
+	client_secret="$(docker exec "${container}" cat "${routes}/${site_initializer}-oahs.oauth2.headless.server.client.secret")"
 
-	{
-		echo "OAUTH_CLIENT_ID=${client_id}"
-		echo "OAUTH_CLIENT_SECRET=${client_secret}"
-	} >> .env
+	local env_file="../.env"
 
-	echo "The OAuth credentials were written to .env."
+	if [ ! -f "${env_file}" ]
+	then
+		printf "OAUTH_CLIENT_ID=\nOAUTH_CLIENT_SECRET=\n" > "${env_file}"
+	fi
+
+	grep --quiet "^OAUTH_CLIENT_ID=" "${env_file}" || echo "OAUTH_CLIENT_ID=" >> "${env_file}"
+	grep --quiet "^OAUTH_CLIENT_SECRET=" "${env_file}" || echo "OAUTH_CLIENT_SECRET=" >> "${env_file}"
+
+	sed --in-place "s|^OAUTH_CLIENT_ID=.*|OAUTH_CLIENT_ID=${client_id}|" "${env_file}"
+	sed --in-place "s|^OAUTH_CLIENT_SECRET=.*|OAUTH_CLIENT_SECRET=${client_secret}|" "${env_file}"
+
+	echo "OAuth credentials written to .env."
+	echo "OAUTH_CLIENT_ID=${client_id}"
+	echo "OAUTH_CLIENT_SECRET=${client_secret}"
 }
 
 main "${@}"
