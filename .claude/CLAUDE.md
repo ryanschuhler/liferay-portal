@@ -127,3 +127,7 @@ Functional tests are a last resort, reserved for complete UI flows that cannot b
 ### Format Source
 
 Run `/format-source` (the `format-source` skill). See `.claude/skills/format-source/SKILL.md` for details.
+
+### Format Shell Scripts
+
+Run `/format-shell` (the `format-shell` skill). See `.claude/skills/format-shell/SKILL.md` for the checklist. Rules are in `.claude/rules/shell-scripts.md`.
