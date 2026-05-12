@@ -30,6 +30,8 @@ function main {
 			--exclude "poshi" \
 			--exclude "quickstart" \
 			--exclude "test.properties" \
+			--exclude "tests/e2e" \
+			--exclude "tests/integration" \
 			--exclude "themes" \
 			--exclude "yarn.lock" \
 			liferay-sample-workspace/ "${dir}"
