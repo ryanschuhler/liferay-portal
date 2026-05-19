@@ -10,8 +10,8 @@ import {AppRoute} from '../../utils/routes';
 
 const Apps = lazy(() => import('./Apps/Apps'));
 const Environments = lazy(() => import('./Environments/Environments'));
-const LicenseKeyUploads = lazy(
-	() => import('./LicenseKeyUploads/LicenseKeyUploads')
+const CommonLicenseKeys = lazy(
+	() => import('./CommonLicenseKeys/CommonLicenseKeys')
 );
 const MessageQueue = lazy(() => import('./MessageQueue/MessageQueue'));
 const MPFinanceOrders = lazy(() => import('./MPFinanceOrders/MPFinanceOrders'));
@@ -94,9 +94,9 @@ export const adminRoutes: AppRoute[] = [
 		path: 'message-queue',
 	},
 	{
-		element: <LicenseKeyUploads />,
-		nav: {label: 'License Key Uploads', section: 'Support'},
-		path: 'license-key-uploads',
+		element: <CommonLicenseKeys />,
+		nav: {label: 'Common License Keys', section: 'Support'},
+		path: 'common-license-keys',
 	},
 
 	{element: <Navigate replace to="." />, path: '*'},
