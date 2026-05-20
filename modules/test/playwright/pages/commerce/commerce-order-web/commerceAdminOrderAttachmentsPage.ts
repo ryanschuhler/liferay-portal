@@ -17,12 +17,14 @@ export class CommerceAdminOrderAttachmentsPage extends CommerceDNDTablePage {
 	readonly page: Page;
 	readonly rowActionsButton: (rowValue: string) => Locator;
 	readonly rowByTitle: (title: string) => Locator;
+	readonly rowRestrictedIcon: (title: string) => Locator;
+	readonly rowTitleLink: (title: string) => Locator;
 	readonly sidePanelCancelButton: Locator;
-	readonly sidePanelFileInput: Locator;
 	readonly sidePanelFrame: FrameLocator;
 	readonly sidePanelPriorityInput: Locator;
 	readonly sidePanelRestrictedCheckbox: Locator;
 	readonly sidePanelSaveButton: Locator;
+	readonly sidePanelSelectFileButton: Locator;
 	readonly sidePanelTitleInput: Locator;
 	readonly sidePanelTypeSelect: Locator;
 
@@ -61,12 +63,14 @@ export class CommerceAdminOrderAttachmentsPage extends CommerceDNDTablePage {
 				.getByRole('button', {name: 'Actions'});
 		this.rowByTitle = (title: string) =>
 			page.getByRole('row', {name: title});
+		this.rowRestrictedIcon = (title: string) =>
+			this.rowByTitle(title).getByRole('img', {name: 'Restricted'});
+		this.rowTitleLink = (title: string) =>
+			this.rowByTitle(title).getByRole('link', {name: title});
 		this.sidePanelFrame = page.frameLocator('.fds-side-panel iframe');
 		this.sidePanelCancelButton = this.sidePanelFrame.getByRole('button', {
 			name: 'Cancel',
 		});
-		this.sidePanelFileInput =
-			this.sidePanelFrame.locator('input[type="file"]');
 		this.sidePanelPriorityInput =
 			this.sidePanelFrame.getByLabel('Priority');
 		this.sidePanelRestrictedCheckbox =
@@ -74,6 +78,10 @@ export class CommerceAdminOrderAttachmentsPage extends CommerceDNDTablePage {
 		this.sidePanelSaveButton = this.sidePanelFrame.getByRole('button', {
 			name: 'Save',
 		});
+		this.sidePanelSelectFileButton = this.sidePanelFrame.getByRole(
+			'button',
+			{name: 'Select File'}
+		);
 		this.sidePanelTitleInput = this.sidePanelFrame.getByLabel('Title');
 		this.sidePanelTypeSelect = this.sidePanelFrame.getByLabel('Type');
 	}

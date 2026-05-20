@@ -35,6 +35,15 @@ public class MockContactsEngineClientImpl
 	extends BaseMockContactsEngineClientImpl {
 
 	@Override
+	public Results<Individual> getAccountIndividuals(
+		FaroProject faroProject, String accountId, String query, int cur,
+		int delta, String sortString) {
+
+		return contactsEngineClient.getAccountIndividuals(
+			faroProject, accountId, query, cur, delta, sortString);
+	}
+
+	@Override
 	public Results<Individual> getCoworkerIndividuals(
 		FaroProject faroProject, String individualId, String query,
 		List<String> fields, int cur, int delta,

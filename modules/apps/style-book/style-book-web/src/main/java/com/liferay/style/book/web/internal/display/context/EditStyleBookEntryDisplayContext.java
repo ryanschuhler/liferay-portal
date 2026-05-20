@@ -608,7 +608,13 @@ public class EditStyleBookEntryDisplayContext {
 
 		portletDisplay.setShowBackIcon(true);
 		portletDisplay.setURLBack(_getRedirect());
-		portletDisplay.setURLBackTitle(portletDisplay.getPortletDisplayName());
+
+		String backURLTitle = ParamUtil.getString(
+			_httpServletRequest, "backURLTitle");
+
+		portletDisplay.setURLBackTitle(
+			Validator.isNotNull(backURLTitle) ? backURLTitle :
+				portletDisplay.getPortletDisplayName());
 
 		_renderResponse.setTitle(_getStyleBookEntryTitle());
 	}

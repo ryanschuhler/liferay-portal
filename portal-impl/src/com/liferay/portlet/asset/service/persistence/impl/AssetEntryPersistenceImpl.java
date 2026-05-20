@@ -11,7 +11,6 @@ import com.liferay.asset.kernel.model.AssetEntryTable;
 import com.liferay.asset.kernel.service.persistence.AssetEntryPersistence;
 import com.liferay.asset.kernel.service.persistence.AssetEntryUtil;
 import com.liferay.asset.kernel.service.persistence.AssetTagPersistence;
-import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.change.tracking.CTColumnResolutionType;
 import com.liferay.portal.kernel.dao.orm.EntityCache;
@@ -83,61 +82,8 @@ public class AssetEntryPersistenceImpl
 	public static final String FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION =
 		FINDER_CLASS_NAME_ENTITY + ".List2";
 
-	private FinderPath _finderPathWithPaginationFindByGroupId;
-	private FinderPath _finderPathWithoutPaginationFindByGroupId;
-	private FinderPath _finderPathCountByGroupId;
 	private CollectionPersistenceFinder<AssetEntry>
 		_collectionPersistenceFinderByGroupId;
-
-	/**
-	 * Returns all the asset entries where groupId = &#63;.
-	 *
-	 * @param groupId the group ID
-	 * @return the matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByGroupId(long groupId) {
-		return findByGroupId(
-			groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the asset entries where groupId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param groupId the group ID
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @return the range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByGroupId(long groupId, int start, int end) {
-		return findByGroupId(groupId, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the asset entries where groupId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param groupId the group ID
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByGroupId(
-		long groupId, int start, int end,
-		OrderByComparator<AssetEntry> orderByComparator) {
-
-		return findByGroupId(groupId, start, end, orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the asset entries where groupId = &#63;.
@@ -159,14 +105,9 @@ public class AssetEntryPersistenceImpl
 		OrderByComparator<AssetEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByGroupId.find(
-				FinderCacheUtil.getFinderCache(), new Object[] {groupId}, start,
-				end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByGroupId.find(
+			FinderCacheUtil.getFinderCache(), new Object[] {groupId}, start,
+			end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -229,72 +170,12 @@ public class AssetEntryPersistenceImpl
 	 */
 	@Override
 	public int countByGroupId(long groupId) {
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByGroupId.count(
-				FinderCacheUtil.getFinderCache(), new Object[] {groupId});
-		}
+		return _collectionPersistenceFinderByGroupId.count(
+			FinderCacheUtil.getFinderCache(), new Object[] {groupId});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByCompanyId;
-	private FinderPath _finderPathWithoutPaginationFindByCompanyId;
-	private FinderPath _finderPathCountByCompanyId;
 	private CollectionPersistenceFinder<AssetEntry>
 		_collectionPersistenceFinderByCompanyId;
-
-	/**
-	 * Returns all the asset entries where companyId = &#63;.
-	 *
-	 * @param companyId the company ID
-	 * @return the matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByCompanyId(long companyId) {
-		return findByCompanyId(
-			companyId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the asset entries where companyId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param companyId the company ID
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @return the range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByCompanyId(
-		long companyId, int start, int end) {
-
-		return findByCompanyId(companyId, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the asset entries where companyId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param companyId the company ID
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByCompanyId(
-		long companyId, int start, int end,
-		OrderByComparator<AssetEntry> orderByComparator) {
-
-		return findByCompanyId(companyId, start, end, orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the asset entries where companyId = &#63;.
@@ -316,14 +197,9 @@ public class AssetEntryPersistenceImpl
 		OrderByComparator<AssetEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByCompanyId.find(
-				FinderCacheUtil.getFinderCache(), new Object[] {companyId},
-				start, end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByCompanyId.find(
+			FinderCacheUtil.getFinderCache(), new Object[] {companyId}, start,
+			end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -386,72 +262,12 @@ public class AssetEntryPersistenceImpl
 	 */
 	@Override
 	public int countByCompanyId(long companyId) {
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByCompanyId.count(
-				FinderCacheUtil.getFinderCache(), new Object[] {companyId});
-		}
+		return _collectionPersistenceFinderByCompanyId.count(
+			FinderCacheUtil.getFinderCache(), new Object[] {companyId});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByClassUuid;
-	private FinderPath _finderPathWithoutPaginationFindByClassUuid;
-	private FinderPath _finderPathCountByClassUuid;
 	private CollectionPersistenceFinder<AssetEntry>
 		_collectionPersistenceFinderByClassUuid;
-
-	/**
-	 * Returns all the asset entries where classUuid = &#63;.
-	 *
-	 * @param classUuid the class uuid
-	 * @return the matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByClassUuid(String classUuid) {
-		return findByClassUuid(
-			classUuid, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the asset entries where classUuid = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param classUuid the class uuid
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @return the range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByClassUuid(
-		String classUuid, int start, int end) {
-
-		return findByClassUuid(classUuid, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the asset entries where classUuid = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param classUuid the class uuid
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByClassUuid(
-		String classUuid, int start, int end,
-		OrderByComparator<AssetEntry> orderByComparator) {
-
-		return findByClassUuid(classUuid, start, end, orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the asset entries where classUuid = &#63;.
@@ -473,14 +289,9 @@ public class AssetEntryPersistenceImpl
 		OrderByComparator<AssetEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByClassUuid.find(
-				FinderCacheUtil.getFinderCache(), new Object[] {classUuid},
-				start, end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByClassUuid.find(
+			FinderCacheUtil.getFinderCache(), new Object[] {classUuid}, start,
+			end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -543,70 +354,12 @@ public class AssetEntryPersistenceImpl
 	 */
 	@Override
 	public int countByClassUuid(String classUuid) {
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByClassUuid.count(
-				FinderCacheUtil.getFinderCache(), new Object[] {classUuid});
-		}
+		return _collectionPersistenceFinderByClassUuid.count(
+			FinderCacheUtil.getFinderCache(), new Object[] {classUuid});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByVisible;
-	private FinderPath _finderPathWithoutPaginationFindByVisible;
-	private FinderPath _finderPathCountByVisible;
 	private CollectionPersistenceFinder<AssetEntry>
 		_collectionPersistenceFinderByVisible;
-
-	/**
-	 * Returns all the asset entries where visible = &#63;.
-	 *
-	 * @param visible the visible
-	 * @return the matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByVisible(boolean visible) {
-		return findByVisible(
-			visible, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the asset entries where visible = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param visible the visible
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @return the range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByVisible(boolean visible, int start, int end) {
-		return findByVisible(visible, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the asset entries where visible = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param visible the visible
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByVisible(
-		boolean visible, int start, int end,
-		OrderByComparator<AssetEntry> orderByComparator) {
-
-		return findByVisible(visible, start, end, orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the asset entries where visible = &#63;.
@@ -628,14 +381,9 @@ public class AssetEntryPersistenceImpl
 		OrderByComparator<AssetEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByVisible.find(
-				FinderCacheUtil.getFinderCache(), new Object[] {visible}, start,
-				end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByVisible.find(
+			FinderCacheUtil.getFinderCache(), new Object[] {visible}, start,
+			end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -698,73 +446,12 @@ public class AssetEntryPersistenceImpl
 	 */
 	@Override
 	public int countByVisible(boolean visible) {
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByVisible.count(
-				FinderCacheUtil.getFinderCache(), new Object[] {visible});
-		}
+		return _collectionPersistenceFinderByVisible.count(
+			FinderCacheUtil.getFinderCache(), new Object[] {visible});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByPublishDate;
-	private FinderPath _finderPathWithoutPaginationFindByPublishDate;
-	private FinderPath _finderPathCountByPublishDate;
 	private CollectionPersistenceFinder<AssetEntry>
 		_collectionPersistenceFinderByPublishDate;
-
-	/**
-	 * Returns all the asset entries where publishDate = &#63;.
-	 *
-	 * @param publishDate the publish date
-	 * @return the matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByPublishDate(Date publishDate) {
-		return findByPublishDate(
-			publishDate, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the asset entries where publishDate = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param publishDate the publish date
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @return the range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByPublishDate(
-		Date publishDate, int start, int end) {
-
-		return findByPublishDate(publishDate, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the asset entries where publishDate = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param publishDate the publish date
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByPublishDate(
-		Date publishDate, int start, int end,
-		OrderByComparator<AssetEntry> orderByComparator) {
-
-		return findByPublishDate(
-			publishDate, start, end, orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the asset entries where publishDate = &#63;.
@@ -786,14 +473,9 @@ public class AssetEntryPersistenceImpl
 		OrderByComparator<AssetEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByPublishDate.find(
-				FinderCacheUtil.getFinderCache(), new Object[] {publishDate},
-				start, end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByPublishDate.find(
+			FinderCacheUtil.getFinderCache(), new Object[] {publishDate}, start,
+			end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -856,73 +538,12 @@ public class AssetEntryPersistenceImpl
 	 */
 	@Override
 	public int countByPublishDate(Date publishDate) {
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByPublishDate.count(
-				FinderCacheUtil.getFinderCache(), new Object[] {publishDate});
-		}
+		return _collectionPersistenceFinderByPublishDate.count(
+			FinderCacheUtil.getFinderCache(), new Object[] {publishDate});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByExpirationDate;
-	private FinderPath _finderPathWithoutPaginationFindByExpirationDate;
-	private FinderPath _finderPathCountByExpirationDate;
 	private CollectionPersistenceFinder<AssetEntry>
 		_collectionPersistenceFinderByExpirationDate;
-
-	/**
-	 * Returns all the asset entries where expirationDate = &#63;.
-	 *
-	 * @param expirationDate the expiration date
-	 * @return the matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByExpirationDate(Date expirationDate) {
-		return findByExpirationDate(
-			expirationDate, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the asset entries where expirationDate = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param expirationDate the expiration date
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @return the range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByExpirationDate(
-		Date expirationDate, int start, int end) {
-
-		return findByExpirationDate(expirationDate, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the asset entries where expirationDate = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param expirationDate the expiration date
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByExpirationDate(
-		Date expirationDate, int start, int end,
-		OrderByComparator<AssetEntry> orderByComparator) {
-
-		return findByExpirationDate(
-			expirationDate, start, end, orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the asset entries where expirationDate = &#63;.
@@ -944,14 +565,9 @@ public class AssetEntryPersistenceImpl
 		OrderByComparator<AssetEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByExpirationDate.find(
-				FinderCacheUtil.getFinderCache(), new Object[] {expirationDate},
-				start, end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByExpirationDate.find(
+			FinderCacheUtil.getFinderCache(), new Object[] {expirationDate},
+			start, end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -1015,74 +631,12 @@ public class AssetEntryPersistenceImpl
 	 */
 	@Override
 	public int countByExpirationDate(Date expirationDate) {
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByExpirationDate.count(
-				FinderCacheUtil.getFinderCache(),
-				new Object[] {expirationDate});
-		}
+		return _collectionPersistenceFinderByExpirationDate.count(
+			FinderCacheUtil.getFinderCache(), new Object[] {expirationDate});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByLayoutUuid;
-	private FinderPath _finderPathWithoutPaginationFindByLayoutUuid;
-	private FinderPath _finderPathCountByLayoutUuid;
 	private CollectionPersistenceFinder<AssetEntry>
 		_collectionPersistenceFinderByLayoutUuid;
-
-	/**
-	 * Returns all the asset entries where layoutUuid = &#63;.
-	 *
-	 * @param layoutUuid the layout uuid
-	 * @return the matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByLayoutUuid(String layoutUuid) {
-		return findByLayoutUuid(
-			layoutUuid, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the asset entries where layoutUuid = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param layoutUuid the layout uuid
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @return the range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByLayoutUuid(
-		String layoutUuid, int start, int end) {
-
-		return findByLayoutUuid(layoutUuid, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the asset entries where layoutUuid = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param layoutUuid the layout uuid
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByLayoutUuid(
-		String layoutUuid, int start, int end,
-		OrderByComparator<AssetEntry> orderByComparator) {
-
-		return findByLayoutUuid(
-			layoutUuid, start, end, orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the asset entries where layoutUuid = &#63;.
@@ -1104,14 +658,9 @@ public class AssetEntryPersistenceImpl
 		OrderByComparator<AssetEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByLayoutUuid.find(
-				FinderCacheUtil.getFinderCache(), new Object[] {layoutUuid},
-				start, end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByLayoutUuid.find(
+			FinderCacheUtil.getFinderCache(), new Object[] {layoutUuid}, start,
+			end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -1174,16 +723,10 @@ public class AssetEntryPersistenceImpl
 	 */
 	@Override
 	public int countByLayoutUuid(String layoutUuid) {
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByLayoutUuid.count(
-				FinderCacheUtil.getFinderCache(), new Object[] {layoutUuid});
-		}
+		return _collectionPersistenceFinderByLayoutUuid.count(
+			FinderCacheUtil.getFinderCache(), new Object[] {layoutUuid});
 	}
 
-	private FinderPath _finderPathFetchByG_CU;
 	private UniquePersistenceFinder<AssetEntry> _uniquePersistenceFinderByG_CU;
 
 	/**
@@ -1217,18 +760,6 @@ public class AssetEntryPersistenceImpl
 	}
 
 	/**
-	 * Returns the asset entry where groupId = &#63; and classUuid = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param groupId the group ID
-	 * @param classUuid the class uuid
-	 * @return the matching asset entry, or <code>null</code> if a matching asset entry could not be found
-	 */
-	@Override
-	public AssetEntry fetchByG_CU(long groupId, String classUuid) {
-		return fetchByG_CU(groupId, classUuid, true);
-	}
-
-	/**
 	 * Returns the asset entry where groupId = &#63; and classUuid = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param groupId the group ID
@@ -1240,14 +771,9 @@ public class AssetEntryPersistenceImpl
 	public AssetEntry fetchByG_CU(
 		long groupId, String classUuid, boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _uniquePersistenceFinderByG_CU.fetch(
-				FinderCacheUtil.getFinderCache(),
-				new Object[] {groupId, classUuid}, useFinderCache);
-		}
+		return _uniquePersistenceFinderByG_CU.fetch(
+			FinderCacheUtil.getFinderCache(), new Object[] {groupId, classUuid},
+			useFinderCache);
 	}
 
 	/**
@@ -1280,67 +806,8 @@ public class AssetEntryPersistenceImpl
 			new Object[] {groupId, classUuid});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByC_CN;
-	private FinderPath _finderPathWithoutPaginationFindByC_CN;
-	private FinderPath _finderPathCountByC_CN;
 	private CollectionPersistenceFinder<AssetEntry>
 		_collectionPersistenceFinderByC_CN;
-
-	/**
-	 * Returns all the asset entries where companyId = &#63; and classNameId = &#63;.
-	 *
-	 * @param companyId the company ID
-	 * @param classNameId the class name ID
-	 * @return the matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByC_CN(long companyId, long classNameId) {
-		return findByC_CN(
-			companyId, classNameId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the asset entries where companyId = &#63; and classNameId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param companyId the company ID
-	 * @param classNameId the class name ID
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @return the range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByC_CN(
-		long companyId, long classNameId, int start, int end) {
-
-		return findByC_CN(companyId, classNameId, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the asset entries where companyId = &#63; and classNameId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param companyId the company ID
-	 * @param classNameId the class name ID
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByC_CN(
-		long companyId, long classNameId, int start, int end,
-		OrderByComparator<AssetEntry> orderByComparator) {
-
-		return findByC_CN(
-			companyId, classNameId, start, end, orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the asset entries where companyId = &#63; and classNameId = &#63;.
@@ -1363,15 +830,10 @@ public class AssetEntryPersistenceImpl
 		OrderByComparator<AssetEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByC_CN.find(
-				FinderCacheUtil.getFinderCache(),
-				new Object[] {companyId, classNameId}, start, end,
-				orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByC_CN.find(
+			FinderCacheUtil.getFinderCache(),
+			new Object[] {companyId, classNameId}, start, end,
+			orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -1442,17 +904,11 @@ public class AssetEntryPersistenceImpl
 	 */
 	@Override
 	public int countByC_CN(long companyId, long classNameId) {
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByC_CN.count(
-				FinderCacheUtil.getFinderCache(),
-				new Object[] {companyId, classNameId});
-		}
+		return _collectionPersistenceFinderByC_CN.count(
+			FinderCacheUtil.getFinderCache(),
+			new Object[] {companyId, classNameId});
 	}
 
-	private FinderPath _finderPathFetchByC_C;
 	private UniquePersistenceFinder<AssetEntry> _uniquePersistenceFinderByC_C;
 
 	/**
@@ -1486,18 +942,6 @@ public class AssetEntryPersistenceImpl
 	}
 
 	/**
-	 * Returns the asset entry where classNameId = &#63; and classPK = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @return the matching asset entry, or <code>null</code> if a matching asset entry could not be found
-	 */
-	@Override
-	public AssetEntry fetchByC_C(long classNameId, long classPK) {
-		return fetchByC_C(classNameId, classPK, true);
-	}
-
-	/**
 	 * Returns the asset entry where classNameId = &#63; and classPK = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param classNameId the class name ID
@@ -1509,14 +953,9 @@ public class AssetEntryPersistenceImpl
 	public AssetEntry fetchByC_C(
 		long classNameId, long classPK, boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _uniquePersistenceFinderByC_C.fetch(
-				FinderCacheUtil.getFinderCache(),
-				new Object[] {classNameId, classPK}, useFinderCache);
-		}
+		return _uniquePersistenceFinderByC_C.fetch(
+			FinderCacheUtil.getFinderCache(),
+			new Object[] {classNameId, classPK}, useFinderCache);
 	}
 
 	/**
@@ -1549,73 +988,8 @@ public class AssetEntryPersistenceImpl
 			new Object[] {classNameId, classPK});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByG_C_V;
-	private FinderPath _finderPathWithoutPaginationFindByG_C_V;
-	private FinderPath _finderPathCountByG_C_V;
 	private CollectionPersistenceFinder<AssetEntry>
 		_collectionPersistenceFinderByG_C_V;
-
-	/**
-	 * Returns all the asset entries where groupId = &#63; and classNameId = &#63; and visible = &#63;.
-	 *
-	 * @param groupId the group ID
-	 * @param classNameId the class name ID
-	 * @param visible the visible
-	 * @return the matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByG_C_V(
-		long groupId, long classNameId, boolean visible) {
-
-		return findByG_C_V(
-			groupId, classNameId, visible, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			null);
-	}
-
-	/**
-	 * Returns a range of all the asset entries where groupId = &#63; and classNameId = &#63; and visible = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param groupId the group ID
-	 * @param classNameId the class name ID
-	 * @param visible the visible
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @return the range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByG_C_V(
-		long groupId, long classNameId, boolean visible, int start, int end) {
-
-		return findByG_C_V(groupId, classNameId, visible, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the asset entries where groupId = &#63; and classNameId = &#63; and visible = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param groupId the group ID
-	 * @param classNameId the class name ID
-	 * @param visible the visible
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByG_C_V(
-		long groupId, long classNameId, boolean visible, int start, int end,
-		OrderByComparator<AssetEntry> orderByComparator) {
-
-		return findByG_C_V(
-			groupId, classNameId, visible, start, end, orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the asset entries where groupId = &#63; and classNameId = &#63; and visible = &#63;.
@@ -1639,15 +1013,10 @@ public class AssetEntryPersistenceImpl
 		OrderByComparator<AssetEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByG_C_V.find(
-				FinderCacheUtil.getFinderCache(),
-				new Object[] {groupId, classNameId, visible}, start, end,
-				orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByG_C_V.find(
+			FinderCacheUtil.getFinderCache(),
+			new Object[] {groupId, classNameId, visible}, start, end,
+			orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -1722,90 +1091,13 @@ public class AssetEntryPersistenceImpl
 	 */
 	@Override
 	public int countByG_C_V(long groupId, long classNameId, boolean visible) {
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByG_C_V.count(
-				FinderCacheUtil.getFinderCache(),
-				new Object[] {groupId, classNameId, visible});
-		}
+		return _collectionPersistenceFinderByG_C_V.count(
+			FinderCacheUtil.getFinderCache(),
+			new Object[] {groupId, classNameId, visible});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByG_C_P_E;
-	private FinderPath _finderPathWithoutPaginationFindByG_C_P_E;
-	private FinderPath _finderPathCountByG_C_P_E;
 	private CollectionPersistenceFinder<AssetEntry>
 		_collectionPersistenceFinderByG_C_P_E;
-
-	/**
-	 * Returns all the asset entries where groupId = &#63; and classNameId = &#63; and publishDate = &#63; and expirationDate = &#63;.
-	 *
-	 * @param groupId the group ID
-	 * @param classNameId the class name ID
-	 * @param publishDate the publish date
-	 * @param expirationDate the expiration date
-	 * @return the matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByG_C_P_E(
-		long groupId, long classNameId, Date publishDate, Date expirationDate) {
-
-		return findByG_C_P_E(
-			groupId, classNameId, publishDate, expirationDate,
-			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the asset entries where groupId = &#63; and classNameId = &#63; and publishDate = &#63; and expirationDate = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param groupId the group ID
-	 * @param classNameId the class name ID
-	 * @param publishDate the publish date
-	 * @param expirationDate the expiration date
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @return the range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByG_C_P_E(
-		long groupId, long classNameId, Date publishDate, Date expirationDate,
-		int start, int end) {
-
-		return findByG_C_P_E(
-			groupId, classNameId, publishDate, expirationDate, start, end,
-			null);
-	}
-
-	/**
-	 * Returns an ordered range of all the asset entries where groupId = &#63; and classNameId = &#63; and publishDate = &#63; and expirationDate = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param groupId the group ID
-	 * @param classNameId the class name ID
-	 * @param publishDate the publish date
-	 * @param expirationDate the expiration date
-	 * @param start the lower bound of the range of asset entries
-	 * @param end the upper bound of the range of asset entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching asset entries
-	 */
-	@Override
-	public List<AssetEntry> findByG_C_P_E(
-		long groupId, long classNameId, Date publishDate, Date expirationDate,
-		int start, int end, OrderByComparator<AssetEntry> orderByComparator) {
-
-		return findByG_C_P_E(
-			groupId, classNameId, publishDate, expirationDate, start, end,
-			orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the asset entries where groupId = &#63; and classNameId = &#63; and publishDate = &#63; and expirationDate = &#63;.
@@ -1830,17 +1122,10 @@ public class AssetEntryPersistenceImpl
 		int start, int end, OrderByComparator<AssetEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByG_C_P_E.find(
-				FinderCacheUtil.getFinderCache(),
-				new Object[] {
-					groupId, classNameId, publishDate, expirationDate
-				},
-				start, end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByG_C_P_E.find(
+			FinderCacheUtil.getFinderCache(),
+			new Object[] {groupId, classNameId, publishDate, expirationDate},
+			start, end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -1928,16 +1213,9 @@ public class AssetEntryPersistenceImpl
 	public int countByG_C_P_E(
 		long groupId, long classNameId, Date publishDate, Date expirationDate) {
 
-		try (SafeCloseable safeCloseable =
-				CTPersistenceHelperUtil.setCTCollectionIdWithSafeCloseable(
-					AssetEntry.class)) {
-
-			return _collectionPersistenceFinderByG_C_P_E.count(
-				FinderCacheUtil.getFinderCache(),
-				new Object[] {
-					groupId, classNameId, publishDate, expirationDate
-				});
-		}
+		return _collectionPersistenceFinderByG_C_P_E.count(
+			FinderCacheUtil.getFinderCache(),
+			new Object[] {groupId, classNameId, publishDate, expirationDate});
 	}
 
 	public AssetEntryPersistenceImpl() {
@@ -2562,361 +1840,326 @@ public class AssetEntryPersistenceImpl
 			"AssetEntries_AssetTags", "companyId", "entryId", "tagId", this,
 			assetTagPersistence);
 
-		_finderPathWithPaginationFindByGroupId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByGroupId",
-			new String[] {
-				Long.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"groupId"}, true);
-
-		_finderPathWithoutPaginationFindByGroupId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByGroupId",
-			new String[] {Long.class.getName()}, new String[] {"groupId"},
-			true);
-
-		_finderPathCountByGroupId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByGroupId",
-			new String[] {Long.class.getName()}, new String[] {"groupId"},
-			false);
-
 		_collectionPersistenceFinderByGroupId =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByGroupId,
-				_finderPathWithoutPaginationFindByGroupId,
-				_finderPathCountByGroupId, _SQL_SELECT_ASSETENTRY_WHERE,
-				_SQL_COUNT_ASSETENTRY_WHERE, AssetEntryModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByGroupId",
+					new String[] {
+						Long.class.getName(), Integer.class.getName(),
+						Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {"groupId"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByGroupId",
+					new String[] {Long.class.getName()},
+					new String[] {"groupId"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByGroupId",
+					new String[] {Long.class.getName()},
+					new String[] {"groupId"}, false),
+				_SQL_SELECT_ASSETENTRY_WHERE, _SQL_COUNT_ASSETENTRY_WHERE,
+				AssetEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"assetEntry.", "groupId", FinderColumn.Type.LONG, "=", true,
 					true, AssetEntry::getGroupId));
 
-		_finderPathWithPaginationFindByCompanyId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByCompanyId",
-			new String[] {
-				Long.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"companyId"}, true);
-
-		_finderPathWithoutPaginationFindByCompanyId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByCompanyId",
-			new String[] {Long.class.getName()}, new String[] {"companyId"},
-			true);
-
-		_finderPathCountByCompanyId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByCompanyId",
-			new String[] {Long.class.getName()}, new String[] {"companyId"},
-			false);
-
 		_collectionPersistenceFinderByCompanyId =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByCompanyId,
-				_finderPathWithoutPaginationFindByCompanyId,
-				_finderPathCountByCompanyId, _SQL_SELECT_ASSETENTRY_WHERE,
-				_SQL_COUNT_ASSETENTRY_WHERE, AssetEntryModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByCompanyId",
+					new String[] {
+						Long.class.getName(), Integer.class.getName(),
+						Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {"companyId"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"findByCompanyId", new String[] {Long.class.getName()},
+					new String[] {"companyId"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"countByCompanyId", new String[] {Long.class.getName()},
+					new String[] {"companyId"}, false),
+				_SQL_SELECT_ASSETENTRY_WHERE, _SQL_COUNT_ASSETENTRY_WHERE,
+				AssetEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"assetEntry.", "companyId", FinderColumn.Type.LONG, "=",
 					true, true, AssetEntry::getCompanyId));
 
-		_finderPathWithPaginationFindByClassUuid = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByClassUuid",
-			new String[] {
-				String.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"classUuid"}, true);
-
-		_finderPathWithoutPaginationFindByClassUuid = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByClassUuid",
-			new String[] {String.class.getName()}, new String[] {"classUuid"},
-			true);
-
-		_finderPathCountByClassUuid = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByClassUuid",
-			new String[] {String.class.getName()}, new String[] {"classUuid"},
-			false);
-
 		_collectionPersistenceFinderByClassUuid =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByClassUuid,
-				_finderPathWithoutPaginationFindByClassUuid,
-				_finderPathCountByClassUuid, _SQL_SELECT_ASSETENTRY_WHERE,
-				_SQL_COUNT_ASSETENTRY_WHERE, AssetEntryModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByClassUuid",
+					new String[] {
+						String.class.getName(), Integer.class.getName(),
+						Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {"classUuid"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"findByClassUuid", new String[] {String.class.getName()},
+					new String[] {"classUuid"}, 0, 1, true, null),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"countByClassUuid", new String[] {String.class.getName()},
+					new String[] {"classUuid"}, 0, 1, false, null),
+				_SQL_SELECT_ASSETENTRY_WHERE, _SQL_COUNT_ASSETENTRY_WHERE,
+				AssetEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"assetEntry.", "classUuid", FinderColumn.Type.STRING, "=",
 					true, true, AssetEntry::getClassUuid));
 
-		_finderPathWithPaginationFindByVisible = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByVisible",
-			new String[] {
-				Boolean.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"visible"}, true);
-
-		_finderPathWithoutPaginationFindByVisible = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByVisible",
-			new String[] {Boolean.class.getName()}, new String[] {"visible"},
-			true);
-
-		_finderPathCountByVisible = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByVisible",
-			new String[] {Boolean.class.getName()}, new String[] {"visible"},
-			false);
-
 		_collectionPersistenceFinderByVisible =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByVisible,
-				_finderPathWithoutPaginationFindByVisible,
-				_finderPathCountByVisible, _SQL_SELECT_ASSETENTRY_WHERE,
-				_SQL_COUNT_ASSETENTRY_WHERE, AssetEntryModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByVisible",
+					new String[] {
+						Boolean.class.getName(), Integer.class.getName(),
+						Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {"visible"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByVisible",
+					new String[] {Boolean.class.getName()},
+					new String[] {"visible"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByVisible",
+					new String[] {Boolean.class.getName()},
+					new String[] {"visible"}, false),
+				_SQL_SELECT_ASSETENTRY_WHERE, _SQL_COUNT_ASSETENTRY_WHERE,
+				AssetEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"assetEntry.", "visible", FinderColumn.Type.BOOLEAN, "=",
 					true, true, AssetEntry::isVisible));
 
-		_finderPathWithPaginationFindByPublishDate = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByPublishDate",
-			new String[] {
-				Date.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"publishDate"}, true);
-
-		_finderPathWithoutPaginationFindByPublishDate = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByPublishDate",
-			new String[] {Date.class.getName()}, new String[] {"publishDate"},
-			true);
-
-		_finderPathCountByPublishDate = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByPublishDate",
-			new String[] {Date.class.getName()}, new String[] {"publishDate"},
-			false);
-
 		_collectionPersistenceFinderByPublishDate =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByPublishDate,
-				_finderPathWithoutPaginationFindByPublishDate,
-				_finderPathCountByPublishDate, _SQL_SELECT_ASSETENTRY_WHERE,
-				_SQL_COUNT_ASSETENTRY_WHERE, AssetEntryModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByPublishDate",
+					new String[] {
+						Date.class.getName(), Integer.class.getName(),
+						Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {"publishDate"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"findByPublishDate", new String[] {Date.class.getName()},
+					new String[] {"publishDate"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"countByPublishDate", new String[] {Date.class.getName()},
+					new String[] {"publishDate"}, false),
+				_SQL_SELECT_ASSETENTRY_WHERE, _SQL_COUNT_ASSETENTRY_WHERE,
+				AssetEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"assetEntry.", "publishDate", FinderColumn.Type.DATE, "=",
 					true, true, AssetEntry::getPublishDate));
 
-		_finderPathWithPaginationFindByExpirationDate = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByExpirationDate",
-			new String[] {
-				Date.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"expirationDate"}, true);
-
-		_finderPathWithoutPaginationFindByExpirationDate = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByExpirationDate",
-			new String[] {Date.class.getName()},
-			new String[] {"expirationDate"}, true);
-
-		_finderPathCountByExpirationDate = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByExpirationDate",
-			new String[] {Date.class.getName()},
-			new String[] {"expirationDate"}, false);
-
 		_collectionPersistenceFinderByExpirationDate =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByExpirationDate,
-				_finderPathWithoutPaginationFindByExpirationDate,
-				_finderPathCountByExpirationDate, _SQL_SELECT_ASSETENTRY_WHERE,
-				_SQL_COUNT_ASSETENTRY_WHERE, AssetEntryModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+					"findByExpirationDate",
+					new String[] {
+						Date.class.getName(), Integer.class.getName(),
+						Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {"expirationDate"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"findByExpirationDate", new String[] {Date.class.getName()},
+					new String[] {"expirationDate"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"countByExpirationDate",
+					new String[] {Date.class.getName()},
+					new String[] {"expirationDate"}, false),
+				_SQL_SELECT_ASSETENTRY_WHERE, _SQL_COUNT_ASSETENTRY_WHERE,
+				AssetEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"assetEntry.", "expirationDate", FinderColumn.Type.DATE,
 					"=", true, true, AssetEntry::getExpirationDate));
 
-		_finderPathWithPaginationFindByLayoutUuid = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByLayoutUuid",
-			new String[] {
-				String.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"layoutUuid"}, true);
-
-		_finderPathWithoutPaginationFindByLayoutUuid = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByLayoutUuid",
-			new String[] {String.class.getName()}, new String[] {"layoutUuid"},
-			true);
-
-		_finderPathCountByLayoutUuid = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByLayoutUuid",
-			new String[] {String.class.getName()}, new String[] {"layoutUuid"},
-			false);
-
 		_collectionPersistenceFinderByLayoutUuid =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByLayoutUuid,
-				_finderPathWithoutPaginationFindByLayoutUuid,
-				_finderPathCountByLayoutUuid, _SQL_SELECT_ASSETENTRY_WHERE,
-				_SQL_COUNT_ASSETENTRY_WHERE, AssetEntryModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByLayoutUuid",
+					new String[] {
+						String.class.getName(), Integer.class.getName(),
+						Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {"layoutUuid"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"findByLayoutUuid", new String[] {String.class.getName()},
+					new String[] {"layoutUuid"}, 0, 1, true, null),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"countByLayoutUuid", new String[] {String.class.getName()},
+					new String[] {"layoutUuid"}, 0, 1, false, null),
+				_SQL_SELECT_ASSETENTRY_WHERE, _SQL_COUNT_ASSETENTRY_WHERE,
+				AssetEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"assetEntry.", "layoutUuid", FinderColumn.Type.STRING, "=",
 					true, true, AssetEntry::getLayoutUuid));
 
-		_finderPathFetchByG_CU = createUniqueFinderPath(
-			FINDER_CLASS_NAME_ENTITY, "fetchByG_CU",
-			new String[] {Long.class.getName(), String.class.getName()},
-			new String[] {"groupId", "classUuid"}, false,
-			AssetEntry::getGroupId, AssetEntry::getClassUuid);
-
 		_uniquePersistenceFinderByG_CU = new UniquePersistenceFinder<>(
-			this, _finderPathFetchByG_CU, _SQL_SELECT_ASSETENTRY_WHERE,
+			this,
+			createUniqueFinderPath(
+				FINDER_CLASS_NAME_ENTITY, "fetchByG_CU",
+				new String[] {Long.class.getName(), String.class.getName()},
+				new String[] {"groupId", "classUuid"}, 0, 2, false,
+				AssetEntry::getGroupId,
+				convertNullFunction(AssetEntry::getClassUuid)),
+			_SQL_SELECT_ASSETENTRY_WHERE, "",
 			new FinderColumn<>(
 				"assetEntry.", "groupId", FinderColumn.Type.LONG, "=", true,
-				false, AssetEntry::getGroupId),
+				true, AssetEntry::getGroupId),
 			new FinderColumn<>(
 				"assetEntry.", "classUuid", FinderColumn.Type.STRING, "=", true,
 				true, AssetEntry::getClassUuid));
 
-		_finderPathWithPaginationFindByC_CN = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_CN",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				OrderByComparator.class.getName()
-			},
-			new String[] {"companyId", "classNameId"}, true);
-
-		_finderPathWithoutPaginationFindByC_CN = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByC_CN",
-			new String[] {Long.class.getName(), Long.class.getName()},
-			new String[] {"companyId", "classNameId"}, true);
-
-		_finderPathCountByC_CN = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByC_CN",
-			new String[] {Long.class.getName(), Long.class.getName()},
-			new String[] {"companyId", "classNameId"}, false);
-
 		_collectionPersistenceFinderByC_CN = new CollectionPersistenceFinder<>(
-			this, _finderPathWithPaginationFindByC_CN,
-			_finderPathWithoutPaginationFindByC_CN, _finderPathCountByC_CN,
+			this,
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_CN",
+				new String[] {
+					Long.class.getName(), Long.class.getName(),
+					Integer.class.getName(), Integer.class.getName(),
+					OrderByComparator.class.getName()
+				},
+				new String[] {"companyId", "classNameId"}, true),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByC_CN",
+				new String[] {Long.class.getName(), Long.class.getName()},
+				new String[] {"companyId", "classNameId"}, true),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByC_CN",
+				new String[] {Long.class.getName(), Long.class.getName()},
+				new String[] {"companyId", "classNameId"}, false),
 			_SQL_SELECT_ASSETENTRY_WHERE, _SQL_COUNT_ASSETENTRY_WHERE,
-			AssetEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX,
+			AssetEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX, "",
 			new FinderColumn<>(
 				"assetEntry.", "companyId", FinderColumn.Type.LONG, "=", true,
-				false, AssetEntry::getCompanyId),
+				true, AssetEntry::getCompanyId),
 			new FinderColumn<>(
 				"assetEntry.", "classNameId", FinderColumn.Type.LONG, "=", true,
 				true, AssetEntry::getClassNameId));
 
-		_finderPathFetchByC_C = createUniqueFinderPath(
-			FINDER_CLASS_NAME_ENTITY, "fetchByC_C",
-			new String[] {Long.class.getName(), Long.class.getName()},
-			new String[] {"classNameId", "classPK"}, false,
-			AssetEntry::getClassNameId, AssetEntry::getClassPK);
-
 		_uniquePersistenceFinderByC_C = new UniquePersistenceFinder<>(
-			this, _finderPathFetchByC_C, _SQL_SELECT_ASSETENTRY_WHERE,
+			this,
+			createUniqueFinderPath(
+				FINDER_CLASS_NAME_ENTITY, "fetchByC_C",
+				new String[] {Long.class.getName(), Long.class.getName()},
+				new String[] {"classNameId", "classPK"}, 0, 0, false,
+				AssetEntry::getClassNameId, AssetEntry::getClassPK),
+			_SQL_SELECT_ASSETENTRY_WHERE, "",
 			new FinderColumn<>(
 				"assetEntry.", "classNameId", FinderColumn.Type.LONG, "=", true,
-				false, AssetEntry::getClassNameId),
+				true, AssetEntry::getClassNameId),
 			new FinderColumn<>(
 				"assetEntry.", "classPK", FinderColumn.Type.LONG, "=", true,
 				true, AssetEntry::getClassPK));
 
-		_finderPathWithPaginationFindByG_C_V = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_C_V",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Boolean.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"groupId", "classNameId", "visible"}, true);
-
-		_finderPathWithoutPaginationFindByG_C_V = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_C_V",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Boolean.class.getName()
-			},
-			new String[] {"groupId", "classNameId", "visible"}, true);
-
-		_finderPathCountByG_C_V = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_C_V",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Boolean.class.getName()
-			},
-			new String[] {"groupId", "classNameId", "visible"}, false);
-
 		_collectionPersistenceFinderByG_C_V = new CollectionPersistenceFinder<>(
-			this, _finderPathWithPaginationFindByG_C_V,
-			_finderPathWithoutPaginationFindByG_C_V, _finderPathCountByG_C_V,
+			this,
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_C_V",
+				new String[] {
+					Long.class.getName(), Long.class.getName(),
+					Boolean.class.getName(), Integer.class.getName(),
+					Integer.class.getName(), OrderByComparator.class.getName()
+				},
+				new String[] {"groupId", "classNameId", "visible"}, true),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_C_V",
+				new String[] {
+					Long.class.getName(), Long.class.getName(),
+					Boolean.class.getName()
+				},
+				new String[] {"groupId", "classNameId", "visible"}, true),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_C_V",
+				new String[] {
+					Long.class.getName(), Long.class.getName(),
+					Boolean.class.getName()
+				},
+				new String[] {"groupId", "classNameId", "visible"}, false),
 			_SQL_SELECT_ASSETENTRY_WHERE, _SQL_COUNT_ASSETENTRY_WHERE,
-			AssetEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX,
+			AssetEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX, "",
 			new FinderColumn<>(
 				"assetEntry.", "groupId", FinderColumn.Type.LONG, "=", true,
-				false, AssetEntry::getGroupId),
+				true, AssetEntry::getGroupId),
 			new FinderColumn<>(
 				"assetEntry.", "classNameId", FinderColumn.Type.LONG, "=", true,
-				false, AssetEntry::getClassNameId),
+				true, AssetEntry::getClassNameId),
 			new FinderColumn<>(
 				"assetEntry.", "visible", FinderColumn.Type.BOOLEAN, "=", true,
 				true, AssetEntry::isVisible));
 
-		_finderPathWithPaginationFindByG_C_P_E = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_C_P_E",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Date.class.getName(), Date.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				OrderByComparator.class.getName()
-			},
-			new String[] {
-				"groupId", "classNameId", "publishDate", "expirationDate"
-			},
-			true);
-
-		_finderPathWithoutPaginationFindByG_C_P_E = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_C_P_E",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Date.class.getName(), Date.class.getName()
-			},
-			new String[] {
-				"groupId", "classNameId", "publishDate", "expirationDate"
-			},
-			true);
-
-		_finderPathCountByG_C_P_E = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_C_P_E",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Date.class.getName(), Date.class.getName()
-			},
-			new String[] {
-				"groupId", "classNameId", "publishDate", "expirationDate"
-			},
-			false);
-
 		_collectionPersistenceFinderByG_C_P_E =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByG_C_P_E,
-				_finderPathWithoutPaginationFindByG_C_P_E,
-				_finderPathCountByG_C_P_E, _SQL_SELECT_ASSETENTRY_WHERE,
-				_SQL_COUNT_ASSETENTRY_WHERE, AssetEntryModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_C_P_E",
+					new String[] {
+						Long.class.getName(), Long.class.getName(),
+						Date.class.getName(), Date.class.getName(),
+						Integer.class.getName(), Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {
+						"groupId", "classNameId", "publishDate",
+						"expirationDate"
+					},
+					true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_C_P_E",
+					new String[] {
+						Long.class.getName(), Long.class.getName(),
+						Date.class.getName(), Date.class.getName()
+					},
+					new String[] {
+						"groupId", "classNameId", "publishDate",
+						"expirationDate"
+					},
+					true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_C_P_E",
+					new String[] {
+						Long.class.getName(), Long.class.getName(),
+						Date.class.getName(), Date.class.getName()
+					},
+					new String[] {
+						"groupId", "classNameId", "publishDate",
+						"expirationDate"
+					},
+					false),
+				_SQL_SELECT_ASSETENTRY_WHERE, _SQL_COUNT_ASSETENTRY_WHERE,
+				AssetEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"assetEntry.", "groupId", FinderColumn.Type.LONG, "=", true,
-					false, AssetEntry::getGroupId),
+					true, AssetEntry::getGroupId),
 				new FinderColumn<>(
 					"assetEntry.", "classNameId", FinderColumn.Type.LONG, "=",
-					true, false, AssetEntry::getClassNameId),
+					true, true, AssetEntry::getClassNameId),
 				new FinderColumn<>(
 					"assetEntry.", "publishDate", FinderColumn.Type.DATE, "=",
-					true, false, AssetEntry::getPublishDate),
+					true, true, AssetEntry::getPublishDate),
 				new FinderColumn<>(
 					"assetEntry.", "expirationDate", FinderColumn.Type.DATE,
 					"=", true, true, AssetEntry::getExpirationDate));
@@ -2962,4 +2205,4 @@ public class AssetEntryPersistenceImpl
 	}
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:-1490206712
+// LIFERAY-SERVICE-BUILDER-HASH:-930039048

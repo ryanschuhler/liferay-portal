@@ -453,6 +453,9 @@ public interface WebKeys {
 	public static final String PORTAL_SERVLET_URL_PATTERNS =
 		"PORTAL_SERVLET_URL_PATTERNS";
 
+	public static final String PORTAL_STATUS_EXCEPTION =
+		"PORTAL_STATUS_EXCEPTION";
+
 	public static final String PORTLET_AJAX_RENDER = "PORTLET_AJAX_RENDER";
 
 	public static final String PORTLET_BREADCRUMBS =

@@ -14,6 +14,8 @@ import {performUserSwitch, userData} from '../../../utils/performLogin';
 import {waitForModal} from '../../../utils/waitFor';
 import {waitForAlert} from '../../../utils/waitForAlert';
 import {checkInZip} from '../../../utils/zip';
+import {DefaultPermissionsPage} from '../permissions/pages/DefaultPermissionsPage';
+import {PermissionsPage} from '../permissions/pages/PermissionsPage';
 import {structureBuilderPagesTest} from '../structure-builder/fixtures/structureBuilderPagesTest';
 import {cmsPagesTest} from './fixtures/cmsPagesTest';
 
@@ -1888,6 +1890,68 @@ test(
 );
 
 test(
+	'Bulk Delete over a Select All expanded selection forwards the section filter',
+	{tag: '@LPD-89162'},
+	async ({apiHelpers, assetsPage, page}) => {
+		const fileCount = 21;
+		const titlePrefix = `BulkDeleteSelectAll ${getRandomString()}`;
+
+		await test.step(`Create ${fileCount} files in the Default space`, async () => {
+			for (let i = 0; i < fileCount; i++) {
+				const entry = await apiHelpers.objectEntry.postObjectEntry(
+					{
+						file: {
+							fileBase64: 'R0lGODlhAQABAAAAACw=',
+							name: `${titlePrefix}_${i}.gif`,
+						},
+						objectEntryFolderExternalReferenceCode: 'L_FILES',
+						title: `${titlePrefix}_${i}`,
+					},
+					'cms/basic-documents',
+					'Default'
+				);
+
+				apiHelpers.data.push({
+					id: entry.file.id,
+					type: 'document',
+				});
+			}
+		});
+
+		await assetsPage.gotoFiles();
+		await assetsPage.changeVisualizationMode('Table');
+
+		await page.getByTitle('Select Items').click();
+
+		const selectAllLink = page.getByRole('button', {
+			exact: true,
+			name: 'Select All',
+		});
+
+		await expect(selectAllLink).toBeVisible();
+
+		await selectAllLink.click();
+
+		await expect(page.getByText('All Selected')).toBeVisible();
+
+		await assetsPage.execBulkItemAction('Delete');
+
+		await waitForModal({page});
+
+		await page
+			.locator('.modal')
+			.getByRole('button', {name: 'Delete'})
+			.click();
+
+		await waitForAlert(page, 'Info:Delete action started', {
+			type: 'info',
+		});
+
+		await expect(page.getByText('Filter is null')).toHaveCount(0);
+	}
+);
+
+test(
 	'Export for Translation CMS assets in bulk',
 	{tag: '@LPD-85361'},
 	async ({apiHelpers, assetsPage, page}) => {
@@ -2849,6 +2913,358 @@ test(
 				'Error:Assets could not be moved. Please ensure the name is unique in the destination.',
 				{type: 'danger'}
 			);
+		});
+	}
+);
+
+test(
+	'Bulk Duplicate creates draft copies in the same Space',
+	{tag: '@LPD-88656'},
+	async ({apiHelpers, assetsPage, page}) => {
+		const applicationName = 'cms/basic-web-contents';
+		const contentTitles = [
+			`Content ${getRandomString()}`,
+			`Content ${getRandomString()}`,
+		];
+		const spaceName = `Space ${getRandomString()}`;
+
+		await test.step('Create a Space with two contents', async () => {
+			await apiHelpers.headlessAssetLibrary.createAssetLibrary({
+				name: spaceName,
+				settings: {},
+				type: 'Space',
+			});
+
+			for (const title of contentTitles) {
+				await apiHelpers.objectEntry.postObjectEntry(
+					{
+						objectEntryFolderExternalReferenceCode: 'L_CONTENTS',
+						title,
+					},
+					applicationName,
+					spaceName
+				);
+			}
+		});
+
+		await test.step('Bulk duplicate both contents', async () => {
+			await assetsPage.gotoSpaceContents(spaceName);
+
+			await assetsPage.selectItems(contentTitles);
+
+			await assetsPage.execBulkItemAction('Duplicate');
+		});
+
+		await test.step('Info alert for the bulk duplicate is displayed', async () => {
+			await waitForAlert(
+				page,
+				'Info:Duplicate action started for 2 assets.',
+				{type: 'info'}
+			);
+		});
+
+		await test.step('Success alert for the bulk duplicate is displayed', async () => {
+			await waitForAlert(
+				page,
+				'Success:2 assets were successfully duplicated.',
+				{first: true}
+			);
+		});
+
+		await test.step('Both copies appear with (Copy) suffix in Draft state', async () => {
+			for (const originalTitle of contentTitles) {
+				await expect(
+					page.getByRole('link', {
+						exact: true,
+						name: `${originalTitle} (Copy)`,
+					})
+				).toBeVisible();
+			}
+
+			await expect(
+				assetsPage.table.bodyRows
+					.filter({
+						has: page.getByRole('link', {
+							exact: true,
+							name: `${contentTitles[0]} (Copy)`,
+						}),
+					})
+					.getByText('Draft')
+			).toBeVisible();
+		});
+	}
+);
+
+test(
+	'Bulk Duplicate handles a mixed entry and folder selection in the same Space',
+	{tag: '@LPD-88656'},
+	async ({apiHelpers, assetsPage, page}) => {
+		const contentTitle = `Content ${getRandomString()}`;
+		const folderTitle = `Folder ${getRandomString()}`;
+		const spaceName = `Space ${getRandomString()}`;
+
+		await test.step('Create a Space with one content and one folder', async () => {
+			await apiHelpers.headlessAssetLibrary.createAssetLibrary({
+				name: spaceName,
+				settings: {},
+				type: 'Space',
+			});
+
+			await apiHelpers.objectEntry.postObjectEntry(
+				{
+					objectEntryFolderExternalReferenceCode: 'L_CONTENTS',
+					title: contentTitle,
+				},
+				'cms/basic-web-contents',
+				spaceName
+			);
+
+			await apiHelpers.objectFolder.createObjectEntryFolder({
+				parentObjectEntryFolderExternalReferenceCode: 'L_CONTENTS',
+				scopeKey: spaceName,
+				title: folderTitle,
+			});
+		});
+
+		await test.step('Bulk duplicate the content and folder', async () => {
+			await assetsPage.gotoSpaceContents(spaceName);
+
+			await assetsPage.selectItems([contentTitle, folderTitle]);
+
+			await assetsPage.execBulkItemAction('Duplicate');
+		});
+
+		await test.step('Info alert for the bulk duplicate is displayed', async () => {
+			await waitForAlert(
+				page,
+				'Info:Duplicate action started for 2 assets.',
+				{type: 'info'}
+			);
+		});
+
+		await test.step('Success alert for the bulk duplicate is displayed', async () => {
+			await waitForAlert(
+				page,
+				'Success:2 assets were successfully duplicated.',
+				{first: true}
+			);
+		});
+
+		await test.step('Both copies appear with (Copy) suffix', async () => {
+			for (const title of [contentTitle, folderTitle]) {
+				await expect(
+					page.getByRole('link', {
+						exact: true,
+						name: `${title} (Copy)`,
+					})
+				).toBeVisible();
+			}
+		});
+	}
+);
+
+test(
+	'Permissions can be reset to defaults in bulk from the All section',
+	{tag: '@LPD-85553'},
+	async ({apiHelpers, assetsPage, page}) => {
+		const applicationName = 'cms/basic-web-contents';
+
+		const contentNames = [getRandomString(), getRandomString()];
+
+		const spaceName = `Space ${getRandomString()}`;
+
+		await apiHelpers.headlessAssetLibrary.createAssetLibrary({
+			name: spaceName,
+			settings: {},
+			type: 'Space',
+		});
+
+		for (const contentName of contentNames) {
+			await apiHelpers.objectEntry.postObjectEntry(
+				{
+					objectEntryFolderExternalReferenceCode: 'L_CONTENTS',
+					title: contentName,
+				},
+				applicationName,
+				spaceName
+			);
+		}
+
+		const permissionsPage = new PermissionsPage(page);
+
+		const overriddenPermissions = [
+			{action: 'DELETE_DISCUSSION', checked: true, role: 'Power User'},
+			{action: 'UPDATE_DISCUSSION', checked: true, role: 'User'},
+		];
+
+		await test.step('Override permissions on each asset individually', async () => {
+			await assetsPage.gotoAll();
+
+			for (const contentName of contentNames) {
+				await page
+					.getByRole('button', {name: `${contentName} Actions`})
+					.click();
+
+				await page
+					.getByRole('menuitem', {exact: true, name: 'Permissions'})
+					.click();
+
+				await page
+					.getByRole('menuitem', {exact: true, name: 'Permissions'})
+					.last()
+					.click();
+
+				await permissionsPage.checkPermissionsAndSave(
+					overriddenPermissions
+				);
+			}
+		});
+
+		await test.step('Bulk reset permissions to parent defaults', async () => {
+			await assetsPage.selectItems(contentNames);
+
+			await page
+				.getByTestId('visualization-mode-table')
+				.getByLabel('Actions')
+				.click();
+
+			await page
+				.getByRole('menuitem', {
+					exact: true,
+					name: 'Reset to Default Permissions',
+				})
+				.click();
+
+			await page.getByRole('button', {name: 'Confirm'}).click();
+
+			await waitForAlert(
+				page,
+				`Info:Reset permissions action started for ${contentNames.length} assets.`,
+				{type: 'info'}
+			);
+		});
+
+		await test.step('Verify the overridden permissions were cleared', async () => {
+			for (const contentName of contentNames) {
+				await page
+					.getByRole('button', {name: `${contentName} Actions`})
+					.click();
+
+				await page
+					.getByRole('menuitem', {exact: true, name: 'Permissions'})
+					.click();
+
+				await page
+					.getByRole('menuitem', {exact: true, name: 'Permissions'})
+					.last()
+					.click();
+
+				await permissionsPage.verifyPermissions([
+					{
+						action: 'DELETE_DISCUSSION',
+						checked: false,
+						role: 'Power User',
+					},
+					{
+						action: 'UPDATE_DISCUSSION',
+						checked: false,
+						role: 'User',
+					},
+				]);
+			}
+		});
+	}
+);
+
+test(
+	'Permissions can be edited by role in bulk from the All section',
+	{tag: '@LPD-85553'},
+	async ({apiHelpers, assetsPage, page}) => {
+		const applicationName = 'cms/basic-web-contents';
+
+		const contentNames = [getRandomString(), getRandomString()];
+
+		const spaceName = `Space ${getRandomString()}`;
+
+		await apiHelpers.headlessAssetLibrary.createAssetLibrary({
+			name: spaceName,
+			settings: {},
+			type: 'Space',
+		});
+
+		for (const contentName of contentNames) {
+			await apiHelpers.objectEntry.postObjectEntry(
+				{
+					objectEntryFolderExternalReferenceCode: 'L_CONTENTS',
+					title: contentName,
+				},
+				applicationName,
+				spaceName
+			);
+		}
+
+		const defaultPermissionsPage = new DefaultPermissionsPage(page);
+		const permissionsPage = new PermissionsPage(page);
+
+		await test.step('Bulk edit Permissions by Role for the selected assets', async () => {
+			await assetsPage.gotoAll();
+
+			await assetsPage.selectItems(contentNames);
+
+			await page
+				.getByTestId('visualization-mode-table')
+				.getByLabel('Actions')
+				.click();
+
+			await page
+				.getByRole('menuitem', {
+					exact: true,
+					name: 'Edit Permissions by Role',
+				})
+				.click();
+
+			await expect(defaultPermissionsPage.permissionsModal).toBeVisible();
+
+			await defaultPermissionsPage.permissionsModalSelectRole.selectOption(
+				'Power User'
+			);
+
+			await defaultPermissionsPage.permissionsModal
+				.getByTestId('row-checkbox-Power User_VIEW')
+				.check();
+
+			await defaultPermissionsPage.permissionsModalSaveButton.click();
+
+			await waitForAlert(
+				page,
+				`update action started for ${contentNames.length} assets`,
+				{type: 'info'}
+			);
+
+			await defaultPermissionsPage.permissionsModalCancelButton.click();
+		});
+
+		await test.step('Verify the selected assets received the new permissions', async () => {
+			const expected = [
+				{action: 'VIEW', checked: true, role: 'Power User'},
+			];
+
+			for (const contentName of contentNames) {
+				await page
+					.getByRole('button', {name: `${contentName} Actions`})
+					.click();
+
+				await page
+					.getByRole('menuitem', {exact: true, name: 'Permissions'})
+					.click();
+
+				await page
+					.getByRole('menuitem', {exact: true, name: 'Permissions'})
+					.last()
+					.click();
+
+				await permissionsPage.verifyPermissions(expected);
+			}
 		});
 	}
 );

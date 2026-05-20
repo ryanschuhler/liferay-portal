@@ -10,7 +10,10 @@ import com.liferay.osb.faro.engine.client.ContactsEngineClient;
 import com.liferay.osb.faro.engine.client.exception.FaroEngineClientException;
 import com.liferay.osb.faro.engine.client.model.Account;
 import com.liferay.osb.faro.engine.client.model.AccountDetails;
+import com.liferay.osb.faro.engine.client.model.AccountLifecycle;
 import com.liferay.osb.faro.engine.client.model.AccountLifecycleMetric;
+import com.liferay.osb.faro.engine.client.model.AccountLifecycleStageMetric;
+import com.liferay.osb.faro.engine.client.model.AccountLifecycleStatus;
 import com.liferay.osb.faro.engine.client.model.AccountMetric;
 import com.liferay.osb.faro.engine.client.model.Activity;
 import com.liferay.osb.faro.engine.client.model.ActivityAggregation;
@@ -72,6 +75,15 @@ import org.osgi.service.component.annotations.Reference;
  */
 public abstract class BaseMockContactsEngineClientImpl
 	extends BaseEngineClient implements ContactsEngineClient {
+
+	@Override
+	public AccountLifecycle addAccountLifecycle(
+		FaroProject faroProject, String description, String name,
+		String segmentId) {
+
+		return contactsEngineClient.addAccountLifecycle(
+			faroProject, description, name, segmentId);
+	}
 
 	@Override
 	public Results<BlockedKeyword> addBlockedKeywords(
@@ -336,13 +348,57 @@ public abstract class BaseMockContactsEngineClientImpl
 	}
 
 	@Override
-	public List<AccountLifecycleMetric> getAccountLifecycleMetrics(
+	public AccountLifecycle getAccountLifecycle(
+			FaroProject faroProject, String id)
+		throws FaroEngineClientException {
+
+		return contactsEngineClient.getAccountLifecycle(faroProject, id);
+	}
+
+	@Override
+	public Results<Account> getAccountLifecycleAccounts(
 			FaroProject faroProject, String country, String id, String industry,
-			String revenue)
+			String query, String stageType, int cur, int delta,
+			String sortString)
+		throws FaroEngineClientException {
+
+		return contactsEngineClient.getAccountLifecycleAccounts(
+			faroProject, country, id, industry, query, stageType, cur, delta,
+			sortString);
+	}
+
+	@Override
+	public List<AccountLifecycleMetric> getAccountLifecycleMetrics(
+			FaroProject faroProject, String country, String id, String industry)
 		throws FaroEngineClientException {
 
 		return contactsEngineClient.getAccountLifecycleMetrics(
-			faroProject, country, id, industry, revenue);
+			faroProject, country, id, industry);
+	}
+
+	@Override
+	public List<AccountLifecycle> getAccountLifecycles(FaroProject faroProject)
+		throws FaroEngineClientException {
+
+		return contactsEngineClient.getAccountLifecycles(faroProject);
+	}
+
+	@Override
+	public List<AccountLifecycleStageMetric> getAccountLifecycleStageMetrics(
+			FaroProject faroProject, String country, String id, String industry)
+		throws FaroEngineClientException {
+
+		return contactsEngineClient.getAccountLifecycleStageMetrics(
+			faroProject, country, id, industry);
+	}
+
+	@Override
+	public AccountLifecycleStatus getAccountLifecycleStatus(
+			FaroProject faroProject, String accountLifecycleId, String id)
+		throws FaroEngineClientException {
+
+		return contactsEngineClient.getAccountLifecycleStatus(
+			faroProject, accountLifecycleId, id);
 	}
 
 	@Override
@@ -460,11 +516,14 @@ public abstract class BaseMockContactsEngineClientImpl
 
 	@Override
 	public Results<AssetSummaryCategory> getAssetSummaryCategories(
-		FaroProject faroProject, long channelId, String rangeEnd, int rangeKey,
-		String rangeStart, int cur, int delta) {
+		FaroProject faroProject, String accountId, long channelId,
+		String keywords, String rangeEnd, int rangeKey, String rangeStart,
+		String selectedMetric, String sort, String vocabularyId, int cur,
+		int delta) {
 
 		return contactsEngineClient.getAssetSummaryCategories(
-			faroProject, channelId, rangeEnd, rangeKey, rangeStart, cur, delta);
+			faroProject, accountId, channelId, keywords, rangeEnd, rangeKey,
+			rangeStart, selectedMetric, sort, vocabularyId, cur, delta);
 	}
 
 	@Override
@@ -478,11 +537,13 @@ public abstract class BaseMockContactsEngineClientImpl
 
 	@Override
 	public Results<AssetSummaryTag> getAssetSummaryTags(
-		FaroProject faroProject, long channelId, String rangeEnd, int rangeKey,
-		String rangeStart, int cur, int delta) {
+		FaroProject faroProject, String accountId, long channelId,
+		String keywords, String rangeEnd, int rangeKey, String rangeStart,
+		String selectedMetric, String sort, int cur, int delta) {
 
 		return contactsEngineClient.getAssetSummaryTags(
-			faroProject, channelId, rangeEnd, rangeKey, rangeStart, cur, delta);
+			faroProject, accountId, channelId, keywords, rangeEnd, rangeKey,
+			rangeStart, selectedMetric, sort, cur, delta);
 	}
 
 	@Override
@@ -496,11 +557,13 @@ public abstract class BaseMockContactsEngineClientImpl
 
 	@Override
 	public Results<AssetSummaryVocabulary> getAssetSummaryVocabularies(
-		FaroProject faroProject, long channelId, String rangeEnd, int rangeKey,
-		String rangeStart, int cur, int delta) {
+		FaroProject faroProject, long channelId, String keywords,
+		String rangeEnd, int rangeKey, String rangeStart, String sort, int cur,
+		int delta) {
 
 		return contactsEngineClient.getAssetSummaryVocabularies(
-			faroProject, channelId, rangeEnd, rangeKey, rangeStart, cur, delta);
+			faroProject, channelId, keywords, rangeEnd, rangeKey, rangeStart,
+			sort, cur, delta);
 	}
 
 	@Override
@@ -1181,6 +1244,24 @@ public abstract class BaseMockContactsEngineClientImpl
 		super.setEngineURL(engineURL);
 
 		contactsEngineClient.setEngineURL(engineURL);
+	}
+
+	@Override
+	public AccountLifecycle updateAccountLifecycle(
+		FaroProject faroProject, String description, String id, String name,
+		String segmentId) {
+
+		return contactsEngineClient.updateAccountLifecycle(
+			faroProject, description, id, name, segmentId);
+	}
+
+	@Override
+	public void updateAccountLifecycleStageRule(
+		FaroProject faroProject, String filterMetadata, String filterString,
+		String id, String name, String stageId) {
+
+		contactsEngineClient.updateAccountLifecycleStageRule(
+			faroProject, filterMetadata, filterString, id, name, stageId);
 	}
 
 	@Override

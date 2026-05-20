@@ -9,9 +9,9 @@ import ProfileCardCDP from '../hoc/ProfileCardCDP';
 import React from 'react';
 import URLConstants from 'shared/util/url-constants';
 import {connect} from 'react-redux';
-import {isNil} from 'lodash';
 import {Routes, toRoute} from 'shared/util/router';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
+import {useDataSources} from 'shared/context/dataSources';
 import {useRequest} from 'shared/hooks/useRequest';
 
 const OverviewCDPEmptyState = ({
@@ -19,6 +19,7 @@ const OverviewCDPEmptyState = ({
 	dataSourceData,
 	dataSourceLoading,
 	groupId,
+	hasConnectedDataSources,
 	pageDisplay = true
 }) => {
 	if (dataSourceLoading) {
@@ -29,9 +30,9 @@ const OverviewCDPEmptyState = ({
 		);
 	}
 
-	const sitesSelected = dataSourceData?.items[0]?.sitesSelected;
-
-	const noSitesSelected = isNil(sitesSelected) || !sitesSelected;
+	const noSitesSelected = !dataSourceData?.items?.some(
+		dataSource => dataSource.sitesSelected
+	);
 
 	if (noSitesSelected) {
 		return (
@@ -71,7 +72,7 @@ const OverviewCDPEmptyState = ({
 						primary
 						title={Liferay.Language.get('no-site-data-synced')}
 					>
-						{authorized && (
+						{authorized && !hasConnectedDataSources && (
 							<ClayLink
 								button
 								className='button-root mt-1'
@@ -100,15 +101,19 @@ const Overview = ({channelId, groupId, individual, tabId, timeZoneId}) => {
 
 	const authorized = currentUser.isAdmin();
 
+	const dataSourceStates = useDataSources();
+
 	const {data: dataSourceData, loading: dataSourceLoading} = useRequest({
 		dataSourceFn: API.dataSource.search,
 		variables: {
-			delta: 1,
+			delta: 500,
 			groupId
 		}
 	});
 
-	const sitesSelected = dataSourceData?.items[0]?.sitesSelected;
+	const sitesSelected = dataSourceData?.items?.some(
+		dataSource => dataSource.sitesSelected
+	);
 
 	return (
 		<div className='overview-column-main'>
@@ -125,6 +130,7 @@ const Overview = ({channelId, groupId, individual, tabId, timeZoneId}) => {
 					dataSourceData={dataSourceData}
 					dataSourceLoading={dataSourceLoading}
 					groupId={groupId}
+					hasConnectedDataSources={!dataSourceStates.empty}
 					pageDisplay={false}
 				/>
 			</ContextualInformation>
@@ -142,6 +148,7 @@ const Overview = ({channelId, groupId, individual, tabId, timeZoneId}) => {
 					dataSourceData={dataSourceData}
 					dataSourceLoading={dataSourceLoading}
 					groupId={groupId}
+					hasConnectedDataSources={!dataSourceStates.empty}
 				/>
 			</ProfileCardCDP>
 		</div>

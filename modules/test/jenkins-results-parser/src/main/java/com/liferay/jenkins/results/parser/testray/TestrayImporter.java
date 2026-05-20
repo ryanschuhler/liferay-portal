@@ -56,7 +56,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -1192,7 +1192,8 @@ public class TestrayImporter {
 			return JobPropertyFactory.newJobProperty(basePropertyName, job);
 		}
 
-		return null;
+		throw new RuntimeException(
+			"Unable to get job property " + basePropertyName);
 	}
 
 	private String _getMajorPortalVersion() {
@@ -1571,7 +1572,7 @@ public class TestrayImporter {
 						warningsPropertyElement.addElement("value");
 
 					warningPropertyElement.addText(
-						StringEscapeUtils.escapeHtml(warning));
+						StringEscapeUtils.escapeHtml4(warning));
 				}
 			}
 

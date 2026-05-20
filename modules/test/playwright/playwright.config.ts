@@ -85,6 +85,7 @@ import {config as frontendEditorAlloyEditorWebConfig} from './tests/frontend-edi
 import {config as frontendEditorCKEditorWebConfig} from './tests/frontend-editor-ckeditor-web/main/config';
 import {config as frontendJsAuiWebConfig} from './tests/frontend-js-aui-web/main/config';
 import {config as frontendJsBootstrapSupportWebConfig} from './tests/frontend-js-bootstrap-support-web/main/config';
+import {config as frontendJsClayWebConfig} from './tests/frontend-js-clay-web/main/config';
 import {config as frontendJsComponentsWebConfig} from './tests/frontend-js-components-web/main/config';
 import {config as frontendJsItemSelectorWebConfig} from './tests/frontend-js-item-selector-web/main/config';
 import {config as frontendJsSpaWebConfig} from './tests/frontend-js-spa-web/main/config';
@@ -119,6 +120,7 @@ import {config as nestedPortletsWebConfig} from './tests/nested-portlets-web/mai
 import {config as notificationWebConfig} from './tests/notification-web/main/config';
 import {config as notificationsWebConfig} from './tests/notifications-web/main/config';
 import {config as oauthClientAdministrationConfig} from './tests/oauth-client-administration/main/config';
+import {config as oauth2ProviderWebConfig} from './tests/oauth2-provider-web/main/config';
 import {config as objectActionWebConfig} from './tests/object-web/action/config';
 import {config as objectClientExtensionWebConfig} from './tests/object-web/client-extension/config';
 import {config as objectContentPageIntegrationWebConfig} from './tests/object-web/content-page-integration/config';
@@ -308,6 +310,7 @@ export default defineConfig({
 		frontendEditorCKEditorWebConfig,
 		frontendJsAuiWebConfig,
 		frontendJsBootstrapSupportWebConfig,
+		frontendJsClayWebConfig,
 		frontendJsComponentsWebConfig,
 		frontendJsItemSelectorWebConfig,
 		frontendJsSpaWebConfig,
@@ -344,6 +347,7 @@ export default defineConfig({
 		notificationWebConfig,
 		notificationsWebConfig,
 		oauthClientAdministrationConfig,
+		oauth2ProviderWebConfig,
 		listTypeDefinitionsWebConfig,
 		objectActionWebConfig,
 		objectClientExtensionWebConfig,

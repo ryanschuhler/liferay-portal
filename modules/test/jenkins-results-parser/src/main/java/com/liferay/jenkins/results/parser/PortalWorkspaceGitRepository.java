@@ -131,77 +131,6 @@ public class PortalWorkspaceGitRepository extends BaseWorkspaceGitRepository {
 			"liferay-portal-ee", getUpstreamBranchName() + "-private");
 	}
 
-	@Override
-	public synchronized void setUp() {
-		if (isSetUp()) {
-			return;
-		}
-
-		System.out.println(toString());
-
-		try {
-			boolean buildCachingEnabled =
-				JenkinsResultsParserUtil.isBuildCachingEnabled(
-					System.getenv("JOB_NAME"), System.getenv("CI_TEST_SUITE"));
-
-			if (buildCachingEnabled) {
-				checkAvailableGitArchive();
-			}
-
-			if (!isSnapshot()) {
-				prepareGitWorkingDirectory();
-
-				if (buildCachingEnabled) {
-					_setUpBinariesCache();
-
-					prepareGitArchive();
-				}
-
-				setSetUp(true);
-			}
-
-			if (!isSetUp() && isSnapshot()) {
-				useGitArchive();
-
-				_setUpBinariesCache();
-			}
-		}
-		catch (IOException ioException) {
-			throw new RuntimeException(ioException);
-		}
-
-		setSetUp(true);
-	}
-
-	public void setUpPortalProfile() {
-		String upstreamBranchName = getUpstreamBranchName();
-
-		if (upstreamBranchName.startsWith("ee-")) {
-			return;
-		}
-
-		Retryable<Object> setupProfileDXPRetryable = new Retryable<Object>(
-			true, _SETUP_PROFILE_DXP_RETRY_COUNT,
-			_SETUP_PROFILE_DXP_RETRY_DELAY, true) {
-
-			@Override
-			public Object execute() {
-				try {
-					AntUtil.callTarget(
-						getDirectory(), "build.xml", "setup-profile-dxp");
-				}
-				catch (AntException antException) {
-					throw new RuntimeException(antException);
-				}
-
-				return null;
-			}
-
-		};
-
-		setupProfileDXPRetryable.executeWithRetries();
-	}
-
 	public void setUpTCKHome() {
 		Map<String, String> parameters = new HashMap<>();
 
@@ -254,6 +183,25 @@ public class PortalWorkspaceGitRepository extends BaseWorkspaceGitRepository {
 		propertyOptions.add(getUpstreamBranchName());
 
 		return propertyOptions;
+	}
+
+	protected boolean isBinariesCacheEnabled() {
+		try {
+			return Boolean.parseBoolean(
+				JenkinsResultsParserUtil.getBuildProperty(
+					"binaries.cache.enabled", System.getenv("CI_TEST_SUITE"),
+					System.getenv("JOB_NAME")));
+		}
+		catch (IOException ioException) {
+			return true;
+		}
+	}
+
+	@Override
+	protected void setUpAdditionalCaches() throws IOException {
+		if (isBinariesCacheEnabled()) {
+			_setUpBinariesCache();
+		}
 	}
 
 	private String _getLiferayFacesURL(
@@ -443,10 +391,6 @@ public class PortalWorkspaceGitRepository extends BaseWorkspaceGitRepository {
 					"test.", System.getenv("HOSTNAME"), ".properties")),
 			_getPortalTestProperties(), true);
 	}
-
-	private static final int _SETUP_PROFILE_DXP_RETRY_COUNT = 2;
-
-	private static final int _SETUP_PROFILE_DXP_RETRY_DELAY = 5;
 
 	private Properties _appServerProperties;
 	private boolean _setUpBinariesCache;

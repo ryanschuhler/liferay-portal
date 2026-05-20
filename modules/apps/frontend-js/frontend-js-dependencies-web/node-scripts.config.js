@@ -28,6 +28,7 @@ module.exports = {
 		'highlight.js/lib/languages/java',
 		'highlight.js/lib/languages/javascript',
 		'highlight.js/lib/languages/plaintext',
+		'libphonenumber-js',
 		'liferay-ckeditor',
 		'moment',
 		'moment/min/moment-with-locales',

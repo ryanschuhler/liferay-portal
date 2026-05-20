@@ -1069,3 +1069,88 @@ test(
 		});
 	}
 );
+
+test(
+	'Product is Unavailable on the channel when warehouses have No Channel eligibility',
+	{tag: ['@COMMERCE-10640', '@LPD-88485']},
+	async ({apiHelpers}) => {
+		const skuName = `TestSKU-${getRandomString()}`;
+
+		await apiHelpers.headlessCommerceAdminInventoryApiHelper.postWarehouses(
+			{
+				active: true,
+				latitude: getRandomInt(),
+				longitude: getRandomInt(),
+				name: {en_US: `TestWH-${getRandomString()}`},
+				warehouseItems: [{quantity: 100, sku: skuName}],
+			}
+		);
+
+		const product =
+			await apiHelpers.headlessCommerceAdminCatalog.postProduct({
+				catalogId: catalog.id,
+				productConfiguration: {
+					allowBackOrder: false,
+					displayStockQuantity: true,
+					inventoryEngine: 'default',
+				},
+				skus: [
+					{
+						cost: 0,
+						price: 10,
+						published: true,
+						purchasable: true,
+						sku: skuName,
+					},
+				],
+			});
+
+		const channelSkus =
+			await apiHelpers.headlessCommerceDeliveryCatalog.getChannelProductSkusPage(
+				channel.id,
+				product.productId
+			);
+
+		expect(channelSkus.items?.[0]?.availability?.stockQuantity ?? 0).toBe(
+			0
+		);
+	}
+);
+
+test(
+	'Minium seeds the Italy warehouse with the expected address and coordinates',
+	{tag: ['@COMMERCE-10308', '@LPD-88485']},
+	async ({
+		commerceAdminWarehouseDetailsPage,
+		commerceAdminWarehousesPage,
+	}) => {
+		await commerceAdminWarehousesPage.goto();
+
+		await commerceAdminWarehousesPage.warehouseLink('Italy').click();
+
+		await expect(
+			commerceAdminWarehouseDetailsPage.geolocateButton
+		).toBeVisible();
+		await expect(
+			commerceAdminWarehouseDetailsPage.latitudeInput
+		).toHaveValue('42.214601');
+		await expect(
+			commerceAdminWarehouseDetailsPage.longitudeInput
+		).toHaveValue('12.796434');
+		await expect(
+			commerceAdminWarehouseDetailsPage.street1Input
+		).toHaveValue('Via delle Coste 24');
+		await expect(commerceAdminWarehouseDetailsPage.cityInput).toHaveValue(
+			'Borgorose'
+		);
+		await expect(
+			commerceAdminWarehouseDetailsPage.postalCodeInput
+		).toHaveValue('2021');
+		await expect(
+			commerceAdminWarehouseDetailsPage.countrySelect
+		).toHaveText(/Italy/);
+		await expect(commerceAdminWarehouseDetailsPage.regionSelect).toHaveText(
+			/Rieti/
+		);
+	}
+);

@@ -31,7 +31,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -244,11 +244,19 @@ public class PullRequest {
 				getUpstreamRemoteGitBranchName(),
 				gitRepositoryDir.getAbsolutePath(), getGitRepositoryName());
 
+		String senderSHA = getSenderSHA();
+
+		if (!gitWorkingDirectory.localSHAExists(senderSHA)) {
+			RemoteGitRef senderRemoteGitRef =
+				gitWorkingDirectory.getRemoteGitRef(
+					getSenderBranchName(), getSenderRemoteURL(), true);
+
+			gitWorkingDirectory.fetch(senderRemoteGitRef);
+		}
+
 		LocalGitBranch forwardLocalGitBranch =
-			gitWorkingDirectory.getRebasedLocalGitBranch(
-				forwardBranchName, getSenderBranchName(), getSenderRemoteURL(),
-				getSenderSHA(), getUpstreamRemoteGitBranchName(),
-				getUpstreamBranchSHA());
+			gitWorkingDirectory.createLocalGitBranch(
+				forwardBranchName, true, senderSHA);
 
 		RemoteGitBranch forwardRemoteGitBranch =
 			gitWorkingDirectory.pushToRemoteGitRepository(
@@ -576,6 +584,35 @@ public class PullRequest {
 	public String getLocalSenderBranchName() {
 		return JenkinsResultsParserUtil.combine(
 			getSenderUsername(), "-", getNumber(), "-", getSenderBranchName());
+	}
+
+	public String getMergeableState() {
+		Retryable<String> retryable = new Retryable<String>(false, 5, 5, true) {
+
+			@Override
+			public String execute() {
+				if (_firstAttempt) {
+					_firstAttempt = false;
+				}
+				else {
+					_refreshJSONObject();
+				}
+
+				String mergeableState = _jsonObject.getString(
+					"mergeable_state");
+
+				if (mergeableState.equals("unknown")) {
+					throw new RuntimeException("Mergeable state is unknown");
+				}
+
+				return mergeableState;
+			}
+
+			private boolean _firstAttempt = true;
+
+		};
+
+		return retryable.executeWithRetries();
 	}
 
 	public String getNumber() {

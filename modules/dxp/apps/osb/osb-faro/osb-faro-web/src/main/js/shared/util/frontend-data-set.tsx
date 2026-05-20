@@ -3,6 +3,7 @@ import FaroConstants from 'shared/util/constants';
 import Label from '@clayui/label';
 import React, {useEffect, useState} from 'react';
 import {CUSTOM_DATE_FORMAT, formatUTCDate} from './date';
+import {Text} from '@clayui/core';
 import {toRoute} from './router';
 
 const {cur, delta, deltaValues} = FaroConstants.pagination;
@@ -19,6 +20,20 @@ type FDSCellProps<TValue = unknown, TItemData = Record<string, unknown>> = {
 };
 
 export const columns = {
+	attributeNameAndValue: ({
+		attributeName,
+		value
+	}: {
+		attributeName?: string;
+		value: string | number;
+	}) => (
+		<div>
+			<p className='mb-0 text-secondary'>{attributeName}</p>
+			<Text size={3} weight='semi-bold'>
+				{value}
+			</Text>
+		</div>
+	),
 	cmsLabelRenderer: ({
 		displayType,
 		label
@@ -37,11 +52,13 @@ export const columns = {
 		<div>{value && formatUTCDate(value, CUSTOM_DATE_FORMAT)}</div>
 	),
 	nameAndLinkRenderer: ({
+		channelId,
 		groupId,
 		itemData,
 		route,
 		value
 	}: {
+		channelId: string;
 		groupId: string;
 		itemData: {id: string | number};
 		route: string;
@@ -53,6 +70,7 @@ export const columns = {
 			<ClayLink
 				className='font-weight-semi-bold text-dark'
 				href={toRoute(route, {
+					channelId,
 					groupId,
 					id: itemData.id
 				})}

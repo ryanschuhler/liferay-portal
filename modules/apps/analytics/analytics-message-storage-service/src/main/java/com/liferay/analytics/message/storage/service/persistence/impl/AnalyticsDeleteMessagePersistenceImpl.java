@@ -13,7 +13,6 @@ import com.liferay.analytics.message.storage.model.impl.AnalyticsDeleteMessageMo
 import com.liferay.analytics.message.storage.service.persistence.AnalyticsDeleteMessagePersistence;
 import com.liferay.analytics.message.storage.service.persistence.AnalyticsDeleteMessageUtil;
 import com.liferay.analytics.message.storage.service.persistence.impl.constants.AnalyticsPersistenceConstants;
-import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.portal.kernel.change.tracking.CTColumnResolutionType;
 import com.liferay.portal.kernel.configuration.Configuration;
 import com.liferay.portal.kernel.dao.orm.EntityCache;
@@ -22,8 +21,6 @@ import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.dao.orm.SessionFactory;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -84,63 +81,8 @@ public class AnalyticsDeleteMessagePersistenceImpl
 	public static final String FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION =
 		FINDER_CLASS_NAME_ENTITY + ".List2";
 
-	private FinderPath _finderPathWithPaginationFindByCompanyId;
-	private FinderPath _finderPathWithoutPaginationFindByCompanyId;
-	private FinderPath _finderPathCountByCompanyId;
 	private CollectionPersistenceFinder<AnalyticsDeleteMessage>
 		_collectionPersistenceFinderByCompanyId;
-
-	/**
-	 * Returns all the analytics delete messages where companyId = &#63;.
-	 *
-	 * @param companyId the company ID
-	 * @return the matching analytics delete messages
-	 */
-	@Override
-	public List<AnalyticsDeleteMessage> findByCompanyId(long companyId) {
-		return findByCompanyId(
-			companyId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the analytics delete messages where companyId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AnalyticsDeleteMessageModelImpl</code>.
-	 * </p>
-	 *
-	 * @param companyId the company ID
-	 * @param start the lower bound of the range of analytics delete messages
-	 * @param end the upper bound of the range of analytics delete messages (not inclusive)
-	 * @return the range of matching analytics delete messages
-	 */
-	@Override
-	public List<AnalyticsDeleteMessage> findByCompanyId(
-		long companyId, int start, int end) {
-
-		return findByCompanyId(companyId, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the analytics delete messages where companyId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AnalyticsDeleteMessageModelImpl</code>.
-	 * </p>
-	 *
-	 * @param companyId the company ID
-	 * @param start the lower bound of the range of analytics delete messages
-	 * @param end the upper bound of the range of analytics delete messages (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching analytics delete messages
-	 */
-	@Override
-	public List<AnalyticsDeleteMessage> findByCompanyId(
-		long companyId, int start, int end,
-		OrderByComparator<AnalyticsDeleteMessage> orderByComparator) {
-
-		return findByCompanyId(companyId, start, end, orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the analytics delete messages where companyId = &#63;.
@@ -162,14 +104,9 @@ public class AnalyticsDeleteMessagePersistenceImpl
 		OrderByComparator<AnalyticsDeleteMessage> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					AnalyticsDeleteMessage.class)) {
-
-			return _collectionPersistenceFinderByCompanyId.find(
-				finderCache, new Object[] {companyId}, start, end,
-				orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByCompanyId.find(
+			finderCache, new Object[] {companyId}, start, end,
+			orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -233,17 +170,10 @@ public class AnalyticsDeleteMessagePersistenceImpl
 	 */
 	@Override
 	public int countByCompanyId(long companyId) {
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					AnalyticsDeleteMessage.class)) {
-
-			return _collectionPersistenceFinderByCompanyId.count(
-				finderCache, new Object[] {companyId});
-		}
+		return _collectionPersistenceFinderByCompanyId.count(
+			finderCache, new Object[] {companyId});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByC_GtM;
-	private FinderPath _finderPathWithPaginationCountByC_GtM;
 	private CollectionPersistenceFinder<AnalyticsDeleteMessage>
 		_collectionPersistenceFinderByC_GtM;
 
@@ -327,14 +257,9 @@ public class AnalyticsDeleteMessagePersistenceImpl
 		OrderByComparator<AnalyticsDeleteMessage> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					AnalyticsDeleteMessage.class)) {
-
-			return _collectionPersistenceFinderByC_GtM.find(
-				finderCache, new Object[] {companyId, modifiedDate}, start, end,
-				orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByC_GtM.find(
+			finderCache, new Object[] {companyId, modifiedDate}, start, end,
+			orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -404,17 +329,10 @@ public class AnalyticsDeleteMessagePersistenceImpl
 	 */
 	@Override
 	public int countByC_GtM(long companyId, Date modifiedDate) {
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					AnalyticsDeleteMessage.class)) {
-
-			return _collectionPersistenceFinderByC_GtM.count(
-				finderCache, new Object[] {companyId, modifiedDate});
-		}
+		return _collectionPersistenceFinderByC_GtM.count(
+			finderCache, new Object[] {companyId, modifiedDate});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByC_LtM;
-	private FinderPath _finderPathWithPaginationCountByC_LtM;
 	private CollectionPersistenceFinder<AnalyticsDeleteMessage>
 		_collectionPersistenceFinderByC_LtM;
 
@@ -498,14 +416,9 @@ public class AnalyticsDeleteMessagePersistenceImpl
 		OrderByComparator<AnalyticsDeleteMessage> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					AnalyticsDeleteMessage.class)) {
-
-			return _collectionPersistenceFinderByC_LtM.find(
-				finderCache, new Object[] {companyId, modifiedDate}, start, end,
-				orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByC_LtM.find(
+			finderCache, new Object[] {companyId, modifiedDate}, start, end,
+			orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -575,13 +488,8 @@ public class AnalyticsDeleteMessagePersistenceImpl
 	 */
 	@Override
 	public int countByC_LtM(long companyId, Date modifiedDate) {
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					AnalyticsDeleteMessage.class)) {
-
-			return _collectionPersistenceFinderByC_LtM.count(
-				finderCache, new Object[] {companyId, modifiedDate});
-		}
+		return _collectionPersistenceFinderByC_LtM.count(
+			finderCache, new Object[] {companyId, modifiedDate});
 	}
 
 	public AnalyticsDeleteMessagePersistenceImpl() {
@@ -867,89 +775,83 @@ public class AnalyticsDeleteMessagePersistenceImpl
 	 */
 	@Activate
 	public void activate() {
-		_finderPathWithPaginationFindByCompanyId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByCompanyId",
-			new String[] {
-				Long.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"companyId"}, true);
-
-		_finderPathWithoutPaginationFindByCompanyId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByCompanyId",
-			new String[] {Long.class.getName()}, new String[] {"companyId"},
-			true);
-
-		_finderPathCountByCompanyId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByCompanyId",
-			new String[] {Long.class.getName()}, new String[] {"companyId"},
-			false);
-
 		_collectionPersistenceFinderByCompanyId =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByCompanyId,
-				_finderPathWithoutPaginationFindByCompanyId,
-				_finderPathCountByCompanyId,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByCompanyId",
+					new String[] {
+						Long.class.getName(), Integer.class.getName(),
+						Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {"companyId"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"findByCompanyId", new String[] {Long.class.getName()},
+					new String[] {"companyId"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"countByCompanyId", new String[] {Long.class.getName()},
+					new String[] {"companyId"}, false),
 				_SQL_SELECT_ANALYTICSDELETEMESSAGE_WHERE,
 				_SQL_COUNT_ANALYTICSDELETEMESSAGE_WHERE,
 				AnalyticsDeleteMessageModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				_ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"analyticsDeleteMessage.", "companyId",
 					FinderColumn.Type.LONG, "=", true, true,
 					AnalyticsDeleteMessage::getCompanyId));
 
-		_finderPathWithPaginationFindByC_GtM = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_GtM",
-			new String[] {
-				Long.class.getName(), Date.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				OrderByComparator.class.getName()
-			},
-			new String[] {"companyId", "modifiedDate"}, true);
-
-		_finderPathWithPaginationCountByC_GtM = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "countByC_GtM",
-			new String[] {Long.class.getName(), Date.class.getName()},
-			new String[] {"companyId", "modifiedDate"}, false);
-
 		_collectionPersistenceFinderByC_GtM = new CollectionPersistenceFinder<>(
-			this, _finderPathWithPaginationFindByC_GtM, null,
-			_finderPathWithPaginationCountByC_GtM,
+			this,
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_GtM",
+				new String[] {
+					Long.class.getName(), Date.class.getName(),
+					Integer.class.getName(), Integer.class.getName(),
+					OrderByComparator.class.getName()
+				},
+				new String[] {"companyId", "modifiedDate"}, true),
+			null,
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "countByC_GtM",
+				new String[] {Long.class.getName(), Date.class.getName()},
+				new String[] {"companyId", "modifiedDate"}, false),
 			_SQL_SELECT_ANALYTICSDELETEMESSAGE_WHERE,
 			_SQL_COUNT_ANALYTICSDELETEMESSAGE_WHERE,
 			AnalyticsDeleteMessageModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX,
+			"",
 			new FinderColumn<>(
 				"analyticsDeleteMessage.", "companyId", FinderColumn.Type.LONG,
-				"=", true, false, AnalyticsDeleteMessage::getCompanyId),
+				"=", true, true, AnalyticsDeleteMessage::getCompanyId),
 			new FinderColumn<>(
 				"analyticsDeleteMessage.", "modifiedDate",
 				FinderColumn.Type.DATE, ">", true, true,
 				AnalyticsDeleteMessage::getModifiedDate));
 
-		_finderPathWithPaginationFindByC_LtM = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_LtM",
-			new String[] {
-				Long.class.getName(), Date.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				OrderByComparator.class.getName()
-			},
-			new String[] {"companyId", "modifiedDate"}, true);
-
-		_finderPathWithPaginationCountByC_LtM = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "countByC_LtM",
-			new String[] {Long.class.getName(), Date.class.getName()},
-			new String[] {"companyId", "modifiedDate"}, false);
-
 		_collectionPersistenceFinderByC_LtM = new CollectionPersistenceFinder<>(
-			this, _finderPathWithPaginationFindByC_LtM, null,
-			_finderPathWithPaginationCountByC_LtM,
+			this,
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_LtM",
+				new String[] {
+					Long.class.getName(), Date.class.getName(),
+					Integer.class.getName(), Integer.class.getName(),
+					OrderByComparator.class.getName()
+				},
+				new String[] {"companyId", "modifiedDate"}, true),
+			null,
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "countByC_LtM",
+				new String[] {Long.class.getName(), Date.class.getName()},
+				new String[] {"companyId", "modifiedDate"}, false),
 			_SQL_SELECT_ANALYTICSDELETEMESSAGE_WHERE,
 			_SQL_COUNT_ANALYTICSDELETEMESSAGE_WHERE,
 			AnalyticsDeleteMessageModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX,
+			"",
 			new FinderColumn<>(
 				"analyticsDeleteMessage.", "companyId", FinderColumn.Type.LONG,
-				"=", true, false, AnalyticsDeleteMessage::getCompanyId),
+				"=", true, true, AnalyticsDeleteMessage::getCompanyId),
 			new FinderColumn<>(
 				"analyticsDeleteMessage.", "modifiedDate",
 				FinderColumn.Type.DATE, "<", true, true,
@@ -1015,13 +917,10 @@ public class AnalyticsDeleteMessagePersistenceImpl
 	private static final String _NO_SUCH_ENTITY_WITH_KEY =
 		"No AnalyticsDeleteMessage exists with the key {";
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		AnalyticsDeleteMessagePersistenceImpl.class);
-
 	@Override
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:-949347672
+// LIFERAY-SERVICE-BUILDER-HASH:-811061661

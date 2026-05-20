@@ -41,10 +41,10 @@ import {HeadlessCommerceReturnApiHelper} from './HeadlessCommerceReturnApiHelper
 import {HeadlessDeliveryApiHelper} from './HeadlessDeliveryApiHelper';
 import {HeadlessDigitalSalesRoomApiHelper} from './HeadlessDigitalSalesRoomApiHelper';
 import {HeadlessPortalInstanceApiHelper} from './HeadlessPortalInstanceApiHelper';
-import {HeadlessSiteApiHelper} from './HeadlessSiteApiHelper';
 import {LanguageApiHelper} from './LanguageApiHelper';
 import {ListTypeAdminApiHelper} from './ListTypeAdminApiHelper';
 import {NotificationApiHelper} from './NotificationApiHelper';
+import {ObjectActionApiHelper} from './ObjectActionApiHelper';
 import {ObjectAdminApiHelper} from './ObjectAdminApiHelper';
 import {ObjectEntryApiHelper} from './ObjectEntryApiHelper';
 import {ObjectEntryFolderApiHelper} from './ObjectEntryFolderApiHelper';
@@ -147,7 +147,6 @@ export class ApiHelpers {
 	readonly headlessCommerceReturn: HeadlessCommerceReturnApiHelper;
 	readonly headlessDelivery: HeadlessDeliveryApiHelper;
 	readonly headlessDigitalSalesRoom: HeadlessDigitalSalesRoomApiHelper;
-	readonly headlessSite: HeadlessSiteApiHelper;
 	readonly headlessPortalInstance: HeadlessPortalInstanceApiHelper;
 	readonly jsonWebServicesAnnouncementsEntryApiHelper: JSONWebServicesAnnouncementsEntryApiHelper;
 	readonly jsonWebServicesAssetDisplayPageEntry: JSONWebServicesAssetDisplayPageEntryApiHelper;
@@ -182,6 +181,7 @@ export class ApiHelpers {
 	readonly language: LanguageApiHelper;
 	readonly listTypeAdmin: ListTypeAdminApiHelper;
 	readonly notification: NotificationApiHelper;
+	readonly objectAction: ObjectActionApiHelper;
 	readonly objectAdmin: ObjectAdminApiHelper;
 	readonly objectEntry: ObjectEntryApiHelper;
 	readonly objectFolder: ObjectEntryFolderApiHelper;
@@ -238,7 +238,6 @@ export class ApiHelpers {
 		this.headlessDigitalSalesRoom = new HeadlessDigitalSalesRoomApiHelper(
 			this
 		);
-		this.headlessSite = new HeadlessSiteApiHelper(this);
 		this.headlessPortalInstance = new HeadlessPortalInstanceApiHelper(this);
 		this.jsonWebServicesAnnouncementsEntryApiHelper =
 			new JSONWebServicesAnnouncementsEntryApiHelper(this);
@@ -294,6 +293,7 @@ export class ApiHelpers {
 		this.language = new LanguageApiHelper(this);
 		this.listTypeAdmin = new ListTypeAdminApiHelper(this);
 		this.notification = new NotificationApiHelper(this);
+		this.objectAction = new ObjectActionApiHelper(this);
 		this.objectAdmin = new ObjectAdminApiHelper(this);
 		this.objectEntry = new ObjectEntryApiHelper(this);
 		this.objectFolder = new ObjectEntryFolderApiHelper(this);
@@ -653,6 +653,11 @@ export class DataApiHelpers extends ApiHelpers {
 			}
 			else if (item.type === 'product') {
 				await this.headlessCommerceAdminCatalog.deleteProduct(item.id);
+			}
+			else if (item.type === 'productGroup') {
+				await this.headlessCommerceAdminCatalog.deleteProductGroup(
+					item.id
+				);
 			}
 			else if (item.type === 'productConfiguration') {
 				await this.headlessCommerceAdminCatalog.deleteProductConfiguration(

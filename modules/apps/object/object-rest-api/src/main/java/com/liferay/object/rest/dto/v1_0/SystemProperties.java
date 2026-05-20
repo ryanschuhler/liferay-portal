@@ -50,6 +50,49 @@ public class SystemProperties implements Serializable {
 
 	@io.swagger.v3.oas.annotations.media.Schema
 	@Valid
+	public CollaboratorBrief getCollaboratorBrief() {
+		if (_collaboratorBriefSupplier != null) {
+			collaboratorBrief = _collaboratorBriefSupplier.get();
+
+			_collaboratorBriefSupplier = null;
+		}
+
+		return collaboratorBrief;
+	}
+
+	public void setCollaboratorBrief(CollaboratorBrief collaboratorBrief) {
+		this.collaboratorBrief = collaboratorBrief;
+
+		_collaboratorBriefSupplier = null;
+	}
+
+	@JsonIgnore
+	public void setCollaboratorBrief(
+		UnsafeSupplier<CollaboratorBrief, Exception>
+			collaboratorBriefUnsafeSupplier) {
+
+		_collaboratorBriefSupplier = () -> {
+			try {
+				return collaboratorBriefUnsafeSupplier.get();
+			}
+			catch (RuntimeException runtimeException) {
+				throw runtimeException;
+			}
+			catch (Exception exception) {
+				throw new RuntimeException(exception);
+			}
+		};
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected CollaboratorBrief collaboratorBrief;
+
+	@JsonIgnore
+	private Supplier<CollaboratorBrief> _collaboratorBriefSupplier;
+
+	@io.swagger.v3.oas.annotations.media.Schema
+	@Valid
 	public ObjectDefinitionBrief getObjectDefinitionBrief() {
 		if (_objectDefinitionBriefSupplier != null) {
 			objectDefinitionBrief = _objectDefinitionBriefSupplier.get();
@@ -205,6 +248,18 @@ public class SystemProperties implements Serializable {
 
 		sb.append("{");
 
+		CollaboratorBrief collaboratorBrief = getCollaboratorBrief();
+
+		if (collaboratorBrief != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"collaboratorBrief\": ");
+
+			sb.append(String.valueOf(collaboratorBrief));
+		}
+
 		ObjectDefinitionBrief objectDefinitionBrief =
 			getObjectDefinitionBrief();
 
@@ -343,4 +398,4 @@ public class SystemProperties implements Serializable {
 	private Map<String, Serializable> _extendedProperties;
 
 }
-// LIFERAY-REST-BUILDER-HASH:1565633521
+// LIFERAY-REST-BUILDER-HASH:-171984500

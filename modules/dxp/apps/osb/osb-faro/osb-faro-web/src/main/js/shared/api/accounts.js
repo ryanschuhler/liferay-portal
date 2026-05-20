@@ -8,15 +8,17 @@ const {
 	pagination: {cur: DEFAULT_PAGE, delta: DEFAULT_DELTA}
 } = FaroConstants;
 
-export function fetch({accountId, groupId}) {
+export function fetch({accountId, channelId, groupId}) {
 	return sendRequest({
+		data: {channelId},
 		method: 'GET',
 		path: `contacts/${groupId}/account/${accountId}`
 	});
 }
 
-export function fetchDetails({accountId, groupId}) {
+export function fetchDetails({accountId, channelId, groupId}) {
 	return sendRequest({
+		data: {channelId},
 		method: 'GET',
 		path: `contacts/${groupId}/account/${accountId}/details`
 	});
@@ -37,6 +39,17 @@ export function fetchFieldValues({
 		},
 		method: 'GET',
 		path: `contacts/${groupId}/account/field_values`
+	});
+}
+
+export async function fetchLifecycleStatus({
+	accountId,
+	accountLifecycleId,
+	groupId
+}) {
+	return sendRequest({
+		method: 'GET',
+		path: `contacts/${groupId}/account/${accountId}/account-lifecycles/${accountLifecycleId}`
 	});
 }
 

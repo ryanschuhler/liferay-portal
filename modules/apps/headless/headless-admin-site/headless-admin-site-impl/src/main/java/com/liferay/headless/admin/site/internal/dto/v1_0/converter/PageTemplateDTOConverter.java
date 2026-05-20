@@ -12,7 +12,7 @@ import com.liferay.headless.admin.site.dto.v1_0.PageTemplateSet;
 import com.liferay.headless.admin.site.dto.v1_0.WidgetPageTemplate;
 import com.liferay.headless.admin.site.dto.v1_0.WidgetPageTemplateSettings;
 import com.liferay.headless.admin.site.internal.dto.v1_0.util.AssetUtil;
-import com.liferay.headless.admin.site.internal.dto.v1_0.util.ThumbnailUtil;
+import com.liferay.headless.admin.site.internal.dto.v1_0.util.ThumbnailURLReferenceUtil;
 import com.liferay.headless.admin.site.internal.resource.v1_0.util.NavigationSettingsUtil;
 import com.liferay.headless.admin.user.dto.v1_0.Creator;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
@@ -125,8 +125,8 @@ public class PageTemplateDTOConverter
 					() -> NestedFieldsSupplier.supply(
 						"thumbnail",
 						fieldName ->
-							ThumbnailUtil.
-								getPortletFileEntryThumbnailURLReference(
+							ThumbnailURLReferenceUtil.
+								getFileEntryThumbnailURLReference(
 									layoutPageTemplateEntry.
 										getPreviewFileEntryId())));
 				setType(() -> Type.CONTENT_PAGE_TEMPLATE);
@@ -226,8 +226,8 @@ public class PageTemplateDTOConverter
 					() -> NestedFieldsSupplier.supply(
 						"thumbnail",
 						fieldName ->
-							ThumbnailUtil.
-								getPortletFileEntryThumbnailURLReference(
+							ThumbnailURLReferenceUtil.
+								getFileEntryThumbnailURLReference(
 									layoutPageTemplateEntry.
 										getPreviewFileEntryId())));
 				setType(() -> Type.WIDGET_PAGE_TEMPLATE);

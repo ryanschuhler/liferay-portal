@@ -2485,6 +2485,8 @@ war.path=${app.server.portal.dir}/</echo>
 		<attribute name="task" />
 
 		<sequential>
+			<mkdir dir="${project.dir}/.gradle" />
+
 			<propertyfile file="${project.dir}/.gradle/gradle.properties">
 				<entry key="sdk.dir" value="${sdk.dir}" />
 			</propertyfile>
@@ -3884,91 +3886,6 @@ tell application "Safari" to quit
 						</echo>
 					</then>
 				</elseif>
-			</if>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="prepare-selenium-click-to-chat-properties">
-		<sequential>
-			<if>
-				<isset property="click.to.chat.chatwoot.password" />
-				<then>
-					<echo append="true" file="${test.ext.properties.file}">
-						click.to.chat.chatwoot.password=${click.to.chat.chatwoot.password}
-					</echo>
-				</then>
-			</if>
-
-			<if>
-				<isset property="click.to.chat.hubspot.password" />
-				<then>
-					<echo append="true" file="${test.ext.properties.file}">
-						click.to.chat.hubspot.password=${click.to.chat.hubspot.password}
-					</echo>
-				</then>
-			</if>
-
-			<if>
-				<isset property="click.to.chat.jivochat.password" />
-				<then>
-					<echo append="true" file="${test.ext.properties.file}">
-						click.to.chat.jivochat.password=${click.to.chat.jivochat.password}
-					</echo>
-				</then>
-			</if>
-
-			<if>
-				<isset property="click.to.chat.liveperson.password" />
-				<then>
-					<echo append="true" file="${test.ext.properties.file}">
-						click.to.chat.liveperson.password=${click.to.chat.liveperson.password}
-					</echo>
-				</then>
-			</if>
-
-			<if>
-				<isset property="click.to.chat.smartsupp.password" />
-				<then>
-					<echo append="true" file="${test.ext.properties.file}">
-						click.to.chat.smartsupp.password=${click.to.chat.smartsupp.password}
-					</echo>
-				</then>
-			</if>
-
-			<if>
-				<isset property="click.to.chat.tawkto.password" />
-				<then>
-					<echo append="true" file="${test.ext.properties.file}">
-						click.to.chat.tawkto.password=${click.to.chat.tawkto.password}
-					</echo>
-				</then>
-			</if>
-
-			<if>
-				<isset property="click.to.chat.tidio.password" />
-				<then>
-					<echo append="true" file="${test.ext.properties.file}">
-						click.to.chat.tidio.password=${click.to.chat.tidio.password}
-					</echo>
-				</then>
-			</if>
-
-			<if>
-				<isset property="click.to.chat.tolvnow.password" />
-				<then>
-					<echo append="true" file="${test.ext.properties.file}">
-						click.to.chat.tolvnow.password=${click.to.chat.tolvnow.password}
-					</echo>
-				</then>
-			</if>
-
-			<if>
-				<isset property="click.to.chat.zendesk.password" />
-				<then>
-					<echo append="true" file="${test.ext.properties.file}">
-						click.to.chat.zendesk.password=${click.to.chat.zendesk.password}
-					</echo>
-				</then>
 			</if>
 		</sequential>
 	</macrodef>
@@ -7472,7 +7389,7 @@ log.sanitizer.enabled=false</echo>
 					</then>
 				</elseif>
 				<else>
-					<var name="app.server.tomcat.version" value="10.1.54" />
+					<var name="app.server.tomcat.version" value="10.1.55" />
 				</else>
 			</if>
 
@@ -7873,6 +7790,7 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 		<attribute default="true" name="delete.liferay.home" />
 		<attribute default="" name="testable.portal.started.marker.file" />
 		<attribute default="false" name="skip.wait.server.startup" />
+		<attribute default="false" name="skip.wait.server.startup.url" />
 
 		<sequential>
 			<lstopwatch action="start" name="start.app.server.@{app.server.bundle.index}" />
@@ -7881,6 +7799,7 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 				app.server.bundle.index="@{app.server.bundle.index}"
 				delete.liferay.home="@{delete.liferay.home}"
 				skip.wait.server.startup="@{skip.wait.server.startup}"
+				skip.wait.server.startup.url="@{skip.wait.server.startup.url}"
 				test.docker.environment="${test.docker.environment}"
 				testable.portal.started.marker.file="@{testable.portal.started.marker.file}"
 			/>
@@ -7906,6 +7825,7 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 		<attribute default="true" name="delete.liferay.home" />
 		<attribute default="host" name="docker.network.name" />
 		<attribute default="false" name="skip.wait.server.startup" />
+		<attribute default="false" name="skip.wait.server.startup.url" />
 		<attribute default="false" name="test.docker.environment" />
 		<attribute default="" name="testable.portal.started.marker.file" />
 
@@ -7975,7 +7895,7 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 						<if>
 							<equals arg1="@{skip.wait.server.startup}" arg2="false" />
 							<then>
-								<wait-for-app-server app.server.bin.dir="@{app.server.bin.dir}" app.server.bundle.index="@{app.server.bundle.index}" />
+								<wait-for-app-server app.server.bin.dir="@{app.server.bin.dir}" app.server.bundle.index="@{app.server.bundle.index}" skip.wait.server.startup.url="@{skip.wait.server.startup.url}" />
 							</then>
 						</if>
 
@@ -9615,66 +9535,72 @@ war.path=${app.server.portal.dir}/</echo>
 	<macrodef name="wait-for-app-server">
 		<attribute name="app.server.bin.dir" />
 		<attribute default="0" name="app.server.bundle.index" />
+		<attribute default="false" name="skip.wait.server.startup.url" />
 
 		<sequential>
 			<wait-for-app-server-log />
 
-			<local name="app.server.waiting.url" />
-
-			<get-operating-system-property property.name="operating.system.docker.image" />
-
-			<get-testcase-property property.name="portal.context" />
-			<propertycopy from="portal.context[${env.CI_TEST_SUITE}]" name="portal.context" silent="true" />
-
-			<get-testcase-property property.name="portal.proxy.path" />
-			<propertycopy from="portal.proxy.path[${env.CI_TEST_SUITE}]" name="portal.proxy.path" silent="true" />
-
 			<if>
-				<isset property="portal.context" />
+				<equals arg1="@{skip.wait.server.startup.url}" arg2="false" />
 				<then>
-					<property name="app.server.waiting.url" value="http://localhost:${test.app.server.leading.port.number}080/${portal.context}/web/guest" />
+					<local name="app.server.waiting.url" />
+
+					<get-operating-system-property property.name="operating.system.docker.image" />
+
+					<get-testcase-property property.name="portal.context" />
+					<propertycopy from="portal.context[${env.CI_TEST_SUITE}]" name="portal.context" silent="true" />
+
+					<get-testcase-property property.name="portal.proxy.path" />
+					<propertycopy from="portal.proxy.path[${env.CI_TEST_SUITE}]" name="portal.proxy.path" silent="true" />
+
+					<if>
+						<isset property="portal.context" />
+						<then>
+							<property name="app.server.waiting.url" value="http://localhost:${test.app.server.leading.port.number}080/${portal.context}/web/guest" />
+						</then>
+						<elseif>
+							<isset property="portal.proxy.path" />
+							<then>
+								<property name="app.server.waiting.url" value="http://localhost:${test.app.server.leading.port.number}8/${portal.proxy.path}/web/guest" />
+							</then>
+						</elseif>
+						<elseif>
+							<isset property="operating.system.docker.image" />
+							<then>
+								<get-operating-system-property property.name="operating.system.host" />
+
+								<property name="app.server.waiting.url" value="http://${operating.system.host}:${test.app.server.leading.port.number}080/web/guest" />
+							</then>
+						</elseif>
+						<else>
+							<property name="app.server.waiting.url" value="http://localhost:${test.app.server.leading.port.number}080/web/guest" />
+						</else>
+					</if>
+
+					<local name="app.server.waiting.timeout" />
+
+					<echo>Waiting for ${app.server.waiting.url} to load</echo>
+
+					<waitfor maxwait="${timeout.app.server.wait}" maxwaitunit="second" timeoutproperty="app.server.waiting.timeout">
+						<http url="${app.server.waiting.url}" />
+					</waitfor>
+
+					<if>
+						<isset property="app.server.waiting.timeout" />
+						<then>
+							<antcall target="print-jstack-logs">
+								<param name="process.name" value="Bootstrap" />
+							</antcall>
+
+							<stop-app-server app.server.bundle.index="@{app.server.bundle.index}" />
+
+							<fail if="app.server.waiting.timeout" message="No server is available at ${app.server.waiting.url}" />
+						</then>
+					</if>
+
+					<echo>${app.server.waiting.url} has loaded</echo>
 				</then>
-				<elseif>
-					<isset property="portal.proxy.path" />
-					<then>
-						<property name="app.server.waiting.url" value="http://localhost:${test.app.server.leading.port.number}8/${portal.proxy.path}/web/guest" />
-					</then>
-				</elseif>
-				<elseif>
-					<isset property="operating.system.docker.image" />
-					<then>
-						<get-operating-system-property property.name="operating.system.host" />
-
-						<property name="app.server.waiting.url" value="http://${operating.system.host}:${test.app.server.leading.port.number}080/web/guest" />
-					</then>
-				</elseif>
-				<else>
-					<property name="app.server.waiting.url" value="http://localhost:${test.app.server.leading.port.number}080/web/guest" />
-				</else>
 			</if>
-
-			<local name="app.server.waiting.timeout" />
-
-			<echo>Waiting for ${app.server.waiting.url} to load</echo>
-
-			<waitfor maxwait="${timeout.app.server.wait}" maxwaitunit="second" timeoutproperty="app.server.waiting.timeout">
-				<http url="${app.server.waiting.url}" />
-			</waitfor>
-
-			<if>
-				<isset property="app.server.waiting.timeout" />
-				<then>
-					<antcall target="print-jstack-logs">
-						<param name="process.name" value="Bootstrap" />
-					</antcall>
-
-					<stop-app-server app.server.bundle.index="@{app.server.bundle.index}" />
-
-					<fail if="app.server.waiting.timeout" message="No server is available at ${app.server.waiting.url}" />
-				</then>
-			</if>
-
-			<echo>${app.server.waiting.url} has loaded</echo>
 
 			<if>
 				<and>
@@ -10143,7 +10069,9 @@ update db cfg for lportal${databases.size} using logsecond 254;</echo>
 							>
 								<replacetoken>grant connect,resource to &amp;1;</replacetoken>
 								<replacevalue>grant connect,resource to &amp;1;
-	grant unlimited tablespace to &amp;1;</replacevalue>
+	grant unlimited tablespace to &amp;1;
+	grant select on sys.v_$session to &amp;1;
+	grant select on sys.v_$sql to &amp;1;</replacevalue>
 							</replace>
 
 							<if>
@@ -10153,7 +10081,9 @@ update db cfg for lportal${databases.size} using logsecond 254;</echo>
 										file="create.sql"
 									>
 										<replacetoken>grant connect,resource to &amp;1;
-	grant unlimited tablespace to &amp;1;</replacetoken>
+	grant unlimited tablespace to &amp;1;
+	grant select on sys.v_$session to &amp;1;
+	grant select on sys.v_$sql to &amp;1;</replacetoken>
 										<replacevalue>grant all privileges to &amp;1;</replacevalue>
 									</replace>
 									<replace
@@ -10388,7 +10318,9 @@ update db cfg for lportal${databases.size} using logsecond 254;</echo>
 							>
 								<replacetoken>grant connect,resource to &amp;1;</replacetoken>
 								<replacevalue>grant connect,resource to &amp;1;
-grant unlimited tablespace to &amp;1;</replacevalue>
+grant unlimited tablespace to &amp;1;
+grant select on sys.v_$session to &amp;1;
+grant select on sys.v_$sql to &amp;1;</replacevalue>
 							</replace>
 
 							<if>
@@ -10398,7 +10330,9 @@ grant unlimited tablespace to &amp;1;</replacevalue>
 										file="create.sql"
 									>
 										<replacetoken>grant connect,resource to &amp;1;
-grant unlimited tablespace to &amp;1;</replacetoken>
+grant unlimited tablespace to &amp;1;
+grant select on sys.v_$session to &amp;1;
+grant select on sys.v_$sql to &amp;1;</replacetoken>
 										<replacevalue>grant all privileges to &amp;1;</replacevalue>
 									</replace>
 									<replace
@@ -13629,25 +13563,6 @@ analytics.cloud.domain.allowed=*</echo>
 		<apply-portal-ext-properties />
 	</target>
 
-	<target name="prepare-portal-properties">
-		<replace
-			file="portal-impl/src/portal.properties"
-		>
-			<replacefilter
-				token="#upgrade.processes="
-				value="upgrade.processes="
-			/>
-			<replacefilter
-				token="#com.liferay.portal.upgrade.UpgradeProcess_"
-				value="com.liferay.portal.upgrade.UpgradeProcess_"
-			/>
-			<replacefilter
-				token="verify.frequency=0"
-				value="verify.frequency=1"
-			/>
-		</replace>
-	</target>
-
 	<target name="prepare-portal-ssl">
 		<if>
 			<equals arg1="${app.server.type}" arg2="tomcat" />
@@ -13983,105 +13898,6 @@ analytics.cloud.domain.allowed=*</echo>
 			<then>
 				<echo append="true" file="${test.ext.properties.file}">
 					azure.container.id=${azure.container.id}
-				</echo>
-			</then>
-		</if>
-
-		<if>
-			<isset property="click.to.chat.chatwoot.password" />
-			<then>
-				<echo append="true" file="${test.ext.properties.file}">
-					click.to.chat.chatwoot.password=${click.to.chat.chatwoot.password}
-				</echo>
-			</then>
-		</if>
-
-		<if>
-			<isset property="click.to.chat.crisp.password" />
-			<then>
-				<echo append="true" file="${test.ext.properties.file}">
-					click.to.chat.crisp.password=${click.to.chat.crisp.password}
-				</echo>
-			</then>
-		</if>
-
-		<if>
-			<isset property="click.to.chat.hubspot.password" />
-			<then>
-				<echo append="true" file="${test.ext.properties.file}">
-					click.to.chat.hubspot.password=${click.to.chat.hubspot.password}
-				</echo>
-			</then>
-		</if>
-
-		<if>
-			<isset property="click.to.chat.jivochat.password" />
-			<then>
-				<echo append="true" file="${test.ext.properties.file}">
-					click.to.chat.jivochat.password=${click.to.chat.jivochat.password}
-				</echo>
-			</then>
-		</if>
-
-		<if>
-			<isset property="click.to.chat.livechat.password" />
-			<then>
-				<echo append="true" file="${test.ext.properties.file}">
-					click.to.chat.livechat.password=${click.to.chat.livechat.password}
-				</echo>
-			</then>
-		</if>
-
-		<if>
-			<isset property="click.to.chat.liveperson.password" />
-			<then>
-				<echo append="true" file="${test.ext.properties.file}">
-					click.to.chat.liveperson.password=${click.to.chat.liveperson.password}
-				</echo>
-			</then>
-		</if>
-
-		<if>
-			<isset property="click.to.chat.smartsupp.password" />
-			<then>
-				<echo append="true" file="${test.ext.properties.file}">
-					click.to.chat.smartsupp.password=${click.to.chat.smartsupp.password}
-				</echo>
-			</then>
-		</if>
-
-		<if>
-			<isset property="click.to.chat.tawkto.password" />
-			<then>
-				<echo append="true" file="${test.ext.properties.file}">
-					click.to.chat.tawkto.password=${click.to.chat.tawkto.password}
-				</echo>
-			</then>
-		</if>
-
-		<if>
-			<isset property="click.to.chat.tidio.password" />
-			<then>
-				<echo append="true" file="${test.ext.properties.file}">
-					click.to.chat.tidio.password=${click.to.chat.tidio.password}
-				</echo>
-			</then>
-		</if>
-
-		<if>
-			<isset property="click.to.chat.tolvnow.password" />
-			<then>
-				<echo append="true" file="${test.ext.properties.file}">
-					click.to.chat.tolvnow.password=${click.to.chat.tolvnow.password}
-				</echo>
-			</then>
-		</if>
-
-		<if>
-			<isset property="click.to.chat.zendesk.password" />
-			<then>
-				<echo append="true" file="${test.ext.properties.file}">
-					click.to.chat.zendesk.password=${click.to.chat.zendesk.password}
 				</echo>
 			</then>
 		</if>
@@ -14604,7 +14420,6 @@ analytics.cloud.domain.allowed=*</echo>
 		<prepare-selenium-aws-translation-properties />
 		<prepare-selenium-azure-translation-properties />
 		<prepare-selenium-browser />
-		<prepare-selenium-click-to-chat-properties />
 		<prepare-selenium-database-properties />
 		<prepare-selenium-digital-signature-properties />
 		<prepare-selenium-email-properties />
@@ -15541,7 +15356,6 @@ ANT_OPTS=${env.ANT_OPTS}</echo>
 		</antcall>
 
 		<antcall target="prepare-osgi-module-configurations" />
-		<antcall target="prepare-portal-properties" />
 		<antcall inheritAll="false" target="prepare-portal-ext-properties">
 			<param name="app.server.tomcat.version" value="${app.server.tomcat.version}" />
 		</antcall>
@@ -17091,8 +16905,6 @@ sendBlacklist=[]
 			<else>
 				<antcall target="prepare-osgi-module-configurations" />
 
-				<antcall target="prepare-portal-properties" />
-
 				<antcall target="prepare-portal-ext-properties">
 					<param name="functional.test.type" value="${functional.test.type}" />
 				</antcall>
@@ -18068,9 +17880,19 @@ CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.managemen
 			</then>
 		</if>
 
+		<if>
+			<not>
+				<isset property="skip.wait.server.startup.url" />
+			</not>
+			<then>
+				<var name="skip.wait.server.startup.url" value="false" />
+			</then>
+		</if>
+
 		<start-app-server
 			app.server.bundle.index="${app.server.bundle.index}"
 			skip.wait.server.startup="${skip.wait.server.startup}"
+			skip.wait.server.startup.url="${skip.wait.server.startup.url}"
 			testable.portal.started.marker.file="${testable.portal.started.marker.file}"
 		/>
 	</target>

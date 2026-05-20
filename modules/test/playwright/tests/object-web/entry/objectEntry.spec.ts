@@ -1119,6 +1119,85 @@ cmsTest.describe('Manage object entries schedule properties', () => {
 	);
 
 	cmsTest(
+		'can submit an object entry with scheduling dates via a custom layout',
+		{tag: ['@LPP-63890']},
+		async ({objectLayoutsPage, page, viewObjectEntriesPage}) => {
+			const objectLayoutName = getRandomString();
+
+			await objectLayoutsPage.goto(_objectDefinition.label['en_US']);
+
+			await objectLayoutsPage.createObjectLayout(objectLayoutName);
+
+			await page.getByRole('link', {name: objectLayoutName}).click();
+
+			await objectLayoutsPage.setObjectLayoutAsDefault();
+
+			await objectLayoutsPage.createObjectLayoutContent({
+				objectFieldNames: [
+					'Display Date',
+					'Expiration Date',
+					'Review Date',
+				],
+				objectLayoutName,
+				objectLayoutRegularBlockName: getRandomString(),
+				objectLayoutTabName: getRandomString(),
+			});
+
+			await objectLayoutsPage.saveUpdateLayoutButton.click();
+
+			await viewObjectEntriesPage.goto(_objectDefinition.className);
+
+			await viewObjectEntriesPage.clickAddObjectEntry(
+				_objectDefinition.label['en_US']
+			);
+
+			const date = new Date();
+
+			date.setDate(date.getDate() + 1);
+
+			await page
+				.locator('[data-field-name*="displayDate"]')
+				.getByLabel('Display Date', {exact: true})
+				.fill(getObjectEntryUIDateTimeFormat(date));
+
+			await page
+				.locator('[data-field-name*="expirationDate"]')
+				.getByLabel('Expiration Date', {exact: true})
+				.fill(getObjectEntryUIDateTimeFormat(date));
+
+			await page
+				.locator('[data-field-name*="reviewDate"]')
+				.getByLabel('Review Date', {exact: true})
+				.fill(getObjectEntryUIDateTimeFormat(date));
+
+			const objectEntryRequestPromise = page.waitForRequest(
+				(request) =>
+					request.method() === 'POST' &&
+					request.url().includes('/o/c/')
+			);
+
+			await viewObjectEntriesPage.saveObjectEntryButton.click();
+
+			const objectEntryRequest = await objectEntryRequestPromise;
+
+			const objectEntryRequestPayload =
+				objectEntryRequest.postDataJSON() as Record<string, string>;
+
+			for (const fieldName of [
+				'displayDate',
+				'expirationDate',
+				'reviewDate',
+			]) {
+				expect(objectEntryRequestPayload[fieldName]).toMatch(
+					/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?Z$/
+				);
+			}
+
+			await waitForAlert(page);
+		}
+	);
+
+	cmsTest(
 		'cannot submit an empty displayDate',
 		async ({page, viewObjectEntriesPage}) => {
 			await viewObjectEntriesPage.goto(_objectDefinition.className);
@@ -3411,6 +3490,177 @@ test.describe('Manage object entries through View Object Entries', () => {
 		);
 	});
 
+	test(
+		'can link an object entry to a system object via relationship picker',
+		{tag: '@LPS-145393'},
+		async ({apiHelpers, page, viewObjectEntriesPage}) => {
+			const objectFields = generateObjectFields({
+				objectFieldBusinessTypes: ['Text'],
+			});
+
+			const objectDefinition =
+				await apiHelpers.objectAdmin.postRandomObjectDefinition({
+					objectFields,
+					status: {code: 0},
+				});
+
+			apiHelpers.data.push({
+				id: objectDefinition.id,
+				type: 'objectDefinition',
+			});
+
+			const userAccount =
+				await apiHelpers.headlessAdminUser.postUserAccount();
+
+			const objectRelationshipAPIClient =
+				await apiHelpers.buildRestClient(ObjectRelationshipAPI);
+
+			const objectRelationshipName =
+				'objectRelationshipName' + Math.floor(Math.random() * 99);
+
+			const {body: objectRelationship} =
+				await objectRelationshipAPIClient.postObjectDefinitionByExternalReferenceCodeObjectRelationship(
+					'L_USER',
+					{
+						label: {en_US: 'Relationship'},
+						name: objectRelationshipName,
+						objectDefinitionExternalReferenceCode1: 'L_USER',
+						objectDefinitionExternalReferenceCode2:
+							objectDefinition.externalReferenceCode,
+						objectDefinitionId2: objectDefinition.id,
+						objectDefinitionName2: objectDefinition.name,
+						type: 'oneToMany',
+					}
+				);
+
+			apiHelpers.data.push({
+				id: objectRelationship.id,
+				type: 'objectRelationship',
+			});
+
+			await viewObjectEntriesPage.goto(objectDefinition.className);
+
+			await viewObjectEntriesPage.clickAddObjectEntry(
+				objectDefinition.label['en_US']
+			);
+
+			await page.getByPlaceholder('Search').click();
+
+			await page
+				.getByRole('menuitem', {name: userAccount.givenName})
+				.click();
+
+			await viewObjectEntriesPage.saveObjectEntryButton.click();
+
+			await expect(viewObjectEntriesPage.successMessage).toBeVisible();
+
+			expect(
+				(
+					await page.getByPlaceholder('Search').inputValue()
+				).toLowerCase()
+			).toBe(userAccount.givenName.toLowerCase());
+		}
+	);
+
+	test(
+		'can link multiple object entries to a system object via relationship picker',
+		{tag: '@LPS-145393'},
+		async ({apiHelpers, page, viewObjectEntriesPage}) => {
+			const objectFields = generateObjectFields({
+				objectFieldBusinessTypes: ['Text'],
+			});
+
+			const objectDefinition =
+				await apiHelpers.objectAdmin.postRandomObjectDefinition({
+					objectFields,
+					status: {code: 0},
+				});
+
+			apiHelpers.data.push({
+				id: objectDefinition.id,
+				type: 'objectDefinition',
+			});
+
+			const userAccount =
+				await apiHelpers.headlessAdminUser.postUserAccount();
+
+			const objectRelationshipAPIClient =
+				await apiHelpers.buildRestClient(ObjectRelationshipAPI);
+
+			const objectRelationshipName =
+				'objectRelationshipName' + Math.floor(Math.random() * 99);
+
+			const {body: objectRelationship} =
+				await objectRelationshipAPIClient.postObjectDefinitionByExternalReferenceCodeObjectRelationship(
+					'L_USER',
+					{
+						label: {en_US: 'Relationship'},
+						name: objectRelationshipName,
+						objectDefinitionExternalReferenceCode1: 'L_USER',
+						objectDefinitionExternalReferenceCode2:
+							objectDefinition.externalReferenceCode,
+						objectDefinitionId2: objectDefinition.id,
+						objectDefinitionName2: objectDefinition.name,
+						type: 'oneToMany',
+					}
+				);
+
+			apiHelpers.data.push({
+				id: objectRelationship.id,
+				type: 'objectRelationship',
+			});
+
+			const textFieldName = objectFields[0].name;
+
+			const entryA = await apiHelpers.objectEntry.postObjectEntry(
+				{[textFieldName]: 'Entry A'},
+				`c/${objectDefinition.name.toLowerCase()}s`
+			);
+
+			const entryB = await apiHelpers.objectEntry.postObjectEntry(
+				{[textFieldName]: 'Entry B'},
+				`c/${objectDefinition.name.toLowerCase()}s`
+			);
+
+			expect(entryA.id).toBeTruthy();
+			expect(entryB.id).toBeTruthy();
+
+			for (const entryLabel of ['Entry A', 'Entry B']) {
+				await viewObjectEntriesPage.goto(objectDefinition.className);
+
+				await page
+					.getByRole('row', {name: new RegExp(entryLabel)})
+					.getByRole('button', {name: 'Actions'})
+					.first()
+					.click();
+
+				await viewObjectEntriesPage.frontendDatasetViewAction.click();
+
+				await viewObjectEntriesPage.editObjectEntryForm.waitFor({
+					state: 'visible',
+				});
+
+				await page.getByPlaceholder('Search').click();
+
+				await page
+					.getByRole('menuitem', {name: userAccount.givenName})
+					.click();
+
+				await viewObjectEntriesPage.saveObjectEntryButton.click();
+
+				await expect(
+					viewObjectEntriesPage.successMessage
+				).toBeVisible();
+
+				expect(
+					(
+						await page.getByPlaceholder('Search').inputValue()
+					).toLowerCase()
+				).toBe(userAccount.givenName.toLowerCase());
+			}
+		}
+	);
+
 	test('can only see entries from their own account', async ({
 		apiHelpers,
 		page,
@@ -4230,7 +4480,9 @@ test.describe('Manage object entries through View Object Entries', () => {
 		await viewObjectEntriesPage.goto(objectDefinition.className);
 
 		await expect(
-			page.getByText('Add ' + objectDefinition.label.en_US)
+			page
+				.getByTestId('managementToolbar')
+				.locator('[data-testid="fdsCreationActionButton"]')
 		).toBeVisible();
 
 		await expect(
@@ -5422,11 +5674,16 @@ test.describe('Manage object entries through View Object Entries', () => {
 		'can add an entry with phone number object field where prefix type is defined by user',
 		{tag: ['@LPD-83570']},
 		async ({apiHelpers, page, viewObjectEntriesPage}) => {
-			const localNumber = '1231231234';
+			const localNumber = '8775433729';
 			const prefix = '+1';
 
 			const objectFields = generateObjectFields({
-				objectFieldBusinessTypes: ['PhoneNumber'],
+				objectFieldBusinessTypes: [
+					{
+						businessType: 'PhoneNumber',
+						required: true,
+					},
+				],
 			});
 
 			const objectFieldLabel = objectFields[0].label!['en_US'];
@@ -5434,6 +5691,8 @@ test.describe('Manage object entries through View Object Entries', () => {
 			const fieldContainer = page.getByRole('group', {
 				name: objectFieldLabel,
 			});
+
+			const phoneNumberInput = fieldContainer.getByLabel('Phone Number');
 
 			let objectDefinition: ObjectDefinition;
 
@@ -5458,6 +5717,43 @@ test.describe('Manage object entries through View Object Entries', () => {
 				);
 			});
 
+			await test.step('Verify the validation error messages are displayed', async () => {
+				const formGroup = page.locator('.form-group', {
+					has: fieldContainer,
+				});
+
+				const formatErrorMessage = formGroup.getByText(
+					'Please enter a valid phone number.'
+				);
+				const requiredErrorMessage = formGroup.getByText(
+					'This field is required.'
+				);
+
+				await phoneNumberInput.focus();
+
+				await phoneNumberInput.blur();
+
+				await expect(requiredErrorMessage).toBeVisible();
+
+				await page.reload();
+
+				await viewObjectEntriesPage.saveObjectEntryButton.click();
+
+				await expect(requiredErrorMessage).toBeVisible();
+
+				await phoneNumberInput.fill('1');
+
+				await phoneNumberInput.blur();
+
+				await expect(formatErrorMessage).toBeVisible();
+
+				await phoneNumberInput.clear();
+
+				await expect(formatErrorMessage).not.toBeVisible();
+
+				await expect(requiredErrorMessage).toBeVisible();
+			});
+
 			await test.step('Select the "United States" prefix, fill the phone number field, and save the entry', async () => {
 				await fieldContainer.getByLabel('Country Code').click();
 
@@ -5465,9 +5761,7 @@ test.describe('Manage object entries through View Object Entries', () => {
 
 				await expect(fieldContainer.getByText(prefix)).toBeVisible();
 
-				await fieldContainer
-					.getByLabel('Phone Number')
-					.fill(localNumber);
+				await phoneNumberInput.fill(localNumber);
 
 				await viewObjectEntriesPage.saveObjectEntryButton.click();
 
@@ -5487,9 +5781,15 @@ test.describe('Manage object entries through View Object Entries', () => {
 					fieldContainer.getByLabel('Country Code')
 				).toHaveText(prefix);
 
+				await expect(phoneNumberInput).toHaveValue(localNumber);
+			});
+
+			await test.step('Verify that the country code icon is correct for the local number entered', async () => {
 				await expect(
-					fieldContainer.getByLabel('Phone Number')
-				).toHaveValue(localNumber);
+					fieldContainer
+						.getByLabel('Country Code')
+						.locator('.lexicon-icon-en-us')
+				).toBeVisible();
 			});
 		}
 	);
@@ -5515,6 +5815,7 @@ test.describe('Manage object entries through View Object Entries', () => {
 								value: prefix,
 							},
 						],
+						required: true,
 					},
 				],
 			});
@@ -5524,6 +5825,8 @@ test.describe('Manage object entries through View Object Entries', () => {
 			const fieldContainer = page.getByRole('group', {
 				name: objectFieldLabel,
 			});
+
+			const phoneNumberInput = fieldContainer.getByLabel('Phone Number');
 
 			let objectDefinition: ObjectDefinition;
 
@@ -5548,12 +5851,47 @@ test.describe('Manage object entries through View Object Entries', () => {
 				);
 			});
 
+			await test.step('Verify the validation error messages are displayed', async () => {
+				const formGroup = page.locator('.form-group', {
+					has: fieldContainer,
+				});
+
+				const formatErrorMessage = formGroup.getByText(
+					'Please enter a valid phone number.'
+				);
+				const requiredErrorMessage = formGroup.getByText(
+					'This field is required.'
+				);
+
+				await phoneNumberInput.focus();
+
+				await phoneNumberInput.blur();
+
+				await expect(requiredErrorMessage).toBeVisible();
+
+				await page.reload();
+
+				await viewObjectEntriesPage.saveObjectEntryButton.click();
+
+				await expect(requiredErrorMessage).toBeVisible();
+
+				await phoneNumberInput.fill('1');
+
+				await phoneNumberInput.blur();
+
+				await expect(formatErrorMessage).toBeVisible();
+
+				await phoneNumberInput.clear();
+
+				await expect(formatErrorMessage).not.toBeVisible();
+
+				await expect(requiredErrorMessage).toBeVisible();
+			});
+
 			await test.step('Fill the phone number field and save the entry', async () => {
 				await expect(fieldContainer.getByText(prefix)).toBeVisible();
 
-				await fieldContainer
-					.getByLabel('Phone Number')
-					.fill(localNumber);
+				await phoneNumberInput.fill(localNumber);
 
 				await viewObjectEntriesPage.saveObjectEntryButton.click();
 
@@ -5571,9 +5909,7 @@ test.describe('Manage object entries through View Object Entries', () => {
 
 				await expect(fieldContainer.getByText(prefix)).toBeVisible();
 
-				await expect(
-					fieldContainer.getByLabel('Phone Number')
-				).toHaveValue(localNumber);
+				await expect(phoneNumberInput).toHaveValue(localNumber);
 			});
 		}
 	);

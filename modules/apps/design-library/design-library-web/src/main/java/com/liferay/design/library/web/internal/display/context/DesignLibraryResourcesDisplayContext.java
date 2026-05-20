@@ -5,6 +5,7 @@
 
 package com.liferay.design.library.web.internal.display.context;
 
+import com.liferay.depot.model.DepotEntry;
 import com.liferay.depot.service.DepotEntryLocalServiceUtil;
 import com.liferay.design.library.web.internal.constants.DesignLibraryConstants;
 import com.liferay.frontend.data.set.model.FDSActionDropdownItem;
@@ -13,14 +14,26 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.module.service.Snapshot;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
+import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.style.book.constants.StyleBookActionKeys;
+import com.liferay.style.book.constants.StyleBookConstants;
+import com.liferay.style.book.constants.StyleBookPortletKeys;
+import com.liferay.style.book.util.StyleBookUtil;
+
+import jakarta.portlet.PortletRequest;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -34,6 +47,9 @@ public class DesignLibraryResourcesDisplayContext {
 
 		_httpServletRequest = httpServletRequest;
 		_liferayPortletResponse = liferayPortletResponse;
+
+		_themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 	}
 
 	public String getAPIURL() {
@@ -80,6 +96,37 @@ public class DesignLibraryResourcesDisplayContext {
 				"#remove/{embedded.id}", "trash", "remove",
 				LanguageUtil.get(_httpServletRequest, "remove"), null, null,
 				"link"));
+	}
+
+	public Map<String, Object> getFDSAdditionalProps(long designLibraryEntryId)
+		throws PortalException {
+
+		DepotEntry depotEntry = DepotEntryLocalServiceUtil.getDepotEntry(
+			designLibraryEntryId);
+
+		long depotGroupId = depotEntry.getGroupId();
+
+		if (!_hasManageStyleBookEntriesPermission(depotGroupId)) {
+			return HashMapBuilder.<String, Object>put(
+				"canAddStyleBook", false
+			).build();
+		}
+
+		return HashMapBuilder.<String, Object>put(
+			"addStyleBookEntryURL",
+			_getAddStyleBookEntryURL(
+				depotEntry.getGroup(), designLibraryEntryId,
+				_themeDisplay.getLocale())
+		).put(
+			"canAddStyleBook", true
+		).put(
+			"frontendTokenDefinitionProviders",
+			StyleBookUtil.getFrontendTokenDefinitionProviders(
+				_themeDisplay.getCompanyId(), _themeDisplay.getLocale())
+		).put(
+			"styleBookNamespace",
+			PortalUtil.getPortletNamespace(StyleBookPortletKeys.STYLE_BOOK)
+		).build();
 	}
 
 	private JSONArray _getActionItemsJSONArray(
@@ -155,6 +202,30 @@ public class DesignLibraryResourcesDisplayContext {
 			));
 	}
 
+	private String _getAddStyleBookEntryURL(
+		Group depotGroup, long designLibraryEntryId, Locale locale) {
+
+		return PortletURLBuilder.create(
+			PortalUtil.getControlPanelPortletURL(
+				_httpServletRequest, depotGroup,
+				StyleBookPortletKeys.STYLE_BOOK, 0, 0,
+				PortletRequest.ACTION_PHASE)
+		).setActionName(
+			"/style_book/add_style_book_entry"
+		).setRedirect(
+			PortletURLBuilder.createRenderURL(
+				_liferayPortletResponse
+			).setMVCRenderCommandName(
+				"/design_library/design_library_resources"
+			).setParameter(
+				DesignLibraryConstants.DESIGN_LIBRARY_ENTRY_ID_KEY,
+				designLibraryEntryId
+			).buildString()
+		).setParameter(
+			"backURLTitle", depotGroup.getName(locale)
+		).buildString();
+	}
+
 	private JSONArray _getBreadcrumbItemsJSONArray(Group group) {
 		return JSONUtil.putAll(
 			JSONUtil.put(
@@ -177,7 +248,27 @@ public class DesignLibraryResourcesDisplayContext {
 			));
 	}
 
+	private boolean _hasManageStyleBookEntriesPermission(long groupId) {
+		PortletResourcePermission portletResourcePermission =
+			_portletResourcePermissionSnapshot.get();
+
+		if (portletResourcePermission == null) {
+			return false;
+		}
+
+		return portletResourcePermission.contains(
+			_themeDisplay.getPermissionChecker(), groupId,
+			StyleBookActionKeys.MANAGE_STYLE_BOOK_ENTRIES);
+	}
+
+	private static final Snapshot<PortletResourcePermission>
+		_portletResourcePermissionSnapshot = new Snapshot<>(
+			DesignLibraryResourcesDisplayContext.class,
+			PortletResourcePermission.class,
+			"(resource.name=" + StyleBookConstants.RESOURCE_NAME + ")");
+
 	private final HttpServletRequest _httpServletRequest;
 	private final LiferayPortletResponse _liferayPortletResponse;
+	private final ThemeDisplay _themeDisplay;
 
 }

@@ -20,18 +20,27 @@ import type {
 	LocalizedValue,
 } from 'dynamic-data-mapping-form-field-type';
 
+// E.164 format: a leading "+" followed by 7 to 15 digits.
+
+const PHONE_NUMBER_PATTERN = /^\+[0-9]{7,15}$/;
+
 interface BasePhoneNumberProps {
 	countries?: CountryInfo[];
 	disabled?: boolean;
+	displayErrors?: boolean;
+	errorMessage?: string;
 	fieldName: string;
 	id?: string;
+	label?: string;
 	name: string;
 	onBlur?: (event: React.FocusEvent) => void;
 	onFocus?: (event: React.FocusEvent) => void;
+	pageValidationFailed?: boolean;
 	predefinedValue?: string;
 	prefix?: string;
 	prefixType?: PrefixType;
 	readOnly?: boolean;
+	valid?: boolean;
 	[key: string]: unknown;
 }
 
@@ -49,6 +58,20 @@ type PhoneNumberProps =
 	| (LocalizablePhoneNumberProps & {localizedObjectField: true})
 	| (NonLocalizablePhoneNumberProps & {localizedObjectField?: false});
 
+const getValidationState = (value: string) => {
+	if (value && !PHONE_NUMBER_PATTERN.test(value)) {
+		return {
+			displayErrors: true,
+			errorMessage: Liferay.Language.get(
+				'please-enter-a-valid-phone-number'
+			),
+			valid: false,
+		};
+	}
+
+	return {};
+};
+
 const LocalizablePhoneNumber = ({
 	countries = [],
 	fieldName,
@@ -65,33 +88,51 @@ const LocalizablePhoneNumber = ({
 }: LocalizablePhoneNumberProps) => {
 	const {availableLocales, editingLanguageId} = useFormState();
 
-	const disabled = readOnly || (otherProps.disabled as boolean);
-	const label = otherProps.label as string;
+	const [touched, setTouched] = useState(false);
 
-	const handleLocalChange = (event: {target: {value: string}}) => {
-		const nextValue = {
+	const currentValue = value[editingLanguageId] ?? predefinedValue ?? '';
+	const disabled = readOnly || otherProps.disabled;
+
+	const validationState =
+		touched || otherProps.pageValidationFailed
+			? getValidationState(currentValue)
+			: {};
+
+	const handleBlur = (event: React.FocusEvent) => {
+		setTouched(true);
+
+		onBlur?.(event);
+	};
+
+	const handleChange = (event: {target: {value: string}}) => {
+		const newValue = {
 			...value,
 			[editingLanguageId]: event.target.value,
 		} as LocalizedValue<string>;
 
-		onChange?.({target: {value: nextValue}});
+		onChange?.({target: {value: newValue}});
 	};
 
 	return (
-		<FieldBase {...otherProps} name={name} readOnly={disabled}>
-			<ClayInput.Group aria-label={label} role="group">
+		<FieldBase
+			{...otherProps}
+			{...validationState}
+			name={name}
+			readOnly={disabled}
+		>
+			<ClayInput.Group aria-label={otherProps.label} role="group">
 				<PhoneNumberInput
 					countries={countries}
 					disabled={disabled}
 					id={otherProps.id as string}
 					key={editingLanguageId}
 					name={name}
-					onBlur={onBlur}
-					onChange={handleLocalChange}
+					onBlur={handleBlur}
+					onChange={handleChange}
 					onFocus={onFocus}
 					prefix={prefix}
 					prefixType={prefixType}
-					value={value[editingLanguageId] ?? predefinedValue ?? ''}
+					value={currentValue}
 				/>
 
 				<ClayInput.GroupItem shrink>
@@ -119,26 +160,45 @@ const NonLocalizablePhoneNumber = ({
 	value: initialValue,
 	...otherProps
 }: NonLocalizablePhoneNumberProps) => {
-	const disabled = readOnly || (otherProps.disabled as boolean);
-	const label = otherProps.label as string;
-
 	const [combinedValue, setCombinedValue] = useState(
 		initialValue || predefinedValue || ''
 	);
+	const [touched, setTouched] = useState(false);
+
+	const disabled = readOnly || otherProps.disabled;
+
+	const validationState =
+		touched || otherProps.pageValidationFailed
+			? getValidationState(combinedValue)
+			: {};
+
+	const handleBlur = (event: React.FocusEvent) => {
+		setTouched(true);
+
+		onBlur?.(event);
+	};
+
+	const handleChange = (event: {target: {value: string}}) => {
+		setCombinedValue(event.target.value);
+
+		onChange?.(event);
+	};
 
 	return (
-		<FieldBase {...otherProps} name={name} readOnly={disabled}>
-			<ClayInput.Group aria-label={label} role="group">
+		<FieldBase
+			{...otherProps}
+			{...validationState}
+			name={name}
+			readOnly={disabled}
+		>
+			<ClayInput.Group aria-label={otherProps.label} role="group">
 				<PhoneNumberInput
 					countries={countries}
 					disabled={disabled}
 					id={otherProps.id as string}
 					name={name}
-					onBlur={onBlur}
-					onChange={(event) => {
-						setCombinedValue(event.target.value);
-						onChange?.(event);
-					}}
+					onBlur={handleBlur}
+					onChange={handleChange}
 					onFocus={onFocus}
 					prefix={prefix}
 					prefixType={prefixType}

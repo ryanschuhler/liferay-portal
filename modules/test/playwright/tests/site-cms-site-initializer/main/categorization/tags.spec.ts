@@ -5,16 +5,19 @@
 
 import {expect, mergeTests} from '@playwright/test';
 
+import {dataApiHelpersTest} from '../../../../fixtures/dataApiHelpersTest';
 import {featureFlagsTest} from '../../../../fixtures/featureFlagsTest';
 import {loginTest} from '../../../../fixtures/loginTest';
 import {checkAccessibility} from '../../../../utils/checkAccessibility';
 import {clickAndExpectToBeHidden} from '../../../../utils/clickAndExpectToBeHidden';
 import {clickAndExpectToBeVisible} from '../../../../utils/clickAndExpectToBeVisible';
 import {getRandomInt} from '../../../../utils/getRandomInt';
+import getRandomString from '../../../../utils/getRandomString';
 import {cmsPagesTest} from '../fixtures/cmsPagesTest';
 
 const test = mergeTests(
 	cmsPagesTest,
+	dataApiHelpersTest,
 	featureFlagsTest({
 		'LPD-17564': {enabled: true},
 	}),
@@ -431,6 +434,61 @@ test(
 	}
 );
 
+test(
+	"View a Tag's usages",
+	{tag: '@LPD-89713'},
+	async ({apiHelpers, dataSetPage, page, tagsPage}) => {
+		const {id: siteId} =
+			await apiHelpers.headlessAdminUser.getSiteByFriendlyUrlPath('cms');
+
+		const tagName = getRandomString();
+
+		await apiHelpers.headlessAdminTaxonomy.postSiteKeyword({
+			name: tagName,
+			siteId,
+		});
+
+		await tagsPage.goto();
+
+		await tagsPage.execItemAction({
+			action: 'View Usages',
+			filter: tagName,
+		});
+
+		await expect(page.getByText('No Results Found')).toBeVisible();
+
+		const basicWebContentTitle = getRandomString();
+
+		await apiHelpers.objectEntry.postObjectEntry(
+			{
+				keywords: [tagName],
+				objectEntryFolderExternalReferenceCode: 'L_CONTENTS',
+				title: basicWebContentTitle,
+			},
+			'cms/basic-web-contents/scopes/Default'
+		);
+
+		await tagsPage.goto();
+
+		await tagsPage.execItemAction({
+			action: 'View Usages',
+			filter: tagName,
+		});
+
+		await checkAccessibility({
+			page,
+			selectors: ['.content'],
+			selectorsToExclude: [
+				'.control-menu-container',
+				'.sidebar-container',
+				'.top-bar',
+			],
+		});
+
+		await expect(dataSetPage.getRow(basicWebContentTitle)).toBeVisible();
+	}
+);
+
 test('Validate tag inputs', {tag: ['@LPD-69687']}, async ({page, tagsPage}) => {
 	await tagsPage.goto();
 
@@ -466,3 +524,70 @@ test('Validate tag inputs', {tag: ['@LPD-69687']}, async ({page, tagsPage}) => {
 
 	await expect(tagsPage.saveButton).toBeDisabled();
 });
+
+test(
+	'Tags with the same name can be created',
+	{tag: '@LPD-69204'},
+	async ({apiHelpers, assetsPage, infoPanelPage, page}) => {
+		const applicationName = 'cms/basic-web-contents';
+		const contentTitle = `title ${getRandomString()}`;
+		let objectEntry: ObjectEntry;
+		const tagNameBase = getRandomString().substring(0, 7);
+		const tagName1 = `A${tagNameBase}`;
+		const tagName2 = `a${tagNameBase}`;
+
+		try {
+			objectEntry = await apiHelpers.objectEntry.postObjectEntry(
+				{
+					objectEntryFolderExternalReferenceCode: 'L_CONTENTS',
+					title: contentTitle,
+				},
+				applicationName,
+				'Default'
+			);
+
+			await assetsPage.gotoAll();
+
+			await assetsPage.execItemAction({
+				action: 'Show Details',
+				filter: contentTitle,
+			});
+
+			await expect(
+				page.getByRole('heading', {name: contentTitle})
+			).toBeVisible();
+
+			await infoPanelPage.selectTab('Categorization').click();
+
+			await page.getByPlaceholder('Add tag').fill(tagName1);
+
+			const newTagOption = page.getByRole('option', {
+				name: 'Create New Tag:',
+			});
+
+			await newTagOption.waitFor();
+			await newTagOption.click();
+
+			await expect(page.getByText(tagName1, {exact: true})).toBeVisible();
+
+			await expect(async () => {
+				await page.getByPlaceholder('Add tag').fill(tagName2);
+
+				await newTagOption.waitFor();
+				await newTagOption.click();
+
+				await expect(
+					page.getByText(tagName2, {exact: true})
+				).toBeVisible();
+			}).toPass({timeout: 5000});
+		}
+		finally {
+			if (objectEntry) {
+				await apiHelpers.objectEntry.deleteObjectEntry(
+					applicationName,
+					String(objectEntry.id)
+				);
+			}
+		}
+	}
+);

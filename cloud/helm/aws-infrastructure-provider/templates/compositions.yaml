@@ -1527,6 +1527,91 @@ spec:
                             managementPolicies: {{ $managementPolicies }}
                         {{- end -}}
 
+                        {{- $elasticsearchName := printf "%s-es" $xr.metadata.name -}}
+                        {{- $elasticsearchSecretName := printf "%s-es-elastic-user" $elasticsearchName -}}
+                        ---
+                        apiVersion: kubernetes.m.crossplane.io/v1alpha1
+                        kind: Object
+                        metadata:
+                            annotations:
+                                gotemplating.fn.crossplane.io/composition-resource-name: elasticsearch-observer
+                            name: {{ $elasticsearchName }}-observer
+                        spec:
+                            forProvider:
+                                manifest:
+                                    apiVersion: elasticsearch.k8s.elastic.co/v1
+                                    kind: Elasticsearch
+                                    metadata:
+                                        name: {{ $elasticsearchName }}
+                                        namespace: {{ $namespace }}
+                            managementPolicies: ["Observe"]
+                        ---
+                        apiVersion: kubernetes.m.crossplane.io/v1alpha1
+                        kind: Object
+                        metadata:
+                            annotations:
+                                gotemplating.fn.crossplane.io/composition-resource-name: elasticsearch-secret-observer
+                            name: {{ $elasticsearchSecretName }}-observer
+                        spec:
+                            forProvider:
+                                manifest:
+                                    apiVersion: v1
+                                    kind: Secret
+                                    metadata:
+                                        name: {{ $elasticsearchSecretName }}
+                                        namespace: {{ $namespace }}
+                            managementPolicies: ["Observe"]
+                        {{- if .observed.resources }}
+                        {{- $elasticsearchHealth := dig "resource" "status" "atProvider" "manifest" "status" "health" "" (index .observed.resources "elasticsearch-observer") -}}
+                        {{- $isElasticsearchReady := or (eq $elasticsearchHealth "green") (eq $elasticsearchHealth "yellow") -}}
+
+                        {{- $elasticsearchPassword := dig "resource" "status" "atProvider" "manifest" "data" "elastic" "" (index .observed.resources "elasticsearch-secret-observer") -}}
+
+                        {{- if and $isElasticsearchReady $elasticsearchPassword }}
+                        ---
+                        apiVersion: kubernetes.m.crossplane.io/v1alpha1
+                        kind: Object
+                        metadata:
+                            annotations:
+                                crossplane.io/external-name: {{ $baseName }}-elasticsearch-connection-details-secret
+                                gotemplating.fn.crossplane.io/composition-resource-name: elasticsearch-connection-details-secret
+                            labels:
+                                app: liferay
+                                component: elasticsearch-connection-details-secret
+                                environmentId: {{ $environmentId }}
+                                projectId: {{ $projectId }}
+                            name: {{ $baseName }}-elasticsearch-connection-details-secret
+                            namespace: {{ $namespace }}
+                        spec:
+                            forProvider:
+                                manifest:
+                                    apiVersion: v1
+                                    data:
+                                        ELASTICSEARCH_PASSWORD: {{ $elasticsearchPassword }}
+                                    kind: Secret
+                                    metadata:
+                                        labels:
+                                            app: liferay
+                                            component: elasticsearch-connection-details-secret
+                                            environmentId: {{ $environmentId }}
+                                            projectId: {{ $projectId }}
+                                        name: elasticsearch-connection-details
+                                        namespace: {{ $namespace }}
+                                        ownerReferences:
+                                            -   apiVersion: aws.liferay.com/v1alpha1
+                                                blockOwnerDeletion: true
+                                                controller: true
+                                                kind: LiferayInfrastructure
+                                                name: {{ .observed.composite.resource.metadata.name }}
+                                                uid: {{ .observed.composite.resource.metadata.uid }}
+                                    stringData:
+                                        ELASTICSEARCH_URL: http://{{ $elasticsearchName }}-es-http.{{ $namespace }}.svc:9200
+                                        ELASTICSEARCH_USERNAME: elastic
+                                    type: Opaque
+                            managementPolicies: {{ $managementPolicies }}
+                        {{- end }}
+                        {{- end }}
+
                         {{- $storageName := "" -}}
                         {{- if kindIs "map" $storage -}}
                             {{- with $storage }}

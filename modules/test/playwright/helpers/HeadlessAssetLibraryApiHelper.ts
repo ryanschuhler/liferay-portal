@@ -23,7 +23,7 @@ export class HeadlessAssetLibraryApiHelper {
 		description?: string;
 		name: string;
 		settings?: any;
-		type: string;
+		type?: string;
 	}) {
 		const data = JSON.stringify({
 			description,
@@ -58,6 +58,63 @@ export class HeadlessAssetLibraryApiHelper {
 	async deleteAssetLibrary(externalReferenceCode: string) {
 		return this.apiHelpers.delete(
 			`${this.apiHelpers.baseUrl}${this.basePath}/asset-libraries/${externalReferenceCode}`
+		);
+	}
+
+	async getAssetLibrary(externalReferenceCode: string) {
+		return this.apiHelpers.get(
+			`${this.apiHelpers.baseUrl}${this.basePath}/asset-libraries/${externalReferenceCode}`
+		);
+	}
+
+	async patchAssetLibrary(
+		externalReferenceCode: string,
+		body: Record<string, any>
+	) {
+		return this.apiHelpers.patch(
+			`${this.apiHelpers.baseUrl}${this.basePath}/asset-libraries/${externalReferenceCode}`,
+			body
+		);
+	}
+
+	async patchAssetLibraryWithProblem(
+		externalReferenceCode: string,
+		body: Record<string, any>
+	) {
+		return this.apiHelpers.patchRequestOptions(
+			`${this.apiHelpers.baseUrl}${this.basePath}/asset-libraries/${externalReferenceCode}`,
+			{data: body, failOnStatusCode: false}
+		);
+	}
+
+	async connectSite(
+		assetLibraryExternalReferenceCode: string,
+		connectedSiteExternalReferenceCode: string,
+		body: Record<string, any> = {searchable: true}
+	) {
+		return this.apiHelpers.put(
+			`${this.apiHelpers.baseUrl}${this.basePath}/asset-libraries/${assetLibraryExternalReferenceCode}/connected-sites/${connectedSiteExternalReferenceCode}`,
+			{data: body}
+		);
+	}
+
+	async putAssetLibraryUserAccount(
+		assetLibraryExternalReferenceCode: string,
+		userAccountExternalReferenceCode: string
+	) {
+		return this.apiHelpers.put(
+			`${this.apiHelpers.baseUrl}${this.basePath}/asset-libraries/${assetLibraryExternalReferenceCode}/user-accounts/${userAccountExternalReferenceCode}`
+		);
+	}
+
+	async putAssetLibraryUserAccountRoles(
+		assetLibraryExternalReferenceCode: string,
+		userAccountExternalReferenceCode: string,
+		roleNames: string[]
+	) {
+		return this.apiHelpers.put(
+			`${this.apiHelpers.baseUrl}${this.basePath}/asset-libraries/${assetLibraryExternalReferenceCode}/user-accounts/${userAccountExternalReferenceCode}/roles`,
+			{data: roleNames.map((name) => ({name}))}
 		);
 	}
 }

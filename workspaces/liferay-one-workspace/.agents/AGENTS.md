@@ -17,11 +17,15 @@ Pure Liferay SaaS client-extension workspace — no OSGi modules, no Ant. Client
 
 Run from `workspaces/liferay-one-workspace/`.
 
-- Environment setup: Run `/one-bootsrap` skill.
+- Start environment: Run `/one-env-up` skill.
+- Stop environment: Run `/one-env-down` skill.
+- Reset environment: Run `/one-env-reset` skill.
+- Liferay MCP setup: Run `/one-mcp` skill.
 - **Build:** `./gradlew build`
 - **Format:** Run the `/format-source` skill.
 - **Deploy:** Run the `/one-deploy` skill.
 - **Pre-commit:** Run format and build first; do not deploy a failing build.
+- **Rebase:** Run the `/one-rebase` skill.
 - PR: Run the `/one-pr` skill.
 
 ## Specs

@@ -18,6 +18,12 @@ const renderComponent = () => {
 		<NewExport
 			backURL="/some/back/url"
 			exportPreviewAPIURL="/o/export-import/v1.0/export-preview"
+			exportProcessAPIURL="/o/export-import/v1.0/export-processes"
+			pageTreeModalConfiguration={{
+				liveGroupId: 20121,
+				pageSize: 20,
+				privateLayoutsEnabled: false,
+			}}
 		/>
 	);
 };
@@ -166,5 +172,41 @@ describe('NewExport', () => {
 		await waitFor(() => {
 			expect(exportButton).toBeEnabled();
 		});
+	});
+
+	it('hides the deletions checkbox when the preview has no deletions', async () => {
+		fetch.resetMocks();
+		fetch.mockResponse(
+			JSON.stringify({
+				...mockExportPreview,
+				deletionCount: 0,
+			})
+		);
+
+		renderComponent();
+
+		await screen.findByText('loaded');
+
+		expect(
+			screen.queryByLabelText('export-individual-deletions')
+		).not.toBeInTheDocument();
+	});
+
+	it('shows the deletions checkbox unchecked and toggles it when the preview has deletions', async () => {
+		renderComponent();
+
+		const deletionsCheckbox = await screen.findByLabelText(
+			'export-individual-deletions'
+		);
+
+		expect(deletionsCheckbox).not.toBeChecked();
+
+		await userEvent.click(deletionsCheckbox);
+
+		expect(deletionsCheckbox).toBeChecked();
+
+		await userEvent.click(deletionsCheckbox);
+
+		expect(deletionsCheckbox).not.toBeChecked();
 	});
 });

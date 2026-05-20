@@ -6,7 +6,9 @@
 package com.liferay.portal.kernel.service.persistence.impl;
 
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.model.BaseModel;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.util.Date;
 import java.util.Objects;
@@ -19,11 +21,14 @@ public class FinderColumn<T extends BaseModel<T>> {
 
 	public FinderColumn(
 		String entityAlias, String columnName, Type type, String comparator,
-		boolean convertNull, boolean last, Function<T, Object> valueExtractor) {
+		boolean caseSensitive, boolean convertNull,
+		Function<T, Object> valueExtractor) {
 
-		_type = type;
-		_convertNull = convertNull;
-		_valueExtractor = valueExtractor;
+		this.type = type;
+		_comparator = comparator;
+		this.caseSensitive = caseSensitive;
+		this.convertNull = convertNull;
+		this.valueExtractor = valueExtractor;
 
 		int dotIndex = columnName.indexOf('.');
 
@@ -34,32 +39,68 @@ public class FinderColumn<T extends BaseModel<T>> {
 			_keyFragment = columnName.substring(dotIndex + 1) + comparator;
 		}
 
-		String suffix = last ? "" : " AND ";
-
-		_sqlBind = StringBundler.concat(
-			entityAlias, columnName, " ", comparator, " ?", suffix);
-
-		if (type == Type.STRING) {
-			_sqlNull = StringBundler.concat(
-				"(", entityAlias, columnName, " IS NULL OR ", entityAlias,
-				columnName, " ", comparator, " '')", suffix);
+		if ((type == Type.STRING) && !caseSensitive) {
+			sqlBind = StringBundler.concat(
+				"lower(", entityAlias, columnName, ") ", comparator, " ?");
 		}
 		else {
-			_sqlNull = null;
+			sqlBind = StringBundler.concat(
+				entityAlias, columnName, " ", comparator, " ?");
+		}
+
+		if (type == Type.STRING) {
+			sqlNull = StringBundler.concat(
+				"(", entityAlias, columnName, " IS NULL OR ", entityAlias,
+				columnName, " ", comparator, " '')");
+		}
+		else {
+			sqlNull = null;
 		}
 
 		if (comparator.equals("<>") || comparator.equals("!=")) {
-			_sqlIsNull = StringBundler.concat(
-				entityAlias, columnName, " IS NOT NULL", suffix);
+			sqlIsNull = entityAlias + columnName + " IS NOT NULL";
 		}
 		else {
-			_sqlIsNull = StringBundler.concat(
-				entityAlias, columnName, " IS NULL", suffix);
+			sqlIsNull = entityAlias + columnName + " IS NULL";
 		}
 	}
 
+	public void bindValue(QueryPos queryPos, Object normalizedValue) {
+		if (type.isPrimitive()) {
+			queryPos.add(normalizedValue);
+
+			return;
+		}
+
+		if ((type == Type.STRING) && convertNull) {
+			String stringValue = (String)normalizedValue;
+
+			if (stringValue.isEmpty()) {
+				return;
+			}
+
+			if (!caseSensitive) {
+				stringValue = StringUtil.toLowerCase(stringValue);
+			}
+
+			queryPos.add(stringValue);
+
+			return;
+		}
+
+		if (normalizedValue == null) {
+			return;
+		}
+
+		if ((type == Type.STRING) && !caseSensitive) {
+			normalizedValue = StringUtil.toLowerCase((String)normalizedValue);
+		}
+
+		queryPos.add(normalizedValue);
+	}
+
 	public Object extractValue(T entity) {
-		return _valueExtractor.apply(entity);
+		return valueExtractor.apply(entity);
 	}
 
 	public String getKeyFragment() {
@@ -67,61 +108,109 @@ public class FinderColumn<T extends BaseModel<T>> {
 	}
 
 	public String getSqlFragment(Object normalizedValue) {
-		if (_type.isPrimitive()) {
-			return _sqlBind;
+		if (type.isPrimitive()) {
+			return sqlBind;
 		}
 
-		if ((_type == Type.STRING) && _convertNull) {
+		if ((type == Type.STRING) && convertNull) {
 			String stringValue = (String)normalizedValue;
 
 			if (stringValue.isEmpty()) {
-				return _sqlNull;
+				return sqlNull;
 			}
 
-			return _sqlBind;
+			return sqlBind;
 		}
 
 		if (normalizedValue == null) {
-			return _sqlIsNull;
+			return sqlIsNull;
 		}
 
-		return _sqlBind;
+		return sqlBind;
 	}
 
 	public boolean matches(T entity, Object normalizedValue) {
-		return Objects.equals(_valueExtractor.apply(entity), normalizedValue);
-	}
+		Object entityValue = valueExtractor.apply(entity);
 
-	public Object normalizeValue(Object value) {
-		if ((_type == Type.STRING) && _convertNull) {
-			return Objects.toString(value, "");
+		if ((type == Type.STRING) && !caseSensitive) {
+			entityValue = StringUtil.toLowerCase((String)entityValue);
 		}
 
-		return value;
-	}
-
-	public boolean shouldBind(Object normalizedValue) {
-		if (_type.isPrimitive()) {
-			return true;
+		if (_comparator.equals("=")) {
+			return Objects.equals(entityValue, normalizedValue);
 		}
 
-		if ((_type == Type.STRING) && _convertNull) {
-			String stringValue = (String)normalizedValue;
-
-			return !stringValue.isEmpty();
+		if (_comparator.equals("!=") || _comparator.equals("<>")) {
+			return !Objects.equals(entityValue, normalizedValue);
 		}
 
-		if (normalizedValue != null) {
-			return true;
+		if ((entityValue == null) || (normalizedValue == null)) {
+			return false;
+		}
+
+		if (_comparator.equals("LIKE")) {
+			return StringUtil.wildcardMatches(
+				(String)entityValue, (String)normalizedValue, '_', '%', '\\',
+				caseSensitive);
+		}
+
+		@SuppressWarnings("rawtypes")
+		Comparable comparable = (Comparable)entityValue;
+
+		@SuppressWarnings("unchecked")
+		int comparisonResult = comparable.compareTo(normalizedValue);
+
+		if (_comparator.equals(">")) {
+			if (comparisonResult > 0) {
+				return true;
+			}
+
+			return false;
+		}
+
+		if (_comparator.equals(">=")) {
+			if (comparisonResult >= 0) {
+				return true;
+			}
+
+			return false;
+		}
+
+		if (_comparator.equals("<")) {
+			if (comparisonResult < 0) {
+				return true;
+			}
+
+			return false;
+		}
+
+		if (_comparator.equals("<=")) {
+			if (comparisonResult <= 0) {
+				return true;
+			}
+
+			return false;
 		}
 
 		return false;
 	}
 
-	public Object toFinderArg(Object normalizedValue) {
-		if (normalizedValue instanceof Date) {
-			Date date = (Date)normalizedValue;
+	public Object normalizeValue(Object value) {
+		if (type == Type.STRING) {
+			if (!caseSensitive) {
+				value = StringUtil.toLowerCase((String)value);
+			}
 
+			if (convertNull) {
+				value = Objects.toString(value, "");
+			}
+		}
+
+		return value;
+	}
+
+	public Object toFinderArg(Object normalizedValue) {
+		if (normalizedValue instanceof Date date) {
 			return date.getTime();
 		}
 
@@ -145,12 +234,15 @@ public class FinderColumn<T extends BaseModel<T>> {
 
 	}
 
-	private final boolean _convertNull;
+	protected final boolean caseSensitive;
+	protected final boolean convertNull;
+	protected final String sqlBind;
+	protected final String sqlIsNull;
+	protected final String sqlNull;
+	protected final Type type;
+	protected final Function<T, Object> valueExtractor;
+
+	private final String _comparator;
 	private final String _keyFragment;
-	private final String _sqlBind;
-	private final String _sqlIsNull;
-	private final String _sqlNull;
-	private final Type _type;
-	private final Function<T, Object> _valueExtractor;
 
 }

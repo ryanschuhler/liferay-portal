@@ -13,13 +13,11 @@ import com.liferay.layout.page.template.model.impl.LayoutPageTemplateStructureRe
 import com.liferay.layout.page.template.service.persistence.LayoutPageTemplateStructureRelPersistence;
 import com.liferay.layout.page.template.service.persistence.LayoutPageTemplateStructureRelUtil;
 import com.liferay.layout.page.template.service.persistence.impl.constants.LayoutPersistenceConstants;
-import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.portal.kernel.change.tracking.CTColumnResolutionType;
 import com.liferay.portal.kernel.configuration.Configuration;
 import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.FinderCache;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.dao.orm.SessionFactory;
 import com.liferay.portal.kernel.log.Log;
@@ -90,68 +88,14 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 	public static final String FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION =
 		FINDER_CLASS_NAME_ENTITY + ".List2";
 
-	private FinderPath _finderPathWithPaginationFindByUuid;
-	private FinderPath _finderPathWithoutPaginationFindByUuid;
-	private FinderPath _finderPathCountByUuid;
 	private CollectionPersistenceFinder<LayoutPageTemplateStructureRel>
 		_collectionPersistenceFinderByUuid;
 
 	/**
-	 * Returns all the layout page template structure rels where uuid = &#63;.
-	 *
-	 * @param uuid the uuid
-	 * @return the matching layout page template structure rels
-	 */
-	@Override
-	public List<LayoutPageTemplateStructureRel> findByUuid(String uuid) {
-		return findByUuid(uuid, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the layout page template structure rels where uuid = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
-	 * </p>
-	 *
-	 * @param uuid the uuid
-	 * @param start the lower bound of the range of layout page template structure rels
-	 * @param end the upper bound of the range of layout page template structure rels (not inclusive)
-	 * @return the range of matching layout page template structure rels
-	 */
-	@Override
-	public List<LayoutPageTemplateStructureRel> findByUuid(
-		String uuid, int start, int end) {
-
-		return findByUuid(uuid, start, end, null);
-	}
-
-	/**
 	 * Returns an ordered range of all the layout page template structure rels where uuid = &#63;.
 	 *
 	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
-	 * </p>
-	 *
-	 * @param uuid the uuid
-	 * @param start the lower bound of the range of layout page template structure rels
-	 * @param end the upper bound of the range of layout page template structure rels (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching layout page template structure rels
-	 */
-	@Override
-	public List<LayoutPageTemplateStructureRel> findByUuid(
-		String uuid, int start, int end,
-		OrderByComparator<LayoutPageTemplateStructureRel> orderByComparator) {
-
-		return findByUuid(uuid, start, end, orderByComparator, true);
-	}
-
-	/**
-	 * Returns an ordered range of all the layout page template structure rels where uuid = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
 	 * </p>
 	 *
 	 * @param uuid the uuid
@@ -167,14 +111,9 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 		OrderByComparator<LayoutPageTemplateStructureRel> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					LayoutPageTemplateStructureRel.class)) {
-
-			return _collectionPersistenceFinderByUuid.find(
-				finderCache, new Object[] {uuid}, start, end, orderByComparator,
-				useFinderCache);
-		}
+		return _collectionPersistenceFinderByUuid.find(
+			finderCache, new Object[] {uuid}, start, end, orderByComparator,
+			useFinderCache);
 	}
 
 	/**
@@ -238,16 +177,10 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 	 */
 	@Override
 	public int countByUuid(String uuid) {
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					LayoutPageTemplateStructureRel.class)) {
-
-			return _collectionPersistenceFinderByUuid.count(
-				finderCache, new Object[] {uuid});
-		}
+		return _collectionPersistenceFinderByUuid.count(
+			finderCache, new Object[] {uuid});
 	}
 
-	private FinderPath _finderPathFetchByUUID_G;
 	private UniquePersistenceFinder<LayoutPageTemplateStructureRel>
 		_uniquePersistenceFinderByUUID_G;
 
@@ -283,20 +216,6 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 	}
 
 	/**
-	 * Returns the layout page template structure rel where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param uuid the uuid
-	 * @param groupId the group ID
-	 * @return the matching layout page template structure rel, or <code>null</code> if a matching layout page template structure rel could not be found
-	 */
-	@Override
-	public LayoutPageTemplateStructureRel fetchByUUID_G(
-		String uuid, long groupId) {
-
-		return fetchByUUID_G(uuid, groupId, true);
-	}
-
-	/**
 	 * Returns the layout page template structure rel where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param uuid the uuid
@@ -308,13 +227,8 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 	public LayoutPageTemplateStructureRel fetchByUUID_G(
 		String uuid, long groupId, boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					LayoutPageTemplateStructureRel.class)) {
-
-			return _uniquePersistenceFinderByUUID_G.fetch(
-				finderCache, new Object[] {uuid, groupId}, useFinderCache);
-		}
+		return _uniquePersistenceFinderByUUID_G.fetch(
+			finderCache, new Object[] {uuid, groupId}, useFinderCache);
 	}
 
 	/**
@@ -348,75 +262,14 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 			finderCache, new Object[] {uuid, groupId});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByUuid_C;
-	private FinderPath _finderPathWithoutPaginationFindByUuid_C;
-	private FinderPath _finderPathCountByUuid_C;
 	private CollectionPersistenceFinder<LayoutPageTemplateStructureRel>
 		_collectionPersistenceFinderByUuid_C;
 
 	/**
-	 * Returns all the layout page template structure rels where uuid = &#63; and companyId = &#63;.
-	 *
-	 * @param uuid the uuid
-	 * @param companyId the company ID
-	 * @return the matching layout page template structure rels
-	 */
-	@Override
-	public List<LayoutPageTemplateStructureRel> findByUuid_C(
-		String uuid, long companyId) {
-
-		return findByUuid_C(
-			uuid, companyId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the layout page template structure rels where uuid = &#63; and companyId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
-	 * </p>
-	 *
-	 * @param uuid the uuid
-	 * @param companyId the company ID
-	 * @param start the lower bound of the range of layout page template structure rels
-	 * @param end the upper bound of the range of layout page template structure rels (not inclusive)
-	 * @return the range of matching layout page template structure rels
-	 */
-	@Override
-	public List<LayoutPageTemplateStructureRel> findByUuid_C(
-		String uuid, long companyId, int start, int end) {
-
-		return findByUuid_C(uuid, companyId, start, end, null);
-	}
-
-	/**
 	 * Returns an ordered range of all the layout page template structure rels where uuid = &#63; and companyId = &#63;.
 	 *
 	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
-	 * </p>
-	 *
-	 * @param uuid the uuid
-	 * @param companyId the company ID
-	 * @param start the lower bound of the range of layout page template structure rels
-	 * @param end the upper bound of the range of layout page template structure rels (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching layout page template structure rels
-	 */
-	@Override
-	public List<LayoutPageTemplateStructureRel> findByUuid_C(
-		String uuid, long companyId, int start, int end,
-		OrderByComparator<LayoutPageTemplateStructureRel> orderByComparator) {
-
-		return findByUuid_C(
-			uuid, companyId, start, end, orderByComparator, true);
-	}
-
-	/**
-	 * Returns an ordered range of all the layout page template structure rels where uuid = &#63; and companyId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
 	 * </p>
 	 *
 	 * @param uuid the uuid
@@ -433,14 +286,9 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 		OrderByComparator<LayoutPageTemplateStructureRel> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					LayoutPageTemplateStructureRel.class)) {
-
-			return _collectionPersistenceFinderByUuid_C.find(
-				finderCache, new Object[] {uuid, companyId}, start, end,
-				orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByUuid_C.find(
+			finderCache, new Object[] {uuid, companyId}, start, end,
+			orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -508,89 +356,18 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 	 */
 	@Override
 	public int countByUuid_C(String uuid, long companyId) {
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					LayoutPageTemplateStructureRel.class)) {
-
-			return _collectionPersistenceFinderByUuid_C.count(
-				finderCache, new Object[] {uuid, companyId});
-		}
+		return _collectionPersistenceFinderByUuid_C.count(
+			finderCache, new Object[] {uuid, companyId});
 	}
 
-	private FinderPath
-		_finderPathWithPaginationFindByLayoutPageTemplateStructureId;
-	private FinderPath
-		_finderPathWithoutPaginationFindByLayoutPageTemplateStructureId;
-	private FinderPath _finderPathCountByLayoutPageTemplateStructureId;
 	private CollectionPersistenceFinder<LayoutPageTemplateStructureRel>
 		_collectionPersistenceFinderByLayoutPageTemplateStructureId;
 
 	/**
-	 * Returns all the layout page template structure rels where layoutPageTemplateStructureId = &#63;.
-	 *
-	 * @param layoutPageTemplateStructureId the layout page template structure ID
-	 * @return the matching layout page template structure rels
-	 */
-	@Override
-	public List<LayoutPageTemplateStructureRel>
-		findByLayoutPageTemplateStructureId(
-			long layoutPageTemplateStructureId) {
-
-		return findByLayoutPageTemplateStructureId(
-			layoutPageTemplateStructureId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			null);
-	}
-
-	/**
-	 * Returns a range of all the layout page template structure rels where layoutPageTemplateStructureId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
-	 * </p>
-	 *
-	 * @param layoutPageTemplateStructureId the layout page template structure ID
-	 * @param start the lower bound of the range of layout page template structure rels
-	 * @param end the upper bound of the range of layout page template structure rels (not inclusive)
-	 * @return the range of matching layout page template structure rels
-	 */
-	@Override
-	public List<LayoutPageTemplateStructureRel>
-		findByLayoutPageTemplateStructureId(
-			long layoutPageTemplateStructureId, int start, int end) {
-
-		return findByLayoutPageTemplateStructureId(
-			layoutPageTemplateStructureId, start, end, null);
-	}
-
-	/**
 	 * Returns an ordered range of all the layout page template structure rels where layoutPageTemplateStructureId = &#63;.
 	 *
 	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
-	 * </p>
-	 *
-	 * @param layoutPageTemplateStructureId the layout page template structure ID
-	 * @param start the lower bound of the range of layout page template structure rels
-	 * @param end the upper bound of the range of layout page template structure rels (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching layout page template structure rels
-	 */
-	@Override
-	public List<LayoutPageTemplateStructureRel>
-		findByLayoutPageTemplateStructureId(
-			long layoutPageTemplateStructureId, int start, int end,
-			OrderByComparator<LayoutPageTemplateStructureRel>
-				orderByComparator) {
-
-		return findByLayoutPageTemplateStructureId(
-			layoutPageTemplateStructureId, start, end, orderByComparator, true);
-	}
-
-	/**
-	 * Returns an ordered range of all the layout page template structure rels where layoutPageTemplateStructureId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
 	 * </p>
 	 *
 	 * @param layoutPageTemplateStructureId the layout page template structure ID
@@ -607,15 +384,9 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 			OrderByComparator<LayoutPageTemplateStructureRel> orderByComparator,
 			boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					LayoutPageTemplateStructureRel.class)) {
-
-			return _collectionPersistenceFinderByLayoutPageTemplateStructureId.
-				find(
-					finderCache, new Object[] {layoutPageTemplateStructureId},
-					start, end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByLayoutPageTemplateStructureId.find(
+			finderCache, new Object[] {layoutPageTemplateStructureId}, start,
+			end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -692,83 +463,18 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 	public int countByLayoutPageTemplateStructureId(
 		long layoutPageTemplateStructureId) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					LayoutPageTemplateStructureRel.class)) {
-
-			return _collectionPersistenceFinderByLayoutPageTemplateStructureId.
-				count(
-					finderCache, new Object[] {layoutPageTemplateStructureId});
-		}
+		return _collectionPersistenceFinderByLayoutPageTemplateStructureId.
+			count(finderCache, new Object[] {layoutPageTemplateStructureId});
 	}
 
-	private FinderPath _finderPathWithPaginationFindBySegmentsExperienceId;
-	private FinderPath _finderPathWithoutPaginationFindBySegmentsExperienceId;
-	private FinderPath _finderPathCountBySegmentsExperienceId;
 	private CollectionPersistenceFinder<LayoutPageTemplateStructureRel>
 		_collectionPersistenceFinderBySegmentsExperienceId;
 
 	/**
-	 * Returns all the layout page template structure rels where segmentsExperienceId = &#63;.
-	 *
-	 * @param segmentsExperienceId the segments experience ID
-	 * @return the matching layout page template structure rels
-	 */
-	@Override
-	public List<LayoutPageTemplateStructureRel> findBySegmentsExperienceId(
-		long segmentsExperienceId) {
-
-		return findBySegmentsExperienceId(
-			segmentsExperienceId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the layout page template structure rels where segmentsExperienceId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
-	 * </p>
-	 *
-	 * @param segmentsExperienceId the segments experience ID
-	 * @param start the lower bound of the range of layout page template structure rels
-	 * @param end the upper bound of the range of layout page template structure rels (not inclusive)
-	 * @return the range of matching layout page template structure rels
-	 */
-	@Override
-	public List<LayoutPageTemplateStructureRel> findBySegmentsExperienceId(
-		long segmentsExperienceId, int start, int end) {
-
-		return findBySegmentsExperienceId(
-			segmentsExperienceId, start, end, null);
-	}
-
-	/**
 	 * Returns an ordered range of all the layout page template structure rels where segmentsExperienceId = &#63;.
 	 *
 	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
-	 * </p>
-	 *
-	 * @param segmentsExperienceId the segments experience ID
-	 * @param start the lower bound of the range of layout page template structure rels
-	 * @param end the upper bound of the range of layout page template structure rels (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching layout page template structure rels
-	 */
-	@Override
-	public List<LayoutPageTemplateStructureRel> findBySegmentsExperienceId(
-		long segmentsExperienceId, int start, int end,
-		OrderByComparator<LayoutPageTemplateStructureRel> orderByComparator) {
-
-		return findBySegmentsExperienceId(
-			segmentsExperienceId, start, end, orderByComparator, true);
-	}
-
-	/**
-	 * Returns an ordered range of all the layout page template structure rels where segmentsExperienceId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>.
 	 * </p>
 	 *
 	 * @param segmentsExperienceId the segments experience ID
@@ -784,14 +490,9 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 		OrderByComparator<LayoutPageTemplateStructureRel> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					LayoutPageTemplateStructureRel.class)) {
-
-			return _collectionPersistenceFinderBySegmentsExperienceId.find(
-				finderCache, new Object[] {segmentsExperienceId}, start, end,
-				orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderBySegmentsExperienceId.find(
+			finderCache, new Object[] {segmentsExperienceId}, start, end,
+			orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -859,16 +560,10 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 	 */
 	@Override
 	public int countBySegmentsExperienceId(long segmentsExperienceId) {
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					LayoutPageTemplateStructureRel.class)) {
-
-			return _collectionPersistenceFinderBySegmentsExperienceId.count(
-				finderCache, new Object[] {segmentsExperienceId});
-		}
+		return _collectionPersistenceFinderBySegmentsExperienceId.count(
+			finderCache, new Object[] {segmentsExperienceId});
 	}
 
-	private FinderPath _finderPathFetchByL_S;
 	private UniquePersistenceFinder<LayoutPageTemplateStructureRel>
 		_uniquePersistenceFinderByL_S;
 
@@ -907,21 +602,6 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 	}
 
 	/**
-	 * Returns the layout page template structure rel where layoutPageTemplateStructureId = &#63; and segmentsExperienceId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param layoutPageTemplateStructureId the layout page template structure ID
-	 * @param segmentsExperienceId the segments experience ID
-	 * @return the matching layout page template structure rel, or <code>null</code> if a matching layout page template structure rel could not be found
-	 */
-	@Override
-	public LayoutPageTemplateStructureRel fetchByL_S(
-		long layoutPageTemplateStructureId, long segmentsExperienceId) {
-
-		return fetchByL_S(
-			layoutPageTemplateStructureId, segmentsExperienceId, true);
-	}
-
-	/**
 	 * Returns the layout page template structure rel where layoutPageTemplateStructureId = &#63; and segmentsExperienceId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param layoutPageTemplateStructureId the layout page template structure ID
@@ -934,17 +614,10 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 		long layoutPageTemplateStructureId, long segmentsExperienceId,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					LayoutPageTemplateStructureRel.class)) {
-
-			return _uniquePersistenceFinderByL_S.fetch(
-				finderCache,
-				new Object[] {
-					layoutPageTemplateStructureId, segmentsExperienceId
-				},
-				useFinderCache);
-		}
+		return _uniquePersistenceFinderByL_S.fetch(
+			finderCache,
+			new Object[] {layoutPageTemplateStructureId, segmentsExperienceId},
+			useFinderCache);
 	}
 
 	/**
@@ -1316,125 +989,108 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 	 */
 	@Activate
 	public void activate() {
-		_finderPathWithPaginationFindByUuid = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByUuid",
-			new String[] {
-				String.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"uuid_"}, true);
-
-		_finderPathWithoutPaginationFindByUuid = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByUuid",
-			new String[] {String.class.getName()}, new String[] {"uuid_"},
-			true);
-
-		_finderPathCountByUuid = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByUuid",
-			new String[] {String.class.getName()}, new String[] {"uuid_"},
-			false);
-
 		_collectionPersistenceFinderByUuid = new CollectionPersistenceFinder<>(
-			this, _finderPathWithPaginationFindByUuid,
-			_finderPathWithoutPaginationFindByUuid, _finderPathCountByUuid,
+			this,
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByUuid",
+				new String[] {
+					String.class.getName(), Integer.class.getName(),
+					Integer.class.getName(), OrderByComparator.class.getName()
+				},
+				new String[] {"uuid_"}, true),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByUuid",
+				new String[] {String.class.getName()}, new String[] {"uuid_"},
+				0, 1, true, null),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByUuid",
+				new String[] {String.class.getName()}, new String[] {"uuid_"},
+				0, 1, false, null),
 			_SQL_SELECT_LAYOUTPAGETEMPLATESTRUCTUREREL_WHERE,
 			_SQL_COUNT_LAYOUTPAGETEMPLATESTRUCTUREREL_WHERE,
 			LayoutPageTemplateStructureRelModelImpl.ORDER_BY_JPQL,
-			_ENTITY_ALIAS_PREFIX,
+			_ENTITY_ALIAS_PREFIX, "",
 			new FinderColumn<>(
 				"layoutPageTemplateStructureRel.", "uuid",
 				FinderColumn.Type.STRING, "=", true, true,
 				LayoutPageTemplateStructureRel::getUuid));
 
-		_finderPathFetchByUUID_G = createUniqueFinderPath(
-			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
-			new String[] {String.class.getName(), Long.class.getName()},
-			new String[] {"uuid_", "groupId"}, false,
-			LayoutPageTemplateStructureRel::getUuid,
-			LayoutPageTemplateStructureRel::getGroupId);
-
 		_uniquePersistenceFinderByUUID_G = new UniquePersistenceFinder<>(
-			this, _finderPathFetchByUUID_G,
-			_SQL_SELECT_LAYOUTPAGETEMPLATESTRUCTUREREL_WHERE,
+			this,
+			createUniqueFinderPath(
+				FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
+				new String[] {String.class.getName(), Long.class.getName()},
+				new String[] {"uuid_", "groupId"}, 0, 1, false,
+				convertNullFunction(LayoutPageTemplateStructureRel::getUuid),
+				LayoutPageTemplateStructureRel::getGroupId),
+			_SQL_SELECT_LAYOUTPAGETEMPLATESTRUCTUREREL_WHERE, "",
 			new FinderColumn<>(
 				"layoutPageTemplateStructureRel.", "uuid",
-				FinderColumn.Type.STRING, "=", true, false,
+				FinderColumn.Type.STRING, "=", true, true,
 				LayoutPageTemplateStructureRel::getUuid),
 			new FinderColumn<>(
 				"layoutPageTemplateStructureRel.", "groupId",
 				FinderColumn.Type.LONG, "=", true, true,
 				LayoutPageTemplateStructureRel::getGroupId));
 
-		_finderPathWithPaginationFindByUuid_C = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByUuid_C",
-			new String[] {
-				String.class.getName(), Long.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				OrderByComparator.class.getName()
-			},
-			new String[] {"uuid_", "companyId"}, true);
-
-		_finderPathWithoutPaginationFindByUuid_C = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByUuid_C",
-			new String[] {String.class.getName(), Long.class.getName()},
-			new String[] {"uuid_", "companyId"}, true);
-
-		_finderPathCountByUuid_C = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByUuid_C",
-			new String[] {String.class.getName(), Long.class.getName()},
-			new String[] {"uuid_", "companyId"}, false);
-
 		_collectionPersistenceFinderByUuid_C =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByUuid_C,
-				_finderPathWithoutPaginationFindByUuid_C,
-				_finderPathCountByUuid_C,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByUuid_C",
+					new String[] {
+						String.class.getName(), Long.class.getName(),
+						Integer.class.getName(), Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {"uuid_", "companyId"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByUuid_C",
+					new String[] {String.class.getName(), Long.class.getName()},
+					new String[] {"uuid_", "companyId"}, 0, 1, true, null),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByUuid_C",
+					new String[] {String.class.getName(), Long.class.getName()},
+					new String[] {"uuid_", "companyId"}, 0, 1, false, null),
 				_SQL_SELECT_LAYOUTPAGETEMPLATESTRUCTUREREL_WHERE,
 				_SQL_COUNT_LAYOUTPAGETEMPLATESTRUCTUREREL_WHERE,
 				LayoutPageTemplateStructureRelModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				_ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"layoutPageTemplateStructureRel.", "uuid",
-					FinderColumn.Type.STRING, "=", true, false,
+					FinderColumn.Type.STRING, "=", true, true,
 					LayoutPageTemplateStructureRel::getUuid),
 				new FinderColumn<>(
 					"layoutPageTemplateStructureRel.", "companyId",
 					FinderColumn.Type.LONG, "=", true, true,
 					LayoutPageTemplateStructureRel::getCompanyId));
 
-		_finderPathWithPaginationFindByLayoutPageTemplateStructureId =
-			new FinderPath(
-				FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
-				"findByLayoutPageTemplateStructureId",
-				new String[] {
-					Long.class.getName(), Integer.class.getName(),
-					Integer.class.getName(), OrderByComparator.class.getName()
-				},
-				new String[] {"layoutPageTemplateStructureId"}, true);
-
-		_finderPathWithoutPaginationFindByLayoutPageTemplateStructureId =
-			new FinderPath(
-				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
-				"findByLayoutPageTemplateStructureId",
-				new String[] {Long.class.getName()},
-				new String[] {"layoutPageTemplateStructureId"}, true);
-
-		_finderPathCountByLayoutPageTemplateStructureId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
-			"countByLayoutPageTemplateStructureId",
-			new String[] {Long.class.getName()},
-			new String[] {"layoutPageTemplateStructureId"}, false);
-
 		_collectionPersistenceFinderByLayoutPageTemplateStructureId =
 			new CollectionPersistenceFinder<>(
 				this,
-				_finderPathWithPaginationFindByLayoutPageTemplateStructureId,
-				_finderPathWithoutPaginationFindByLayoutPageTemplateStructureId,
-				_finderPathCountByLayoutPageTemplateStructureId,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+					"findByLayoutPageTemplateStructureId",
+					new String[] {
+						Long.class.getName(), Integer.class.getName(),
+						Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {"layoutPageTemplateStructureId"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"findByLayoutPageTemplateStructureId",
+					new String[] {Long.class.getName()},
+					new String[] {"layoutPageTemplateStructureId"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"countByLayoutPageTemplateStructureId",
+					new String[] {Long.class.getName()},
+					new String[] {"layoutPageTemplateStructureId"}, false),
 				_SQL_SELECT_LAYOUTPAGETEMPLATESTRUCTUREREL_WHERE,
 				_SQL_COUNT_LAYOUTPAGETEMPLATESTRUCTUREREL_WHERE,
 				LayoutPageTemplateStructureRelModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				_ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"layoutPageTemplateStructureRel.",
 					"layoutPageTemplateStructureId", FinderColumn.Type.LONG,
@@ -1442,56 +1098,54 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 					LayoutPageTemplateStructureRel::
 						getLayoutPageTemplateStructureId));
 
-		_finderPathWithPaginationFindBySegmentsExperienceId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
-			"findBySegmentsExperienceId",
-			new String[] {
-				Long.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"segmentsExperienceId"}, true);
-
-		_finderPathWithoutPaginationFindBySegmentsExperienceId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
-			"findBySegmentsExperienceId", new String[] {Long.class.getName()},
-			new String[] {"segmentsExperienceId"}, true);
-
-		_finderPathCountBySegmentsExperienceId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
-			"countBySegmentsExperienceId", new String[] {Long.class.getName()},
-			new String[] {"segmentsExperienceId"}, false);
-
 		_collectionPersistenceFinderBySegmentsExperienceId =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindBySegmentsExperienceId,
-				_finderPathWithoutPaginationFindBySegmentsExperienceId,
-				_finderPathCountBySegmentsExperienceId,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+					"findBySegmentsExperienceId",
+					new String[] {
+						Long.class.getName(), Integer.class.getName(),
+						Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {"segmentsExperienceId"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"findBySegmentsExperienceId",
+					new String[] {Long.class.getName()},
+					new String[] {"segmentsExperienceId"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"countBySegmentsExperienceId",
+					new String[] {Long.class.getName()},
+					new String[] {"segmentsExperienceId"}, false),
 				_SQL_SELECT_LAYOUTPAGETEMPLATESTRUCTUREREL_WHERE,
 				_SQL_COUNT_LAYOUTPAGETEMPLATESTRUCTUREREL_WHERE,
 				LayoutPageTemplateStructureRelModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				_ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"layoutPageTemplateStructureRel.", "segmentsExperienceId",
 					FinderColumn.Type.LONG, "=", true, true,
 					LayoutPageTemplateStructureRel::getSegmentsExperienceId));
 
-		_finderPathFetchByL_S = createUniqueFinderPath(
-			FINDER_CLASS_NAME_ENTITY, "fetchByL_S",
-			new String[] {Long.class.getName(), Long.class.getName()},
-			new String[] {
-				"layoutPageTemplateStructureId", "segmentsExperienceId"
-			},
-			false,
-			LayoutPageTemplateStructureRel::getLayoutPageTemplateStructureId,
-			LayoutPageTemplateStructureRel::getSegmentsExperienceId);
-
 		_uniquePersistenceFinderByL_S = new UniquePersistenceFinder<>(
-			this, _finderPathFetchByL_S,
-			_SQL_SELECT_LAYOUTPAGETEMPLATESTRUCTUREREL_WHERE,
+			this,
+			createUniqueFinderPath(
+				FINDER_CLASS_NAME_ENTITY, "fetchByL_S",
+				new String[] {Long.class.getName(), Long.class.getName()},
+				new String[] {
+					"layoutPageTemplateStructureId", "segmentsExperienceId"
+				},
+				0, 0, false,
+				LayoutPageTemplateStructureRel::
+					getLayoutPageTemplateStructureId,
+				LayoutPageTemplateStructureRel::getSegmentsExperienceId),
+			_SQL_SELECT_LAYOUTPAGETEMPLATESTRUCTUREREL_WHERE, "",
 			new FinderColumn<>(
 				"layoutPageTemplateStructureRel.",
 				"layoutPageTemplateStructureId", FinderColumn.Type.LONG, "=",
-				true, false,
+				true, true,
 				LayoutPageTemplateStructureRel::
 					getLayoutPageTemplateStructureId),
 			new FinderColumn<>(
@@ -1574,4 +1228,4 @@ public class LayoutPageTemplateStructureRelPersistenceImpl
 	}
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:-15456156
+// LIFERAY-SERVICE-BUILDER-HASH:-1831424118

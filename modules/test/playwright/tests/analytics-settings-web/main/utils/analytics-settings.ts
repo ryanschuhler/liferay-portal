@@ -7,7 +7,9 @@ import {Page, expect} from '@playwright/test';
 
 import {ApiHelpers} from '../../../../helpers/ApiHelpers';
 import {liferayConfig} from '../../../../liferay.config';
+import {clickAndExpectToBeVisible} from '../../../../utils/clickAndExpectToBeVisible';
 import {PORTLET_URLS} from '../../../../utils/portletUrls';
+import {waitForAlert} from '../../../../utils/waitForAlert';
 import {createChannel} from '../../../osb-faro-web/main/utils/channel';
 import {createDataSource} from '../../../osb-faro-web/main/utils/data-source';
 import {acceptsCookiesBanner} from '../../../osb-faro-web/main/utils/portal';
@@ -45,7 +47,7 @@ export async function connectToAnalyticsCloud(
 ) {
 	await page.getByPlaceholder('Paste token here.').fill(token);
 
-	await page.getByRole('button', {name: 'Connect'}).click();
+	await page.getByRole('button', {name: 'Connect'}).last().click();
 }
 
 export async function connectToAnalyticsCloudWithNoSiteSynced(page: Page) {
@@ -80,9 +82,7 @@ export async function disconnectFromAnalyticsCloud(page: Page) {
 
 		await confirmationButton.click();
 
-		await expect(
-			page.getByText('Success:Workspace disconnected.')
-		).toBeVisible();
+		await waitForAlert(page, 'Workspace disconnected.');
 	}
 }
 
@@ -125,11 +125,13 @@ export async function findChannel({
 	channelName: string;
 	page: Page;
 }): Promise<any> {
-	await page.waitForSelector('[data-testid="properties"]');
+	const managementBar = page.locator('.management-bar').filter({
+		has: page.locator('input[placeholder="Search"]:not([disabled])'),
+	});
 
-	await page.getByPlaceholder('Search').first().fill(channelName);
+	await managementBar.getByPlaceholder('Search').fill(channelName);
 
-	await page.getByRole('button', {name: 'Search'}).first().click();
+	await managementBar.getByRole('button', {name: 'Search'}).click();
 
 	await expect(page.getByRole('cell', {name: channelName})).toBeVisible({
 		timeout: 100 * 1000,
@@ -330,15 +332,9 @@ export async function syncCommerce({
 
 	await checkbox.check();
 
-	const submitButton = await page.$(
-		'.modal .modal-item-last button.btn-primary'
-	);
+	await page.locator('.modal .modal-item-last button.btn-primary').click();
 
-	await submitButton.click();
-
-	await expect(
-		page.getByText('Success:Properties settings have been saved.')
-	).toBeVisible();
+	await waitForAlert(page, 'Properties settings have been saved.');
 }
 
 export async function toggleSiteSync({
@@ -354,9 +350,10 @@ export async function toggleSiteSync({
 }) {
 	const channel = await findChannel({channelName, page});
 
-	const assignButton = await channel.locator('button');
-
-	await assignButton.click();
+	await clickAndExpectToBeVisible({
+		target: page.getByRole('dialog'),
+		trigger: channel.locator('button'),
+	});
 
 	await switchToTab({page, tabName: TabName.Sites});
 
@@ -370,9 +367,11 @@ export async function toggleSiteSync({
 
 	expect(sitesTable).toBeVisible();
 
-	const checkbox = sitesTable.locator(
-		'tbody tr:first-child input[type="checkbox"]'
-	);
+	const siteRow = sitesTable.locator('tbody tr').filter({hasText: siteName});
+
+	await expect(siteRow).toBeVisible();
+
+	const checkbox = siteRow.locator('input[type="checkbox"]');
 
 	if (synced) {
 		await checkbox.check();
@@ -381,15 +380,9 @@ export async function toggleSiteSync({
 		await checkbox.uncheck();
 	}
 
-	const submitButton = await page.$(
-		'.modal .modal-item-last button.btn-primary'
-	);
+	await page.locator('.modal .modal-item-last button.btn-primary').click();
 
-	await submitButton.click();
-
-	await expect(
-		page.getByText('Success:Properties settings have been saved.')
-	).toBeVisible();
+	await waitForAlert(page, 'Properties settings have been saved.');
 }
 
 export async function goNextStep(page) {

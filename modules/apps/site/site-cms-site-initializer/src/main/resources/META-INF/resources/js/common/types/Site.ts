@@ -10,4 +10,5 @@ export type Site = {
 	logo: string;
 	name: string;
 	searchable: boolean;
+	type?: 'Site' | 'SiteTemplate';
 };

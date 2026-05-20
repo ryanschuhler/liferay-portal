@@ -13,6 +13,7 @@ import {getCMSItemSelectorGroupedFilters} from '@liferay/frontend-js-item-select
 import {sub} from 'frontend-js-web';
 import React from 'react';
 
+import SharedIcon from '../../common/components/SharedIcon';
 import StatusLabel from '../../common/components/StatusLabel';
 import {openAssetUsageListModal} from '../../common/components/asset_usage/utils';
 import {AssetLibrary} from '../../common/types/AssetLibrary';
@@ -43,6 +44,7 @@ import deleteAssetEntriesBulkAction, {
 	executeBulkDeleteAction,
 } from './actions/deleteAssetEntriesBulkAction';
 import deleteItemAction from './actions/deleteItemAction';
+import duplicateBulkAction from './actions/duplicateBulkAction';
 import executeResetPermissionObjectBulkSelectionAction from './actions/executeResetPermissionObjectBulkSelectionAction';
 import expireEntriesBulkAction from './actions/expireEntriesBulkAction';
 import exportTranslationBulkAction from './actions/exportTranslationBulkAction';
@@ -272,6 +274,17 @@ export default function AssetsFDSPropsTransformer({
 									});
 								}}
 								options={options}
+								trailingIcon={
+									itemData?.embedded?.systemProperties
+										?.collaboratorBrief && (
+										<SharedIcon
+											className="c-ml-2"
+											spaceName={
+												itemData?.embedded?.scopeKey
+											}
+										/>
+									)
+								}
 								value={value}
 							/>
 						);
@@ -554,7 +567,7 @@ export default function AssetsFDSPropsTransformer({
 							closeModal,
 							defaultSourceLanguageId:
 								itemData.embedded?.defaultLanguageId,
-							itemId: itemData.embedded.id,
+							translationsAPIURL: `${itemData.actions.get.href}/translations`,
 						}),
 				});
 			}
@@ -749,6 +762,13 @@ export default function AssetsFDSPropsTransformer({
 						additionalProps.parentObjectEntryFolderExternalReferenceCode,
 					selectedData,
 					singleRoleMode: true,
+				});
+			}
+			else if (action?.data.id === 'duplicate') {
+				duplicateBulkAction({
+					apiURL: otherProps.apiURL,
+					dataSetId: otherProps.id,
+					selectedData,
 				});
 			}
 			else if (action?.data.id === 'expire') {

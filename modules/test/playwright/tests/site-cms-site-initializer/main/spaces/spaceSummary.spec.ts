@@ -10,7 +10,9 @@ import {featureFlagsTest} from '../../../../fixtures/featureFlagsTest';
 import {loginTest} from '../../../../fixtures/loginTest';
 import {getRandomInt} from '../../../../utils/getRandomInt';
 import getRandomString from '../../../../utils/getRandomString';
+import {performUserSwitchViaApi} from '../../../../utils/performLogin';
 import {cmsPagesTest} from '../fixtures/cmsPagesTest';
+import {registerUserCredentials} from './helpers/roleMembership';
 
 const test = mergeTests(
 	cmsPagesTest,
@@ -327,6 +329,44 @@ test(
 );
 
 test(
+	'Space member without assign-members permission cannot see the Add Members button',
+	{tag: '@LPD-89584'},
+	async ({apiHelpers, spaceSummaryPage}) => {
+		const spaceName = getRandomString();
+
+		await apiHelpers.headlessAssetLibrary.createAssetLibrary({
+			name: spaceName,
+			settings: {},
+			type: 'Space',
+		});
+
+		const user = await apiHelpers.headlessAdminUser.postUserAccount();
+		const userFullName = `${user.givenName} ${user.familyName}`;
+
+		registerUserCredentials(user);
+
+		await spaceSummaryPage.goto(spaceName);
+
+		await spaceSummaryPage.addUserOrUserGroup(userFullName, 'users');
+
+		await performUserSwitchViaApi(
+			spaceSummaryPage.page,
+			user.alternateName
+		);
+
+		await spaceSummaryPage.goto(spaceName);
+
+		await spaceSummaryPage.usersTab.click();
+
+		await expect(spaceSummaryPage.addMembersButton).toBeHidden();
+
+		await spaceSummaryPage.userGroupsTab.click();
+
+		await expect(spaceSummaryPage.addMembersButton).toBeHidden();
+	}
+);
+
+test(
 	'Can view Share modal for added content',
 	{tag: '@LPD-62554'},
 	async ({apiHelpers, assetsPage, page, spaceSummaryPage}) => {
@@ -424,7 +464,7 @@ test(
 			.getByRole('link', {name: /^Title \d+ /})
 			.count();
 
-		expect(visibleCount).toBeLessThanOrEqual(8);
+		expect(visibleCount).toBe(8);
 
 		await spaceSummaryPage.viewAllContentLink.click();
 
@@ -586,7 +626,7 @@ test(
 			.getByRole('link', {name: /^File \d+ /})
 			.count();
 
-		expect(visibleCount).toBeLessThanOrEqual(8);
+		expect(visibleCount).toBe(8);
 
 		await spaceSummaryPage.viewAllFilesLink.click();
 
@@ -655,7 +695,7 @@ test(
 			.getByRole('link', {name: /^(Folder|Entry) \d+ /})
 			.count();
 
-		expect(visibleCount).toBeLessThanOrEqual(8);
+		expect(visibleCount).toBe(8);
 
 		await spaceSummaryPage.viewAllContentLink.click();
 

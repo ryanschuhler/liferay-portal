@@ -10,14 +10,13 @@
  */
 
 module.exports = {
-	hash: 'e414c4a251fb9e33ae1ab13e8c035cb66439e46534621516d72ef3e3abed46a6',
+	hash: '5fa062d41a6b1b034a7f3c4311b7f4bc285eebba4fd95a0dbd33736a920d78b1',
 	imports: {
 		'@liferay/accessibility-menu-web': [],
 		'@liferay/accessibility-settings-state-web': [],
 		'@liferay/address-web': [],
 		'@liferay/ai-creator-openai-web': [],
 		'@liferay/ai-hub-cell-js-components-web': [],
-		'@liferay/ai-hub-cell-web': [],
 		'@liferay/ai-hub-web': [],
 		'@liferay/analytics-reports-js-components-web': [],
 		'@liferay/analytics-settings-web': [],
@@ -62,6 +61,7 @@ module.exports = {
 		'@liferay/configuration-admin-web': [],
 		'@liferay/content-dashboard-document-library-impl': [],
 		'@liferay/content-dashboard-web': [],
+		'@liferay/content-site-generator-web': [],
 		'@liferay/cookies-banner-web': [],
 		'@liferay/cookies-sample-web': [],
 		'@liferay/design-library-web': [],
@@ -170,6 +170,7 @@ module.exports = {
 			'highlight.js/lib/languages/java',
 			'highlight.js/lib/languages/javascript',
 			'highlight.js/lib/languages/plaintext',
+			'libphonenumber-js',
 			'liferay-ckeditor',
 			'moment',
 			'moment/min/moment-with-locales',

@@ -83,7 +83,7 @@ cd <module-root> && <gradlew> test --tests <TestClassName>
 
 # Portal core
 ant test-unit
-ant test-unit -Dtest.class=SomeTest
+ant test-class -Dtest.class=SomeTest
 ant test-package -Dtest.package=com.liferay.portal.kernel.util
 
 # Frontend
@@ -119,9 +119,3 @@ Functional tests are a last resort, reserved for complete UI flows that cannot b
 ### Format Source
 
 Run `/format-source` (the `format-source` skill). See `.claude/skills/format-source/SKILL.md` for details.
-
-# Skills
-
-When a request matches a skill's domain, always invoke the skill rather than working manually.
-
-- **worktree-setup** — Any operation involving Git worktrees: creating, configuring ports, listing, checking status, or tearing down. Use `/worktree-setup` with the appropriate argument (`new`, `status`, `list`, `cleanup`).

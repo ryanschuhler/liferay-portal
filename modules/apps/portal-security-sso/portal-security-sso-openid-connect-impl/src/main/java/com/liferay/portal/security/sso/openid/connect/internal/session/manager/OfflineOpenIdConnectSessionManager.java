@@ -266,6 +266,9 @@ public class OfflineOpenIdConnectSessionManager {
 				GetterUtil.getInteger(properties.get("tokenConnectionTimeout")),
 				oAuthClientEntry.getTokenRequestParametersJSON());
 
+			_updateOpenIdConnectSessionIdToken(
+				oidcTokens.getIDTokenString(), openIdConnectSession);
+
 			_updateOpenIdConnectSession(
 				oidcTokens.getAccessToken(), openIdConnectSession,
 				oidcTokens.getRefreshToken());
@@ -359,6 +362,20 @@ public class OfflineOpenIdConnectSessionManager {
 		openIdConnectSession.setUserId(userId);
 		openIdConnectSession.setAuthServerWellKnownURI(authServerWellKnownURI);
 		openIdConnectSession.setClientId(clientId);
+
+		_updateOpenIdConnectSessionIdToken(idTokenString, openIdConnectSession);
+
+		_updateOpenIdConnectSession(
+			accessToken, openIdConnectSession, refreshToken);
+	}
+
+	private void _updateOpenIdConnectSessionIdToken(
+		String idTokenString, OpenIdConnectSession openIdConnectSession) {
+
+		if (idTokenString == null) {
+			return;
+		}
+
 		openIdConnectSession.setIdToken(idTokenString);
 
 		try {
@@ -375,9 +392,6 @@ public class OfflineOpenIdConnectSessionManager {
 				_log.warn(parseException);
 			}
 		}
-
-		_updateOpenIdConnectSession(
-			accessToken, openIdConnectSession, refreshToken);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

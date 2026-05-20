@@ -12,6 +12,8 @@ export const ENTERPRISE_URL = 'https://www.liferay.com/web/lr/cms-upgrade';
 
 export const EXPIRING_SOON_THRESHOLD_DAYS = 7;
 
+export const FDS_EVENT_DISPLAY_UPDATED = 'fds-display-updated';
+
 export const FDS_EVENT_UPDATE_DISPLAY = 'fds-update-display';
 
 export const MS_PER_DAY = 24 * 60 * 60 * 1000;
@@ -56,6 +58,8 @@ export const ROOT_FOLDER_ERC = {
 	FILES: 'L_FILES',
 } as const;
 
+export const SITE_TEMPLATE_TYPE = 'SiteTemplate';
+
 export const ROOT_FOLDER_ERCS: ReadonlySet<string> = new Set([
 	ROOT_FOLDER_ERC.CONTENTS,
 	ROOT_FOLDER_ERC.FILES,
@@ -75,4 +79,19 @@ export type ItemSelectorItemType =
 
 export const CMSSiteInitializerFDSNames = {
 	ALL_SECTION: '-allSection',
+} as const;
+
+export const WORKFLOW_STATUS = {
+	APPROVED: 0,
+	DRAFT: 2,
+	EXPIRED: 3,
+} as const;
+
+export type WorkflowStatus =
+	(typeof WORKFLOW_STATUS)[keyof typeof WORKFLOW_STATUS];
+
+export const FDS_FILTER_ID = {
+	DATE_EXPIRATION: 'dateExpiration',
+	DATE_REVIEW: 'dateReview',
+	STATUS: 'status',
 } as const;

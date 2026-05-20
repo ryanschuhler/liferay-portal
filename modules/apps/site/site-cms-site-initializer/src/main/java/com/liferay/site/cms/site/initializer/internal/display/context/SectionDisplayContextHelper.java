@@ -48,6 +48,7 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.site.cms.site.initializer.constants.CMSWorkflowConstants;
 import com.liferay.site.cms.site.initializer.internal.util.ActionUtil;
 import com.liferay.translation.constants.TranslationPortletKeys;
 
@@ -56,7 +57,6 @@ import jakarta.portlet.ActionRequest;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -119,7 +119,7 @@ public class SectionDisplayContextHelper {
 
 	public String appendStatus(String filterString) {
 		return StringBundler.concat(
-			filterString, " and status in (", StringUtil.merge(_statuses, ", "),
+			filterString, " and status in (", _CMS_WORKFLOW_STATUSES_STRING,
 			")");
 	}
 
@@ -136,7 +136,7 @@ public class SectionDisplayContextHelper {
 			httpServletRequest.getAttribute(InfoDisplayWebKeys.INFO_ITEM),
 			rootObjectEntryFolderExternalReferenceCode);
 
-		StringBundler sb = new StringBundler(11);
+		StringBundler sb = new StringBundler(12);
 
 		sb.append("emptySearch=true&filter=");
 
@@ -152,7 +152,7 @@ public class SectionDisplayContextHelper {
 			}
 			else {
 				sb.append(" and status in (");
-				sb.append(StringUtil.merge(_statuses, ", "));
+				sb.append(_CMS_WORKFLOW_STATUSES_STRING);
 				sb.append(")");
 			}
 		}
@@ -163,6 +163,7 @@ public class SectionDisplayContextHelper {
 		sb.append("&nestedFields=embedded,embeddedTaxonomyCategory,");
 		sb.append("file.metadata,file.previewURL,file.thumbnailURL,");
 		sb.append("numberOfObjectEntries,numberOfObjectEntryFolders,");
+		sb.append("systemProperties.collaboratorBrief,");
 		sb.append("systemProperties.objectDefinitionBrief");
 		sb.append("&sort=dateModified:desc");
 
@@ -717,7 +718,7 @@ public class SectionDisplayContextHelper {
 			).setMethod(
 				"post"
 			).setPermissionKey(
-				"edit-categories"
+				"update"
 			).build(
 				"edit-categories"
 			));
@@ -729,7 +730,7 @@ public class SectionDisplayContextHelper {
 			).setMethod(
 				"post"
 			).setPermissionKey(
-				"edit-tags"
+				"update"
 			).build(
 				"edit-tags"
 			));
@@ -827,6 +828,15 @@ public class SectionDisplayContextHelper {
 				LanguageUtil.get(httpServletRequest, "copy-to")
 			).build(
 				"copy-to"
+			),
+			FDSActionDropdownItemBuilder.setHref(
+				"#"
+			).setIcon(
+				"copy"
+			).setLabel(
+				LanguageUtil.get(httpServletRequest, "duplicate")
+			).build(
+				"duplicate"
 			),
 			FDSActionDropdownItemBuilder.setHighlighted(
 				true
@@ -1136,13 +1146,11 @@ public class SectionDisplayContextHelper {
 		return false;
 	}
 
+	private static final String _CMS_WORKFLOW_STATUSES_STRING =
+		StringUtil.merge(CMSWorkflowConstants.STATUSES, ", ");
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		SectionDisplayContextHelper.class);
-
-	private static final List<Integer> _statuses = Arrays.asList(
-		WorkflowConstants.STATUS_APPROVED, WorkflowConstants.STATUS_DRAFT,
-		WorkflowConstants.STATUS_EXPIRED, WorkflowConstants.STATUS_PENDING,
-		WorkflowConstants.STATUS_SCHEDULED);
 
 	private final DepotEntryLocalService _depotEntryLocalService;
 	private final GroupLocalService _groupLocalService;

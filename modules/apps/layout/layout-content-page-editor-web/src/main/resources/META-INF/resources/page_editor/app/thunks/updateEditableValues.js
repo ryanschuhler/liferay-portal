@@ -7,47 +7,54 @@ import updateEditableValuesAction from '../actions/updateEditableValues';
 import FragmentService from '../services/FragmentService';
 import {clearPageContents} from '../utils/usePageContents';
 
-let nextRequestId = 0;
-const latestRequestIds = new Map();
+const pendingRequests = new Map();
+
+function enqueueByKey(key, work) {
+	const previous = pendingRequests.get(key) ?? Promise.resolve();
+
+	const current = previous
+		.catch(() => {})
+		.then(() => work(() => pendingRequests.get(key) === current))
+		.finally(() => {
+			if (pendingRequests.get(key) === current) {
+				pendingRequests.delete(key);
+			}
+		});
+
+	pendingRequests.set(key, current);
+
+	return current;
+}
 
 export default function updateEditableValues({
 	editableValues,
 	fragmentEntryLinkId,
 }) {
-	return async (dispatch, getState) => {
-		const requestId = ++nextRequestId;
-
-		latestRequestIds.set(fragmentEntryLinkId, requestId);
-
+	return (dispatch, getState) => {
 		const {languageId, segmentsExperienceId} = getState();
 
-		const {fragmentEntryLink} = await FragmentService.updateEditableValues({
-			editableValues,
-			fragmentEntryLinkId,
-			languageId,
-			onNetworkStatus: dispatch,
-			segmentsExperienceId,
+		return enqueueByKey(fragmentEntryLinkId, async (isLastInQueue) => {
+			const {fragmentEntryLink} =
+				await FragmentService.updateEditableValues({
+					editableValues,
+					fragmentEntryLinkId,
+					languageId,
+					onNetworkStatus: dispatch,
+					segmentsExperienceId,
+				});
+
+			dispatch(
+				updateEditableValuesAction({
+					content: fragmentEntryLink.content,
+					editableValues,
+					fragmentEntryLinkId,
+					segmentsExperienceId,
+				})
+			);
+
+			if (isLastInQueue()) {
+				clearPageContents();
+			}
 		});
-
-		// If a newer request started for this fragment, skip this response
-		// so we don't replace the latest state with old data. Nothing is
-		// lost: each request sends the full editable values.
-
-		if (latestRequestIds.get(fragmentEntryLinkId) !== requestId) {
-			return;
-		}
-
-		latestRequestIds.delete(fragmentEntryLinkId);
-
-		dispatch(
-			updateEditableValuesAction({
-				content: fragmentEntryLink.content,
-				editableValues,
-				fragmentEntryLinkId,
-				segmentsExperienceId,
-			})
-		);
-
-		clearPageContents();
 	};
 }

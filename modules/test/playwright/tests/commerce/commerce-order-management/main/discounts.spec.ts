@@ -1386,3 +1386,135 @@ test(
 		await expect(commerceAdminDiscountsPage.discountsHeading).toBeVisible();
 	}
 );
+
+test(
+	'Discount targeting a different channel does not apply on the buyer-visible channel',
+	{tag: ['@LPD-85008']},
+	async ({apiHelpers, page, productDetailsPage}) => {
+		const productName = `U-Joint Discount ${getRandomString()}`;
+
+		const product =
+			await apiHelpers.headlessCommerceAdminCatalog.postProduct({
+				active: true,
+				catalogId: catalog.id,
+				name: {en_US: productName},
+				skus: [
+					{
+						cost: 0,
+						price: 24,
+						published: true,
+						purchasable: true,
+						sku: `SKU${getRandomString()}`,
+					},
+				],
+			});
+
+		const otherSite = await apiHelpers.headlessAdminSite.postSite({
+			name: 'OtherSite-' + getRandomString(),
+		});
+
+		const otherChannel =
+			await apiHelpers.headlessCommerceAdminChannel.postChannel({
+				name: `TestChannel-${getRandomString()}`,
+				siteGroupId: otherSite.id,
+			});
+
+		await apiHelpers.headlessCommerceAdminPricing.postDiscount({
+			active: true,
+			discountChannels: [{channelId: otherChannel.id}],
+			discountProducts: [{productId: product.productId}],
+			level: 'L1',
+			percentageLevel1: 25,
+			target: 'products',
+			title: `Test Discount ${getRandomString()}`,
+			usePercentage: true,
+		} as any);
+
+		const {buyerUser} = await createAccountWithBuyerUser(
+			apiHelpers,
+			site.id
+		);
+
+		await performUserSwitch(page, buyerUser.alternateName);
+
+		await page.goto(
+			`/web${site.friendlyUrlPath}/p/${encodeURIComponent(productName)}`
+		);
+
+		await expect(
+			await productDetailsPage.priceField(
+				'$ 24.00',
+				productDetailsPage.priceContainer
+			)
+		).toBeVisible();
+		await expect(
+			await productDetailsPage.promoPriceField(
+				'$ 18.00',
+				productDetailsPage.priceContainer
+			)
+		).toHaveCount(0);
+	}
+);
+
+test(
+	'A discount eligibility entry can be added and then removed via the row actions menu',
+	{tag: ['@COMMERCE-6234', '@LPD-85008']},
+	async ({
+		apiHelpers,
+		commerceAdminDiscountDetailsPage,
+		commerceAdminDiscountsPage,
+		page,
+	}) => {
+		const randomString = getRandomString().slice(0, 8);
+		const accountName = `Test Account Run${randomString}`;
+
+		const account = await apiHelpers.headlessAdminUser.postAccount({
+			name: accountName,
+			type: 'business',
+		});
+
+		const discount =
+			await apiHelpers.headlessCommerceAdminPricing.postDiscount({
+				active: true,
+				level: 'L1',
+				percentageLevel1: 20,
+				target: 'products',
+				title: `Test Discount ${getRandomString()}`,
+				usePercentage: true,
+			});
+
+		await apiHelpers.headlessCommerceAdminPricing.postDiscountAccount(
+			discount.id,
+			account.id
+		);
+
+		await commerceAdminDiscountsPage.goto();
+
+		await commerceAdminDiscountsPage.discountLink(discount.title).click();
+		await commerceAdminDiscountDetailsPage.eligibilityTab.click();
+		await commerceAdminDiscountDetailsPage.specificAccountsRadio.check();
+
+		await expect(
+			commerceAdminDiscountDetailsPage.eligibilityEntryCell(accountName)
+		).toBeVisible();
+
+		await expect(async () => {
+			await commerceAdminDiscountDetailsPage
+				.eligibilityRowActions(accountName)
+				.click();
+
+			await expect(
+				commerceAdminDiscountDetailsPage.eligibilityRowRemoveMenuItem
+			).toBeVisible({timeout: 500});
+		}).toPass({timeout: 5000});
+
+		await commerceAdminDiscountDetailsPage.eligibilityRowRemoveMenuItem.click();
+		await commerceAdminDiscountDetailsPage.publishButton.click();
+
+		await waitForAlert(page);
+
+		await expect(
+			commerceAdminDiscountDetailsPage.eligibilityEntryCell(accountName)
+		).toHaveCount(0);
+	}
+);

@@ -16,7 +16,6 @@ import com.liferay.osb.patcher.service.persistence.impl.constants.OSBPatcherPers
 import com.liferay.portal.kernel.configuration.Configuration;
 import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.FinderCache;
-import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.dao.orm.SessionFactory;
 import com.liferay.portal.kernel.log.Log;
@@ -73,7 +72,6 @@ public class PatcherTicketHintPersistenceImpl
 	public static final String FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION =
 		FINDER_CLASS_NAME_ENTITY + ".List2";
 
-	private FinderPath _finderPathFetchByPatcherProductVersionId;
 	private UniquePersistenceFinder<PatcherTicketHint>
 		_uniquePersistenceFinderByPatcherProductVersionId;
 
@@ -107,19 +105,6 @@ public class PatcherTicketHintPersistenceImpl
 		}
 
 		return patcherTicketHint;
-	}
-
-	/**
-	 * Returns the patcher ticket hint where patcherProductVersionId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param patcherProductVersionId the patcher product version ID
-	 * @return the matching patcher ticket hint, or <code>null</code> if a matching patcher ticket hint could not be found
-	 */
-	@Override
-	public PatcherTicketHint fetchByPatcherProductVersionId(
-		long patcherProductVersionId) {
-
-		return fetchByPatcherProductVersionId(patcherProductVersionId, true);
 	}
 
 	/**
@@ -371,16 +356,15 @@ public class PatcherTicketHintPersistenceImpl
 	 */
 	@Activate
 	public void activate() {
-		_finderPathFetchByPatcherProductVersionId = createUniqueFinderPath(
-			FINDER_CLASS_NAME_ENTITY, "fetchByPatcherProductVersionId",
-			new String[] {Long.class.getName()},
-			new String[] {"patcherProductVersionId"}, false,
-			PatcherTicketHint::getPatcherProductVersionId);
-
 		_uniquePersistenceFinderByPatcherProductVersionId =
 			new UniquePersistenceFinder<>(
-				this, _finderPathFetchByPatcherProductVersionId,
-				_SQL_SELECT_PATCHERTICKETHINT_WHERE,
+				this,
+				createUniqueFinderPath(
+					FINDER_CLASS_NAME_ENTITY, "fetchByPatcherProductVersionId",
+					new String[] {Long.class.getName()},
+					new String[] {"patcherProductVersionId"}, 0, 0, false,
+					PatcherTicketHint::getPatcherProductVersionId),
+				_SQL_SELECT_PATCHERTICKETHINT_WHERE, "",
 				new FinderColumn<>(
 					"patcherTicketHint.", "patcherProductVersionId",
 					FinderColumn.Type.LONG, "=", true, true,
@@ -428,9 +412,6 @@ public class PatcherTicketHintPersistenceImpl
 	@Reference
 	protected FinderCache finderCache;
 
-	private static final String _ENTITY_ALIAS_PREFIX =
-		PatcherTicketHintModelImpl.ENTITY_ALIAS + ".";
-
 	private static final String _SQL_SELECT_PATCHERTICKETHINT =
 		"SELECT patcherTicketHint FROM PatcherTicketHint patcherTicketHint";
 
@@ -449,4 +430,4 @@ public class PatcherTicketHintPersistenceImpl
 	}
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:-102170691
+// LIFERAY-SERVICE-BUILDER-HASH:585746567

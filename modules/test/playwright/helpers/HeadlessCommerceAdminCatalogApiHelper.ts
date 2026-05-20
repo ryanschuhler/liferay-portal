@@ -213,6 +213,7 @@ type TSkuUnitOfMeasure = {
 	pricingQuantity?: number;
 	primary?: boolean;
 	priority?: number;
+	promoPrice?: number;
 	rate?: number;
 };
 
@@ -291,6 +292,12 @@ export class HeadlessCommerceAdminCatalogApiHelper {
 		);
 	}
 
+	async deleteProductGroup(productGroupId: number) {
+		return this.apiHelpers.delete(
+			`${this.apiHelpers.baseUrl}${this.basePath}/product-groups/${productGroupId}`
+		);
+	}
+
 	async deleteRelatedProduct(relatedProductId: string) {
 		return this.apiHelpers.delete(
 			`${this.apiHelpers.baseUrl}${this.basePath}/relatedProducts/${relatedProductId}`
@@ -366,6 +373,25 @@ export class HeadlessCommerceAdminCatalogApiHelper {
 	async getProductConfigurationListsPage(search: string = '') {
 		return this.apiHelpers.get(
 			`${this.apiHelpers.baseUrl}${this.basePath}/product-configuration-lists?search=${search}`
+		);
+	}
+
+	async getProductByName(name: string) {
+		const {items} = await this.getProducts(
+			new URLSearchParams({
+				filter: `name eq '${name}'`,
+				nestedFields: 'skus',
+			})
+		);
+
+		return items.find(
+			(item: {name: {en_US: string}}) => item.name.en_US === name
+		);
+	}
+
+	async getProductGroups(searchParams = new URLSearchParams()) {
+		return this.apiHelpers.get(
+			`${this.apiHelpers.baseUrl}${this.basePath}/product-groups?${searchParams.toString()}`
 		);
 	}
 
@@ -798,6 +824,28 @@ export class HeadlessCommerceAdminCatalogApiHelper {
 		}
 
 		return relatedProduct;
+	}
+
+	async postProductGroup(productGroup: {
+		products?: Array<{productId: number}>;
+		title: string;
+	}) {
+		const result = await this.apiHelpers.post(
+			`${this.apiHelpers.baseUrl}${this.basePath}/product-groups`,
+			{
+				data: {
+					products: productGroup.products ?? [],
+					title: {en_US: productGroup.title},
+				},
+				failOnStatusCode: true,
+			}
+		);
+
+		if (this.apiHelpers instanceof DataApiHelpers) {
+			this.apiHelpers.data.push({id: result.id, type: 'productGroup'});
+		}
+
+		return result;
 	}
 
 	async postSkuUnitOfMeasure(

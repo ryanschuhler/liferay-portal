@@ -106,9 +106,9 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -134,10 +134,6 @@ public class JenkinsResultsParserUtil {
 	public static boolean debug;
 
 	public static void addRedactToken(String token) {
-		if (_redactTokens.isEmpty()) {
-			_initializeRedactTokens();
-		}
-
 		if (_forbiddenRedactTokens.contains(token)) {
 			return;
 		}
@@ -1427,6 +1423,12 @@ public class JenkinsResultsParserUtil {
 
 	public static Properties getBuildProperties(boolean checkCache)
 		throws IOException {
+
+		if (_getCacheURL() == null) {
+			System.out.println("WARNING: Unable to get build properties");
+
+			return new SecureProperties();
+		}
 
 		Properties properties = new SecureProperties();
 
@@ -4836,12 +4838,6 @@ public class JenkinsResultsParserUtil {
 			return string;
 		}
 
-		if (_redactTokens.isEmpty()) {
-			synchronized (_redactTokens) {
-				_initializeRedactTokens();
-			}
-		}
-
 		synchronized (_redactTokens) {
 			for (String redactToken : _redactTokens) {
 				if (_forbiddenRedactTokens.contains(redactToken)) {
@@ -6766,12 +6762,7 @@ public class JenkinsResultsParserUtil {
 			return _cacheURL;
 		}
 
-		throw new RuntimeException(
-			combine(
-				"Unable to locate local ", JENKINS_REPOSITORY_NAME,
-				" repository at ", cacheDirPath,
-				". Set the environment variable \"CACHE_DIR\" to a directory ",
-				"containing a ", JENKINS_REPOSITORY_NAME, " checkout."));
+		return null;
 	}
 
 	private static String _getCanonicalPath(File canonicalFile) {
@@ -7189,6 +7180,10 @@ public class JenkinsResultsParserUtil {
 
 		String newValue = value;
 
+		if (SecretsUtil.isSecretProperty(newValue)) {
+			newValue = SecretsUtil.getSecret(newValue);
+		}
+
 		while (matcher.find()) {
 			String propertyGroup = matcher.group(0);
 			String propertyName = matcher.group(1);
@@ -7431,8 +7426,7 @@ public class JenkinsResultsParserUtil {
 	private static JSONArray _gitDirectoriesJSONArray;
 	private static final Pattern _gitHubAPIURLPattern = Pattern.compile(
 		"https\\:\\/\\/api\\.github\\.com(.*)");
-	private static final DateFormat _gitHubDateFormat = new SimpleDateFormat(
-		"yyyy-MM-dd'T'HH:mm:ss");
+	private static final DateFormat _gitHubDateFormat;
 	private static final Pattern _gitSHAPattern = Pattern.compile(
 		"^([0-9a-fA-F]{6}|[0-9a-fA-F]{40}|[0-9a-fA-F]{64})$");
 	private static JSONArray _gitWorkingDirectoriesJSONArray;
@@ -7500,6 +7494,10 @@ public class JenkinsResultsParserUtil {
 		System.getProperty("user.home"));
 
 	static {
+		_gitHubDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+		_gitHubDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
 		try {
 			_initializeRedactTokens();
 

@@ -14,6 +14,8 @@ jobs:
                     terraform_version: 1.5.7
             -   name: Set up TFLint
                 uses: terraform-linters/setup-tflint@v4
+                with:
+                    github_token: ${{secrets.GITHUB_TOKEN}}
             -   name: Initialize Terraform
                 run: terraform init -backend=false -input=false
                 working-directory: ./cloud/terraform/${{matrix.stack}}
@@ -22,16 +24,26 @@ jobs:
                 working-directory: ./cloud/terraform/${{matrix.stack}}
             -   name: Run TFLint
                 run: |
-                    tflint --init
-                    tflint
+                    function main {
+                        local cloud="${{matrix.stack}}"
+
+                        cloud="${cloud%%/*}"
+
+                        local config="${GITHUB_WORKSPACE}/cloud/terraform/${cloud}/.tflint.hcl"
+
+                        tflint --config="${config}" --init
+
+                        tflint --config="${config}"
+                    }
+
+                    main
                 working-directory: ./cloud/terraform/${{matrix.stack}}
             -   name: Run Checkov
                 uses: bridgecrewio/checkov-action@v12
                 with:
                     directory: ./cloud/terraform/${{matrix.stack}}
                     framework: terraform
-                    hard_fail_on: CKV_TF_1
-                    soft_fail: true
+                    soft_fail: false
         strategy:
             fail-fast: false
             matrix:

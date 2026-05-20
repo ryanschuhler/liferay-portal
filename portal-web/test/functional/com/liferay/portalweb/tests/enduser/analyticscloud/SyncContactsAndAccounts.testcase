@@ -45,15 +45,33 @@ definition {
 		ACUtils.tearDownAC();
 	}
 
-	@description = "Story: LRAC-10859 | Automation ID: LRAC-12667 | Test Summary: Can search for account groups in the select contacts modal"
+	@description = "Story: LRAC-10859 | Automation ID: LRAC-12663 | Test Summary: Can search for groups in the select contacts modal"
 	@priority = 4
-	test CanSearchAccountGroupsInContactsModal {
+	test CanSearchAcrossEntityTypesInPropertyWizard {
 		var foundAccountGroup = "Brazilian";
+		var foundOrganization = "Minium";
+		var foundUserGroup = "LXC";
 		var notFoundAccountGroup = "Silver,Copper";
+		var notFoundOrganization = "Canada,Italy";
+		var notFoundUserGroup = "AC,DXP";
 
-		task ("Create 3 account groups") {
+		task ("Create some user groups") {
+			for (var userGroupName : list "${foundUserGroup},${notFoundUserGroup}") {
+				JSONUserGroup.addUserGroup(
+					userGroupDescription = "UserGroup Description",
+					userGroupName = ${userGroupName});
+			}
+		}
+
+		task ("Create account groups") {
 			for (var accountGroupName : list "${foundAccountGroup},${notFoundAccountGroup}") {
 				JSONAccountGroup.addAccountGroup(accountGroupName = ${accountGroupName});
+			}
+		}
+
+		task ("Create organizations") {
+			for (var organizationName : list "${foundOrganization},${notFoundOrganization}") {
+				JSONOrganization.addOrganization(organizationName = ${organizationName});
 			}
 		}
 
@@ -84,7 +102,7 @@ definition {
 				locator1 = "Button#ANY");
 		}
 
-		task ("Click on sync by account groups") {
+		task ("Click on Select Accounts > Click on sync by Account Groups") {
 			Click(
 				key_panel = "Select Accounts",
 				locator1 = "Panel#PANEL_COLLAPSED");
@@ -102,48 +120,6 @@ definition {
 			ACDXPSettings.viewGenericListItem(itemValueList = ${foundAccountGroup});
 
 			ACDXPSettings.viewGenericListItemNotPresent(itemValueList = ${notFoundAccountGroup});
-		}
-	}
-
-	@description = "Story: LRAC-10859 | Automation ID: LRAC-12663 | Test Summary: Can search for groups in the select contacts modal"
-	@priority = 4
-	test CanSearchGroupsInContactsModal {
-		var foundUserGroup = "LXC";
-		var notFoundUserGroup = "AC,DXP";
-
-		task ("Create some user groups") {
-			for (var userGroupName : list "${foundUserGroup},${notFoundUserGroup}") {
-				JSONUserGroup.addUserGroup(
-					userGroupDescription = "UserGroup Description",
-					userGroupName = ${userGroupName});
-			}
-		}
-
-		task ("Connect Commerce and AC") {
-			ACDXPSettings.connectAnalyticsCloud();
-		}
-
-		task ("Get the property name to enable commerce on the right one") {
-			var channelName = "Minium Portal";
-			var siteName = "Minium";
-
-			ACDXPSettings.getAssignedPropertyName();
-		}
-
-		task ("Enable commerce and sync the commerce channel and the related site") {
-			ACDXPSettings.syncChannel(
-				channelName = ${channelName},
-				propertyName = ${assignedPropertyName});
-
-			ACDXPSettings.syncSites(
-				propertyName = ${assignedPropertyName},
-				siteName = ${siteName});
-		}
-
-		task ("Go to the next page to configure people data") {
-			Click(
-				key_text = "Next",
-				locator1 = "Button#ANY");
 		}
 
 		task ("Click on Select Contacts > Click on sync contacts by groups") {
@@ -176,6 +152,26 @@ definition {
 
 		task ("Check that no result is found for the search") {
 			ACUtils.viewGenericText(textValueList = "No user groups were found.");
+		}
+
+		task ("Click on Select Contacts > Click on Organizations") {
+			Click(
+				key_panel = "Select Contacts",
+				locator1 = "Panel#PANEL_COLLAPSED");
+
+			Click(
+				key_option = "Organizations",
+				locator1 = "ACDXPSettings#CONTACT_SYNC_OPTIONS");
+		}
+
+		task ("Search for an organization and assert the result") {
+			ACUtils.searchBar(searchItem = ${foundOrganization});
+
+			ACUtils.viewResultsMessage(results = "Showing 1 to 1 of 1 entries.");
+
+			ACDXPSettings.viewGenericListItem(itemValueList = ${foundOrganization});
+
+			ACDXPSettings.viewGenericListItemNotPresent(itemValueList = ${notFoundOrganization});
 		}
 
 		task ("Complete the wizard configuration") {
@@ -216,66 +212,6 @@ definition {
 
 		task ("Check that no result is found for the search") {
 			ACUtils.viewGenericText(textValueList = "No user groups were found.");
-		}
-	}
-
-	@description = "Story: LRAC-10859 | Automation ID: LRAC-12660 | Test Summary: Can search for organizations in the select contacts modal"
-	@priority = 4
-	test CanSearchOrganizationsInContactsModal {
-		var foundOrganizations = "Minium";
-		var notFoundOrganizations = "Canada,Italy";
-
-		task ("Create 3 organizations") {
-			for (var organizationName : list "${foundOrganizations},${notFoundOrganizations}") {
-				JSONOrganization.addOrganization(organizationName = ${organizationName});
-			}
-		}
-
-		task ("Connect Commerce and AC") {
-			ACDXPSettings.connectAnalyticsCloud();
-		}
-
-		task ("Get the property name to enable commerce on the right one") {
-			var channelName = "Minium Portal";
-			var siteName = "Minium";
-
-			ACDXPSettings.getAssignedPropertyName();
-		}
-
-		task ("Enable commerce and sync the commerce channel and the related site") {
-			ACDXPSettings.syncChannel(
-				channelName = ${channelName},
-				propertyName = ${assignedPropertyName});
-
-			ACDXPSettings.syncSites(
-				propertyName = ${assignedPropertyName},
-				siteName = ${siteName});
-		}
-
-		task ("Go to the next page to configure people data") {
-			Click(
-				key_text = "Next",
-				locator1 = "Button#ANY");
-		}
-
-		task ("Click on sync by organizations") {
-			Click(
-				key_panel = "Select Contacts",
-				locator1 = "Panel#PANEL_COLLAPSED");
-
-			Click(
-				key_option = "Organizations",
-				locator1 = "ACDXPSettings#CONTACT_SYNC_OPTIONS");
-		}
-
-		task ("Search for an organization and assert the result") {
-			ACUtils.searchBar(searchItem = ${foundOrganizations});
-
-			ACUtils.viewResultsMessage(results = "Showing 1 to 1 of 1 entries.");
-
-			ACDXPSettings.viewGenericListItem(itemValueList = ${foundOrganizations});
-
-			ACDXPSettings.viewGenericListItemNotPresent(itemValueList = ${notFoundOrganizations});
 		}
 	}
 
@@ -751,348 +687,14 @@ definition {
 		}
 	}
 
-	@description = "Story: LRAC-10859 | Automation ID: LRAC-12764 | Test Summary: Check that it is possible to sort by account groups name in the account groups list"
-	@priority = 3
-	test CheckCanSortByAccountGroupsName {
-		var accountGroupPageListUp = "brazilian,European,Gold,North American";
-		var accountGroupPageListDown = "North American,Gold,European,brazilian";
-
-		task ("Create 4 account groups") {
-			for (var accountGroupName : list ${accountGroupPageListUp}) {
-				JSONAccountGroup.addAccountGroup(accountGroupName = ${accountGroupName});
-			}
-		}
-
-		task ("Connect Commerce and AC") {
-			ACDXPSettings.connectAnalyticsCloud();
-		}
-
-		task ("Get the property name to enable commerce on the right one") {
-			var channelName = "Minium Portal";
-			var siteName = "Minium";
-
-			ACDXPSettings.getAssignedPropertyName();
-		}
-
-		task ("Enable commerce and sync the commerce channel and the related site") {
-			ACDXPSettings.syncChannel(
-				channelName = ${channelName},
-				propertyName = ${assignedPropertyName});
-
-			ACDXPSettings.syncSites(
-				propertyName = ${assignedPropertyName},
-				siteName = ${siteName});
-		}
-
-		task ("Go to the next page to configure people data") {
-			Click(
-				key_text = "Next",
-				locator1 = "Button#ANY");
-		}
-
-		task ("Click on sync by account groups") {
-			Click(
-				key_panel = "Select Accounts",
-				locator1 = "Panel#PANEL_COLLAPSED");
-
-			Click(
-				key_option = "Sync by Account Groups",
-				locator1 = "ACDXPSettings#CONTACT_SYNC_OPTIONS");
-		}
-
-		task ("Sort the list by the Account Groups column (Ascending)") {
-			KaleoFormsManageFieldSets.clickFilterAndOrderBy(filterOption = "Account Group");
-
-			ACDXPSettings.setSortDirection(sortDirection = "up");
-		}
-
-		task ("Check that the list is sorted correctly") {
-			ACDXPSettings.viewGenericListItemInOrder(
-				indexList = "1,2,3,4",
-				itemValueList = ${accountGroupPageListUp});
-		}
-
-		task ("Sort the list by the Account Groups column (Descending)") {
-			ACDXPSettings.setSortDirection(sortDirection = "down");
-		}
-
-		task ("Check that the list is sorted correctly") {
-			ACDXPSettings.viewGenericListItemInOrder(
-				indexList = "1,2,3,4",
-				itemValueList = ${accountGroupPageListDown});
-		}
-
-		task ("Complete the wizard configuration") {
-			ACDXPSettings.completeWizardConfiguration();
-		}
-
-		task ("Go to the people page in the sidebar") {
-			ACDXPSettings.navToSyncedContactDataMenu();
-		}
-
-		task ("Click on sync by account groups") {
-			Click(
-				key_panel = "Select Accounts",
-				locator1 = "Panel#PANEL_COLLAPSED");
-
-			Click(
-				key_option = "Sync by Account Groups",
-				locator1 = "ACDXPSettings#CONTACT_SYNC_OPTIONS");
-		}
-
-		task ("Sort the list by the Account Groups column (Ascending)") {
-			KaleoFormsManageFieldSets.clickFilterAndOrderBy(filterOption = "Account Group");
-
-			ACDXPSettings.setSortDirection(sortDirection = "up");
-		}
-
-		task ("Check that the list is sorted correctly") {
-			ACDXPSettings.viewGenericListItemInOrder(
-				indexList = "1,2,3,4",
-				itemValueList = ${accountGroupPageListUp});
-		}
-
-		task ("Sort the list by the Account Groups column (Descending)") {
-			ACDXPSettings.setSortDirection(sortDirection = "down");
-		}
-
-		task ("Check that the list is sorted correctly") {
-			ACDXPSettings.viewGenericListItemInOrder(
-				indexList = "1,2,3,4",
-				itemValueList = ${accountGroupPageListDown});
-		}
-	}
-
-	@description = "Story: LRAC-10859 | Automation ID: LRAC-12762 | Test Summary: Check that it is possible to sort by organizations name in the organizations list"
-	@priority = 3
-	test CheckCanSortByOrganizationsName {
-		var orgNamePageListUp = "Canada,england,Italy,Minium,United States";
-		var orgNamePageListDown = "United States,Minium,Italy,england,Canada";
-
-		task ("Create 5 organizations") {
-			for (var organizationName : list ${orgNamePageListUp}) {
-				JSONOrganization.addOrganization(organizationName = ${organizationName});
-			}
-		}
-
-		task ("Connect Commerce and AC") {
-			ACDXPSettings.connectAnalyticsCloud();
-		}
-
-		task ("Get the property name to enable commerce on the right one") {
-			var channelName = "Minium Portal";
-			var siteName = "Minium";
-
-			ACDXPSettings.getAssignedPropertyName();
-		}
-
-		task ("Enable commerce and sync the commerce channel and the related site") {
-			ACDXPSettings.syncChannel(
-				channelName = ${channelName},
-				propertyName = ${assignedPropertyName});
-
-			ACDXPSettings.syncSites(
-				propertyName = ${assignedPropertyName},
-				siteName = ${siteName});
-		}
-
-		task ("Go to the next page to configure people data") {
-			Click(
-				key_text = "Next",
-				locator1 = "Button#ANY");
-		}
-
-		task ("Click on sync by organizations") {
-			Click(
-				key_panel = "Select Contacts",
-				locator1 = "Panel#PANEL_COLLAPSED");
-
-			Click(
-				key_option = "Organizations",
-				locator1 = "ACDXPSettings#CONTACT_SYNC_OPTIONS");
-		}
-
-		task ("Sort the list by the Organizations column (Ascending)") {
-			KaleoFormsManageFieldSets.clickFilterAndOrderBy(filterOption = "Organizations");
-
-			ACDXPSettings.setSortDirection(sortDirection = "up");
-		}
-
-		task ("Check that the list is sorted correctly") {
-			ACDXPSettings.viewGenericListItemInOrder(
-				indexList = "1,2,3,4,5",
-				itemValueList = ${orgNamePageListUp});
-		}
-
-		task ("Sort the list by the Organizations column (Descending)") {
-			ACDXPSettings.setSortDirection(sortDirection = "down");
-		}
-
-		task ("Check that the list is sorted correctly") {
-			ACDXPSettings.viewGenericListItemInOrder(
-				indexList = "1,2,3,4,5",
-				itemValueList = ${orgNamePageListDown});
-		}
-
-		task ("Complete the wizard configuration") {
-			ACDXPSettings.completeWizardConfiguration();
-		}
-
-		task ("Go to the people page in the sidebar") {
-			ACDXPSettings.navToSyncedContactDataMenu();
-		}
-
-		task ("Click on sync by organizations") {
-			Click(
-				key_panel = "Select Contacts",
-				locator1 = "Panel#PANEL_COLLAPSED");
-
-			Click(
-				key_option = "Organizations",
-				locator1 = "ACDXPSettings#CONTACT_SYNC_OPTIONS");
-		}
-
-		task ("Sort the list by the Organizations column (Ascending)") {
-			KaleoFormsManageFieldSets.clickFilterAndOrderBy(filterOption = "Organizations");
-
-			ACDXPSettings.setSortDirection(sortDirection = "up");
-		}
-
-		task ("Check that the list is sorted correctly") {
-			ACDXPSettings.viewGenericListItemInOrder(
-				indexList = "1,2,3,4,5",
-				itemValueList = ${orgNamePageListUp});
-		}
-
-		task ("Sort the list by the Organizations column (Descending)") {
-			ACDXPSettings.setSortDirection(sortDirection = "down");
-		}
-
-		task ("Check that the list is sorted correctly") {
-			ACDXPSettings.viewGenericListItemInOrder(
-				indexList = "1,2,3,4,5",
-				itemValueList = ${orgNamePageListDown});
-		}
-	}
-
-	@description = "Story: LRAC-10859 | Automation ID: LRAC-12763 | Test Summary: Check that it is possible to sort by user groups name in the groups list"
-	@priority = 3
-	test CheckCanSortByUserGroupsName {
-		var userGroupPageListUp = "ac UserGroup,DXP UserGroup,LXC UserGroup";
-		var userGroupPageListDown = "LXC UserGroup,DXP UserGroup,ac UserGroup";
-
-		task ("Connect Commerce and AC") {
-			ACDXPSettings.connectAnalyticsCloud();
-		}
-
-		task ("Get the property name to enable commerce on the right one") {
-			var channelName = "Minium Portal";
-			var siteName = "Minium";
-
-			ACDXPSettings.getAssignedPropertyName();
-		}
-
-		task ("Enable commerce and sync the commerce channel and the related site") {
-			ACDXPSettings.syncChannel(
-				channelName = ${channelName},
-				propertyName = ${assignedPropertyName});
-
-			ACDXPSettings.syncSites(
-				propertyName = ${assignedPropertyName},
-				siteName = ${siteName});
-		}
-
-		task ("Go to the next page to configure people data") {
-			Click(
-				key_text = "Next",
-				locator1 = "Button#ANY");
-		}
-
-		task ("Create some user groups") {
-			for (var userGroupName : list ${userGroupPageListUp}) {
-				JSONUserGroup.addUserGroup(
-					userGroupDescription = "UserGroup Description",
-					userGroupName = ${userGroupName});
-			}
-		}
-
-		task ("Click on Select Contacts > Click on sync contacts by groups") {
-			Click(
-				key_panel = "Select Contacts",
-				locator1 = "Panel#PANEL_COLLAPSED");
-
-			Click(
-				key_option = "User Groups",
-				locator1 = "ACDXPSettings#CONTACT_SYNC_OPTIONS");
-		}
-
-		task ("Sort the list by the User Groups column (Ascending)") {
-			KaleoFormsManageFieldSets.clickFilterAndOrderBy(filterOption = "User Groups");
-
-			ACDXPSettings.setSortDirection(sortDirection = "up");
-		}
-
-		task ("Check that the list is sorted correctly") {
-			ACDXPSettings.viewGenericListItemInOrder(
-				indexList = "1,2,3",
-				itemValueList = ${userGroupPageListUp});
-		}
-
-		task ("Sort the list by the User Groups column (Descending)") {
-			ACDXPSettings.setSortDirection(sortDirection = "down");
-		}
-
-		task ("Check that the list is sorted correctly") {
-			ACDXPSettings.viewGenericListItemInOrder(
-				indexList = "1,2,3",
-				itemValueList = ${userGroupPageListDown});
-		}
-
-		task ("Complete the wizard configuration") {
-			ACDXPSettings.completeWizardConfiguration();
-		}
-
-		task ("Go to the people page in the sidebar") {
-			ACDXPSettings.navToSyncedContactDataMenu();
-		}
-
-		task ("Click on Select Contacts > Click on sync contacts by groups") {
-			Click(
-				key_panel = "Select Contacts",
-				locator1 = "Panel#PANEL_COLLAPSED");
-
-			Click(
-				key_option = "User Groups",
-				locator1 = "ACDXPSettings#CONTACT_SYNC_OPTIONS");
-		}
-
-		task ("Sort the list by the User Groups column (Ascending)") {
-			KaleoFormsManageFieldSets.clickFilterAndOrderBy(filterOption = "User Groups");
-
-			ACDXPSettings.setSortDirection(sortDirection = "up");
-		}
-
-		task ("Check that the list is sorted correctly") {
-			ACDXPSettings.viewGenericListItemInOrder(
-				indexList = "1,2,3",
-				itemValueList = ${userGroupPageListUp});
-		}
-
-		task ("Sort the list by the User Groups column (Descending)") {
-			ACDXPSettings.setSortDirection(sortDirection = "down");
-		}
-
-		task ("Check that the list is sorted correctly") {
-			ACDXPSettings.viewGenericListItemInOrder(
-				indexList = "1,2,3",
-				itemValueList = ${userGroupPageListDown});
-		}
-	}
-
 	@description = "Story: LRAC-10859 | Automation ID: LRAC-12664 | Test Summary: Check that it is possible to make pagination in the groups"
 	@priority = 3
-	test CheckIsPossiblePaginateGroups {
+	test CheckCanPaginateAcrossEntityTypes {
+		var accountGroupFirstPageList = "Brazilian,Copper,European,Gold,North American";
+		var accountGroupSecondPageList = "Silver";
 		var firstPageList = "AC UserGroup Pagination 1,AC UserGroup Pagination 2,AC UserGroup Pagination 3,AC UserGroup Pagination 4,AC UserGroup Pagination 5";
+		var organizationFirstPageList = "Brazil,Canada,France,Italy,Minium";
+		var organizationSecondPageList = "United States";
 		var secondPageList = "AC UserGroup Pagination 6";
 
 		task ("Connect Commerce and AC") {
@@ -1130,6 +732,46 @@ definition {
 			}
 		}
 
+		task ("Create 6 account groups") {
+			for (var accountGroupName : list "${accountGroupFirstPageList},${accountGroupSecondPageList}") {
+				JSONAccountGroup.addAccountGroup(accountGroupName = ${accountGroupName});
+			}
+		}
+
+		task ("Create 6 organizations") {
+			for (var organizationName : list "${organizationFirstPageList},${organizationSecondPageList}") {
+				JSONOrganization.addOrganization(organizationName = ${organizationName});
+			}
+		}
+
+		task ("Click on Select Accounts > Sync by Account Groups") {
+			Click(
+				key_panel = "Select Accounts",
+				locator1 = "Panel#PANEL_COLLAPSED");
+
+			Click(
+				key_option = "Sync by Account Groups",
+				locator1 = "ACDXPSettings#CONTACT_SYNC_OPTIONS");
+		}
+
+		task ("Choose the pagination to 5 items per page for account groups") {
+			ACUtils.changePagination(itemsPerPage = 5);
+		}
+
+		task ("See that there's only 5 account groups present in the list on the first page") {
+			ACDXPSettings.viewGenericListItem(itemValueList = ${accountGroupFirstPageList});
+
+			ACDXPSettings.viewGenericListItemNotPresent(itemValueList = ${accountGroupSecondPageList});
+		}
+
+		task ("Go to the second page and see that there's only one account group in the list") {
+			ACUtils.checkAnyPage(pageNumber = 2);
+
+			ACDXPSettings.viewGenericListItem(itemValueList = ${accountGroupSecondPageList});
+
+			ACDXPSettings.viewGenericListItemNotPresent(itemValueList = ${accountGroupFirstPageList});
+		}
+
 		task ("Click on Select Contacts > Click on sync contacts by groups") {
 			Click(
 				key_panel = "Select Contacts",
@@ -1166,6 +808,34 @@ definition {
 
 		task ("Check that the user group on the first page does not appear on the second") {
 			ACDXPSettings.viewGenericListItemNotPresent(itemValueList = ${firstPageList});
+		}
+
+		task ("Click on Select Contacts > Organizations") {
+			Click(
+				key_panel = "Select Contacts",
+				locator1 = "Panel#PANEL_COLLAPSED");
+
+			Click(
+				key_option = "Organizations",
+				locator1 = "ACDXPSettings#CONTACT_SYNC_OPTIONS");
+		}
+
+		task ("Choose the pagination to 5 items per page for organizations") {
+			ACUtils.changePagination(itemsPerPage = 5);
+		}
+
+		task ("See that there's only 5 organizations present in the list on the first page") {
+			ACDXPSettings.viewGenericListItem(itemValueList = ${organizationFirstPageList});
+
+			ACDXPSettings.viewGenericListItemNotPresent(itemValueList = ${organizationSecondPageList});
+		}
+
+		task ("Go to the second page and see that there's only one organization in the list") {
+			ACUtils.checkAnyPage(pageNumber = 2);
+
+			ACDXPSettings.viewGenericListItem(itemValueList = ${organizationSecondPageList});
+
+			ACDXPSettings.viewGenericListItemNotPresent(itemValueList = ${organizationFirstPageList});
 		}
 
 		task ("Complete the wizard configuration") {
@@ -1215,15 +885,33 @@ definition {
 		}
 	}
 
-	@description = "Story: LRAC-10859 | Automation ID: LRAC-12668 | Test Summary: Check that it is possible to make pagination in the account groups"
-	@priority = 4
-	test CheckIsPossiblePaginateInAccountGroups {
-		var firstPageList = "Brazilian,Copper,European,Gold,North American";
-		var secondPageList = "Silver";
+	@description = "Story: LRAC-10859 | Automation ID: LRAC-12762 | Test Summary: Check that it is possible to sort by organizations name in the organizations list"
+	@priority = 3
+	test CheckCanSortAcrossEntityTypes {
+		var accountGroupPageListDown = "North American,Gold,European,brazilian";
+		var accountGroupPageListUp = "brazilian,European,Gold,North American";
+		var orgNamePageListDown = "United States,Minium,Italy,england,Canada";
+		var orgNamePageListUp = "Canada,england,Italy,Minium,United States";
+		var userGroupPageListDown = "LXC UserGroup,DXP UserGroup,ac UserGroup";
+		var userGroupPageListUp = "ac UserGroup,DXP UserGroup,LXC UserGroup";
 
-		task ("Create 6 account groups") {
-			for (var accountGroupName : list "${firstPageList},${secondPageList}") {
+		task ("Create 4 account groups") {
+			for (var accountGroupName : list ${accountGroupPageListUp}) {
 				JSONAccountGroup.addAccountGroup(accountGroupName = ${accountGroupName});
+			}
+		}
+
+		task ("Create 5 organizations") {
+			for (var organizationName : list ${orgNamePageListUp}) {
+				JSONOrganization.addOrganization(organizationName = ${organizationName});
+			}
+		}
+
+		task ("Create some user groups") {
+			for (var userGroupName : list ${userGroupPageListUp}) {
+				JSONUserGroup.addUserGroup(
+					userGroupDescription = "UserGroup Description",
+					userGroupName = ${userGroupName});
 			}
 		}
 
@@ -1254,7 +942,7 @@ definition {
 				locator1 = "Button#ANY");
 		}
 
-		task ("Click on sync by account groups") {
+		task ("Click on Select Accounts > Sync by Account Groups") {
 			Click(
 				key_panel = "Select Accounts",
 				locator1 = "Panel#PANEL_COLLAPSED");
@@ -1264,62 +952,26 @@ definition {
 				locator1 = "ACDXPSettings#CONTACT_SYNC_OPTIONS");
 		}
 
-		task ("Choose the pagination to 5 items per page") {
-			ACUtils.changePagination(itemsPerPage = 5);
+		task ("Sort the list by the Account Groups column (Ascending)") {
+			KaleoFormsManageFieldSets.clickFilterAndOrderBy(filterOption = "Account Group");
+
+			ACDXPSettings.setSortDirection(sortDirection = "up");
 		}
 
-		task ("See that there's only 5 account groups present in the list on the first page") {
-			ACDXPSettings.viewGenericListItem(itemValueList = ${firstPageList});
-
-			ACDXPSettings.viewGenericListItemNotPresent(itemValueList = ${secondPageList});
+		task ("Check that the list is sorted correctly") {
+			ACDXPSettings.viewGenericListItemInOrder(
+				indexList = "1,2,3,4",
+				itemValueList = ${accountGroupPageListUp});
 		}
 
-		task ("Go to the second page and see that there's only one account group in the list") {
-			ACUtils.checkAnyPage(pageNumber = 2);
-
-			ACDXPSettings.viewGenericListItem(itemValueList = ${secondPageList});
-
-			ACDXPSettings.viewGenericListItemNotPresent(itemValueList = ${firstPageList});
-		}
-	}
-
-	@description = "Story: LRAC-10859 | Automation ID: LRAC-12661 | Test Summary: Check that it is possible to make pagination in the organizations"
-	@priority = 4
-	test CheckIsPossiblePaginateOrganizations {
-		var firstPageList = "Brazil,Canada,France,Italy,Minium";
-		var secondPageList = "United States";
-
-		task ("Create 6 organizations") {
-			for (var organizationName : list "${firstPageList},${secondPageList}") {
-				JSONOrganization.addOrganization(organizationName = ${organizationName});
-			}
+		task ("Sort the list by the Account Groups column (Descending)") {
+			ACDXPSettings.setSortDirection(sortDirection = "down");
 		}
 
-		task ("Connect Commerce and AC") {
-			ACDXPSettings.connectAnalyticsCloud();
-		}
-
-		task ("Get the property name to enable commerce on the right one") {
-			var channelName = "Minium Portal";
-			var siteName = "Minium";
-
-			ACDXPSettings.getAssignedPropertyName();
-		}
-
-		task ("Enable commerce and sync the commerce channel and the related site") {
-			ACDXPSettings.syncChannel(
-				channelName = ${channelName},
-				propertyName = ${assignedPropertyName});
-
-			ACDXPSettings.syncSites(
-				propertyName = ${assignedPropertyName},
-				siteName = ${siteName});
-		}
-
-		task ("Go to the next page to configure people data") {
-			Click(
-				key_text = "Next",
-				locator1 = "Button#ANY");
+		task ("Check that the list is sorted correctly") {
+			ACDXPSettings.viewGenericListItemInOrder(
+				indexList = "1,2,3,4",
+				itemValueList = ${accountGroupPageListDown});
 		}
 
 		task ("Click on sync by organizations") {
@@ -1332,22 +984,98 @@ definition {
 				locator1 = "ACDXPSettings#CONTACT_SYNC_OPTIONS");
 		}
 
-		task ("Choose the pagination to 5 items per page") {
-			ACUtils.changePagination(itemsPerPage = 5);
+		task ("Sort the list by the Organizations column (Ascending)") {
+			KaleoFormsManageFieldSets.clickFilterAndOrderBy(filterOption = "Organizations");
+
+			ACDXPSettings.setSortDirection(sortDirection = "up");
 		}
 
-		task ("See that there's only 5 organizations present in the list on the first page") {
-			ACDXPSettings.viewGenericListItem(itemValueList = ${firstPageList});
-
-			ACDXPSettings.viewGenericListItemNotPresent(itemValueList = ${secondPageList});
+		task ("Check that the list is sorted correctly") {
+			ACDXPSettings.viewGenericListItemInOrder(
+				indexList = "1,2,3,4,5",
+				itemValueList = ${orgNamePageListUp});
 		}
 
-		task ("Go to the second page and see that there's only one organization in the list") {
-			ACUtils.checkAnyPage(pageNumber = 2);
+		task ("Sort the list by the Organizations column (Descending)") {
+			ACDXPSettings.setSortDirection(sortDirection = "down");
+		}
 
-			ACDXPSettings.viewGenericListItem(itemValueList = ${secondPageList});
+		task ("Check that the list is sorted correctly") {
+			ACDXPSettings.viewGenericListItemInOrder(
+				indexList = "1,2,3,4,5",
+				itemValueList = ${orgNamePageListDown});
+		}
 
-			ACDXPSettings.viewGenericListItemNotPresent(itemValueList = ${firstPageList});
+		task ("Click on Select Contacts > User Groups") {
+			Click(
+				key_panel = "Select Contacts",
+				locator1 = "Panel#PANEL_COLLAPSED");
+
+			Click(
+				key_option = "User Groups",
+				locator1 = "ACDXPSettings#CONTACT_SYNC_OPTIONS");
+		}
+
+		task ("Sort the list by the User Groups column (Ascending)") {
+			KaleoFormsManageFieldSets.clickFilterAndOrderBy(filterOption = "User Groups");
+
+			ACDXPSettings.setSortDirection(sortDirection = "up");
+		}
+
+		task ("Check that the list is sorted correctly") {
+			ACDXPSettings.viewGenericListItemInOrder(
+				indexList = "1,2,3",
+				itemValueList = ${userGroupPageListUp});
+		}
+
+		task ("Sort the list by the User Groups column (Descending)") {
+			ACDXPSettings.setSortDirection(sortDirection = "down");
+		}
+
+		task ("Check that the list is sorted correctly") {
+			ACDXPSettings.viewGenericListItemInOrder(
+				indexList = "1,2,3",
+				itemValueList = ${userGroupPageListDown});
+		}
+
+		task ("Complete the wizard configuration") {
+			ACDXPSettings.completeWizardConfiguration();
+		}
+
+		task ("Go to the people page in the sidebar") {
+			ACDXPSettings.navToSyncedContactDataMenu();
+		}
+
+		task ("Click on sync by organizations") {
+			Click(
+				key_panel = "Select Contacts",
+				locator1 = "Panel#PANEL_COLLAPSED");
+
+			Click(
+				key_option = "Organizations",
+				locator1 = "ACDXPSettings#CONTACT_SYNC_OPTIONS");
+		}
+
+		task ("Sort the list by the Organizations column (Ascending)") {
+			KaleoFormsManageFieldSets.clickFilterAndOrderBy(filterOption = "Organizations");
+
+			ACDXPSettings.setSortDirection(sortDirection = "up");
+		}
+
+		task ("Check that the list is sorted correctly") {
+			ACDXPSettings.viewGenericListItemInOrder(
+				indexList = "1,2,3,4,5",
+				itemValueList = ${orgNamePageListUp});
+		}
+
+		task ("Sort the list by the Organizations column (Descending)") {
+			ACDXPSettings.setSortDirection(sortDirection = "down");
+		}
+
+		task ("Check that the list is sorted correctly") {
+			ACDXPSettings.viewGenericListItemInOrder(
+				indexList = "1,2,3,4,5",
+				itemValueList = ${orgNamePageListDown});
 		}
 	}
 

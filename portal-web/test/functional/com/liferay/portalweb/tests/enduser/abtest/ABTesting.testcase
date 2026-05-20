@@ -93,52 +93,9 @@ definition {
 		}
 	}
 
-	@description = "LPS-97882: Validate if the A/B Test icon is not displayed in the control bar, when the user has not the page edit permission"
-	@priority = 3
-	test ABTestIconVisibleWithNoPermissions {
-		task ("Create user") {
-			JSONUser.addUser(
-				userEmailAddress = "userea@liferay.com",
-				userFirstName = "userfn",
-				userLastName = "userln",
-				userScreenName = "usersn");
-
-			JSONUser.setFirstPassword(
-				agreeToTermsAndAnswerReminderQuery = "true",
-				requireReset = "false",
-				userEmailAddress = "userea@liferay.com");
-		}
-
-		task ("Create role and assign to user") {
-			JSONRole.addRegularRole(
-				roleKey = "Roles Regrole Name Test",
-				roleTitle = "Roles Regrole Name Test");
-
-			Permissions.definePermissionViaJSONAPI(
-				resourceAction = "VIEW",
-				resourceName = "com.liferay.portal.kernel.model.Layout",
-				roleTitle = "Roles Regrole Name Test");
-
-			JSONRole.assignRoleToUser(
-				roleTitle = "Roles Regrole Name Test",
-				userEmailAddress = "userea@liferay.com");
-		}
-
-		task ("Login with new user") {
-			User.logoutAndLoginPG(
-				password = PropsUtil.get("default.admin.password"),
-				userLoginEmailAddress = "userea@liferay.com",
-				userLoginFullName = "userfn userln");
-		}
-
-		task ("Assert AB Test icon is not present") {
-			AssertElementNotPresent(locator1 = "ABTest#AB_TEST_BUTTON");
-		}
-	}
-
 	@description = "LPS-97882: Validate if the A/B Test icon is displayed in the control bar, when the user has the page edit permission"
 	@priority = 3
-	test ABTestIconVisibleWithPermissions {
+	test ABTestIconVisibilityInControlBar {
 		task ("Create user") {
 			JSONUser.addUser(
 				userEmailAddress = "userea@liferay.com",
@@ -176,6 +133,148 @@ definition {
 
 		task ("Assert AB Test icon is present") {
 			AssertElementPresent(locator1 = "ABTest#AB_TEST_BUTTON");
+		}
+
+		task ("Create user without page edit permission") {
+			JSONUser.addUser(
+				userEmailAddress = "userea2@liferay.com",
+				userFirstName = "noperm",
+				userLastName = "noperm",
+				userScreenName = "usersn2");
+
+			JSONUser.setFirstPassword(
+				agreeToTermsAndAnswerReminderQuery = "true",
+				requireReset = "false",
+				userEmailAddress = "userea2@liferay.com");
+		}
+
+		task ("Create view-only role and assign to user without permission") {
+			JSONRole.addRegularRole(
+				roleKey = "Roles Regrole Name Test View",
+				roleTitle = "Roles Regrole Name Test View");
+
+			Permissions.definePermissionViaJSONAPI(
+				resourceAction = "VIEW",
+				resourceName = "com.liferay.portal.kernel.model.Layout",
+				roleTitle = "Roles Regrole Name Test View");
+
+			JSONRole.assignRoleToUser(
+				roleTitle = "Roles Regrole Name Test View",
+				userEmailAddress = "userea2@liferay.com");
+		}
+
+		task ("Login as user without page edit permission") {
+			User.logoutAndLoginPG(
+				password = PropsUtil.get("default.admin.password"),
+				userLoginEmailAddress = "userea2@liferay.com",
+				userLoginFullName = "noperm noperm");
+		}
+
+		task ("Assert AB Test icon is not present") {
+			AssertElementNotPresent(locator1 = "ABTest#AB_TEST_BUTTON");
+		}
+	}
+
+	@description = "LPS-96787: Validate if in the notification message has one link to the content page of the test, with the AB test panel open in that test"
+	@priority = 3
+	test ABTestNotificationFlows {
+		task ("Create AB test as admin, run and terminate to test no self-notification") {
+			Navigator.openWithAppendToBaseURL(urlAppend = "web/test-site-name/content-page");
+
+			ABTest.createABTest(
+				goal = "Bounce Rate",
+				testTitle = "Same user AB test");
+
+			ABTest.createVariant(variantName = "Variant name");
+
+			ABTest.runTest();
+
+			ABTest.terminateTest();
+		}
+
+		task ("Assert no notification appears when the same user changes the test status") {
+			Notifications.viewNoNotifications(activePanel = "Notifications");
+		}
+
+		task ("Create user and sync contact with AC") {
+			JSONUser.addUser(
+				userEmailAddress = "userea@liferay.com",
+				userFirstName = "userfn",
+				userLastName = "userln",
+				userScreenName = "usersn");
+
+			JSONUser.setFirstPassword(
+				agreeToTermsAndAnswerReminderQuery = "true",
+				requireReset = "false",
+				userEmailAddress = "userea@liferay.com");
+
+			ACDXPSettings.syncNewContactData();
+		}
+
+		task ("Create role and assign to user") {
+			JSONRole.addRegularRole(
+				roleKey = "Roles Regrole Name Test",
+				roleTitle = "Roles Regrole Name Test");
+
+			Permissions.definePermissionViaJSONAPI(
+				resourceAction = "UPDATE",
+				resourceName = "com.liferay.portal.kernel.model.Layout",
+				roleTitle = "Roles Regrole Name Test");
+
+			JSONRole.assignRoleToUser(
+				roleTitle = "Roles Regrole Name Test",
+				userEmailAddress = "userea@liferay.com");
+		}
+
+		task ("Create AB test with a variant and run test") {
+			Navigator.openWithAppendToBaseURL(urlAppend = "web/test-site-name/content-page");
+
+			ABTest.createABTest(
+				goal = "Bounce Rate",
+				testTitle = "AB test title");
+
+			ABTest.createVariant(variantName = "Variant name");
+
+			ABTest.runTest();
+		}
+
+		task ("Login with new user") {
+			User.logoutAndLoginPG(
+				userLoginEmailAddress = "userea@liferay.com",
+				userLoginFullName = "userfn userln");
+		}
+
+		task ("Terminate AB Test") {
+			Navigator.openWithAppendToBaseURL(urlAppend = "web/test-site-name/content-page");
+
+			ABTest.openABTestPanel();
+
+			ABTest.terminateTest();
+		}
+
+		task ("Login with new user") {
+			User.logoutAndLoginPG(
+				userLoginEmailAddress = "test@liferay.com",
+				userLoginFullName = "Test Test");
+		}
+
+		task ("Go to notifications") {
+			Notifications.gotoNotifications();
+		}
+
+		task ("Click on the title and assert the Content Page is displayed") {
+			Notifications.viewSpecificNotificationDetails(
+				contentBody = "AB test title",
+				notificationsTitle = "A/B test has changed to status terminated");
+
+			AssertClick(
+				locator1 = "Notifications#NOTIFICATIONS_TITLE",
+				value1 = "A/B test has changed to status terminated.");
+
+			AssertTextEquals.assertPartialText(
+				key_portletTitle = "Content Page",
+				locator1 = "Home#SITE_ADMINISTRATION_PORTLET_TITLE",
+				value1 = "Content Page");
 		}
 	}
 
@@ -286,110 +385,6 @@ definition {
 				key_index = 1,
 				key_nodeName = "Heading",
 				locator1 = "Treeview#PAGE_STRUCTURE_TREE_VERTICAL_ELLIPSIS");
-		}
-	}
-
-	@description = "LPS-97882: Validate if, when the user tries to edit an existing A/B Test, after edit the mandatory information, A/B Test sidebar appears with the A/B Testing configuration"
-	@priority = 3
-	test ChangesAppliedAfterEdit {
-		task ("Create AB test") {
-			ABTest.createABTest(
-				goal = "Bounce Rate",
-				testTitle = "AB test title");
-		}
-
-		task ("Open modal Edit test A/B, modify mandatory values and save") {
-			ABTest.openEditABTest();
-
-			ABTest.fillInput(
-				key_testTitle = "AB test title 2",
-				labelValue = "Test Name");
-
-			ABTest.selectGoal(key_goal = "Click");
-
-			Click(locator1 = "Modal#SAVE_BUTTON");
-
-			WaitForElementNotPresent(locator1 = "Modal#MODAL_CONTENT");
-		}
-
-		task ("Assert the changes have been applied") {
-			AssertTextEquals(
-				key_title = "AB test title 2",
-				locator1 = "ABTest#AB_TEST_TITLE_DXP",
-				value1 = "AB test title 2");
-
-			AssertTextEquals(
-				key_name = "Click",
-				locator1 = "ABTest#AB_TEST_DETAILS_FIELD",
-				value1 = "Click");
-		}
-	}
-
-	@description = "LPS-97882: Validate if when the user is editing the A/B Testing, he can press the cancel button on the modal, and the changes in the A/B Testing is not saved"
-	@priority = 3
-	test ChangesNotAppliedAfterCancel {
-		task ("Create AB test") {
-			ABTest.createABTest(
-				goal = "Bounce Rate",
-				testTitle = "AB test title");
-		}
-
-		task ("Open modal Edit test A/B, modify mandatory values and Cancel") {
-			ABTest.openEditABTest();
-
-			ABTest.fillInput(
-				key_testTitle = "AB test title 2",
-				labelValue = "Test Name");
-
-			ABTest.selectGoal(key_goal = "Click");
-
-			Button.click(button = "Cancel");
-		}
-
-		task ("Assert the changes have not been applied") {
-			AssertTextEquals(
-				key_title = "AB test title",
-				locator1 = "ABTest#AB_TEST_TITLE_DXP",
-				value1 = "AB test title");
-
-			AssertTextEquals(
-				key_name = "Bounce Rate",
-				locator1 = "ABTest#AB_TEST_DETAILS_FIELD",
-				value1 = "Bounce Rate");
-		}
-	}
-
-	@description = "LPS-97882: Validate if when the user is editing the A/B Testing, he can close the modal, and the changes in the A/B Testing is not saved"
-	@priority = 3
-	test ChangesNotAppliedAfterCloseModal {
-		task ("Create AB test") {
-			ABTest.createABTest(
-				goal = "Bounce Rate",
-				testTitle = "AB test title");
-		}
-
-		task ("Open modal Edit test A/B, modify mandatory values and close") {
-			ABTest.openEditABTest();
-
-			ABTest.fillInput(
-				key_testTitle = "AB test title 2",
-				labelValue = "Test Name");
-
-			ABTest.selectGoal(key_goal = "Click");
-
-			Click(locator1 = "Modal#CLOSE_BUTTON");
-		}
-
-		task ("Assert that changes have not been applied") {
-			AssertTextEquals(
-				key_title = "AB test title",
-				locator1 = "ABTest#AB_TEST_TITLE_DXP",
-				value1 = "AB test title");
-
-			AssertTextEquals(
-				key_name = "Bounce Rate",
-				locator1 = "ABTest#AB_TEST_DETAILS_FIELD",
-				value1 = "Bounce Rate");
 		}
 	}
 
@@ -514,7 +509,7 @@ definition {
 
 	@description = "LPS-97195: Validate if the variant for A/B Test that was added on Liferay portal is visible in the Analytics Cloud"
 	@priority = 5
-	test CheckVariantAddedInAC {
+	test CheckVariantAddedAndEditedInAC {
 		task ("Create AB test and create variant") {
 			ABTest.createABTest(
 				goal = "Bounce Rate",
@@ -523,23 +518,11 @@ definition {
 			ABTest.createVariant(variantName = "Variant name");
 		}
 
-		task ("Check the info is correct in Analytics Cloud and run the test") {
+		task ("Check the added variant is visible in Analytics Cloud") {
 			ABTest.checkVariantAnalyticsCloud(variantNames = "Variant name");
 		}
-	}
 
-	@description = "LPS-97195: Validate if the variant for A/B Test that was edited on Liferay portal is visible in the Analytics Cloud"
-	@priority = 3
-	test CheckVariantEditedInAC {
-		task ("Create AB test and create variant") {
-			ABTest.createABTest(
-				goal = "Bounce Rate",
-				testTitle = "AB test title");
-
-			ABTest.createVariant(variantName = "Variant name");
-		}
-
-		task ("Edit variant") {
+		task ("Edit variant name") {
 			ABTest.editVariantName();
 
 			ABTest.fillInput(
@@ -551,20 +534,20 @@ definition {
 				locator1 = "Button#GENERAL_BUTTON_MODAL_FOOTER");
 		}
 
-		task ("Assert that variant name is changed in DXP and run the test") {
+		task ("Assert that the variant name is changed in DXP") {
 			AssertVisible(
 				key_variantName = "Variant name 2",
 				locator1 = "ABTest#VARIANT_TITLE");
 		}
 
-		task ("Check the info is correct in Analytics Cloud") {
+		task ("Check the edited variant name is visible in Analytics Cloud") {
 			ABTest.checkVariantAnalyticsCloud(variantNames = "Variant name 2");
 		}
 	}
 
-	@description = "LPS-119475: When a user has selected an element and clicks on the x icon within the ID box, the ID box gets empty and the Change clickable element button changes into Select clickable element"
+	@description = "LPS-119475: When a user clicks on the "eye" button, by click or by ID, the page scrolls if needed and shows the selected element highlighted"
 	@priority = 3
-	test ClearIDBox {
+	test ClickableElementIDBoxInteractions {
 		task ("Edit the Content page to add a button fragment") {
 			ContentPages.gotoPageEditor();
 
@@ -583,13 +566,46 @@ definition {
 				testTitle = "AB test title");
 		}
 
-		task ("Take ID Element and assert the element ID appears in the ID box") {
+		task ("Take the ID Element") {
 			var idbutton = ABTest.takeElementID();
+		}
 
-			ABTest.selectElementID();
+		task ("Select element by id ") {
+			Click(locator1 = "ABTest#ELEMENT_ID_INPUT");
 
-			AssertTextEquals.assertValue(
+			Type(
 				locator1 = "ABTest#ELEMENT_ID_INPUT",
+				value1 = ${idbutton});
+
+			KeyPress(
+				locator1 = "ABTest#ELEMENT_ID_INPUT",
+				value1 = "\ENTER");
+		}
+
+		task ("Assert that selected button is target") {
+			AssertElementPresent(
+				key_idElement = ${idbutton},
+				locator1 = "ABTest#TARGET_ELEMENT",
+				value1 = ${idbutton});
+		}
+
+		task ("Click wherever so the button highlight is taken out") {
+			Click(locator1 = "ABTest#REVIEW_NO_HAVE_VARIANTS");
+
+			AssertElementNotPresent(
+				key_idElement = ${idbutton},
+				locator1 = "ABTest#TARGET_ELEMENT",
+				value1 = ${idbutton});
+		}
+
+		task ("Click on the eye button") {
+			Click(locator1 = "Icon#EYE_PREVIEW");
+		}
+
+		task ("Assert that selected button is target") {
+			AssertElementPresent(
+				key_idElement = ${idbutton},
+				locator1 = "ABTest#TARGET_ELEMENT",
 				value1 = ${idbutton});
 		}
 
@@ -809,7 +825,7 @@ definition {
 
 	@description = "LPS-101341: Validate if an alert appears when the user tries to delete an experience with an AB Test in a draft mode, the user should be able to delete the experience"
 	@priority = 4
-	test DeleteExperienceWithDraftABTest {
+	test DeleteExperienceWithDraftABTestConfirmOrCancel {
 		task ("Create an experience and add on content page") {
 			ContentPages.gotoPageEditor();
 
@@ -840,7 +856,42 @@ definition {
 			ContentPages.gotoPageEditor();
 		}
 
-		task ("Delete the created experience") {
+		task ("Try to delete the experience and Cancel the confirm dialog") {
+			var key_experienceName = "NewAnyoneExperience";
+
+			PageEditor.openExperienceMenu();
+
+			ClickNoError(locator1 = "PageEditor#EXPERIENCE_DELETE_BUTTON");
+
+			Confirm.dismissAlert();
+		}
+
+		task ("Assert that experience is not deleted after Cancel") {
+			AssertElementPresent(
+				key_experienceName = "NewAnyoneExperience",
+				locator1 = "PageEditor#EXPERIENCE_SELECT_ITEM");
+
+			Click(locator1 = "PageEditor#EXPERIENCE_SELECTOR");
+		}
+
+		task ("Assert that the AB test draft still appears after Cancel") {
+			Button.clickPublish();
+
+			Navigator.openWithAppendToBaseURL(urlAppend = "web/test-site-name/content-page");
+
+			ContentPages.changeExperience(experienceName = "NewAnyoneExperience");
+
+			AssertTextEquals(
+				key_title = "AB test title",
+				locator1 = "ABTest#AB_TEST_TITLE_DXP",
+				value1 = "AB test title");
+		}
+
+		task ("Go back to the content page editor") {
+			ContentPages.gotoPageEditor();
+		}
+
+		task ("Delete the created experience with Confirm") {
 			var key_experienceName = "NewAnyoneExperience";
 
 			PageEditor.openExperienceMenu();
@@ -852,77 +903,12 @@ definition {
 			Alert.viewSuccessMessage();
 		}
 
-		task ("Assert that experience was deleted") {
+		task ("Assert that experience was deleted after Confirm") {
 			PageEditor.openExperienceMenu();
 
 			AssertElementNotPresent(
 				key_experienceName = "NewAnyoneExperience",
 				locator1 = "PageEditor#EXPERIENCE_SELECT_ITEM");
-		}
-	}
-
-	@description = "LPS-101341: Validate if an alert appears when the user tries to delete an experience with an AB Test in a draft mode, the user should be able to cancel the deletion of the experience"
-	@priority = 3
-	test DeleteExperienceWithDraftABTestCancel {
-		task ("Create an experience and add on content page") {
-			ContentPages.gotoPageEditor();
-
-			PageEditor.addExperience(
-				experienceName = "NewAnyoneExperience",
-				segmentName = "Anyone");
-
-			Button.clickPublish();
-		}
-
-		task ("Select the new experience") {
-			Navigator.openWithAppendToBaseURL(urlAppend = "web/test-site-name/content-page");
-
-			ABTest.openABTestPanel();
-
-			ContentPages.changeExperience(experienceName = "NewAnyoneExperience");
-		}
-
-		task ("Create AB test with a variant, run and terminate test") {
-			ABTest.createABTest(
-				goal = "Bounce Rate",
-				testTitle = "AB test title");
-
-			ABTest.createVariant(variantName = "Variant name");
-		}
-
-		task ("Go to edit the content page.") {
-			ContentPages.gotoPageEditor();
-		}
-
-		task ("Delete the created experience") {
-			var key_experienceName = "NewAnyoneExperience";
-
-			PageEditor.openExperienceMenu();
-
-			ClickNoError(locator1 = "PageEditor#EXPERIENCE_DELETE_BUTTON");
-
-			Confirm.dismissAlert();
-		}
-
-		task ("Assert that experience is not deleted") {
-			AssertElementPresent(
-				key_experienceName = "NewAnyoneExperience",
-				locator1 = "PageEditor#EXPERIENCE_SELECT_ITEM");
-
-			Click(locator1 = "PageEditor#EXPERIENCE_SELECTOR");
-		}
-
-		task ("Assert that the ABTest draft keeps appearing") {
-			Button.clickPublish();
-
-			Navigator.openWithAppendToBaseURL(urlAppend = "web/test-site-name/content-page");
-
-			ContentPages.changeExperience(experienceName = "NewAnyoneExperience");
-
-			AssertTextEquals(
-				key_title = "AB test title",
-				locator1 = "ABTest#AB_TEST_TITLE_DXP",
-				value1 = "AB test title");
 		}
 	}
 
@@ -994,6 +980,90 @@ definition {
 		}
 	}
 
+	@description = "LPS-97882: Validate if, when the user tries to edit an existing A/B Test, after edit the mandatory information, A/B Test sidebar appears with the A/B Testing configuration"
+	@priority = 3
+	test EditChangesPersistence {
+		task ("Create AB test") {
+			ABTest.createABTest(
+				goal = "Bounce Rate",
+				testTitle = "AB test title");
+		}
+
+		task ("Open edit modal, modify mandatory values and Cancel") {
+			ABTest.openEditABTest();
+
+			ABTest.fillInput(
+				key_testTitle = "AB test title 2",
+				labelValue = "Test Name");
+
+			ABTest.selectGoal(key_goal = "Click");
+
+			Button.click(button = "Cancel");
+		}
+
+		task ("Assert the changes have not been applied after Cancel") {
+			AssertTextEquals(
+				key_title = "AB test title",
+				locator1 = "ABTest#AB_TEST_TITLE_DXP",
+				value1 = "AB test title");
+
+			AssertTextEquals(
+				key_name = "Bounce Rate",
+				locator1 = "ABTest#AB_TEST_DETAILS_FIELD",
+				value1 = "Bounce Rate");
+		}
+
+		task ("Open edit modal, modify mandatory values and close") {
+			ABTest.openEditABTest();
+
+			ABTest.fillInput(
+				key_testTitle = "AB test title 2",
+				labelValue = "Test Name");
+
+			ABTest.selectGoal(key_goal = "Click");
+
+			Click(locator1 = "Modal#CLOSE_BUTTON");
+		}
+
+		task ("Assert the changes have not been applied after closing the modal") {
+			AssertTextEquals(
+				key_title = "AB test title",
+				locator1 = "ABTest#AB_TEST_TITLE_DXP",
+				value1 = "AB test title");
+
+			AssertTextEquals(
+				key_name = "Bounce Rate",
+				locator1 = "ABTest#AB_TEST_DETAILS_FIELD",
+				value1 = "Bounce Rate");
+		}
+
+		task ("Open modal Edit test A/B, modify mandatory values and save") {
+			ABTest.openEditABTest();
+
+			ABTest.fillInput(
+				key_testTitle = "AB test title 2",
+				labelValue = "Test Name");
+
+			ABTest.selectGoal(key_goal = "Click");
+
+			Click(locator1 = "Modal#SAVE_BUTTON");
+
+			WaitForElementNotPresent(locator1 = "Modal#MODAL_CONTENT");
+		}
+
+		task ("Assert the changes have been applied") {
+			AssertTextEquals(
+				key_title = "AB test title 2",
+				locator1 = "ABTest#AB_TEST_TITLE_DXP",
+				value1 = "AB test title 2");
+
+			AssertTextEquals(
+				key_name = "Click",
+				locator1 = "ABTest#AB_TEST_DETAILS_FIELD",
+				value1 = "Click");
+		}
+	}
+
 	@description = "LPS-96791: Validate if the user can edit the target"
 	@priority = 5
 	test EditClickElementTarget {
@@ -1052,7 +1122,7 @@ definition {
 
 	@description = "LPS-99349: Validate if the user can edit the variant for A/B Test content with success"
 	@priority = 5
-	test EditVariantContent {
+	test EditVariantContentSaveAndDiscard {
 		task ("Create AB test and create variant") {
 			ABTest.createABTest(
 				goal = "Bounce Rate",
@@ -1089,24 +1159,8 @@ definition {
 				id = "link",
 				text = "Go Somewhere");
 		}
-	}
 
-	@description = "LPS-99349: Validate if the user can cancel the edition of one variant for A/B Test, and the data that he inputs during the creation is discarded"
-	@priority = 4
-	test EditVariantContentCancel {
-		task ("Create AB test and create variant") {
-			ABTest.createABTest(
-				goal = "Bounce Rate",
-				testTitle = "AB test title");
-
-			ABTest.createVariant(variantName = "Variant name");
-		}
-
-		task ("Edit variant page and add some fragment to the page") {
-			Click(
-				key_variantName = "Variant name",
-				locator1 = "ABTest#VARIANT_TITLE");
-
+		task ("Edit variant page, add another fragment and Discard Variant") {
 			ContentPages.gotoPageEditor();
 
 			PageEditor.addFragment(
@@ -1128,7 +1182,7 @@ definition {
 				locator1 = "ABTest#VARIANT_TITLE");
 		}
 
-		task ("Assert the modifications are shown when the variant is selected") {
+		task ("Assert the discarded fragment is not shown when the variant is selected") {
 			AssertElementNotPresent(
 				fragmentName = "button",
 				id = "link",
@@ -1190,178 +1244,6 @@ definition {
 				fragmentName = "heading",
 				id = "element-text",
 				text = "New text");
-		}
-	}
-
-	@description = "LPS-119475: When a user clicks on the "eye" button, by click or by ID, the page scrolls if needed and shows the selected element highlighted"
-	@priority = 3
-	test EyeButton {
-		task ("Edit the Content page to add a button fragment") {
-			ContentPages.gotoPageEditor();
-
-			PageEditor.addFragment(
-				collectionName = "Basic Components",
-				fragmentName = "Button");
-
-			Button.clickPublish();
-
-			Navigator.openWithAppendToBaseURL(urlAppend = "web/test-site-name/content-page");
-		}
-
-		task ("Create AB test") {
-			ABTest.createABTest(
-				goal = "Click",
-				testTitle = "AB test title");
-		}
-
-		task ("Take the ID Element") {
-			var idbutton = ABTest.takeElementID();
-		}
-
-		task ("Select element by id ") {
-			Click(locator1 = "ABTest#ELEMENT_ID_INPUT");
-
-			Type(
-				locator1 = "ABTest#ELEMENT_ID_INPUT",
-				value1 = ${idbutton});
-
-			KeyPress(
-				locator1 = "ABTest#ELEMENT_ID_INPUT",
-				value1 = "\ENTER");
-		}
-
-		task ("Assert that selected button is target") {
-			AssertElementPresent(
-				key_idElement = ${idbutton},
-				locator1 = "ABTest#TARGET_ELEMENT",
-				value1 = ${idbutton});
-		}
-
-		task ("Click wherever so the button highlight is taken out") {
-			Click(locator1 = "ABTest#REVIEW_NO_HAVE_VARIANTS");
-
-			AssertElementNotPresent(
-				key_idElement = ${idbutton},
-				locator1 = "ABTest#TARGET_ELEMENT",
-				value1 = ${idbutton});
-		}
-
-		task ("Click on the eye button") {
-			Click(locator1 = "Icon#EYE_PREVIEW");
-		}
-
-		task ("Assert that selected button is target") {
-			AssertElementPresent(
-				key_idElement = ${idbutton},
-				locator1 = "ABTest#TARGET_ELEMENT",
-				value1 = ${idbutton});
-		}
-	}
-
-	@description = "LPS-96787: Validate if the Liferay NOT receives the notification when the test status is changed by the same user that created the test"
-	@priority = 3
-	test NoNotificationAfterChangesSameUser {
-		task ("Create AB test with a variant and run test") {
-			Navigator.openWithAppendToBaseURL(urlAppend = "web/test-site-name/content-page");
-
-			ABTest.createABTest(
-				goal = "Bounce Rate",
-				testTitle = "AB test title");
-
-			ABTest.createVariant(variantName = "Variant name");
-
-			ABTest.runTest();
-
-			ABTest.terminateTest();
-		}
-
-		task ("Assert there are not notifications") {
-			Notifications.viewNoNotifications(activePanel = "Notifications");
-		}
-	}
-
-	@description = "LPS-96787: Validate if in the notification message has one link to the content page of the test, with the AB test panel open in that test"
-	@priority = 3
-	test NotificationLinkToContentPage {
-		task ("Create user and sync contact with AC") {
-			JSONUser.addUser(
-				userEmailAddress = "userea@liferay.com",
-				userFirstName = "userfn",
-				userLastName = "userln",
-				userScreenName = "usersn");
-
-			JSONUser.setFirstPassword(
-				agreeToTermsAndAnswerReminderQuery = "true",
-				requireReset = "false",
-				userEmailAddress = "userea@liferay.com");
-
-			ACDXPSettings.syncNewContactData();
-		}
-
-		task ("Create role and assign to user") {
-			JSONRole.addRegularRole(
-				roleKey = "Roles Regrole Name Test",
-				roleTitle = "Roles Regrole Name Test");
-
-			Permissions.definePermissionViaJSONAPI(
-				resourceAction = "UPDATE",
-				resourceName = "com.liferay.portal.kernel.model.Layout",
-				roleTitle = "Roles Regrole Name Test");
-
-			JSONRole.assignRoleToUser(
-				roleTitle = "Roles Regrole Name Test",
-				userEmailAddress = "userea@liferay.com");
-		}
-
-		task ("Create AB test with a variant and run test") {
-			Navigator.openWithAppendToBaseURL(urlAppend = "web/test-site-name/content-page");
-
-			ABTest.createABTest(
-				goal = "Bounce Rate",
-				testTitle = "AB test title");
-
-			ABTest.createVariant(variantName = "Variant name");
-
-			ABTest.runTest();
-		}
-
-		task ("Login with new user") {
-			User.logoutAndLoginPG(
-				userLoginEmailAddress = "userea@liferay.com",
-				userLoginFullName = "userfn userln");
-		}
-
-		task ("Terminate AB Test") {
-			Navigator.openWithAppendToBaseURL(urlAppend = "web/test-site-name/content-page");
-
-			ABTest.openABTestPanel();
-
-			ABTest.terminateTest();
-		}
-
-		task ("Login with new user") {
-			User.logoutAndLoginPG(
-				userLoginEmailAddress = "test@liferay.com",
-				userLoginFullName = "Test Test");
-		}
-
-		task ("Go to notifications") {
-			Notifications.gotoNotifications();
-		}
-
-		task ("Click on the title and assert the Content Page is displayed") {
-			Notifications.viewSpecificNotificationDetails(
-				contentBody = "AB test title",
-				notificationsTitle = "A/B test has changed to status terminated");
-
-			AssertClick(
-				locator1 = "Notifications#NOTIFICATIONS_TITLE",
-				value1 = "A/B test has changed to status terminated.");
-
-			AssertTextEquals.assertPartialText(
-				key_portletTitle = "Content Page",
-				locator1 = "Home#SITE_ADMINISTRATION_PORTLET_TITLE",
-				value1 = "Content Page");
 		}
 	}
 
@@ -1453,7 +1335,7 @@ definition {
 
 	@description = "LPS-99225: Validate if the admin can rename a segment in an experience with an A/B test in the draft status"
 	@priority = 3
-	test RenameSegmentABTestDraft {
+	test RenameSegmentInABTestStates {
 		task ("Create a segment and an Experience using the segment created") {
 			ContentPages.gotoPageEditor();
 
@@ -1476,7 +1358,7 @@ definition {
 			ABTest.createVariant(variantName = "Variant name");
 		}
 
-		task ("Go to Segments page and try to rename that segment") {
+		task ("Go to Segments page and rename the segment while AB test is in draft") {
 			Segmentation.openSegmentsAdmin(siteURLKey = "test-site-name");
 
 			Segmentation.editSegment(entry = "SegmentForABTest");
@@ -1488,54 +1370,38 @@ definition {
 			Alert.viewSuccessMessage();
 		}
 
-		task ("Assert the changes have been applied") {
+		task ("Assert the rename has been applied in draft state") {
 			LexiconEntry.viewEntryName(rowEntry = "SegmentForABTest 2");
 		}
-	}
 
-	@description = "LPS-99225: Validate if the admin can rename a segment in an experience with an A/B test in terminated status"
-	@priority = 3
-	test RenameSegmentABTestTerminated {
-		task ("Create a segment and an Experience using the segment created") {
-			ContentPages.gotoPageEditor();
+		task ("Navigate back to content page and run + terminate the AB test") {
+			ContentPagesNavigator.openEditContentPage(
+				pageName = "Content Page Name",
+				siteName = "Test Site Name");
 
-			Segmentation.createExperienceWithSegment(
-				newExperience = "NewExp1",
-				newSegment = "SegmentForABTest");
-
-			Button.clickPublish();
-		}
-
-		task ("Create a new A/B test with a new experience, run and terminate it") {
 			ABTest.openABTestPanel();
 
 			ContentPages.changeExperience(experienceName = "NewExp1");
-
-			ABTest.createABTest(
-				goal = "Bounce Rate",
-				testTitle = "AB test title");
-
-			ABTest.createVariant(variantName = "Variant name");
 
 			ABTest.runTest();
 
 			ABTest.terminateTest();
 		}
 
-		task ("Go to Segments page and try to rename that segment") {
+		task ("Go to Segments page and rename the segment while AB test is terminated") {
 			Segmentation.openSegmentsAdmin(siteURLKey = "test-site-name");
 
-			Segmentation.editSegment(entry = "SegmentForABTest");
+			Segmentation.editSegment(entry = "SegmentForABTest 2");
 
-			Segmentation.fillTitle(titleField = "SegmentForABTest 2");
+			Segmentation.fillTitle(titleField = "SegmentForABTest 3");
 
 			Button.clickSave();
 
 			Alert.viewSuccessMessage();
 		}
 
-		task ("Assert the changes have been applied") {
-			LexiconEntry.viewEntryName(rowEntry = "SegmentForABTest 2");
+		task ("Assert the rename has been applied in terminated state") {
+			LexiconEntry.viewEntryName(rowEntry = "SegmentForABTest 3");
 		}
 	}
 

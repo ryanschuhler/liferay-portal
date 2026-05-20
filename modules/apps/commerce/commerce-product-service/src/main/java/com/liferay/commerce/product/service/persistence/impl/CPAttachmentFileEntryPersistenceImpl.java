@@ -14,7 +14,6 @@ import com.liferay.commerce.product.model.impl.CPAttachmentFileEntryModelImpl;
 import com.liferay.commerce.product.service.persistence.CPAttachmentFileEntryPersistence;
 import com.liferay.commerce.product.service.persistence.CPAttachmentFileEntryUtil;
 import com.liferay.commerce.product.service.persistence.impl.constants.CommercePersistenceConstants;
-import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.portal.kernel.change.tracking.CTColumnResolutionType;
 import com.liferay.portal.kernel.configuration.Configuration;
 import com.liferay.portal.kernel.dao.orm.EntityCache;
@@ -98,62 +97,8 @@ public class CPAttachmentFileEntryPersistenceImpl
 	public static final String FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION =
 		FINDER_CLASS_NAME_ENTITY + ".List2";
 
-	private FinderPath _finderPathWithPaginationFindByUuid;
-	private FinderPath _finderPathWithoutPaginationFindByUuid;
-	private FinderPath _finderPathCountByUuid;
 	private CollectionPersistenceFinder<CPAttachmentFileEntry>
 		_collectionPersistenceFinderByUuid;
-
-	/**
-	 * Returns all the cp attachment file entries where uuid = &#63;.
-	 *
-	 * @param uuid the uuid
-	 * @return the matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByUuid(String uuid) {
-		return findByUuid(uuid, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the cp attachment file entries where uuid = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param uuid the uuid
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @return the range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByUuid(
-		String uuid, int start, int end) {
-
-		return findByUuid(uuid, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the cp attachment file entries where uuid = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param uuid the uuid
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByUuid(
-		String uuid, int start, int end,
-		OrderByComparator<CPAttachmentFileEntry> orderByComparator) {
-
-		return findByUuid(uuid, start, end, orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the cp attachment file entries where uuid = &#63;.
@@ -175,14 +120,9 @@ public class CPAttachmentFileEntryPersistenceImpl
 		OrderByComparator<CPAttachmentFileEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByUuid.find(
-				finderCache, new Object[] {uuid}, start, end, orderByComparator,
-				useFinderCache);
-		}
+		return _collectionPersistenceFinderByUuid.find(
+			finderCache, new Object[] {uuid}, start, end, orderByComparator,
+			useFinderCache);
 	}
 
 	/**
@@ -246,16 +186,10 @@ public class CPAttachmentFileEntryPersistenceImpl
 	 */
 	@Override
 	public int countByUuid(String uuid) {
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByUuid.count(
-				finderCache, new Object[] {uuid});
-		}
+		return _collectionPersistenceFinderByUuid.count(
+			finderCache, new Object[] {uuid});
 	}
 
-	private FinderPath _finderPathFetchByUUID_G;
 	private UniquePersistenceFinder<CPAttachmentFileEntry>
 		_uniquePersistenceFinderByUUID_G;
 
@@ -290,18 +224,6 @@ public class CPAttachmentFileEntryPersistenceImpl
 	}
 
 	/**
-	 * Returns the cp attachment file entry where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param uuid the uuid
-	 * @param groupId the group ID
-	 * @return the matching cp attachment file entry, or <code>null</code> if a matching cp attachment file entry could not be found
-	 */
-	@Override
-	public CPAttachmentFileEntry fetchByUUID_G(String uuid, long groupId) {
-		return fetchByUUID_G(uuid, groupId, true);
-	}
-
-	/**
 	 * Returns the cp attachment file entry where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param uuid the uuid
@@ -313,13 +235,8 @@ public class CPAttachmentFileEntryPersistenceImpl
 	public CPAttachmentFileEntry fetchByUUID_G(
 		String uuid, long groupId, boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _uniquePersistenceFinderByUUID_G.fetch(
-				finderCache, new Object[] {uuid, groupId}, useFinderCache);
-		}
+		return _uniquePersistenceFinderByUUID_G.fetch(
+			finderCache, new Object[] {uuid, groupId}, useFinderCache);
 	}
 
 	/**
@@ -352,69 +269,8 @@ public class CPAttachmentFileEntryPersistenceImpl
 			finderCache, new Object[] {uuid, groupId});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByUuid_C;
-	private FinderPath _finderPathWithoutPaginationFindByUuid_C;
-	private FinderPath _finderPathCountByUuid_C;
 	private CollectionPersistenceFinder<CPAttachmentFileEntry>
 		_collectionPersistenceFinderByUuid_C;
-
-	/**
-	 * Returns all the cp attachment file entries where uuid = &#63; and companyId = &#63;.
-	 *
-	 * @param uuid the uuid
-	 * @param companyId the company ID
-	 * @return the matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByUuid_C(
-		String uuid, long companyId) {
-
-		return findByUuid_C(
-			uuid, companyId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the cp attachment file entries where uuid = &#63; and companyId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param uuid the uuid
-	 * @param companyId the company ID
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @return the range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByUuid_C(
-		String uuid, long companyId, int start, int end) {
-
-		return findByUuid_C(uuid, companyId, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the cp attachment file entries where uuid = &#63; and companyId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param uuid the uuid
-	 * @param companyId the company ID
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByUuid_C(
-		String uuid, long companyId, int start, int end,
-		OrderByComparator<CPAttachmentFileEntry> orderByComparator) {
-
-		return findByUuid_C(
-			uuid, companyId, start, end, orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the cp attachment file entries where uuid = &#63; and companyId = &#63;.
@@ -437,14 +293,9 @@ public class CPAttachmentFileEntryPersistenceImpl
 		OrderByComparator<CPAttachmentFileEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByUuid_C.find(
-				finderCache, new Object[] {uuid, companyId}, start, end,
-				orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByUuid_C.find(
+			finderCache, new Object[] {uuid, companyId}, start, end,
+			orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -512,73 +363,12 @@ public class CPAttachmentFileEntryPersistenceImpl
 	 */
 	@Override
 	public int countByUuid_C(String uuid, long companyId) {
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByUuid_C.count(
-				finderCache, new Object[] {uuid, companyId});
-		}
+		return _collectionPersistenceFinderByUuid_C.count(
+			finderCache, new Object[] {uuid, companyId});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByFileEntryId;
-	private FinderPath _finderPathWithoutPaginationFindByFileEntryId;
-	private FinderPath _finderPathCountByFileEntryId;
 	private CollectionPersistenceFinder<CPAttachmentFileEntry>
 		_collectionPersistenceFinderByFileEntryId;
-
-	/**
-	 * Returns all the cp attachment file entries where fileEntryId = &#63;.
-	 *
-	 * @param fileEntryId the file entry ID
-	 * @return the matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByFileEntryId(long fileEntryId) {
-		return findByFileEntryId(
-			fileEntryId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the cp attachment file entries where fileEntryId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param fileEntryId the file entry ID
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @return the range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByFileEntryId(
-		long fileEntryId, int start, int end) {
-
-		return findByFileEntryId(fileEntryId, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the cp attachment file entries where fileEntryId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param fileEntryId the file entry ID
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByFileEntryId(
-		long fileEntryId, int start, int end,
-		OrderByComparator<CPAttachmentFileEntry> orderByComparator) {
-
-		return findByFileEntryId(
-			fileEntryId, start, end, orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the cp attachment file entries where fileEntryId = &#63;.
@@ -600,14 +390,9 @@ public class CPAttachmentFileEntryPersistenceImpl
 		OrderByComparator<CPAttachmentFileEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByFileEntryId.find(
-				finderCache, new Object[] {fileEntryId}, start, end,
-				orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByFileEntryId.find(
+			finderCache, new Object[] {fileEntryId}, start, end,
+			orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -671,78 +456,12 @@ public class CPAttachmentFileEntryPersistenceImpl
 	 */
 	@Override
 	public int countByFileEntryId(long fileEntryId) {
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByFileEntryId.count(
-				finderCache, new Object[] {fileEntryId});
-		}
+		return _collectionPersistenceFinderByFileEntryId.count(
+			finderCache, new Object[] {fileEntryId});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByC_C;
-	private FinderPath _finderPathWithoutPaginationFindByC_C;
-	private FinderPath _finderPathCountByC_C;
 	private CollectionPersistenceFinder<CPAttachmentFileEntry>
 		_collectionPersistenceFinderByC_C;
-
-	/**
-	 * Returns all the cp attachment file entries where classNameId = &#63; and classPK = &#63;.
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @return the matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByC_C(
-		long classNameId, long classPK) {
-
-		return findByC_C(
-			classNameId, classPK, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the cp attachment file entries where classNameId = &#63; and classPK = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @return the range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByC_C(
-		long classNameId, long classPK, int start, int end) {
-
-		return findByC_C(classNameId, classPK, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the cp attachment file entries where classNameId = &#63; and classPK = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByC_C(
-		long classNameId, long classPK, int start, int end,
-		OrderByComparator<CPAttachmentFileEntry> orderByComparator) {
-
-		return findByC_C(
-			classNameId, classPK, start, end, orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the cp attachment file entries where classNameId = &#63; and classPK = &#63;.
@@ -765,14 +484,9 @@ public class CPAttachmentFileEntryPersistenceImpl
 		OrderByComparator<CPAttachmentFileEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C.find(
-				finderCache, new Object[] {classNameId, classPK}, start, end,
-				orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByC_C.find(
+			finderCache, new Object[] {classNameId, classPK}, start, end,
+			orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -841,17 +555,10 @@ public class CPAttachmentFileEntryPersistenceImpl
 	 */
 	@Override
 	public int countByC_C(long classNameId, long classPK) {
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C.count(
-				finderCache, new Object[] {classNameId, classPK});
-		}
+		return _collectionPersistenceFinderByC_C.count(
+			finderCache, new Object[] {classNameId, classPK});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByLtD_S;
-	private FinderPath _finderPathWithPaginationCountByLtD_S;
 	private CollectionPersistenceFinder<CPAttachmentFileEntry>
 		_collectionPersistenceFinderByLtD_S;
 
@@ -934,14 +641,9 @@ public class CPAttachmentFileEntryPersistenceImpl
 		OrderByComparator<CPAttachmentFileEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByLtD_S.find(
-				finderCache, new Object[] {displayDate, status}, start, end,
-				orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByLtD_S.find(
+			finderCache, new Object[] {displayDate, status}, start, end,
+			orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -1009,83 +711,12 @@ public class CPAttachmentFileEntryPersistenceImpl
 	 */
 	@Override
 	public int countByLtD_S(Date displayDate, int status) {
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByLtD_S.count(
-				finderCache, new Object[] {displayDate, status});
-		}
+		return _collectionPersistenceFinderByLtD_S.count(
+			finderCache, new Object[] {displayDate, status});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByG_C_F;
-	private FinderPath _finderPathWithoutPaginationFindByG_C_F;
-	private FinderPath _finderPathCountByG_C_F;
 	private CollectionPersistenceFinder<CPAttachmentFileEntry>
 		_collectionPersistenceFinderByG_C_F;
-
-	/**
-	 * Returns all the cp attachment file entries where groupId = &#63; and classNameId = &#63; and fileEntryId = &#63;.
-	 *
-	 * @param groupId the group ID
-	 * @param classNameId the class name ID
-	 * @param fileEntryId the file entry ID
-	 * @return the matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByG_C_F(
-		long groupId, long classNameId, long fileEntryId) {
-
-		return findByG_C_F(
-			groupId, classNameId, fileEntryId, QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the cp attachment file entries where groupId = &#63; and classNameId = &#63; and fileEntryId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param groupId the group ID
-	 * @param classNameId the class name ID
-	 * @param fileEntryId the file entry ID
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @return the range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByG_C_F(
-		long groupId, long classNameId, long fileEntryId, int start, int end) {
-
-		return findByG_C_F(groupId, classNameId, fileEntryId, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the cp attachment file entries where groupId = &#63; and classNameId = &#63; and fileEntryId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param groupId the group ID
-	 * @param classNameId the class name ID
-	 * @param fileEntryId the file entry ID
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByG_C_F(
-		long groupId, long classNameId, long fileEntryId, int start, int end,
-		OrderByComparator<CPAttachmentFileEntry> orderByComparator) {
-
-		return findByG_C_F(
-			groupId, classNameId, fileEntryId, start, end, orderByComparator,
-			true);
-	}
 
 	/**
 	 * Returns an ordered range of all the cp attachment file entries where groupId = &#63; and classNameId = &#63; and fileEntryId = &#63;.
@@ -1109,14 +740,9 @@ public class CPAttachmentFileEntryPersistenceImpl
 		OrderByComparator<CPAttachmentFileEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByG_C_F.find(
-				finderCache, new Object[] {groupId, classNameId, fileEntryId},
-				start, end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByG_C_F.find(
+			finderCache, new Object[] {groupId, classNameId, fileEntryId},
+			start, end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -1192,83 +818,12 @@ public class CPAttachmentFileEntryPersistenceImpl
 	 */
 	@Override
 	public int countByG_C_F(long groupId, long classNameId, long fileEntryId) {
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByG_C_F.count(
-				finderCache, new Object[] {groupId, classNameId, fileEntryId});
-		}
+		return _collectionPersistenceFinderByG_C_F.count(
+			finderCache, new Object[] {groupId, classNameId, fileEntryId});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByC_C_F;
-	private FinderPath _finderPathWithoutPaginationFindByC_C_F;
-	private FinderPath _finderPathCountByC_C_F;
 	private CollectionPersistenceFinder<CPAttachmentFileEntry>
 		_collectionPersistenceFinderByC_C_F;
-
-	/**
-	 * Returns all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and fileEntryId = &#63;.
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @param fileEntryId the file entry ID
-	 * @return the matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByC_C_F(
-		long classNameId, long classPK, long fileEntryId) {
-
-		return findByC_C_F(
-			classNameId, classPK, fileEntryId, QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and fileEntryId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @param fileEntryId the file entry ID
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @return the range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByC_C_F(
-		long classNameId, long classPK, long fileEntryId, int start, int end) {
-
-		return findByC_C_F(classNameId, classPK, fileEntryId, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and fileEntryId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @param fileEntryId the file entry ID
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByC_C_F(
-		long classNameId, long classPK, long fileEntryId, int start, int end,
-		OrderByComparator<CPAttachmentFileEntry> orderByComparator) {
-
-		return findByC_C_F(
-			classNameId, classPK, fileEntryId, start, end, orderByComparator,
-			true);
-	}
 
 	/**
 	 * Returns an ordered range of all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and fileEntryId = &#63;.
@@ -1292,14 +847,9 @@ public class CPAttachmentFileEntryPersistenceImpl
 		OrderByComparator<CPAttachmentFileEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C_F.find(
-				finderCache, new Object[] {classNameId, classPK, fileEntryId},
-				start, end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByC_C_F.find(
+			finderCache, new Object[] {classNameId, classPK, fileEntryId},
+			start, end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -1375,82 +925,12 @@ public class CPAttachmentFileEntryPersistenceImpl
 	 */
 	@Override
 	public int countByC_C_F(long classNameId, long classPK, long fileEntryId) {
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C_F.count(
-				finderCache, new Object[] {classNameId, classPK, fileEntryId});
-		}
+		return _collectionPersistenceFinderByC_C_F.count(
+			finderCache, new Object[] {classNameId, classPK, fileEntryId});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByC_C_C;
-	private FinderPath _finderPathWithoutPaginationFindByC_C_C;
-	private FinderPath _finderPathCountByC_C_C;
 	private CollectionPersistenceFinder<CPAttachmentFileEntry>
 		_collectionPersistenceFinderByC_C_C;
-
-	/**
-	 * Returns all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and cdnURL = &#63;.
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @param cdnURL the cdn url
-	 * @return the matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByC_C_C(
-		long classNameId, long classPK, String cdnURL) {
-
-		return findByC_C_C(
-			classNameId, classPK, cdnURL, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			null);
-	}
-
-	/**
-	 * Returns a range of all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and cdnURL = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @param cdnURL the cdn url
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @return the range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByC_C_C(
-		long classNameId, long classPK, String cdnURL, int start, int end) {
-
-		return findByC_C_C(classNameId, classPK, cdnURL, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and cdnURL = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @param cdnURL the cdn url
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByC_C_C(
-		long classNameId, long classPK, String cdnURL, int start, int end,
-		OrderByComparator<CPAttachmentFileEntry> orderByComparator) {
-
-		return findByC_C_C(
-			classNameId, classPK, cdnURL, start, end, orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and cdnURL = &#63;.
@@ -1474,14 +954,9 @@ public class CPAttachmentFileEntryPersistenceImpl
 		OrderByComparator<CPAttachmentFileEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C_C.find(
-				finderCache, new Object[] {classNameId, classPK, cdnURL}, start,
-				end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByC_C_C.find(
+			finderCache, new Object[] {classNameId, classPK, cdnURL}, start,
+			end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -1555,17 +1030,10 @@ public class CPAttachmentFileEntryPersistenceImpl
 	 */
 	@Override
 	public int countByC_C_C(long classNameId, long classPK, String cdnURL) {
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C_C.count(
-				finderCache, new Object[] {classNameId, classPK, cdnURL});
-		}
+		return _collectionPersistenceFinderByC_C_C.count(
+			finderCache, new Object[] {classNameId, classPK, cdnURL});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByC_C_LtD_S;
-	private FinderPath _finderPathWithPaginationCountByC_C_LtD_S;
 	private CollectionPersistenceFinder<CPAttachmentFileEntry>
 		_collectionPersistenceFinderByC_C_LtD_S;
 
@@ -1660,15 +1128,10 @@ public class CPAttachmentFileEntryPersistenceImpl
 		int end, OrderByComparator<CPAttachmentFileEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C_LtD_S.find(
-				finderCache,
-				new Object[] {classNameId, classPK, displayDate, status}, start,
-				end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByC_C_LtD_S.find(
+			finderCache,
+			new Object[] {classNameId, classPK, displayDate, status}, start,
+			end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -1752,89 +1215,13 @@ public class CPAttachmentFileEntryPersistenceImpl
 	public int countByC_C_LtD_S(
 		long classNameId, long classPK, Date displayDate, int status) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C_LtD_S.count(
-				finderCache,
-				new Object[] {classNameId, classPK, displayDate, status});
-		}
+		return _collectionPersistenceFinderByC_C_LtD_S.count(
+			finderCache,
+			new Object[] {classNameId, classPK, displayDate, status});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByC_C_T_ST;
-	private FinderPath _finderPathWithoutPaginationFindByC_C_T_ST;
-	private FinderPath _finderPathCountByC_C_T_ST;
 	private CollectionPersistenceFinder<CPAttachmentFileEntry>
 		_collectionPersistenceFinderByC_C_T_ST;
-
-	/**
-	 * Returns all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and type = &#63; and status = &#63;.
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @param type the type
-	 * @param status the status
-	 * @return the matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByC_C_T_ST(
-		long classNameId, long classPK, int type, int status) {
-
-		return findByC_C_T_ST(
-			classNameId, classPK, type, status, QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and type = &#63; and status = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @param type the type
-	 * @param status the status
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @return the range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByC_C_T_ST(
-		long classNameId, long classPK, int type, int status, int start,
-		int end) {
-
-		return findByC_C_T_ST(
-			classNameId, classPK, type, status, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and type = &#63; and status = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @param type the type
-	 * @param status the status
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByC_C_T_ST(
-		long classNameId, long classPK, int type, int status, int start,
-		int end, OrderByComparator<CPAttachmentFileEntry> orderByComparator) {
-
-		return findByC_C_T_ST(
-			classNameId, classPK, type, status, start, end, orderByComparator,
-			true);
-	}
 
 	/**
 	 * Returns an ordered range of all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and type = &#63; and status = &#63;.
@@ -1859,14 +1246,9 @@ public class CPAttachmentFileEntryPersistenceImpl
 		int end, OrderByComparator<CPAttachmentFileEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C_T_ST.find(
-				finderCache, new Object[] {classNameId, classPK, type, status},
-				start, end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByC_C_T_ST.find(
+			finderCache, new Object[] {classNameId, classPK, type, status},
+			start, end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -1948,17 +1330,10 @@ public class CPAttachmentFileEntryPersistenceImpl
 	public int countByC_C_T_ST(
 		long classNameId, long classPK, int type, int status) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C_T_ST.count(
-				finderCache, new Object[] {classNameId, classPK, type, status});
-		}
+		return _collectionPersistenceFinderByC_C_T_ST.count(
+			finderCache, new Object[] {classNameId, classPK, type, status});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByC_C_T_NotST;
-	private FinderPath _finderPathWithPaginationCountByC_C_T_NotST;
 	private CollectionPersistenceFinder<CPAttachmentFileEntry>
 		_collectionPersistenceFinderByC_C_T_NotST;
 
@@ -2053,14 +1428,9 @@ public class CPAttachmentFileEntryPersistenceImpl
 		int end, OrderByComparator<CPAttachmentFileEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C_T_NotST.find(
-				finderCache, new Object[] {classNameId, classPK, type, status},
-				start, end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByC_C_T_NotST.find(
+			finderCache, new Object[] {classNameId, classPK, type, status},
+			start, end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -2142,94 +1512,12 @@ public class CPAttachmentFileEntryPersistenceImpl
 	public int countByC_C_T_NotST(
 		long classNameId, long classPK, int type, int status) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C_T_NotST.count(
-				finderCache, new Object[] {classNameId, classPK, type, status});
-		}
+		return _collectionPersistenceFinderByC_C_T_NotST.count(
+			finderCache, new Object[] {classNameId, classPK, type, status});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByC_C_G_T_ST;
-	private FinderPath _finderPathWithoutPaginationFindByC_C_G_T_ST;
-	private FinderPath _finderPathCountByC_C_G_T_ST;
 	private CollectionPersistenceFinder<CPAttachmentFileEntry>
 		_collectionPersistenceFinderByC_C_G_T_ST;
-
-	/**
-	 * Returns all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and galleryEnabled = &#63; and type = &#63; and status = &#63;.
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @param galleryEnabled the gallery enabled
-	 * @param type the type
-	 * @param status the status
-	 * @return the matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByC_C_G_T_ST(
-		long classNameId, long classPK, boolean galleryEnabled, int type,
-		int status) {
-
-		return findByC_C_G_T_ST(
-			classNameId, classPK, galleryEnabled, type, status,
-			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and galleryEnabled = &#63; and type = &#63; and status = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @param galleryEnabled the gallery enabled
-	 * @param type the type
-	 * @param status the status
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @return the range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByC_C_G_T_ST(
-		long classNameId, long classPK, boolean galleryEnabled, int type,
-		int status, int start, int end) {
-
-		return findByC_C_G_T_ST(
-			classNameId, classPK, galleryEnabled, type, status, start, end,
-			null);
-	}
-
-	/**
-	 * Returns an ordered range of all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and galleryEnabled = &#63; and type = &#63; and status = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CPAttachmentFileEntryModelImpl</code>.
-	 * </p>
-	 *
-	 * @param classNameId the class name ID
-	 * @param classPK the class pk
-	 * @param galleryEnabled the gallery enabled
-	 * @param type the type
-	 * @param status the status
-	 * @param start the lower bound of the range of cp attachment file entries
-	 * @param end the upper bound of the range of cp attachment file entries (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching cp attachment file entries
-	 */
-	@Override
-	public List<CPAttachmentFileEntry> findByC_C_G_T_ST(
-		long classNameId, long classPK, boolean galleryEnabled, int type,
-		int status, int start, int end,
-		OrderByComparator<CPAttachmentFileEntry> orderByComparator) {
-
-		return findByC_C_G_T_ST(
-			classNameId, classPK, galleryEnabled, type, status, start, end,
-			orderByComparator, true);
-	}
 
 	/**
 	 * Returns an ordered range of all the cp attachment file entries where classNameId = &#63; and classPK = &#63; and galleryEnabled = &#63; and type = &#63; and status = &#63;.
@@ -2256,17 +1544,10 @@ public class CPAttachmentFileEntryPersistenceImpl
 		OrderByComparator<CPAttachmentFileEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C_G_T_ST.find(
-				finderCache,
-				new Object[] {
-					classNameId, classPK, galleryEnabled, type, status
-				},
-				start, end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByC_C_G_T_ST.find(
+			finderCache,
+			new Object[] {classNameId, classPK, galleryEnabled, type, status},
+			start, end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -2361,20 +1642,11 @@ public class CPAttachmentFileEntryPersistenceImpl
 		long classNameId, long classPK, boolean galleryEnabled, int type,
 		int status) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C_G_T_ST.count(
-				finderCache,
-				new Object[] {
-					classNameId, classPK, galleryEnabled, type, status
-				});
-		}
+		return _collectionPersistenceFinderByC_C_G_T_ST.count(
+			finderCache,
+			new Object[] {classNameId, classPK, galleryEnabled, type, status});
 	}
 
-	private FinderPath _finderPathWithPaginationFindByC_C_G_T_NotST;
-	private FinderPath _finderPathWithPaginationCountByC_C_G_T_NotST;
 	private CollectionPersistenceFinder<CPAttachmentFileEntry>
 		_collectionPersistenceFinderByC_C_G_T_NotST;
 
@@ -2477,17 +1749,10 @@ public class CPAttachmentFileEntryPersistenceImpl
 		OrderByComparator<CPAttachmentFileEntry> orderByComparator,
 		boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C_G_T_NotST.find(
-				finderCache,
-				new Object[] {
-					classNameId, classPK, galleryEnabled, type, status
-				},
-				start, end, orderByComparator, useFinderCache);
-		}
+		return _collectionPersistenceFinderByC_C_G_T_NotST.find(
+			finderCache,
+			new Object[] {classNameId, classPK, galleryEnabled, type, status},
+			start, end, orderByComparator, useFinderCache);
 	}
 
 	/**
@@ -2583,19 +1848,11 @@ public class CPAttachmentFileEntryPersistenceImpl
 		long classNameId, long classPK, boolean galleryEnabled, int type,
 		int status) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _collectionPersistenceFinderByC_C_G_T_NotST.count(
-				finderCache,
-				new Object[] {
-					classNameId, classPK, galleryEnabled, type, status
-				});
-		}
+		return _collectionPersistenceFinderByC_C_G_T_NotST.count(
+			finderCache,
+			new Object[] {classNameId, classPK, galleryEnabled, type, status});
 	}
 
-	private FinderPath _finderPathFetchByERC_C;
 	private UniquePersistenceFinder<CPAttachmentFileEntry>
 		_uniquePersistenceFinderByERC_C;
 
@@ -2632,20 +1889,6 @@ public class CPAttachmentFileEntryPersistenceImpl
 	}
 
 	/**
-	 * Returns the cp attachment file entry where externalReferenceCode = &#63; and companyId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param externalReferenceCode the external reference code
-	 * @param companyId the company ID
-	 * @return the matching cp attachment file entry, or <code>null</code> if a matching cp attachment file entry could not be found
-	 */
-	@Override
-	public CPAttachmentFileEntry fetchByERC_C(
-		String externalReferenceCode, long companyId) {
-
-		return fetchByERC_C(externalReferenceCode, companyId, true);
-	}
-
-	/**
 	 * Returns the cp attachment file entry where externalReferenceCode = &#63; and companyId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param externalReferenceCode the external reference code
@@ -2657,14 +1900,9 @@ public class CPAttachmentFileEntryPersistenceImpl
 	public CPAttachmentFileEntry fetchByERC_C(
 		String externalReferenceCode, long companyId, boolean useFinderCache) {
 
-		try (SafeCloseable safeCloseable =
-				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
-					CPAttachmentFileEntry.class)) {
-
-			return _uniquePersistenceFinderByERC_C.fetch(
-				finderCache, new Object[] {externalReferenceCode, companyId},
-				useFinderCache);
-		}
+		return _uniquePersistenceFinderByERC_C.fetch(
+			finderCache, new Object[] {externalReferenceCode, companyId},
+			useFinderCache);
 	}
 
 	/**
@@ -3096,561 +2334,549 @@ public class CPAttachmentFileEntryPersistenceImpl
 	 */
 	@Activate
 	public void activate() {
-		_finderPathWithPaginationFindByUuid = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByUuid",
-			new String[] {
-				String.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"uuid_"}, true);
-
-		_finderPathWithoutPaginationFindByUuid = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByUuid",
-			new String[] {String.class.getName()}, new String[] {"uuid_"},
-			true);
-
-		_finderPathCountByUuid = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByUuid",
-			new String[] {String.class.getName()}, new String[] {"uuid_"},
-			false);
-
 		_collectionPersistenceFinderByUuid = new CollectionPersistenceFinder<>(
-			this, _finderPathWithPaginationFindByUuid,
-			_finderPathWithoutPaginationFindByUuid, _finderPathCountByUuid,
+			this,
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByUuid",
+				new String[] {
+					String.class.getName(), Integer.class.getName(),
+					Integer.class.getName(), OrderByComparator.class.getName()
+				},
+				new String[] {"uuid_"}, true),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByUuid",
+				new String[] {String.class.getName()}, new String[] {"uuid_"},
+				0, 1, true, null),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByUuid",
+				new String[] {String.class.getName()}, new String[] {"uuid_"},
+				0, 1, false, null),
 			_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE,
 			_SQL_COUNT_CPATTACHMENTFILEENTRY_WHERE,
 			CPAttachmentFileEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX,
+			"",
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "uuid", FinderColumn.Type.STRING, "=",
 				true, true, CPAttachmentFileEntry::getUuid));
 
-		_finderPathFetchByUUID_G = createUniqueFinderPath(
-			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
-			new String[] {String.class.getName(), Long.class.getName()},
-			new String[] {"uuid_", "groupId"}, false,
-			CPAttachmentFileEntry::getUuid, CPAttachmentFileEntry::getGroupId);
-
 		_uniquePersistenceFinderByUUID_G = new UniquePersistenceFinder<>(
-			this, _finderPathFetchByUUID_G,
-			_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE,
+			this,
+			createUniqueFinderPath(
+				FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
+				new String[] {String.class.getName(), Long.class.getName()},
+				new String[] {"uuid_", "groupId"}, 0, 1, false,
+				convertNullFunction(CPAttachmentFileEntry::getUuid),
+				CPAttachmentFileEntry::getGroupId),
+			_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE, "",
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "uuid", FinderColumn.Type.STRING, "=",
-				true, false, CPAttachmentFileEntry::getUuid),
+				true, true, CPAttachmentFileEntry::getUuid),
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "groupId", FinderColumn.Type.LONG,
 				"=", true, true, CPAttachmentFileEntry::getGroupId));
 
-		_finderPathWithPaginationFindByUuid_C = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByUuid_C",
-			new String[] {
-				String.class.getName(), Long.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				OrderByComparator.class.getName()
-			},
-			new String[] {"uuid_", "companyId"}, true);
-
-		_finderPathWithoutPaginationFindByUuid_C = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByUuid_C",
-			new String[] {String.class.getName(), Long.class.getName()},
-			new String[] {"uuid_", "companyId"}, true);
-
-		_finderPathCountByUuid_C = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByUuid_C",
-			new String[] {String.class.getName(), Long.class.getName()},
-			new String[] {"uuid_", "companyId"}, false);
-
 		_collectionPersistenceFinderByUuid_C =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByUuid_C,
-				_finderPathWithoutPaginationFindByUuid_C,
-				_finderPathCountByUuid_C,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByUuid_C",
+					new String[] {
+						String.class.getName(), Long.class.getName(),
+						Integer.class.getName(), Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {"uuid_", "companyId"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByUuid_C",
+					new String[] {String.class.getName(), Long.class.getName()},
+					new String[] {"uuid_", "companyId"}, 0, 1, true, null),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByUuid_C",
+					new String[] {String.class.getName(), Long.class.getName()},
+					new String[] {"uuid_", "companyId"}, 0, 1, false, null),
 				_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE,
 				_SQL_COUNT_CPATTACHMENTFILEENTRY_WHERE,
 				CPAttachmentFileEntryModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				_ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "uuid", FinderColumn.Type.STRING,
-					"=", true, false, CPAttachmentFileEntry::getUuid),
+					"=", true, true, CPAttachmentFileEntry::getUuid),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "companyId",
 					FinderColumn.Type.LONG, "=", true, true,
 					CPAttachmentFileEntry::getCompanyId));
 
-		_finderPathWithPaginationFindByFileEntryId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByFileEntryId",
-			new String[] {
-				Long.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"fileEntryId"}, true);
-
-		_finderPathWithoutPaginationFindByFileEntryId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByFileEntryId",
-			new String[] {Long.class.getName()}, new String[] {"fileEntryId"},
-			true);
-
-		_finderPathCountByFileEntryId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByFileEntryId",
-			new String[] {Long.class.getName()}, new String[] {"fileEntryId"},
-			false);
-
 		_collectionPersistenceFinderByFileEntryId =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByFileEntryId,
-				_finderPathWithoutPaginationFindByFileEntryId,
-				_finderPathCountByFileEntryId,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByFileEntryId",
+					new String[] {
+						Long.class.getName(), Integer.class.getName(),
+						Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {"fileEntryId"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"findByFileEntryId", new String[] {Long.class.getName()},
+					new String[] {"fileEntryId"}, true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"countByFileEntryId", new String[] {Long.class.getName()},
+					new String[] {"fileEntryId"}, false),
 				_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE,
 				_SQL_COUNT_CPATTACHMENTFILEENTRY_WHERE,
 				CPAttachmentFileEntryModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				_ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "fileEntryId",
 					FinderColumn.Type.LONG, "=", true, true,
 					CPAttachmentFileEntry::getFileEntryId));
 
-		_finderPathWithPaginationFindByC_C = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				OrderByComparator.class.getName()
-			},
-			new String[] {"classNameId", "classPK"}, true);
-
-		_finderPathWithoutPaginationFindByC_C = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByC_C",
-			new String[] {Long.class.getName(), Long.class.getName()},
-			new String[] {"classNameId", "classPK"}, true);
-
-		_finderPathCountByC_C = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByC_C",
-			new String[] {Long.class.getName(), Long.class.getName()},
-			new String[] {"classNameId", "classPK"}, false);
-
 		_collectionPersistenceFinderByC_C = new CollectionPersistenceFinder<>(
-			this, _finderPathWithPaginationFindByC_C,
-			_finderPathWithoutPaginationFindByC_C, _finderPathCountByC_C,
+			this,
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C",
+				new String[] {
+					Long.class.getName(), Long.class.getName(),
+					Integer.class.getName(), Integer.class.getName(),
+					OrderByComparator.class.getName()
+				},
+				new String[] {"classNameId", "classPK"}, true),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByC_C",
+				new String[] {Long.class.getName(), Long.class.getName()},
+				new String[] {"classNameId", "classPK"}, true),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByC_C",
+				new String[] {Long.class.getName(), Long.class.getName()},
+				new String[] {"classNameId", "classPK"}, false),
 			_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE,
 			_SQL_COUNT_CPATTACHMENTFILEENTRY_WHERE,
 			CPAttachmentFileEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX,
+			"",
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "classNameId", FinderColumn.Type.LONG,
-				"=", true, false, CPAttachmentFileEntry::getClassNameId),
+				"=", true, true, CPAttachmentFileEntry::getClassNameId),
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "classPK", FinderColumn.Type.LONG,
 				"=", true, true, CPAttachmentFileEntry::getClassPK));
 
-		_finderPathWithPaginationFindByLtD_S = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByLtD_S",
-			new String[] {
-				Date.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				OrderByComparator.class.getName()
-			},
-			new String[] {"displayDate", "status"}, true);
-
-		_finderPathWithPaginationCountByLtD_S = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "countByLtD_S",
-			new String[] {Date.class.getName(), Integer.class.getName()},
-			new String[] {"displayDate", "status"}, false);
-
 		_collectionPersistenceFinderByLtD_S = new CollectionPersistenceFinder<>(
-			this, _finderPathWithPaginationFindByLtD_S, null,
-			_finderPathWithPaginationCountByLtD_S,
+			this,
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByLtD_S",
+				new String[] {
+					Date.class.getName(), Integer.class.getName(),
+					Integer.class.getName(), Integer.class.getName(),
+					OrderByComparator.class.getName()
+				},
+				new String[] {"displayDate", "status"}, true),
+			null,
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "countByLtD_S",
+				new String[] {Date.class.getName(), Integer.class.getName()},
+				new String[] {"displayDate", "status"}, false),
 			_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE,
 			_SQL_COUNT_CPATTACHMENTFILEENTRY_WHERE,
 			CPAttachmentFileEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX,
+			"",
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "displayDate", FinderColumn.Type.DATE,
-				"<", true, false, CPAttachmentFileEntry::getDisplayDate),
+				"<", true, true, CPAttachmentFileEntry::getDisplayDate),
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "status", FinderColumn.Type.INTEGER,
 				"=", true, true, CPAttachmentFileEntry::getStatus));
 
-		_finderPathWithPaginationFindByG_C_F = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_C_F",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Long.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"groupId", "classNameId", "fileEntryId"}, true);
-
-		_finderPathWithoutPaginationFindByG_C_F = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_C_F",
-			new String[] {
-				Long.class.getName(), Long.class.getName(), Long.class.getName()
-			},
-			new String[] {"groupId", "classNameId", "fileEntryId"}, true);
-
-		_finderPathCountByG_C_F = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_C_F",
-			new String[] {
-				Long.class.getName(), Long.class.getName(), Long.class.getName()
-			},
-			new String[] {"groupId", "classNameId", "fileEntryId"}, false);
-
 		_collectionPersistenceFinderByG_C_F = new CollectionPersistenceFinder<>(
-			this, _finderPathWithPaginationFindByG_C_F,
-			_finderPathWithoutPaginationFindByG_C_F, _finderPathCountByG_C_F,
+			this,
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_C_F",
+				new String[] {
+					Long.class.getName(), Long.class.getName(),
+					Long.class.getName(), Integer.class.getName(),
+					Integer.class.getName(), OrderByComparator.class.getName()
+				},
+				new String[] {"groupId", "classNameId", "fileEntryId"}, true),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_C_F",
+				new String[] {
+					Long.class.getName(), Long.class.getName(),
+					Long.class.getName()
+				},
+				new String[] {"groupId", "classNameId", "fileEntryId"}, true),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_C_F",
+				new String[] {
+					Long.class.getName(), Long.class.getName(),
+					Long.class.getName()
+				},
+				new String[] {"groupId", "classNameId", "fileEntryId"}, false),
 			_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE,
 			_SQL_COUNT_CPATTACHMENTFILEENTRY_WHERE,
 			CPAttachmentFileEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX,
+			"",
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "groupId", FinderColumn.Type.LONG,
-				"=", true, false, CPAttachmentFileEntry::getGroupId),
+				"=", true, true, CPAttachmentFileEntry::getGroupId),
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "classNameId", FinderColumn.Type.LONG,
-				"=", true, false, CPAttachmentFileEntry::getClassNameId),
+				"=", true, true, CPAttachmentFileEntry::getClassNameId),
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "fileEntryId", FinderColumn.Type.LONG,
 				"=", true, true, CPAttachmentFileEntry::getFileEntryId));
-
-		_finderPathWithPaginationFindByC_C_F = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C_F",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Long.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"classNameId", "classPK", "fileEntryId"}, true);
-
-		_finderPathWithoutPaginationFindByC_C_F = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByC_C_F",
-			new String[] {
-				Long.class.getName(), Long.class.getName(), Long.class.getName()
-			},
-			new String[] {"classNameId", "classPK", "fileEntryId"}, true);
-
-		_finderPathCountByC_C_F = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByC_C_F",
-			new String[] {
-				Long.class.getName(), Long.class.getName(), Long.class.getName()
-			},
-			new String[] {"classNameId", "classPK", "fileEntryId"}, false);
 
 		_collectionPersistenceFinderByC_C_F = new CollectionPersistenceFinder<>(
-			this, _finderPathWithPaginationFindByC_C_F,
-			_finderPathWithoutPaginationFindByC_C_F, _finderPathCountByC_C_F,
+			this,
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C_F",
+				new String[] {
+					Long.class.getName(), Long.class.getName(),
+					Long.class.getName(), Integer.class.getName(),
+					Integer.class.getName(), OrderByComparator.class.getName()
+				},
+				new String[] {"classNameId", "classPK", "fileEntryId"}, true),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByC_C_F",
+				new String[] {
+					Long.class.getName(), Long.class.getName(),
+					Long.class.getName()
+				},
+				new String[] {"classNameId", "classPK", "fileEntryId"}, true),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByC_C_F",
+				new String[] {
+					Long.class.getName(), Long.class.getName(),
+					Long.class.getName()
+				},
+				new String[] {"classNameId", "classPK", "fileEntryId"}, false),
 			_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE,
 			_SQL_COUNT_CPATTACHMENTFILEENTRY_WHERE,
 			CPAttachmentFileEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX,
+			"",
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "classNameId", FinderColumn.Type.LONG,
-				"=", true, false, CPAttachmentFileEntry::getClassNameId),
+				"=", true, true, CPAttachmentFileEntry::getClassNameId),
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "classPK", FinderColumn.Type.LONG,
-				"=", true, false, CPAttachmentFileEntry::getClassPK),
+				"=", true, true, CPAttachmentFileEntry::getClassPK),
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "fileEntryId", FinderColumn.Type.LONG,
 				"=", true, true, CPAttachmentFileEntry::getFileEntryId));
 
-		_finderPathWithPaginationFindByC_C_C = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C_C",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				String.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"classNameId", "classPK", "cdnURL"}, true);
-
-		_finderPathWithoutPaginationFindByC_C_C = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByC_C_C",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				String.class.getName()
-			},
-			new String[] {"classNameId", "classPK", "cdnURL"}, true);
-
-		_finderPathCountByC_C_C = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByC_C_C",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				String.class.getName()
-			},
-			new String[] {"classNameId", "classPK", "cdnURL"}, false);
-
 		_collectionPersistenceFinderByC_C_C = new CollectionPersistenceFinder<>(
-			this, _finderPathWithPaginationFindByC_C_C,
-			_finderPathWithoutPaginationFindByC_C_C, _finderPathCountByC_C_C,
+			this,
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C_C",
+				new String[] {
+					Long.class.getName(), Long.class.getName(),
+					String.class.getName(), Integer.class.getName(),
+					Integer.class.getName(), OrderByComparator.class.getName()
+				},
+				new String[] {"classNameId", "classPK", "cdnURL"}, true),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByC_C_C",
+				new String[] {
+					Long.class.getName(), Long.class.getName(),
+					String.class.getName()
+				},
+				new String[] {"classNameId", "classPK", "cdnURL"}, 0, 4, true,
+				null),
+			new FinderPath(
+				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByC_C_C",
+				new String[] {
+					Long.class.getName(), Long.class.getName(),
+					String.class.getName()
+				},
+				new String[] {"classNameId", "classPK", "cdnURL"}, 0, 4, false,
+				null),
 			_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE,
 			_SQL_COUNT_CPATTACHMENTFILEENTRY_WHERE,
 			CPAttachmentFileEntryModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX,
+			"",
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "classNameId", FinderColumn.Type.LONG,
-				"=", true, false, CPAttachmentFileEntry::getClassNameId),
+				"=", true, true, CPAttachmentFileEntry::getClassNameId),
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "classPK", FinderColumn.Type.LONG,
-				"=", true, false, CPAttachmentFileEntry::getClassPK),
+				"=", true, true, CPAttachmentFileEntry::getClassPK),
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "cdnURL", FinderColumn.Type.STRING,
 				"=", true, true, CPAttachmentFileEntry::getCDNURL));
 
-		_finderPathWithPaginationFindByC_C_LtD_S = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C_LtD_S",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Date.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				OrderByComparator.class.getName()
-			},
-			new String[] {"classNameId", "classPK", "displayDate", "status"},
-			true);
-
-		_finderPathWithPaginationCountByC_C_LtD_S = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "countByC_C_LtD_S",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Date.class.getName(), Integer.class.getName()
-			},
-			new String[] {"classNameId", "classPK", "displayDate", "status"},
-			false);
-
 		_collectionPersistenceFinderByC_C_LtD_S =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByC_C_LtD_S, null,
-				_finderPathWithPaginationCountByC_C_LtD_S,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C_LtD_S",
+					new String[] {
+						Long.class.getName(), Long.class.getName(),
+						Date.class.getName(), Integer.class.getName(),
+						Integer.class.getName(), Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {
+						"classNameId", "classPK", "displayDate", "status"
+					},
+					true),
+				null,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "countByC_C_LtD_S",
+					new String[] {
+						Long.class.getName(), Long.class.getName(),
+						Date.class.getName(), Integer.class.getName()
+					},
+					new String[] {
+						"classNameId", "classPK", "displayDate", "status"
+					},
+					false),
 				_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE,
 				_SQL_COUNT_CPATTACHMENTFILEENTRY_WHERE,
 				CPAttachmentFileEntryModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				_ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "classNameId",
-					FinderColumn.Type.LONG, "=", true, false,
+					FinderColumn.Type.LONG, "=", true, true,
 					CPAttachmentFileEntry::getClassNameId),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "classPK", FinderColumn.Type.LONG,
-					"=", true, false, CPAttachmentFileEntry::getClassPK),
+					"=", true, true, CPAttachmentFileEntry::getClassPK),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "displayDate",
-					FinderColumn.Type.DATE, "<", true, false,
+					FinderColumn.Type.DATE, "<", true, true,
 					CPAttachmentFileEntry::getDisplayDate),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "status",
 					FinderColumn.Type.INTEGER, "=", true, true,
 					CPAttachmentFileEntry::getStatus));
 
-		_finderPathWithPaginationFindByC_C_T_ST = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C_T_ST",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				OrderByComparator.class.getName()
-			},
-			new String[] {"classNameId", "classPK", "type_", "status"}, true);
-
-		_finderPathWithoutPaginationFindByC_C_T_ST = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByC_C_T_ST",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Integer.class.getName(), Integer.class.getName()
-			},
-			new String[] {"classNameId", "classPK", "type_", "status"}, true);
-
-		_finderPathCountByC_C_T_ST = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByC_C_T_ST",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Integer.class.getName(), Integer.class.getName()
-			},
-			new String[] {"classNameId", "classPK", "type_", "status"}, false);
-
 		_collectionPersistenceFinderByC_C_T_ST =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByC_C_T_ST,
-				_finderPathWithoutPaginationFindByC_C_T_ST,
-				_finderPathCountByC_C_T_ST,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C_T_ST",
+					new String[] {
+						Long.class.getName(), Long.class.getName(),
+						Integer.class.getName(), Integer.class.getName(),
+						Integer.class.getName(), Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {"classNameId", "classPK", "type_", "status"},
+					true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByC_C_T_ST",
+					new String[] {
+						Long.class.getName(), Long.class.getName(),
+						Integer.class.getName(), Integer.class.getName()
+					},
+					new String[] {"classNameId", "classPK", "type_", "status"},
+					true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"countByC_C_T_ST",
+					new String[] {
+						Long.class.getName(), Long.class.getName(),
+						Integer.class.getName(), Integer.class.getName()
+					},
+					new String[] {"classNameId", "classPK", "type_", "status"},
+					false),
 				_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE,
 				_SQL_COUNT_CPATTACHMENTFILEENTRY_WHERE,
 				CPAttachmentFileEntryModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				_ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "classNameId",
-					FinderColumn.Type.LONG, "=", true, false,
+					FinderColumn.Type.LONG, "=", true, true,
 					CPAttachmentFileEntry::getClassNameId),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "classPK", FinderColumn.Type.LONG,
-					"=", true, false, CPAttachmentFileEntry::getClassPK),
+					"=", true, true, CPAttachmentFileEntry::getClassPK),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "type", FinderColumn.Type.INTEGER,
-					"=", true, false, CPAttachmentFileEntry::getType),
+					"=", true, true, CPAttachmentFileEntry::getType),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "status",
 					FinderColumn.Type.INTEGER, "=", true, true,
 					CPAttachmentFileEntry::getStatus));
-
-		_finderPathWithPaginationFindByC_C_T_NotST = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C_T_NotST",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				OrderByComparator.class.getName()
-			},
-			new String[] {"classNameId", "classPK", "type_", "status"}, true);
-
-		_finderPathWithPaginationCountByC_C_T_NotST = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "countByC_C_T_NotST",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Integer.class.getName(), Integer.class.getName()
-			},
-			new String[] {"classNameId", "classPK", "type_", "status"}, false);
 
 		_collectionPersistenceFinderByC_C_T_NotST =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByC_C_T_NotST, null,
-				_finderPathWithPaginationCountByC_C_T_NotST,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C_T_NotST",
+					new String[] {
+						Long.class.getName(), Long.class.getName(),
+						Integer.class.getName(), Integer.class.getName(),
+						Integer.class.getName(), Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {"classNameId", "classPK", "type_", "status"},
+					true),
+				null,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+					"countByC_C_T_NotST",
+					new String[] {
+						Long.class.getName(), Long.class.getName(),
+						Integer.class.getName(), Integer.class.getName()
+					},
+					new String[] {"classNameId", "classPK", "type_", "status"},
+					false),
 				_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE,
 				_SQL_COUNT_CPATTACHMENTFILEENTRY_WHERE,
 				CPAttachmentFileEntryModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				_ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "classNameId",
-					FinderColumn.Type.LONG, "=", true, false,
+					FinderColumn.Type.LONG, "=", true, true,
 					CPAttachmentFileEntry::getClassNameId),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "classPK", FinderColumn.Type.LONG,
-					"=", true, false, CPAttachmentFileEntry::getClassPK),
+					"=", true, true, CPAttachmentFileEntry::getClassPK),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "type", FinderColumn.Type.INTEGER,
-					"=", true, false, CPAttachmentFileEntry::getType),
+					"=", true, true, CPAttachmentFileEntry::getType),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "status",
 					FinderColumn.Type.INTEGER, "!=", true, true,
 					CPAttachmentFileEntry::getStatus));
 
-		_finderPathWithPaginationFindByC_C_G_T_ST = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C_G_T_ST",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Boolean.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {
-				"classNameId", "classPK", "galleryEnabled", "type_", "status"
-			},
-			true);
-
-		_finderPathWithoutPaginationFindByC_C_G_T_ST = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByC_C_G_T_ST",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Boolean.class.getName(), Integer.class.getName(),
-				Integer.class.getName()
-			},
-			new String[] {
-				"classNameId", "classPK", "galleryEnabled", "type_", "status"
-			},
-			true);
-
-		_finderPathCountByC_C_G_T_ST = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByC_C_G_T_ST",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Boolean.class.getName(), Integer.class.getName(),
-				Integer.class.getName()
-			},
-			new String[] {
-				"classNameId", "classPK", "galleryEnabled", "type_", "status"
-			},
-			false);
-
 		_collectionPersistenceFinderByC_C_G_T_ST =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByC_C_G_T_ST,
-				_finderPathWithoutPaginationFindByC_C_G_T_ST,
-				_finderPathCountByC_C_G_T_ST,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C_G_T_ST",
+					new String[] {
+						Long.class.getName(), Long.class.getName(),
+						Boolean.class.getName(), Integer.class.getName(),
+						Integer.class.getName(), Integer.class.getName(),
+						Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {
+						"classNameId", "classPK", "galleryEnabled", "type_",
+						"status"
+					},
+					true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"findByC_C_G_T_ST",
+					new String[] {
+						Long.class.getName(), Long.class.getName(),
+						Boolean.class.getName(), Integer.class.getName(),
+						Integer.class.getName()
+					},
+					new String[] {
+						"classNameId", "classPK", "galleryEnabled", "type_",
+						"status"
+					},
+					true),
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+					"countByC_C_G_T_ST",
+					new String[] {
+						Long.class.getName(), Long.class.getName(),
+						Boolean.class.getName(), Integer.class.getName(),
+						Integer.class.getName()
+					},
+					new String[] {
+						"classNameId", "classPK", "galleryEnabled", "type_",
+						"status"
+					},
+					false),
 				_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE,
 				_SQL_COUNT_CPATTACHMENTFILEENTRY_WHERE,
 				CPAttachmentFileEntryModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				_ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "classNameId",
-					FinderColumn.Type.LONG, "=", true, false,
+					FinderColumn.Type.LONG, "=", true, true,
 					CPAttachmentFileEntry::getClassNameId),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "classPK", FinderColumn.Type.LONG,
-					"=", true, false, CPAttachmentFileEntry::getClassPK),
+					"=", true, true, CPAttachmentFileEntry::getClassPK),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "galleryEnabled",
-					FinderColumn.Type.BOOLEAN, "=", true, false,
+					FinderColumn.Type.BOOLEAN, "=", true, true,
 					CPAttachmentFileEntry::isGalleryEnabled),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "type", FinderColumn.Type.INTEGER,
-					"=", true, false, CPAttachmentFileEntry::getType),
+					"=", true, true, CPAttachmentFileEntry::getType),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "status",
 					FinderColumn.Type.INTEGER, "=", true, true,
 					CPAttachmentFileEntry::getStatus));
 
-		_finderPathWithPaginationFindByC_C_G_T_NotST = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C_G_T_NotST",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Boolean.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {
-				"classNameId", "classPK", "galleryEnabled", "type_", "status"
-			},
-			true);
-
-		_finderPathWithPaginationCountByC_C_G_T_NotST = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "countByC_C_G_T_NotST",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				Boolean.class.getName(), Integer.class.getName(),
-				Integer.class.getName()
-			},
-			new String[] {
-				"classNameId", "classPK", "galleryEnabled", "type_", "status"
-			},
-			false);
-
 		_collectionPersistenceFinderByC_C_G_T_NotST =
 			new CollectionPersistenceFinder<>(
-				this, _finderPathWithPaginationFindByC_C_G_T_NotST, null,
-				_finderPathWithPaginationCountByC_C_G_T_NotST,
+				this,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+					"findByC_C_G_T_NotST",
+					new String[] {
+						Long.class.getName(), Long.class.getName(),
+						Boolean.class.getName(), Integer.class.getName(),
+						Integer.class.getName(), Integer.class.getName(),
+						Integer.class.getName(),
+						OrderByComparator.class.getName()
+					},
+					new String[] {
+						"classNameId", "classPK", "galleryEnabled", "type_",
+						"status"
+					},
+					true),
+				null,
+				new FinderPath(
+					FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+					"countByC_C_G_T_NotST",
+					new String[] {
+						Long.class.getName(), Long.class.getName(),
+						Boolean.class.getName(), Integer.class.getName(),
+						Integer.class.getName()
+					},
+					new String[] {
+						"classNameId", "classPK", "galleryEnabled", "type_",
+						"status"
+					},
+					false),
 				_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE,
 				_SQL_COUNT_CPATTACHMENTFILEENTRY_WHERE,
 				CPAttachmentFileEntryModelImpl.ORDER_BY_JPQL,
-				_ENTITY_ALIAS_PREFIX,
+				_ENTITY_ALIAS_PREFIX, "",
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "classNameId",
-					FinderColumn.Type.LONG, "=", true, false,
+					FinderColumn.Type.LONG, "=", true, true,
 					CPAttachmentFileEntry::getClassNameId),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "classPK", FinderColumn.Type.LONG,
-					"=", true, false, CPAttachmentFileEntry::getClassPK),
+					"=", true, true, CPAttachmentFileEntry::getClassPK),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "galleryEnabled",
-					FinderColumn.Type.BOOLEAN, "=", true, false,
+					FinderColumn.Type.BOOLEAN, "=", true, true,
 					CPAttachmentFileEntry::isGalleryEnabled),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "type", FinderColumn.Type.INTEGER,
-					"=", true, false, CPAttachmentFileEntry::getType),
+					"=", true, true, CPAttachmentFileEntry::getType),
 				new FinderColumn<>(
 					"cpAttachmentFileEntry.", "status",
 					FinderColumn.Type.INTEGER, "!=", true, true,
 					CPAttachmentFileEntry::getStatus));
 
-		_finderPathFetchByERC_C = createUniqueFinderPath(
-			FINDER_CLASS_NAME_ENTITY, "fetchByERC_C",
-			new String[] {String.class.getName(), Long.class.getName()},
-			new String[] {"externalReferenceCode", "companyId"}, false,
-			CPAttachmentFileEntry::getExternalReferenceCode,
-			CPAttachmentFileEntry::getCompanyId);
-
 		_uniquePersistenceFinderByERC_C = new UniquePersistenceFinder<>(
-			this, _finderPathFetchByERC_C,
-			_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE,
+			this,
+			createUniqueFinderPath(
+				FINDER_CLASS_NAME_ENTITY, "fetchByERC_C",
+				new String[] {String.class.getName(), Long.class.getName()},
+				new String[] {"externalReferenceCode", "companyId"}, 0, 1,
+				false,
+				convertNullFunction(
+					CPAttachmentFileEntry::getExternalReferenceCode),
+				CPAttachmentFileEntry::getCompanyId),
+			_SQL_SELECT_CPATTACHMENTFILEENTRY_WHERE, "",
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "externalReferenceCode",
-				FinderColumn.Type.STRING, "=", true, false,
+				FinderColumn.Type.STRING, "=", true, true,
 				CPAttachmentFileEntry::getExternalReferenceCode),
 			new FinderColumn<>(
 				"cpAttachmentFileEntry.", "companyId", FinderColumn.Type.LONG,
@@ -3728,4 +2954,4 @@ public class CPAttachmentFileEntryPersistenceImpl
 	}
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:1536799527
+// LIFERAY-SERVICE-BUILDER-HASH:-417680883

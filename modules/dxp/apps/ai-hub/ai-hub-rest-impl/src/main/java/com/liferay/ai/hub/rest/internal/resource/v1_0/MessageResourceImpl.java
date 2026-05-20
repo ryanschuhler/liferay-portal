@@ -10,6 +10,7 @@ import com.liferay.account.service.AccountEntryUserRelLocalService;
 import com.liferay.ai.hub.agent.AgentContext;
 import com.liferay.ai.hub.agent.SupervisorAgent;
 import com.liferay.ai.hub.rest.dto.v1_0.Message;
+import com.liferay.ai.hub.rest.internal.util.OAuth2ApplicationIdResolverUtil;
 import com.liferay.ai.hub.rest.resource.v1_0.MessageResource;
 import com.liferay.ai.hub.util.AccountEntryUtil;
 import com.liferay.object.model.ObjectDefinition;
@@ -57,8 +58,6 @@ public class MessageResourceImpl extends BaseMessageResourceImpl {
 
 		_supervisorAgent.invoke(
 			AgentContext.builder(
-			).accessToken(
-				contextHttpServletRequest.getHeader("Authorization")
 			).chatbotExternalReferenceCode(
 				message.getChatbotExternalReferenceCode()
 			).companyId(
@@ -75,6 +74,9 @@ public class MessageResourceImpl extends BaseMessageResourceImpl {
 				Map.of("message", message.getText())
 			).instructionDefinitionScope(
 				message.getInstructionDefinitionScopeAsString()
+			).oAuth2ApplicationId(
+				OAuth2ApplicationIdResolverUtil.resolve(
+					contextHttpServletRequest)
 			).serviceContext(
 				ServiceContextFactory.getInstance(contextHttpServletRequest)
 			).sseEventSinkKey(
