@@ -16,6 +16,16 @@ Create a GitHub pull request against `liferay-one/liferay-portal`, transition th
 
 - The working tree has no uncommitted changes. When dirty, abort and ask the user to commit first (suggest `/commit`); do not stash or discard their work.
 
+## Pre-flight Checks
+
+Before creating the PR, verify these Brian-enforced requirements:
+
+**Scope:** Run `git diff liferay-one/master-temp --name-only` and confirm all changed files belong to the workspace for this ticket. If files from another workspace (e.g., `clarity-solution-workspace`) appear, abort and ask the user to remove them.
+
+**Commit messages:** Confirm every commit on the branch has a valid Jira ticket prefix (`LPD-`, `LRSD-`, `LCD-`, etc.). The CI bot auto-closes PRs missing a ticket reference.
+
+**Merge conflicts:** Confirm the branch is rebased on top of `liferay-one/master-temp` with no conflicts. Run `git merge-base --is-ancestor liferay-one/master-temp HEAD` — if the branch is behind, offer to run `/one-rebase` first.
+
 ## Input
 
 ### Branch

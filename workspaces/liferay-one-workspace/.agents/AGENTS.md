@@ -28,6 +28,15 @@ Run from `workspaces/liferay-one-workspace/`.
 - **Rebase:** Run the `/one-rebase` skill.
 - PR: Run the `/one-pr` skill.
 
+## Rules
+
+`.agents/rules/` contains coding standards and PR conventions derived from Brian Chan's review feedback. Read these before writing or reviewing code:
+
+- [`rules/code-style.md`](./rules/code-style.md) — sorting, log conventions, FreeMarker, Java ordering
+- [`rules/naming.md`](./rules/naming.md) — brand name casing, file naming, REST controller naming
+- [`rules/object-naming.md`](./rules/object-naming.md) — ERC patterns, Object names, field casing
+- [`rules/pr-hygiene.md`](./rules/pr-hygiene.md) — PR scope, merge conflicts, commit messages
+
 ## Specs
 
 `.agents/specs/` is the source of truth for this workspace. Read these before making any implementation decisions:
