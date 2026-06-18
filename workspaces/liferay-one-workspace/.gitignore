@@ -1,4 +1,5 @@
 .DS_Store
+/.env
 /.idea
 /bundles
 /client-extensions/liferay-one-etc-spring-boot/liferay-release-tool-ee
@@ -11,3 +12,5 @@ build
 dist
 node_modules
 node_modules_cache
+playwright-report
+test-results
