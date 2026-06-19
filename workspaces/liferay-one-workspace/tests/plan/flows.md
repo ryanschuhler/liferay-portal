@@ -13,10 +13,10 @@ capability areas. Add, split, or refine them as the product takes shape.
 | FLOW-CHECKOUT-BANK-TRANSFER | Bank-transfer checkout reaches the bank-transfer-completed state | e2e | P1 | planned | spec:flow#checkout-bank-transfer |
 | FLOW-PUBLISHER-ONBOARDING | Publisher onboarding: request → approval → publisher profile + assets editable | e2e | P1 | planned | spec:flow#publisher-onboarding |
 | FLOW-LICENSE-GENERATION | License key generation produces a signed key tied to the subscription | integration | P0 | planned | spec:flow#license-generation |
-| FLOW-LICENSE-REVOCATION | Spec-only; no license-key revocation endpoint or action implemented yet. Deferred until built. | integration | P1 | deferred | spec:flow#license-revocation |
+| FLOW-LICENSE-REVOCATION | Spec-only; no license-key revocation endpoint or action implemented yet. Deferred until built. | integration | P1 | planned | spec:flow#license-revocation |
 | FLOW-LICENSE-EXPIRATION-EMAIL | Expiring-license emails are queued at 30/14/0 days before expiry | integration | P1 | planned | spec:flow#license-expiration-email |
-| FLOW-TRIAL-PROVISIONING | Spec-only; no trial provisioning endpoint implemented yet (depends on the Liferay Cloud integration). Deferred until built. | integration | P0 | deferred | spec:flow#trial-provisioning |
-| FLOW-TRIAL-EXPIRY | Spec-only; no trial expiry endpoint implemented yet (depends on the Liferay Cloud integration). Deferred until built. | integration | P1 | deferred | spec:flow#trial-expiry |
+| FLOW-TRIAL-PROVISIONING | Spec-only; no trial provisioning endpoint implemented yet (depends on the Liferay Cloud integration). Deferred until built. | integration | P0 | planned | spec:flow#trial-provisioning |
+| FLOW-TRIAL-EXPIRY | Spec-only; no trial expiry endpoint implemented yet (depends on the Liferay Cloud integration). Deferred until built. | integration | P1 | planned | spec:flow#trial-expiry |
 | FLOW-TICKET-UPLOAD | Ticket attachment upload: initiate → GCS upload → complete → Jira comment | e2e | P1 | planned | spec:flow#ticket-attachment-upload |
 | FLOW-TICKET-DOWNLOAD | Ticket attachment download enforces access checks and signed-URL expiry | integration | P1 | planned | spec:flow#ticket-attachment-download |
 | FLOW-BUSINESS-EVENT-LIFECYCLE | Business event lifecycle: create → edit → record go-live / cancel → activity history | e2e | P1 | planned | spec:flow#business-event-lifecycle |
