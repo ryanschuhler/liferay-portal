@@ -74,9 +74,17 @@ table-driven suites need no extra annotation.
 ```bash
 # from workspaces/liferay-one-workspace
 yarn plan:check       # plan covers code?  (CI gate)
-yarn plan:coverage    # tests cover plan?  (progress toward go-live)
+yarn plan:coverage    # tests cover plan?  (every item has a test, incl. stubs)
+yarn plan:report      # real vs pending vs uncovered  (true go-live picture)
 yarn plan:scaffold    # reconcile plan after code changes (safe: preserves curation)
 ```
+
+`plan:coverage` counts an item as covered when any test references its ID — a
+hard-failing pending stub counts the same as a real test, so it answers "is
+every item tracked?". `plan:report` looks at *which* file covers each item and
+separates **real** tests from **pending** stubs, so it answers "how close are we
+*really*?". It prints a per-surface breakdown and writes a full per-item
+traceability report to `tests/test-results/plan-report.md`.
 
 `check-plan` reports three kinds of problem:
 
