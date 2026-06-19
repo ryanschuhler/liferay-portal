@@ -37,7 +37,7 @@ public class SalesforceObjectPubsubSubscriberTest {
 	@Test
 	public void testReceiveProduct2Delete() throws Exception {
 
-		// [SUB-SALESFORCEOBJECTPUBSUBSUBSCRIBER]
+		// [SUB-SALESFORCEOBJECTPUBSUBSUBSCRIBER] [INT-SALESFORCE]
 
 		ReflectionTestUtils.invokeMethod(
 			_salesforceObjectPubsubSubscriber, "receive",
