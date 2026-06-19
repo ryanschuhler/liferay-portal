@@ -118,3 +118,55 @@ export function indexTaggedTests(knownIds: Set<string>): Map<string, string[]> {
 
 	return coverage;
 }
+
+export interface OrphanTag {
+	file: string;
+	id: string;
+}
+
+/**
+ * Finds plan-ID-shaped tags in tests that do NOT resolve to a real plan item.
+ *
+ * A token only counts as a tag — and therefore as a possible orphan — when its
+ * prefix (the part before the first hyphen) matches a prefix used by a real plan
+ * ID. That keeps incidental hyphenated tokens out while catching typos
+ * (`OBJ-LICENSEKY`) and tags left behind when a plan ID is renamed. Such tags
+ * silently contribute nothing to coverage, so this surfaces them instead.
+ */
+export function findOrphanTags(knownIds: Set<string>): OrphanTag[] {
+	const knownPrefixes = new Set<string>();
+
+	for (const id of knownIds) {
+		knownPrefixes.add(id.split('-')[0]);
+	}
+
+	const orphans: OrphanTag[] = [];
+	const seen = new Set<string>();
+
+	for (const root of TEST_ROOTS) {
+		for (const file of walk(root.dir, root.match)) {
+			const source = fs.readFileSync(file, 'utf8');
+			const relative = path.relative(WORKSPACE_ROOT, file);
+
+			for (const match of source.matchAll(ID_PATTERN)) {
+				const id = match[0];
+
+				if (knownIds.has(id) || !knownPrefixes.has(id.split('-')[0])) {
+					continue;
+				}
+
+				const key = `${relative}::${id}`;
+
+				if (seen.has(key)) {
+					continue;
+				}
+
+				seen.add(key);
+
+				orphans.push({file: relative, id});
+			}
+		}
+	}
+
+	return orphans;
+}

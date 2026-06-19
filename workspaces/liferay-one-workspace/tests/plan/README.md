@@ -78,9 +78,17 @@ yarn plan:coverage    # tests cover plan?  (progress toward go-live)
 yarn plan:scaffold    # reconcile plan after code changes (safe: preserves curation)
 ```
 
-When `check-plan` reports a **GAP**, new code shipped without a plan row: run
-`yarn plan:scaffold` to add it, then curate the new row. When it reports a
-**STALE** row, code was removed: `scaffold` drops it on the next run.
+`check-plan` reports three kinds of problem:
+
+- **GAP** — new code shipped without a plan row: run `yarn plan:scaffold` to add
+  it, then curate the new row.
+- **STALE** — code was removed: `scaffold` drops the row on the next run.
+- **ORPHAN** — a test carries a plan-ID-shaped tag (e.g. `[OBJ-LICENSEKY]`) that
+  matches no plan item, usually a typo or a tag left behind when a plan ID was
+  renamed. Such a tag silently counts toward nothing, so it fails the check. Fix
+  the tag to match a real plan ID (or remove it). Only tags whose prefix matches
+  a real plan prefix (`UI-`, `OBJ-`, `REST-`, …) are flagged, so unrelated
+  hyphenated tokens are ignored.
 
 `check-coverage` accepts `--list` (show every uncovered item) and `--min <pct>`
 (fail under a threshold — wire this into CI as the go-live bar rises).

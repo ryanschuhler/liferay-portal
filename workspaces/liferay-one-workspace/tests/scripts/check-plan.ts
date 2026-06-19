@@ -12,11 +12,14 @@
  * subscribers, objects, roles, integrations) it diffs the code against the
  * plan's Source anchors and reports:
  *
- *   - GAPS:  code that ships but has no plan row   (plan is incomplete)
- *   - STALE: plan rows pointing at code that is gone (plan is out of date)
+ *   - GAPS:   code that ships but has no plan row   (plan is incomplete)
+ *   - STALE:  plan rows pointing at code that is gone (plan is out of date)
+ *   - ORPHAN: a plan-ID-shaped tag in a test that resolves to no plan item
+ *             (a typo or a tag left behind when a plan ID was renamed) — such a
+ *             tag silently counts toward nothing, so it is treated as an error.
  *
  * `spec:*` plan sources are ignored (they have no enumerable code symbol).
- * Exits non-zero on any gap, stale row, or plan validation error.
+ * Exits non-zero on any gap, stale row, orphan tag, or plan validation error.
  *
  *   node scripts/check-plan.ts
  *
@@ -25,6 +28,7 @@
 
 import {parsePlan, validatePlan} from './lib/plan.ts';
 import {ENUMERABLE_PREFIXES, enumerateSurface} from './lib/surface.ts';
+import {findOrphanTags} from './lib/tests-index.ts';
 
 function sourcePrefix(source: string): string {
 	return source.split(':', 1)[0];
@@ -107,12 +111,41 @@ function main(): number {
 		}
 	}
 
+	// Orphan tags: plan-ID-shaped references in tests that match no plan item.
+
+	const orphans = findOrphanTags(new Set(items.map((item) => item.id)));
+
+	if (orphans.length) {
+		console.log('');
+
+		for (const orphan of orphans) {
+			console.log(
+				`  ✗ ORPHAN tag (no such plan item): ${orphan.id} in ${orphan.file}`
+			);
+		}
+	}
+
 	console.log('');
 
-	if (gapCount || staleCount) {
+	if (gapCount || staleCount || orphans.length) {
+		const reasons = [];
+
+		if (gapCount) {
+			reasons.push(`${gapCount} gap(s)`);
+		}
+
+		if (staleCount) {
+			reasons.push(`${staleCount} stale row(s)`);
+		}
+
+		if (orphans.length) {
+			reasons.push(`${orphans.length} orphan tag(s)`);
+		}
+
 		console.log(
-			`FAIL — ${gapCount} gap(s), ${staleCount} stale row(s). ` +
-				`Run \`node scripts/scaffold-plan.ts\` to reconcile.`
+			`FAIL — ${reasons.join(', ')}. ` +
+				`Run \`node scripts/scaffold-plan.ts\` to reconcile gaps/stale rows; ` +
+				`fix orphan tags to match a plan ID.`
 		);
 
 		return 1;
@@ -125,7 +158,8 @@ function main(): number {
 
 	console.log(
 		`OK — plan covers all ${enumerableInPlan} enumerable surface items` +
-			` (+${specInPlan} spec-derived flow/cross-cutting items tracked).`
+			` (+${specInPlan} spec-derived flow/cross-cutting items tracked); ` +
+			`all test tags resolve.`
 	);
 
 	return 0;
