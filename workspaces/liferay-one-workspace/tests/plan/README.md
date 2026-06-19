@@ -63,8 +63,11 @@ test('[UI-ADMIN-MP-ORDERS] renders the orders table', async () => { ... });
 @DisplayName("[REST-POST-ENTITLEMENTS-GENERATE] generates an entitlement")
 ```
 
-`check-coverage` does a substring scan, so any framework works and one test may
-cover several IDs (list them all in the title).
+`check-coverage` scans for ID-shaped tokens, so any framework works and one test
+may cover several IDs (list them all in the title). An ID also counts when it
+appears as a bare token rather than bracketed — e.g. a data-driven test whose
+table holds `planId: 'OBJ-LICENSEKEY'` and builds the title dynamically — so
+table-driven suites need no extra annotation.
 
 ## Workflow
 

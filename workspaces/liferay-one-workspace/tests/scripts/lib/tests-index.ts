@@ -6,13 +6,17 @@
 /**
  * Indexes the test suites and finds which plan IDs each test references.
  *
- * Tests declare the plan items they cover by embedding the plan ID in square
- * brackets, anywhere in the test file — typically in the test title:
+ * Tests declare the plan items they cover by referencing the plan ID anywhere
+ * in the test file — typically in the test title:
  *
  *   Playwright / Vitest: test('[UI-ADMIN-MP-ORDERS] loads the orders page', ...)
  *   JUnit:               @DisplayName("[REST-POST-ENTITLEMENTS-GENERATE] ...")
  *
- * A single substring scan keeps this framework-agnostic.
+ * An ID counts whether it is bracketed (`[UI-ADMIN-MP-ORDERS]`) or appears as a
+ * bare ID-shaped token (`planId: 'OBJ-LICENSEKEY'`), so data-driven tests that
+ * build titles dynamically are picked up without extra annotations. Only tokens
+ * that exactly match a known plan ID are recorded, so stray text is ignored. A
+ * single token scan keeps this framework-agnostic.
  */
 
 import * as fs from 'fs';
@@ -76,11 +80,14 @@ export interface TestReference {
 	id: string;
 }
 
-const ID_PATTERN = /\[([A-Z][A-Z0-9-]+)\]/g;
+// An ID-shaped token: an uppercase prefix and at least one hyphenated segment
+// (UI-..., OBJ-..., REST-..., FLOW-..., etc.). Plain words never match.
+
+const ID_PATTERN = /[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+/g;
 
 /**
  * Returns a map of plan ID -> relative test file paths referencing it.
- * Only IDs present in `knownIds` are recorded, so stray bracketed text is
+ * Only tokens that exactly match a known plan ID are recorded, so stray text is
  * ignored.
  */
 export function indexTaggedTests(knownIds: Set<string>): Map<string, string[]> {
@@ -92,7 +99,7 @@ export function indexTaggedTests(knownIds: Set<string>): Map<string, string[]> {
 			const relative = path.relative(WORKSPACE_ROOT, file);
 
 			for (const match of source.matchAll(ID_PATTERN)) {
-				const id = match[1];
+				const id = match[0];
 
 				if (!knownIds.has(id)) {
 					continue;
