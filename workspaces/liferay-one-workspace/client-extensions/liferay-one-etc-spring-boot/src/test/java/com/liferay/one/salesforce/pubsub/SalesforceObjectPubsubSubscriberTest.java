@@ -38,6 +38,7 @@ public class SalesforceObjectPubsubSubscriberTest {
 	public void testReceiveProduct2Delete() throws Exception {
 
 		// [SUB-SALESFORCEOBJECTPUBSUBSUBSCRIBER] [INT-SALESFORCE]
+		// [FLOW-SALESFORCE-ORDER-SYNC]
 
 		ReflectionTestUtils.invokeMethod(
 			_salesforceObjectPubsubSubscriber, "receive",

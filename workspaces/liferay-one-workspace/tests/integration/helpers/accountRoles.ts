@@ -32,6 +32,18 @@ export class AccountRolesFixture {
 		this._request = request;
 	}
 
+	async addAccountMember(accountId: number, user: TestUser): Promise<void> {
+		const response = await this._api.send(
+			'post',
+			`${BASE}/accounts/${accountId}/user-accounts/by-email-address/` +
+				encodeURIComponent(user.emailAddress)
+		);
+
+		expect(response.status(), `add member: ${await response.text()}`).toBe(
+			200
+		);
+	}
+
 	async assignAccountRole(
 		accountId: number,
 		userId: number,

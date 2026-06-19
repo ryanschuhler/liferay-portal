@@ -78,6 +78,60 @@ test.describe('Account role deny — non-member', () => {
 	});
 });
 
+test.describe('Account-entry restriction', () => {
+	test('[AUTH-ACCOUNT-RESTRICTION] restricted objects filter to the caller account', async ({
+		api,
+		request,
+	}) => {
+		const fixture = new AccountRolesFixture(api, request);
+
+		const accountA = await fixture.createAccount();
+		const accountB = await fixture.createAccount();
+		const user = await fixture.createUser();
+
+		try {
+			await fixture.addAccountMember(accountA.id, user);
+			await fixture.assignAccountRole(
+				accountA.id,
+				user.id,
+				'Account Administrator'
+			);
+
+			const contractA = await api.post<{id: number}>('/o/c/contracts', {
+				r_accountEntryToContract_accountEntryId: accountA.id,
+			});
+			const contractB = await api.post<{id: number}>('/o/c/contracts', {
+				r_accountEntryToContract_accountEntryId: accountB.id,
+			});
+
+			try {
+				const response = await fixture
+					.asUser(user)
+					.send('get', '/o/c/contracts?page=1&pageSize=200');
+
+				expect(response.status()).toBe(200);
+
+				const body = (await response.json()) as {
+					items: Array<{id: number}>;
+				};
+				const ids = body.items.map((item) => item.id);
+
+				expect(ids).toContain(contractA.id);
+				expect(ids).not.toContain(contractB.id);
+			}
+			finally {
+				await api.delete(`/o/c/contracts/${contractA.id}`);
+				await api.delete(`/o/c/contracts/${contractB.id}`);
+			}
+		}
+		finally {
+			await fixture.deleteUser(user);
+			await fixture.deleteAccount(accountA);
+			await fixture.deleteAccount(accountB);
+		}
+	});
+});
+
 test.describe('Account role write distinction — administrator vs member', () => {
 	test('[ROLE-ACCOUNT-ADMINISTRATOR] administrator may update the account', async ({
 		api,

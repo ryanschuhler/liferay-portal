@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 public class EntitlementsRestControllerTest {
 
 	// Plan coverage (endpoint): [REST-POST-ENTITLEMENTS-GENERATE]
+	// [FLOW-ENTITLEMENT-GENERATION]
 
 	@BeforeEach
 	public void setUp() {
