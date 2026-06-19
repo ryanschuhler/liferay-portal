@@ -74,7 +74,7 @@ export class APIHelpers {
 	 * failures, permission denials, not-found).
 	 */
 	async send(
-		method: 'delete' | 'get' | 'post',
+		method: 'delete' | 'get' | 'patch' | 'post' | 'put',
 		path: string,
 		body?: unknown
 	): Promise<APIResponse> {
