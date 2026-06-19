@@ -98,7 +98,7 @@ public class TicketAttachmentsRestControllerDownloadTest {
 	@Test
 	public void testGetByIdDownload() throws Exception {
 
-		// [REST-GET-TICKET-ATTACHMENTS-BY-ID-ID-DOWNLOAD]
+		// [REST-GET-TICKET-ATTACHMENTS-BY-ID-ID-DOWNLOAD] [FLOW-TICKET-DOWNLOAD]
 
 		Mockito.when(
 			_ticketAttachmentService.getTicketAttachment(

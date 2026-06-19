@@ -35,7 +35,7 @@ public class SubscriptionEntryServiceTest {
 	@Test
 	public void testScheduledSendExpiringLicenseKeyEmails() throws Exception {
 
-		// [CRON-SCHEDULEDSENDEXPIRINGLICENSEKEYEMAILS]
+		// [CRON-SCHEDULEDSENDEXPIRINGLICENSEKEYEMAILS] [FLOW-LICENSE-EXPIRATION-EMAIL]
 
 		Mockito.when(
 			_licenseKeyService.getLicenseKeys(Mockito.anyString())

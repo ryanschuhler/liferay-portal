@@ -79,7 +79,7 @@ test.describe('Account role deny — non-member', () => {
 });
 
 test.describe('Account-entry restriction', () => {
-	test('[AUTH-ACCOUNT-RESTRICTION] restricted objects filter to the caller account', async ({
+	test('[AUTH-ACCOUNT-RESTRICTION] [FLOW-ACCOUNT-TEAM-MEMBERS] restricted objects filter to the caller account', async ({
 		api,
 		request,
 	}) => {
