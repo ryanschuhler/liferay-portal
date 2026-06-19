@@ -13,10 +13,10 @@
 		"plan:check": "node scripts/check-plan.ts",
 		"plan:coverage": "node scripts/check-coverage.ts",
 		"plan:scaffold": "node scripts/scaffold-plan.ts",
-		"playwright": "playwright test",
-		"playwright:e2e": "playwright test --project=e2e",
-		"playwright:integration": "playwright test --project=integration",
-		"playwright:ui": "playwright test --ui"
+		"test": "playwright test",
+		"test:e2e": "playwright test --project=e2e",
+		"test:integration": "playwright test --project=integration",
+		"test:ui": "playwright test --ui"
 	},
 	"version": "1.0.0"
 }

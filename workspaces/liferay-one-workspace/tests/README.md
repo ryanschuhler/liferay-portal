@@ -76,10 +76,10 @@ tests/
 From this `tests` directory:
 
 ```bash
-yarn playwright                  # Both projects
-yarn playwright:integration      # Integration only (no browser)
-yarn playwright:e2e              # E2E only
-yarn playwright:ui               # Playwright UI mode
+yarn test                        # Both projects
+yarn test:integration            # Integration only (no browser)
+yarn test:e2e                    # E2E only
+yarn test:ui                     # Playwright UI mode
 ```
 
 Or, from the workspace root:
