@@ -100,6 +100,33 @@ const OBJECT_CASES: ObjectCase[] = [
 	},
 	{
 		hasRequiredFields: true,
+		name: 'AIHubBetaPrivateAccessRequest',
+		path: '/o/c/aihubbetaprivateaccessrequests',
+		planId: 'OBJ-AIHUBBETAPRIVATEACCESSREQUEST',
+		valid: {
+			administratorEmailAddress: 'integration-probe@liferay.com',
+			aiHubAccountName: 'Integration Probe',
+			businessEmailAddress: 'integration-probe@liferay.com',
+			country: 'United States',
+			fullName: 'Integration Probe',
+			purpose: 'Integration test',
+		},
+	},
+	{
+		hasRequiredFields: true,
+		name: 'DXPFreeActivationKeyRequest',
+		path: '/o/c/dxpfreeactivationkeyrequests',
+		planId: 'OBJ-DXPFREEACTIVATIONKEYREQUEST',
+		valid: {
+			businessEmailAddress: 'integration-probe@liferay.com',
+			country: 'United States',
+			domain: 'integration-probe.example.com',
+			fullName: 'Integration Probe',
+			purpose: 'Integration test',
+		},
+	},
+	{
+		hasRequiredFields: true,
 		name: 'EntitlementDefinition',
 		path: '/o/c/entitlementdefinitions',
 		planId: 'OBJ-ENTITLEMENTDEFINITION',
@@ -112,20 +139,39 @@ const OBJECT_CASES: ObjectCase[] = [
 		planId: 'OBJ-PROPERTY',
 		valid: {name: 'Integration Probe Property'},
 	},
+	{
+		hasRequiredFields: true,
+		name: 'PublisherSalesSummary',
+		path: '/o/c/publishersalessummaries',
+		planId: 'OBJ-PUBLISHERSALESSUMMARY',
+		valid: {
+			paymentStatus: 'paid',
+			publisherName: 'Integration Probe',
+			quarter: '2026-Q2',
+		},
+	},
+	{
+		hasRequiredFields: true,
+		name: 'SubscriptionEntry',
+		path: '/o/c/subscriptionentries',
+		planId: 'OBJ-SUBSCRIPTIONENTRY',
+		valid: {
+			className: 'com.liferay.one.integration.Probe',
+			classPK: 1,
+			customUserId: 1,
+		},
+	},
 ];
-
-// Plan coverage (titles below carry the same IDs dynamically):
-// [OBJ-COMMONLICENSEKEY] [OBJ-DSRREQUEST] [OBJ-GETAPPINFORMATION]
-// [OBJ-LICENSEKEY] [OBJ-LICENSETYPESDESCRIPTION] [OBJ-LIFERAYBUNDLE]
-// [OBJ-PUBLISHERACCOUNTREQUEST] [OBJ-PUBLISHERDETAILS] [OBJ-REPORT]
-// [OBJ-SALESREQUEST] [OBJ-ENTITLEMENTDEFINITION] [OBJ-PROPERTY]
 
 for (const objectCase of OBJECT_CASES) {
 	test.describe(`Object CRUD — ${objectCase.name}`, () => {
 		test(`[${objectCase.planId}] round-trips create, read, and delete`, async ({
 			api,
 		}) => {
-			const created = await api.post<Entry>(objectCase.path, objectCase.valid);
+			const created = await api.post<Entry>(
+				objectCase.path,
+				objectCase.valid
+			);
 
 			expect(created.id).toBeGreaterThan(0);
 
