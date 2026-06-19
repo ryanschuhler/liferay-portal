@@ -29,6 +29,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
  */
 public class TicketAttachmentsRestControllerTest {
 
+	// Plan coverage (endpoint):
+	// [REST-POST-TICKET-ATTACHMENTS-INITIATE-UPLOAD]
+	// [REST-POST-TICKET-ATTACHMENTS-TICKETATTACHMENTID-COMPLETE-UPLOAD]
+	// [REST-DELETE-TICKET-ATTACHMENTS-TICKETATTACHMENTID]
+
 	@BeforeEach
 	public void setUp() {
 		_jiraService = Mockito.mock(JiraService.class);

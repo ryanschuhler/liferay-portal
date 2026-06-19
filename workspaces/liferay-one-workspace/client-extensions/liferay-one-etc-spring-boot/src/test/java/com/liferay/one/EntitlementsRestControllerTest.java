@@ -23,6 +23,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
  */
 public class EntitlementsRestControllerTest {
 
+	// Plan coverage (endpoint): [REST-POST-ENTITLEMENTS-GENERATE]
+
 	@BeforeEach
 	public void setUp() {
 		_entitlementService = Mockito.mock(EntitlementService.class);

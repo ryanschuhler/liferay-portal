@@ -6,7 +6,9 @@
 import {expect, test} from '@playwright/test';
 
 test.describe('Headless authentication', () => {
-	test('rejects an unauthenticated request', async ({request}) => {
+	test('[AUTH-UNAUTHENTICATED] rejects an unauthenticated request', async ({
+		request,
+	}) => {
 		const response = await request.get(
 			'/o/headless-admin-user/v1.0/my-user-account'
 		);

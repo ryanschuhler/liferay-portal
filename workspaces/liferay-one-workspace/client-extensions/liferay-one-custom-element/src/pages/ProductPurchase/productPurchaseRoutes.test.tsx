@@ -7,6 +7,9 @@ import {describe, expect, it} from 'vitest';
 
 import {getProductPurchaseRoutes} from './productPurchaseRoutes';
 
+// Plan coverage (route wiring): [UI-PRODUCT-PURCHASE-LICENSE]
+// [UI-PRODUCT-PURCHASE-PAYMENT-METHOD] [UI-PRODUCT-PURCHASE-SUMMARY]
+
 describe('getProductPurchaseRoutes', () => {
 	it('declares the account-selection index and the summary step', () => {
 		const routes = getProductPurchaseRoutes(false);

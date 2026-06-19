@@ -26,7 +26,9 @@ const EXPECTED_OBJECT_DEFINITIONS = [
 ];
 
 test.describe('/o/object-admin/v1.0/object-definitions', () => {
-	test('exposes the batch-imported custom objects', async ({api}) => {
+	test('[OBJ-CONTRACT] [OBJ-ENTITLEMENT] [OBJ-ENTITLEMENTDEFINITION] [OBJ-LICENSEKEY] [OBJ-PUBLISHERDETAILS] [OBJ-TICKETATTACHMENT] exposes the batch-imported custom objects', async ({
+		api,
+	}) => {
 		const page = await api.get<HeadlessPage<ObjectDefinition>>(
 			'/o/object-admin/v1.0/object-definitions?page=1&pageSize=200'
 		);

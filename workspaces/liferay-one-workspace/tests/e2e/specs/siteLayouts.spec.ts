@@ -16,30 +16,72 @@ import {gotoStable} from '../utils/navigation';
 const SITE_PATH = process.env.SITE_PATH ?? '/web/one';
 
 const SITE_LAYOUTS = [
-	{friendlyURL: '/home', name: 'Home'},
-	{friendlyURL: '/my-account', name: 'My Account'},
+	{friendlyURL: '/home', id: 'PAGE-HOME', name: 'Home'},
+	{friendlyURL: '/my-account', id: 'PAGE-MY-ACCOUNT', name: 'My Account'},
 	{
 		friendlyURL: '/my-account/publisher-dashboard',
+		id: 'PAGE-MY-ACCOUNT-PUBLISHER-DASHBOARD',
 		name: 'Publisher Dashboard',
 	},
-	{friendlyURL: '/support', name: 'Support'},
-	{friendlyURL: '/support/getting-started', name: 'Getting Started'},
+	{friendlyURL: '/support', id: 'PAGE-SUPPORT', name: 'Support'},
+	{
+		friendlyURL: '/support/getting-started',
+		id: 'PAGE-SUPPORT-GETTING-STARTED',
+		name: 'Getting Started',
+	},
 	{
 		friendlyURL: '/support/customer-portal-help',
+		id: 'PAGE-SUPPORT-CUSTOMER-PORTAL-HELP',
 		name: 'Customer Portal Help',
 	},
-	{friendlyURL: '/support/announcements', name: 'Announcements'},
-	{friendlyURL: '/support/business-events', name: 'Business Events'},
-	{friendlyURL: '/support/large-file-uploader', name: 'Large File Uploader'},
-	{friendlyURL: '/support/ticket-attachments', name: 'Ticket Attachments'},
-	{friendlyURL: '/marketplace', name: 'Marketplace'},
-	{friendlyURL: '/marketplace/applications', name: 'Applications'},
-	{friendlyURL: '/marketplace/products', name: 'Products'},
-	{friendlyURL: '/marketplace/solutions', name: 'Solutions'},
-	{friendlyURL: '/marketplace/publishers', name: 'Publishers'},
-	{friendlyURL: '/admin', name: 'Admin'},
-	{friendlyURL: '/product-purchase', name: 'Product Purchase'},
-	{friendlyURL: '/search', name: 'Search'},
+	{
+		friendlyURL: '/support/announcements',
+		id: 'PAGE-SUPPORT-ANNOUNCEMENTS',
+		name: 'Announcements',
+	},
+	{
+		friendlyURL: '/support/business-events',
+		id: 'PAGE-SUPPORT-BUSINESS-EVENTS',
+		name: 'Business Events',
+	},
+	{
+		friendlyURL: '/support/large-file-uploader',
+		id: 'PAGE-SUPPORT-LARGE-FILE-UPLOADER',
+		name: 'Large File Uploader',
+	},
+	{
+		friendlyURL: '/support/ticket-attachments',
+		id: 'PAGE-SUPPORT-TICKET-ATTACHMENTS',
+		name: 'Ticket Attachments',
+	},
+	{friendlyURL: '/marketplace', id: 'PAGE-MARKETPLACE', name: 'Marketplace'},
+	{
+		friendlyURL: '/marketplace/applications',
+		id: 'PAGE-MARKETPLACE-APPLICATIONS',
+		name: 'Applications',
+	},
+	{
+		friendlyURL: '/marketplace/products',
+		id: 'PAGE-MARKETPLACE-PRODUCTS',
+		name: 'Products',
+	},
+	{
+		friendlyURL: '/marketplace/solutions',
+		id: 'PAGE-MARKETPLACE-SOLUTIONS',
+		name: 'Solutions',
+	},
+	{
+		friendlyURL: '/marketplace/publishers',
+		id: 'PAGE-MARKETPLACE-PUBLISHERS',
+		name: 'Publishers',
+	},
+	{friendlyURL: '/admin', id: 'PAGE-ADMIN', name: 'Admin'},
+	{
+		friendlyURL: '/product-purchase',
+		id: 'PAGE-PRODUCT-PURCHASE',
+		name: 'Product Purchase',
+	},
+	{friendlyURL: '/search', id: 'PAGE-SEARCH', name: 'Search'},
 ];
 
 // Share one authenticated session across every layout assertion.
@@ -58,9 +100,19 @@ test.beforeAll(async ({browser}) => {
 	await liferayLogin(page);
 });
 
+// Plan coverage (page loads): [PAGE-HOME] [PAGE-MY-ACCOUNT]
+// [PAGE-MY-ACCOUNT-PUBLISHER-DASHBOARD] [PAGE-SUPPORT]
+// [PAGE-SUPPORT-GETTING-STARTED] [PAGE-SUPPORT-CUSTOMER-PORTAL-HELP]
+// [PAGE-SUPPORT-ANNOUNCEMENTS] [PAGE-SUPPORT-BUSINESS-EVENTS]
+// [PAGE-SUPPORT-LARGE-FILE-UPLOADER] [PAGE-SUPPORT-TICKET-ATTACHMENTS]
+// [PAGE-MARKETPLACE] [PAGE-MARKETPLACE-APPLICATIONS]
+// [PAGE-MARKETPLACE-PRODUCTS] [PAGE-MARKETPLACE-SOLUTIONS]
+// [PAGE-MARKETPLACE-PUBLISHERS] [PAGE-ADMIN] [PAGE-PRODUCT-PURCHASE]
+// [PAGE-SEARCH]
+
 test.describe('Site initializer layouts', () => {
-	for (const {friendlyURL, name} of SITE_LAYOUTS) {
-		test(`${name} (${friendlyURL}) loads for an authenticated user`, async () => {
+	for (const {friendlyURL, id, name} of SITE_LAYOUTS) {
+		test(`[${id}] ${name} (${friendlyURL}) loads for an authenticated user`, async () => {
 			const response = await gotoStable(
 				page,
 				`${SITE_PATH}${friendlyURL}`

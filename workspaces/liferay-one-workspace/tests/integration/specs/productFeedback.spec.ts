@@ -16,7 +16,9 @@ type ProductFeedback = {
 const PATH = '/o/c/productfeedbacks';
 
 test.describe('Object CRUD — ProductFeedback', () => {
-	test('round-trips create, read, and delete', async ({api}) => {
+	test('[OBJ-PRODUCTFEEDBACK] round-trips create, read, and delete', async ({
+		api,
+	}) => {
 		const created = await api.post<ProductFeedback>(PATH, {
 			emailAddress: 'integration-probe@liferay.com',
 			fullName: 'Integration Probe',
@@ -42,7 +44,9 @@ test.describe('Object CRUD — ProductFeedback', () => {
 		expect(afterDelete.status()).toBe(404);
 	});
 
-	test('rejects a create that omits required fields', async ({api}) => {
+	test('[OBJ-PRODUCTFEEDBACK] rejects a create that omits required fields', async ({
+		api,
+	}) => {
 		const response = await api.send('post', PATH, {
 			companyName: 'Missing Required Fields',
 		});

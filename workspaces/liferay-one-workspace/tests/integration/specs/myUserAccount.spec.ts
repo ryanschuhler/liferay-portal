@@ -14,7 +14,9 @@ type UserAccount = {
 };
 
 test.describe('/o/headless-admin-user/v1.0/my-user-account', () => {
-	test('returns the authenticated user account', async ({api}) => {
+	test('[HEADLESS-MY-USER-ACCOUNT] returns the authenticated user account', async ({
+		api,
+	}) => {
 		const user = await api.get<UserAccount>(
 			'/o/headless-admin-user/v1.0/my-user-account'
 		);

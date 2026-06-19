@@ -17,7 +17,9 @@ test.beforeEach(async ({page}) => {
 });
 
 test.describe('Smoke', () => {
-	test('home page loads when authenticated', async ({homePage}) => {
+	test('[PAGE-HOME] home page loads when authenticated', async ({
+		homePage,
+	}) => {
 		await homePage.goto();
 
 		await expect(homePage.heading).toBeVisible();

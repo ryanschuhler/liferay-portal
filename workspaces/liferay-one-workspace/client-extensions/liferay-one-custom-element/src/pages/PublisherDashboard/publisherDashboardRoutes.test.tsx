@@ -12,6 +12,11 @@ function paths(routes: AppRoute[]) {
 	return routes.map((route) => (route.index ? '(index)' : route.path));
 }
 
+// Plan coverage (route wiring): [UI-PUBLISHER-DASHBOARD-EDIT]
+// [UI-PUBLISHER-DASHBOARD-PUBLISHED-APPS]
+// [UI-PUBLISHER-DASHBOARD-PUBLISHED-SOLUTIONS]
+// [UI-PUBLISHER-DASHBOARD-PUBLISHER-PROFILE]
+
 describe('publisherDashboardRoutes', () => {
 	it('declares the dashboard paths in order', () => {
 		expect(paths(publisherDashboardRoutes)).toEqual([

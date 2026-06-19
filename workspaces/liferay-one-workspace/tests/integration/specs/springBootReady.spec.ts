@@ -9,7 +9,7 @@ const springBootBaseURL =
 	process.env.SPRING_BOOT_BASE_URL ?? 'http://localhost:58081';
 
 test.describe('liferay-one-etc-spring-boot /ready', () => {
-	test('reports READY when the client extension is healthy', async ({
+	test('[REST-GET-READY] reports READY when the client extension is healthy', async ({
 		request,
 	}) => {
 		const response = await request.get(`${springBootBaseURL}/ready`);

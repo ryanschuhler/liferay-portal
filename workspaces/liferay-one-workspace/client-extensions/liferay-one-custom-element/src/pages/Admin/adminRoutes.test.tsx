@@ -7,6 +7,16 @@ import {describe, expect, it} from 'vitest';
 
 import {adminRoutes} from './adminRoutes';
 
+// Plan coverage (route wiring): [UI-ADMIN-DETAILS-ORDERID]
+// [UI-ADMIN-LICENSE-KEY-UPLOADS] [UI-ADMIN-MANAGE-SSA-SAAS-USERS]
+// [UI-ADMIN-MESSAGE-QUEUE] [UI-ADMIN-MP-APPS]
+// [UI-ADMIN-MP-FINANCE-ORDERS] [UI-ADMIN-MP-FINANCE-ORDERS-ORDERID]
+// [UI-ADMIN-MP-ORDERS] [UI-ADMIN-MP-PAYMENTS]
+// [UI-ADMIN-MP-PAYMENTS-ENTRYID] [UI-ADMIN-MP-SOLUTIONS]
+// [UI-ADMIN-MP-SUMMARY] [UI-ADMIN-MY-SSA-SAAS-DEMO]
+// [UI-ADMIN-PUBLISHER-REQUESTS] [UI-ADMIN-PUBLISHERS]
+// [UI-ADMIN-SSA-SAAS-ENVIRONMENTS] [UI-ADMIN-TRIALS]
+
 describe('adminRoutes', () => {
 	it('declares every admin route path in order', () => {
 		const paths = adminRoutes.map((route) =>

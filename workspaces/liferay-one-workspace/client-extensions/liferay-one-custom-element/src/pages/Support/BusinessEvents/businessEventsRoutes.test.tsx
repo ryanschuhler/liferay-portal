@@ -12,6 +12,11 @@ function paths(routes: AppRoute[]) {
 	return routes.map((route) => (route.index ? '(index)' : route.path));
 }
 
+// Plan coverage (route wiring):
+// [UI-BUSINESS-EVENTS-ACCOUNTKEY-BUSINESS-EVENTS]
+// [UI-BUSINESS-EVENTS-ACTIVITY-HISTORY] [UI-BUSINESS-EVENTS-ADD]
+// [UI-BUSINESS-EVENTS-EDIT] [UI-BUSINESS-EVENTS-ID]
+
 describe('businessEventsRoutes', () => {
 	it('redirects from the index to the account-scoped list', () => {
 		expect(paths(businessEventsRoutes)).toEqual([

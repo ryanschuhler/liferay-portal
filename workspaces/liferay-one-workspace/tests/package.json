@@ -10,6 +10,9 @@
 	"private": true,
 	"scripts": {
 		"install:browsers": "playwright install chromium",
+		"plan:check": "node scripts/check-plan.ts",
+		"plan:coverage": "node scripts/check-coverage.ts",
+		"plan:scaffold": "node scripts/scaffold-plan.ts",
 		"playwright": "playwright test",
 		"playwright:e2e": "playwright test --project=e2e",
 		"playwright:integration": "playwright test --project=integration",

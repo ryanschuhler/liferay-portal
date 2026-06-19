@@ -12,6 +12,10 @@ function paths(routes: AppRoute[]) {
 	return routes.map((route) => (route.index ? '(index)' : route.path));
 }
 
+// Plan coverage (route wiring): [UI-ATTACHMENTS-ERC-TICKETATTACHMENTERC]
+// [UI-ATTACHMENTS-ID-TICKETATTACHMENTID] [UI-ATTACHMENTS-NEW]
+// [UI-ATTACHMENTS-NEW-TICKETID] [UI-ATTACHMENTS-TICKETID]
+
 describe('attachmentsRoutes', () => {
 	it('wraps every page in a single layout route', () => {
 		expect(attachmentsRoutes).toHaveLength(1);

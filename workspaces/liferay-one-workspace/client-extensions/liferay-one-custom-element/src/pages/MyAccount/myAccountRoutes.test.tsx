@@ -12,6 +12,12 @@ function paths(routes: AppRoute[]) {
 	return routes.map((route) => (route.index ? '(index)' : route.path));
 }
 
+// Plan coverage (route wiring): [UI-MY-ACCOUNT-ACCOUNT-DETAILS]
+// [UI-MY-ACCOUNT-ACCOUNT-MEMBERS] [UI-MY-ACCOUNT-APPLICATIONS]
+// [UI-MY-ACCOUNT-APPLICATIONERC] [UI-MY-ACCOUNT-HISTORY]
+// [UI-MY-ACCOUNT-ORDERID] [UI-MY-ACCOUNT-ORDERS]
+// [UI-MY-ACCOUNT-PRODUCTERC] [UI-MY-ACCOUNT-PRODUCTS]
+
 describe('accountRoutes', () => {
 	it('declares the account-level paths', () => {
 		expect(paths(accountRoutes)).toEqual([

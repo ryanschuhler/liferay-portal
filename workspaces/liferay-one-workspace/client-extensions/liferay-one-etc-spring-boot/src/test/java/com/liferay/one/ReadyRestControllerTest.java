@@ -17,6 +17,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
  */
 public class ReadyRestControllerTest {
 
+	// Plan coverage (endpoint): [REST-GET-READY]
+
 	@Test
 	public void testGet() throws Exception {
 		_mockMvc.perform(
