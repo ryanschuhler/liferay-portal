@@ -18,6 +18,7 @@
 		"plan:scaffold": "yarn workspace @liferay/liferay-one-workspace-tests plan:scaffold",
 		"test:e2e": "yarn workspace @liferay/liferay-one-workspace-tests test:e2e",
 		"test:integration": "yarn workspace @liferay/liferay-one-workspace-tests test:integration",
+		"test:report": "yarn workspace @liferay/liferay-one-workspace-tests test:report",
 		"test:unit": "yarn workspace @liferay/liferay-one-custom-element test"
 	},
 	"workspaces": {

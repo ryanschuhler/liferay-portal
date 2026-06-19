@@ -16,6 +16,7 @@
 		"test": "playwright test",
 		"test:e2e": "playwright test --project=e2e",
 		"test:integration": "playwright test --project=integration",
+		"test:report": "playwright show-report",
 		"test:ui": "playwright test --ui"
 	},
 	"version": "1.0.0"
