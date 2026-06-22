@@ -11,6 +11,9 @@
 !@vite/refresh.ts
 bin
 build
+coverage
 dist
 node_modules
 node_modules_cache
+playwright-report
+test-results
