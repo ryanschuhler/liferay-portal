@@ -13,6 +13,7 @@ import com.liferay.petra.string.StringPool;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import org.junit.jupiter.api.Assertions;
@@ -30,6 +31,36 @@ import org.springframework.web.server.ResponseStatusException;
  * @author Karoline Silva
  */
 public class AdminRestControllerTest {
+
+	// Plan coverage (REST endpoints): [REST-GET-ADMIN-PUBSUB-SUBSCRIBERS]
+	// [REST-POST-ADMIN-PUBSUB-DISPATCH]
+
+	@Test
+	public void testGetReturnsSubscribersWithTopics() throws Exception {
+		AdminRestController adminRestController = _createController(
+			new TestPubsubSubscriber("test-topic"),
+			new TestPubsubSubscriber(""));
+
+		ResponseEntity<String> responseEntity =
+			adminRestController.getPubsubSubscribers(null);
+
+		Assertions.assertEquals(
+			HttpStatus.OK.value(),
+			responseEntity.getStatusCode(
+			).value());
+
+		JSONArray jsonArray = new JSONArray(responseEntity.getBody());
+
+		// The blank-topic subscriber is filtered out.
+
+		Assertions.assertEquals(1, jsonArray.length());
+
+		JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+		Assertions.assertEquals(
+			"TestPubsubSubscriber", jsonObject.getString("name"));
+		Assertions.assertEquals("test-topic", jsonObject.getString("topic"));
+	}
 
 	@Test
 	public void testPostDispatchesMessageToMatchingSubscriber()
@@ -246,6 +277,30 @@ public class AdminRestControllerTest {
 		);
 
 		return basePubsubSubscriber;
+	}
+
+	private static class TestPubsubSubscriber extends BasePubsubSubscriber {
+
+		public TestPubsubSubscriber(String topic) {
+			_topic = topic;
+		}
+
+		@Override
+		public String getTopic() {
+			return _topic;
+		}
+
+		@Override
+		public void receive(Message message) {
+		}
+
+		@Override
+		protected String getProjectId() {
+			return null;
+		}
+
+		private final String _topic;
+
 	}
 
 }

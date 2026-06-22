@@ -16,6 +16,7 @@ buildscript {
 }
 
 apply plugin: "com.liferay.source.formatter"
+apply plugin: "jacoco"
 apply plugin: "java-library"
 apply plugin: "org.springframework.boot"
 
@@ -77,6 +78,7 @@ dependencies {
 	implementation group: "org.springframework.boot", name: "spring-boot-starter-oauth2-resource-server", version: "2.7.18"
 	implementation group: "org.springframework.boot", name: "spring-boot-starter-web", version: "2.7.18"
 	implementation group: "org.springframework.boot", name: "spring-boot-starter-webflux", version: "2.7.18"
+	testImplementation group: "org.mockito", name: "mockito-inline", version: "4.5.1"
 	testImplementation group: "org.springframework.boot", name: "spring-boot-starter-test", version: "2.7.18"
 }
 
@@ -99,12 +101,24 @@ sourceSets {
 }
 
 test {
+	finalizedBy jacocoTestReport
+
 	jvmArgs(
 		"--add-opens=java.base/java.lang=ALL-UNNAMED",
 		"--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
 		"--add-opens=java.base/java.lang.reflect=ALL-UNNAMED"
 	)
 	useJUnitPlatform()
+}
+
+jacocoTestReport {
+	dependsOn test
+
+	reports {
+		csv.required = false
+		html.required = true
+		xml.required = true
+	}
 }
 
 compileJava.dependsOn cloneReleaseToolEE
