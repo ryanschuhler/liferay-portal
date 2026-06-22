@@ -4,6 +4,7 @@
  */
 
 import {CONSENT_TYPE} from '../core/Storage';
+import {IS_MOCK, createMockLiferay} from './devMock';
 
 export type IOAuth2ClientAgentApplication = {
 	authorizeURL: string;
@@ -101,38 +102,42 @@ declare global {
 	}
 }
 
-export const Liferay = window.Liferay || {
-	CommerceContext: {},
-	MarketplaceCustomerFlow: 0,
-	Service: {},
-	ThemeDisplay: {
-		getCanonicalURL: () => window.location.href,
-		getCompanyGroupId: () => '',
-		getCompanyId: () => '',
-		getDefaultLanguageId: () => 'en_US',
-		getLanguageId: () => '',
-		getLayoutRelativeURL: () => '',
-		getLayoutURL: () => '',
-		getPathContext: () => '',
-		getPathThemeImages: () => '',
-		getPortalURL: () => '',
-		getURLHome: () => '',
-		getUserId: () => '',
-		isSignedIn: () => {
-			return false;
-		},
-	},
-	Util: {
-		LocalStorage: localStorage,
-		SessionStorage: sessionStorage,
-	},
-	detach: (
-		type: keyof WindowEventMap,
-		callback: EventListenerOrEventListenerObject
-	) => window.removeEventListener(type, callback),
-	fire: () => null,
-	on: (
-		type: keyof WindowEventMap,
-		callback: EventListenerOrEventListenerObject
-	) => window.addEventListener(type, callback),
-};
+export const Liferay =
+	window.Liferay ||
+	(IS_MOCK
+		? createMockLiferay()
+		: {
+				CommerceContext: {},
+				MarketplaceCustomerFlow: 0,
+				Service: {},
+				ThemeDisplay: {
+					getCanonicalURL: () => window.location.href,
+					getCompanyGroupId: () => '',
+					getCompanyId: () => '',
+					getDefaultLanguageId: () => 'en_US',
+					getLanguageId: () => '',
+					getLayoutRelativeURL: () => '',
+					getLayoutURL: () => '',
+					getPathContext: () => '',
+					getPathThemeImages: () => '',
+					getPortalURL: () => '',
+					getURLHome: () => '',
+					getUserId: () => '',
+					isSignedIn: () => {
+						return false;
+					},
+				},
+				Util: {
+					LocalStorage: localStorage,
+					SessionStorage: sessionStorage,
+				},
+				detach: (
+					type: keyof WindowEventMap,
+					callback: EventListenerOrEventListenerObject
+				) => window.removeEventListener(type, callback),
+				fire: () => null,
+				on: (
+					type: keyof WindowEventMap,
+					callback: EventListenerOrEventListenerObject
+				) => window.addEventListener(type, callback),
+			});

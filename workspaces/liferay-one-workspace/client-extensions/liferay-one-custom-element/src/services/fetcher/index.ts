@@ -3,10 +3,14 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {IS_MOCK, MOCK_LIFERAY_URL} from '../../liferay/devMock';
 import {Liferay} from '../../liferay/liferay';
 import FetcherError from './FetcherError';
 
-const liferayHost = window.location.origin;
+// In standalone dev (yarn dev:standalone) the headless APIs live on the mock
+// Liferay server rather than the same origin that serves the app.
+
+const liferayHost = IS_MOCK ? MOCK_LIFERAY_URL : window.location.origin;
 
 function changeResource(resource: RequestInfo) {
 	if (resource.toString().startsWith('http')) {

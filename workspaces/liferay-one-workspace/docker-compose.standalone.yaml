@@ -1,0 +1,60 @@
+# Runs the Spring Boot client extension against the mock Liferay server, with
+# no real Liferay or MySQL. The custom element runs on the host via Vite
+# (yarn dev:standalone). See mock-liferay/README.md.
+#
+# Prerequisite: the Spring Boot image must already be built once:
+#   ./gradlew :client-extensions:liferay-one-etc-spring-boot:buildDockerImage
+name: liferay-one-standalone
+services:
+    mock-liferay:
+        build:
+            context: ./mock-liferay
+        container_name: mock-liferay
+        healthcheck:
+            interval: 5s
+            retries: 20
+            start_period: 3s
+            test:
+                [
+                    'CMD',
+                    'node',
+                    '-e',
+                    "fetch('http://localhost:8080/c/portal/status').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+                ]
+            timeout: 5s
+        image: liferay-one-mock-liferay:latest
+        ports:
+            - 8080:8080
+            - 58081:58081
+    liferay-one-etc-spring-boot:
+        container_name: liferay-one-etc-spring-boot
+        depends_on:
+            mock-liferay:
+                condition: service_healthy
+        env_file:
+            - ./.env.example
+        environment:
+            LIFERAY_JAR_RUNNER_JAVA_OPTS: --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED
+            LIFERAY_ROUTES_CLIENT_EXTENSION: /opt/liferay/routes/default/liferay-one-etc-spring-boot
+            LIFERAY_ROUTES_DXP: /opt/liferay/routes/default/dxp
+        healthcheck:
+            interval: 10s
+            retries: 30
+            start_period: 60s
+            test:
+                [
+                    'CMD',
+                    'curl',
+                    '--fail',
+                    '--silent',
+                    'http://localhost:58081/ready',
+                ]
+            timeout: 5s
+        image: liferay-one-etc-spring-boot:latest
+        # Share the mock's network namespace so the app reaches the mock at
+        # localhost:8080 (matching com.liferay.lxc.dxp.mainDomain) and its own
+        # port 58081 is published by the mock-liferay service above.
+        network_mode: service:mock-liferay
+        volumes:
+            - ./mock-liferay/routes:/opt/liferay/routes/default:ro
+            - ./client-extensions/liferay-one-etc-spring-boot/scripts/wait-for-routes.sh:/usr/local/bin/liferay_jar_runner_set_up.sh:ro

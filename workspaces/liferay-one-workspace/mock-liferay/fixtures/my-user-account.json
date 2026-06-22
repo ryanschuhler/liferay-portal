@@ -1,0 +1,18 @@
+{
+	"path": "/o/headless-admin-user/v1.0/my-user-account",
+	"response": {
+		"accountBriefs": [
+			{
+				"externalReferenceCode": "MOCK-ACCOUNT",
+				"id": 1,
+				"name": "Mock Account"
+			}
+		],
+		"alternateName": "test",
+		"emailAddress": "test@liferay.com",
+		"familyName": "Test",
+		"givenName": "Test",
+		"id": 20124,
+		"name": "Test Test"
+	}
+}

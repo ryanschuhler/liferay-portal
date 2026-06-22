@@ -1,0 +1,24 @@
+{
+	"name": "liferay-one-mock-liferay",
+	"version": "0.0.0",
+	"private": true,
+	"description": "A lightweight mock of the Liferay HTTP surface for running liferay-one-custom-element and liferay-one-etc-spring-boot without a real Liferay server.",
+	"license": "LGPL",
+	"type": "module",
+	"scripts": {
+		"start": "tsx src/server.ts",
+		"dev": "tsx watch src/server.ts"
+	},
+	"dependencies": {
+		"cors": "^2.8.5",
+		"express": "^4.21.2",
+		"jose": "^5.9.6"
+	},
+	"devDependencies": {
+		"@types/cors": "^2.8.17",
+		"@types/express": "^4.17.21",
+		"@types/node": "^22.10.2",
+		"tsx": "^4.19.2",
+		"typescript": "^5.7.2"
+	}
+}

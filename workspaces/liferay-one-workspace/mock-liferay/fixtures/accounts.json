@@ -1,0 +1,11 @@
+{
+	"collectionPath": "/o/headless-admin-user/v1.0/accounts",
+	"items": [
+		{
+			"externalReferenceCode": "MOCK-ACCOUNT",
+			"id": 1,
+			"name": "Mock Account",
+			"type": "business"
+		}
+	]
+}
