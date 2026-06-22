@@ -104,6 +104,21 @@ public class LicenseKeyExporterTest {
 	}
 
 	@Test
+	public void testGetFileNameTruncatesToMaxLength() {
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < 500; i++) {
+			sb.append('x');
+		}
+
+		String fileName = _licenseKeyExporter.getFileName(
+			sb.toString(), "7.4", "key-1");
+
+		Assertions.assertEquals(255, fileName.length());
+		Assertions.assertTrue(fileName.endsWith(".xml"), fileName);
+	}
+
+	@Test
 	public void testToXMLEscapesSpecialCharacters() throws Exception {
 		String xml = _licenseKeyExporter.toXML(
 			"TESTKEY", "Acme Corp", "Enterprise",

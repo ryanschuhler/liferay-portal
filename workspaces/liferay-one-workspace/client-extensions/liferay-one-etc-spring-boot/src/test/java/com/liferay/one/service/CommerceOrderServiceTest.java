@@ -5,6 +5,7 @@
 
 package com.liferay.one.service;
 
+import com.liferay.headless.commerce.admin.order.client.dto.v1_0.Account;
 import com.liferay.headless.commerce.admin.order.client.dto.v1_0.BillingAddress;
 import com.liferay.headless.commerce.admin.order.client.dto.v1_0.Order;
 import com.liferay.headless.commerce.admin.order.client.dto.v1_0.OrderItem;
@@ -934,6 +935,31 @@ public class CommerceOrderServiceTest {
 	}
 
 	@Test
+	public void testIsTaxApplicableBusinessOutsideIreland() {
+		Assertions.assertFalse(_isTaxApplicable(_ACCOUNT_TYPE_BUSINESS, "FR"));
+	}
+
+	@Test
+	public void testIsTaxApplicableBusinessWithinIreland() {
+		Assertions.assertTrue(_isTaxApplicable(_ACCOUNT_TYPE_BUSINESS, "IE"));
+	}
+
+	@Test
+	public void testIsTaxApplicableForUnknownAccountType() {
+		Assertions.assertFalse(_isTaxApplicable(0, "IE"));
+	}
+
+	@Test
+	public void testIsTaxApplicablePersonInEuropeanCountry() {
+		Assertions.assertTrue(_isTaxApplicable(_ACCOUNT_TYPE_PERSON, "FR"));
+	}
+
+	@Test
+	public void testIsTaxApplicablePersonOutsideEurope() {
+		Assertions.assertFalse(_isTaxApplicable(_ACCOUNT_TYPE_PERSON, "US"));
+	}
+
+	@Test
 	public void testOnApplicationReadyCompletesSettledOrders()
 		throws Exception {
 
@@ -992,6 +1018,21 @@ public class CommerceOrderServiceTest {
 		order.setPaymentStatus(paymentStatus);
 
 		return order;
+	}
+
+	private boolean _isTaxApplicable(int accountType, String countryISOCode) {
+		Account account = new Account();
+
+		account.setType(accountType);
+
+		BillingAddress billingAddress = new BillingAddress();
+
+		billingAddress.setCountryISOCode(countryISOCode);
+
+		return Boolean.TRUE.equals(
+			ReflectionTestUtils.invokeMethod(
+				_commerceOrderService, "_isTaxApplicable", account,
+				billingAddress));
 	}
 
 	private void _setAIHubOrderFields(Order order, String orderMetadata) {
@@ -1071,6 +1112,10 @@ public class CommerceOrderServiceTest {
 			ArgumentMatchers.any(Order.class), ArgumentMatchers.any()
 		);
 	}
+
+	private static final int _ACCOUNT_TYPE_BUSINESS = 2;
+
+	private static final int _ACCOUNT_TYPE_PERSON = 1;
 
 	private static final long _ORDER_ID = 1000L;
 

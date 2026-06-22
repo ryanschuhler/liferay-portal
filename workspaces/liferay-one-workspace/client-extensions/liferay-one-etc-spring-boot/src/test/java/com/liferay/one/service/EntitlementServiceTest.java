@@ -10,6 +10,7 @@ import com.liferay.headless.commerce.admin.order.client.custom.field.CustomValue
 import com.liferay.headless.commerce.admin.order.client.dto.v1_0.Order;
 import com.liferay.headless.commerce.admin.order.client.dto.v1_0.OrderItem;
 import com.liferay.one.constants.CommerceOrderItemConstants;
+import com.liferay.one.exception.DuplicateEntitlementException;
 import com.liferay.one.model.Entitlement;
 import com.liferay.one.model.EntitlementDefinition;
 
@@ -49,6 +50,88 @@ public class EntitlementServiceTest {
 		ReflectionTestUtils.setField(
 			_entitlementService, "_entitlementDefinitionService",
 			_entitlementDefinitionService);
+	}
+
+	@Test
+	public void testAddEntitlementRejectsDuplicate() throws Exception {
+		Mockito.doReturn(
+			_createEntitlement(1, "storage")
+		).when(
+			_entitlementService
+		).fetchEntitlement(
+			_ORDER_ITEM_ID, 1L
+		);
+
+		Assertions.assertThrows(
+			DuplicateEntitlementException.class,
+			() -> _entitlementService.addEntitlement(
+				_ACCOUNT_ID, _ORDER_ITEM_ID, _CONTRACT_ID, 1L, null, "fixed",
+				null, "storage", Map.of(), _PROJECT_EXTERNAL_REFERENCE_CODE,
+				200.0, null));
+	}
+
+	@Test
+	public void testGenerateEntitlementsContinuesWhenOneDefinitionFails()
+		throws Exception {
+
+		_setUpOrderItem(_createOrderItem());
+
+		Mockito.when(
+			_entitlementDefinitionService.getEntitlementDefinitions(
+				Mockito.anyString(), Mockito.anyMap())
+		).thenReturn(
+			List.of(
+				_createEntitlementDefinition(100.0, 1, "storage"),
+				_createEntitlementDefinition(1.0, 2, "support"))
+		);
+
+		Order order = new Order();
+
+		order.setAccountId(_ACCOUNT_ID);
+		order.setCustomFields(
+			Map.of(
+				"contractId", _CONTRACT_ID, "salesforceProjectId",
+				_PROJECT_EXTERNAL_REFERENCE_CODE));
+
+		Mockito.when(
+			_commerceOrderService.fetchCommerceOrder(_ORDER_ID)
+		).thenReturn(
+			order
+		);
+
+		Mockito.doThrow(
+			new DuplicateEntitlementException("Duplicate entitlement")
+		).when(
+			_entitlementService
+		).addEntitlement(
+			Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong(),
+			Mockito.eq(1L), Mockito.any(), Mockito.any(), Mockito.any(),
+			Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
+			Mockito.any()
+		);
+
+		Mockito.doReturn(
+			_createEntitlement(2, "support")
+		).when(
+			_entitlementService
+		).addEntitlement(
+			Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong(),
+			Mockito.eq(2L), Mockito.any(), Mockito.any(), Mockito.any(),
+			Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
+			Mockito.any()
+		);
+
+		_entitlementService.generateEntitlements(_ORDER_ITEM_ID);
+
+		Mockito.verify(
+			_entitlementService
+		).addEntitlement(
+			Mockito.eq(_ACCOUNT_ID), Mockito.eq(_ORDER_ITEM_ID),
+			Mockito.eq(_CONTRACT_ID), Mockito.eq(2L), Mockito.isNull(),
+			Mockito.eq("fixed"), Mockito.isNull(), Mockito.eq("support"),
+			Mockito.eq(Map.of()), Mockito.eq(_PROJECT_EXTERNAL_REFERENCE_CODE),
+			Mockito.eq(2.0), Mockito.isNull()
+		);
 	}
 
 	@Test
@@ -161,6 +244,18 @@ public class EntitlementServiceTest {
 		orderItem.setCustomFields(new CustomField[] {customField});
 
 		_setUpOrderItem(orderItem);
+
+		_entitlementService.generateEntitlements(_ORDER_ITEM_ID);
+
+		Mockito.verifyNoInteractions(_entitlementDefinitionService);
+		Mockito.verifyNoInteractions(_commerceOrderService);
+	}
+
+	@Test
+	public void testGenerateEntitlementsSkipsMissingOrderItem()
+		throws Exception {
+
+		_setUpOrderItem(null);
 
 		_entitlementService.generateEntitlements(_ORDER_ITEM_ID);
 

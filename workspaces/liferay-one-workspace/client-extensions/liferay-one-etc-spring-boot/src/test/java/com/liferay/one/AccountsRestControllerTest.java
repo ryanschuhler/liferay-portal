@@ -497,6 +497,30 @@ public class AccountsRestControllerTest {
 	}
 
 	@Test
+	public void testGetJiraObjectKey() throws Exception {
+		AccountsRestController accountsRestController = _createController();
+
+		Mockito.when(
+			_accountAssetService.getAccountObjectKey(_EXTERNAL_REFERENCE_CODE)
+		).thenReturn(
+			"OBJKEY-1"
+		);
+
+		ResponseEntity<String> responseEntity =
+			accountsRestController.getJiraObjectKey(
+				null, _EXTERNAL_REFERENCE_CODE);
+
+		Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		Assertions.assertEquals("OBJKEY-1", responseEntity.getBody());
+
+		Mockito.verify(
+			_accountPermission
+		).check(
+			_EXTERNAL_REFERENCE_CODE, ActionKeys.VIEW, null
+		);
+	}
+
+	@Test
 	public void testGetLicenseKeys() throws Exception {
 		AccountsRestController accountsRestController = _createController();
 
