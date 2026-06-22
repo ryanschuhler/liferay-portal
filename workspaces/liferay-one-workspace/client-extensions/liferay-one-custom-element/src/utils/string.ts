@@ -23,6 +23,10 @@ export function normalizeURLProtocol(url = '') {
 export function removeUnnecessaryURLString(text: string) {
 	const index = text.indexOf('/o');
 
+	if (index === -1) {
+		return text;
+	}
+
 	return text.substring(index);
 }
 

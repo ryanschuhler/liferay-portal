@@ -24,7 +24,10 @@
 		"strict": true,
 		"target": "ESNext",
 		"types": [
-			"vite/client"
+			"@testing-library/jest-dom",
+			"node",
+			"vite/client",
+			"vitest/globals"
 		],
 		"useDefineForClassFields": true
 	},
