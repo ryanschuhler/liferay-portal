@@ -6,16 +6,7 @@
 import {Page, expect, test} from '@playwright/test';
 
 import {SPAPage} from '../pages/SPAPage';
-import {liferayLogin, liferayLogout} from '../utils/login';
-
-// FLOW: FLOW-BUSINESS-EVENT-LIFECYCLE — create, edit, delete, and activity
-// history across ROUTE-BUSINESS-EVENTS-ADD / ROUTE-BUSINESS-EVENTS-EDIT /
-// ROUTE-BUSINESS-EVENTS-ACTIVITY-HISTORY and the JiraRestController
-// business-events CRUD that backs them.
-//
-// DEFERRED. Business events are backed by Jira Assets, so this needs a Jira stub
-// and an entitled support user with projects. Provision ONE_ENTITLED_EMAIL /
-// ONE_ENTITLED_PASSWORD, set ONE_ACCOUNT_KEY, and drop `.fixme`.
+import {liferayLogin, liferayLogout} from '../utils/loginUtils';
 
 const entitledEmail = process.env.ONE_ENTITLED_EMAIL ?? 'test@liferay.com';
 const entitledPassword = process.env.ONE_ENTITLED_PASSWORD ?? 'test';
@@ -41,11 +32,6 @@ test.beforeEach(async ({page}) => {
 test.describe.fixme(
 	'[FLOW-BUSINESS-EVENT-LIFECYCLE] business event lifecycle',
 	() => {
-
-		// Create, edit, and delete share one event and must run in order; serial
-		// mode stops a failed create from cascading into confusing edit/delete
-		// failures.
-
 		test.describe.configure({mode: 'serial'});
 
 		test('[FLOW-BUSINESS-EVENT-LIFECYCLE] [ROUTE-BUSINESS-EVENTS-ADD] creates a business event', async ({
@@ -62,8 +48,6 @@ test.describe.fixme(
 			await page.getByLabel(/event name|name/i).fill(eventName);
 			await page.getByLabel(/type/i).selectOption({index: 1});
 			await page.getByRole('button', {name: /save|create/i}).click();
-
-			// The new event appears in the list table.
 
 			await expect(
 				page.getByRole('cell', {name: eventName})
@@ -86,8 +70,6 @@ test.describe.fixme(
 			await expect(
 				page.getByText(/rescheduled to sunday/i)
 			).toBeVisible();
-
-			// [ROUTE-BUSINESS-EVENTS-ACTIVITY-HISTORY] the edit is recorded.
 
 			await page.getByRole('tab', {name: /activity history/i}).click();
 

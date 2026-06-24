@@ -8,19 +8,6 @@ import {APIRequestContext, expect} from '@playwright/test';
 import {apiTest as test} from '../fixtures/apiTest';
 import {APIHelpers, HeadlessPage} from '../helpers/APIHelpers';
 
-// FLOW: FLOW-TICKET-ATTACHMENT-RETENTION — the two-stage retention lifecycle.
-//
-//   CRON-SCHEDULEDCLEANUP trashes attachments on tickets closed more than 7 days
-//   ago (STATUS_IN_TRASH), and CRON-SCHEDULEDDELETETICKETATTACHMENT drains the
-//   trash to a GCS hard-delete and removes the record. Both handlers are
-//   unit-covered (Mockito); this proves the transition end to end and that a
-//   re-run is idempotent.
-//
-// DEFERRED. Needs Jira + GCS stubs, a seeded attachment on a ticket closed >7
-// days ago, and a way to trigger the scheduled task on demand (the cron fires
-// at midnight/hourly). Point CRON_TRIGGER_URL at the on-demand trigger
-// (actuator/scheduler), set ONE_RETENTION_ATTACHMENT_ID, and drop `.fixme`.
-
 const cronTriggerURL = process.env.CRON_TRIGGER_URL ?? '';
 const attachmentId = Number(process.env.ONE_RETENTION_ATTACHMENT_ID ?? '0');
 
@@ -74,8 +61,6 @@ test.describe.fixme(
 			await triggerCron(request, 'scheduledCleanUp');
 			await triggerCron(request, 'scheduledDeleteTicketAttachment');
 
-			// The record is gone once the trash is drained to a GCS hard-delete.
-
 			await expect
 				.poll(() => attachmentState(api, attachmentId))
 				.toBeUndefined();
@@ -86,8 +71,6 @@ test.describe.fixme(
 			request,
 		}) => {
 			await triggerCron(request, 'scheduledDeleteTicketAttachment');
-
-			// A second drain over an empty trash is a no-op, not an error.
 
 			const page = await api.get<HeadlessPage<TicketAttachment>>(
 				`/o/c/ticketattachments?filter=${encodeURIComponent(

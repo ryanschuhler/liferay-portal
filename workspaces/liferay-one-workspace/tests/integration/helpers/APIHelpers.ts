@@ -9,6 +9,7 @@ export interface APIOptions {
 	baseURL?: string;
 	basicAuth?: {password: string; user: string};
 	oAuth2?: {clientId: string; clientSecret: string};
+	springBootBaseURL?: string;
 }
 
 export type HeadlessPage<T> = {
@@ -22,6 +23,7 @@ export class APIHelpers {
 	readonly baseURL: string;
 	readonly options: APIOptions;
 	readonly request: APIRequestContext;
+	readonly springBootBaseURL: string;
 
 	private token: string | undefined;
 	private tokenExpiry = 0;
@@ -31,10 +33,21 @@ export class APIHelpers {
 			options.baseURL ?? process.env.BASE_URL ?? 'http://localhost:8080';
 		this.options = options;
 		this.request = request;
+		this.springBootBaseURL =
+			options.springBootBaseURL ??
+			process.env.SPRING_BOOT_BASE_URL ??
+			'http://localhost:58081';
+	}
+
+	// Spring Boot endpoints are served directly by the client extension at its
+	// own host (SPRING_BOOT_BASE_URL), not proxied under the portal. Prefix a
+	// path with this to target them; portal/object paths stay relative.
+	springBoot(path: string): string {
+		return `${this.springBootBaseURL}${path}`;
 	}
 
 	async delete<T = unknown>(path: string): Promise<T | undefined> {
-		const response = await this.request.delete(`${this.baseURL}${path}`, {
+		const response = await this.request.delete(this._url(path), {
 			headers: await this.headers(),
 		});
 
@@ -48,7 +61,7 @@ export class APIHelpers {
 	}
 
 	async get<T = unknown>(path: string): Promise<T> {
-		const response = await this.request.get(`${this.baseURL}${path}`, {
+		const response = await this.request.get(this._url(path), {
 			headers: await this.headers(),
 		});
 
@@ -58,7 +71,7 @@ export class APIHelpers {
 	}
 
 	async post<T = unknown>(path: string, body: unknown): Promise<T> {
-		const response = await this.request.post(`${this.baseURL}${path}`, {
+		const response = await this.request.post(this._url(path), {
 			data: body,
 			headers: await this.headers(),
 		});
@@ -68,20 +81,19 @@ export class APIHelpers {
 		return (await response.json()) as T;
 	}
 
-	/**
-	 * Issues an authenticated request and returns the raw response without
-	 * asserting success — use this to assert non-2xx status codes (validation
-	 * failures, permission denials, not-found).
-	 */
 	async send(
 		method: 'delete' | 'get' | 'patch' | 'post' | 'put',
 		path: string,
 		body?: unknown
 	): Promise<APIResponse> {
-		return this.request[method](`${this.baseURL}${path}`, {
+		return this.request[method](this._url(path), {
 			data: body,
 			headers: await this.headers(),
 		});
+	}
+
+	private _url(path: string): string {
+		return /^https?:\/\//.test(path) ? path : `${this.baseURL}${path}`;
 	}
 
 	private async authHeader(): Promise<Record<string, string>> {

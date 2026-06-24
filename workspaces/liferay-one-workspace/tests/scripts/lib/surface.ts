@@ -3,39 +3,6 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-/**
- * Enumerates the *actual code surface* of the liferay-one-workspace so that
- * `check-plan` can verify the testing plan covers everything that ships.
- *
- * Scope is intentionally limited to the two client extensions under test — the
- * custom-element SPA and the Spring Boot service. For Spring Boot that means its
- * full testable surface: REST endpoints, scheduled crons, and async Pub/Sub
- * subscribers. Other surfaces (site pages, Objects, roles, external integration
- * contracts) are out of scope for now and are not enumerated.
- *
- * Each enumerator returns a list of canonical "anchors". An anchor is a stable
- * string that identifies one testable surface element. Plan rows reference the
- * same anchors in their `Source` column, so the two can be diffed.
- *
- * Anchor grammar (prefix : detail):
- *   route:<group>:<path>      one custom-element route
- *   rest:<METHOD>:<path>      one Spring Boot REST endpoint
- *   cron:<methodName>         one @Scheduled task
- *   subscriber:<ClassName>    one async Pub/Sub subscriber
- *   service:<ClassName>       one Spring service holding branching logic
- *   converter:<ClassName>     one DTO/model converter
- *
- * Services and converters are enumerated because the branching logic worth
- * unit-testing (dedupe guards, validation, null/error fallbacks) concentrates
- * there, not in the controllers that delegate to them. Thin HTTP CRUD wrappers
- * with no branch worth proving are still enumerated, but their plan rows carry
- * status `n/a` so they stay visible without dragging down the denominator.
- *
- * `spec:*` anchors are intentionally NOT enumerable here. They mark
- * requirements derived from the specs (OAuth2 scopes, error contracts,
- * end-to-end flows) that have no single code symbol. check-plan ignores them.
- */
-
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -94,16 +61,6 @@ function kebab(value: string): string {
 		.toLowerCase();
 }
 
-// route:<group>:<path> — one route per `path:` entry in every route source file.
-//
-// Both the static *Routes.tsx tables and the *Router.tsx files are scanned: a
-// few real, user-facing routes (e.g. ProductPurchase's bank-transfer-completed
-// and purchase-completed terminal pages, MyAccount's :accountERC access guard)
-// are declared inline in the Router rather than the route table, and would
-// otherwise be invisible to the plan. Structural-only paths — the root `/`, the
-// `*` wildcard fallback, and redirect catch-alls ending in `/*` — carry no page
-// of their own and are skipped.
-
 export function enumerateRoutes(): string[] {
 	const files = walk(
 		CUSTOM_ELEMENT_SRC,
@@ -140,16 +97,10 @@ export function enumerateRoutes(): string[] {
 	return unique(anchors);
 }
 
-// rest:<METHOD>:<path> — class @RequestMapping base + method mapping path.
-
 export function enumerateRestEndpoints(): string[] {
 	const files = walk(SPRING_BOOT_JAVA, (file) =>
 		file.endsWith('RestController.java')
 	);
-
-	// Matches both `@GetMapping("/x")` and the bare `@GetMapping` form, where
-	// the whole path lives on the class-level @RequestMapping. Also tolerates
-	// `value =` / `path =` attribute syntax.
 
 	const methodRegex =
 		/@(Get|Post|Put|Delete|Patch)Mapping\b(?:\(\s*(?:(?:value|path)\s*=\s*)?"([^"]*)")?/g;
@@ -175,8 +126,6 @@ export function enumerateRestEndpoints(): string[] {
 	return unique(anchors);
 }
 
-// cron:<methodName> — every @Scheduled task.
-
 export function enumerateCrons(): string[] {
 	const files = walk(SPRING_BOOT_JAVA, (file) => file.endsWith('.java'));
 
@@ -197,8 +146,6 @@ export function enumerateCrons(): string[] {
 	return unique(anchors);
 }
 
-// subscriber:<ClassName> — concrete async Pub/Sub subscribers.
-
 export function enumerateSubscribers(): string[] {
 	const files = walk(
 		SPRING_BOOT_JAVA,
@@ -212,8 +159,6 @@ export function enumerateSubscribers(): string[] {
 	);
 }
 
-// service:<ClassName> — every Spring service except the abstract base.
-
 export function enumerateServices(): string[] {
 	const files = walk(
 		SPRING_BOOT_JAVA,
@@ -226,8 +171,6 @@ export function enumerateServices(): string[] {
 		files.map((file) => `service:${path.basename(file, '.java')}`)
 	);
 }
-
-// converter:<ClassName> — every DTO/model converter except the abstract base.
 
 export function enumerateConverters(): string[] {
 	const files = walk(

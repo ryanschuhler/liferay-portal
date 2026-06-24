@@ -6,16 +6,7 @@
 import {expect, test} from '@playwright/test';
 
 import {SPAPage} from '../pages/SPAPage';
-import {liferayLogin, liferayLogout} from '../utils/login';
-
-// FLOWS: FLOW-MY-ACCOUNT-OVERVIEW and FLOW-ACCOUNT-TEAM-MEMBERS — the MyAccount
-// route group (ROUTE-MY-ACCOUNT-ORDERS, ROUTE-MY-ACCOUNT-ACCOUNT-MEMBERS, …) for
-// an entitled member: projects/orders/billing render, and the account-members
-// table supports invite, assign-role, and remove with role enforcement.
-//
-// DEFERRED. Needs an entitled member (the seed admin hits the Restricted Page)
-// and seeded account + member data. Provision ONE_ENTITLED_EMAIL /
-// ONE_ENTITLED_PASSWORD and set ONE_ACCOUNT_ERC, then drop `.fixme`.
+import {liferayLogin, liferayLogout} from '../utils/loginUtils';
 
 const entitledEmail = process.env.ONE_ENTITLED_EMAIL ?? 'test@liferay.com';
 const entitledPassword = process.env.ONE_ENTITLED_PASSWORD ?? 'test';
@@ -40,9 +31,6 @@ test.describe.fixme('[FLOW-MY-ACCOUNT-OVERVIEW] my account overview', () => {
 		await spaPage.goto();
 
 		await expect(spaPage.customElement.first()).toBeAttached();
-
-		// The member is not gated, so the overview resolves a project rather
-		// than the Restricted Page.
 
 		await expect(page.getByText(/restricted page/i)).toHaveCount(0);
 
@@ -72,8 +60,6 @@ test.describe.fixme(
 
 			await expect(page.getByRole('table')).toBeVisible({timeout: 30000});
 
-			// Invite a member.
-
 			await page.getByRole('button', {name: /invite/i}).click();
 			await page.getByLabel(/email/i).fill(inviteEmail);
 			await page.getByRole('button', {name: /send|invite|add/i}).click();
@@ -84,14 +70,10 @@ test.describe.fixme(
 
 			await expect(memberRow).toBeVisible();
 
-			// Reassign their role from the row actions.
-
 			await memberRow.getByRole('button').last().click();
 			await page.getByRole('menuitem', {name: /administrator/i}).click();
 
 			await expect(memberRow.getByText(/administrator/i)).toBeVisible();
-
-			// Remove the member.
 
 			await memberRow.getByRole('button').last().click();
 			await page.getByRole('menuitem', {name: /remove/i}).click();

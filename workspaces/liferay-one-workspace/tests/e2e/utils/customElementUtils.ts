@@ -5,24 +5,10 @@
 
 import {Page, expect} from '@playwright/test';
 
-import {gotoStable} from './navigation';
+import gotoStable from './gotoStable';
 
 const HEADING_SELECTOR = 'h1, h2, h3, h4, h5, h6, [role="heading"]';
 
-/**
- * Asserts that the `liferay-one-custom-element` SPA has booted and rendered at
- * the current location: the web component is attached and it has put a first
- * header or other visible content on the page. This is a deliberately loose
- * health check — it proves React mounted and rendered *something*, not that any
- * particular page loaded its data.
- *
- * A route can legitimately resolve to several rendered states on a fresh local:
- * the page's own view (a semantic heading), the restricted view for an
- * entitlement-gated page group, or an empty state when seeded data or a query
- * parameter is missing. All three count as "the React app is working", so the
- * check accepts a visible heading inside the custom element, any non-empty
- * visible text it rendered, or a page-level restricted message.
- */
 export async function expectCustomElementRenders(
 	page: Page,
 	path: string,
@@ -53,14 +39,10 @@ export async function expectCustomElementRenders(
 						await element.innerText().catch(() => '')
 					).trim();
 
-					if (text.length > 0) {
+					if (text.length) {
 						return true;
 					}
 				}
-
-				// Gated page groups can render a portal-level restricted view
-				// outside the custom element; that still proves the page mounted
-				// and the gate held.
 
 				return page
 					.getByText(/restricted/i)
@@ -76,9 +58,6 @@ export async function expectCustomElementRenders(
 		.toBe(true);
 }
 
-/**
- * Navigates to a custom-element route and asserts the SPA rendered there.
- */
 export async function gotoAndExpectRender(
 	page: Page,
 	path: string,

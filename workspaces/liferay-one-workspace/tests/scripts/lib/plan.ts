@@ -3,17 +3,6 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-/**
- * Parses the definitive testing plan under tests/plan/*.md into structured
- * rows. The plan is the source of truth: each row is one testable requirement
- * with a stable ID (referenced by tests) and a Source anchor (matched against
- * the enumerated code surface).
- *
- * Every plan file holds one or more Markdown tables with this exact header:
- *
- *   | ID | Requirement | Type | Priority | Status | Source |
- */
-
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -23,9 +12,6 @@ export const PLAN_DIR = path.join(WORKSPACE_ROOT, 'tests/plan');
 
 export const VALID_TYPES = ['unit', 'integration', 'e2e'];
 export const VALID_PRIORITIES = ['P0', 'P1', 'P2'];
-
-// "planned" items count toward the go-live denominator and need a test.
-// "deferred" / "n/a" items are excluded from the denominator.
 
 export const VALID_STATUSES = ['planned', 'deferred', 'n/a'];
 

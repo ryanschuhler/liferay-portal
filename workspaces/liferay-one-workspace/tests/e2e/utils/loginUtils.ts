@@ -34,12 +34,6 @@ export async function liferayLogin(
 	await loginPage.passwordField.fill(password);
 	await loginPage.signInButton.click();
 
-	// The redirect away from /sign-in is not proof of authentication — the
-	// portal returns to the login page on bad credentials. Wait until the
-	// runtime reports a signed-in session. isSignedIn swallows the transient
-	// error raised when the post-login redirect destroys the execution context
-	// mid-poll.
-
 	await expect
 		.poll(() => isSignedIn(page), {
 			message: 'expected the portal session to be signed in',

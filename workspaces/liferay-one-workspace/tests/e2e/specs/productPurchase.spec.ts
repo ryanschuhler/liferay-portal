@@ -6,18 +6,7 @@
 import {Page, expect, test} from '@playwright/test';
 
 import {SPAPage} from '../pages/SPAPage';
-import {liferayLogin, liferayLogout} from '../utils/login';
-
-// FLOWS: FLOW-PRODUCT-PURCHASE-ENTRY, FLOW-CHECKOUT-FREE, FLOW-CHECKOUT-PAID —
-// the ProductPurchase wizard end to end, also exercising the e2e route surfaces
-// ROUTE-PRODUCT-PURCHASE-LICENSE, ROUTE-PRODUCT-PURCHASE-PAYMENT-METHOD, and
-// ROUTE-PRODUCT-PURCHASE-SUMMARY for the right persona.
-//
-// DEFERRED. Needs an entitled user with a purchasable product (the seed admin
-// hits the Restricted Page), seeded commerce data for a free and a paid app, and
-// a payment-provider stub for the paid path. Set ONE_FREE_PRODUCT_ERC /
-// ONE_PAID_PRODUCT_ERC and provision the entitled persona (ONE_ENTITLED_EMAIL /
-// ONE_ENTITLED_PASSWORD), then drop `.fixme`.
+import {liferayLogin, liferayLogout} from '../utils/loginUtils';
 
 const freeProductERC = process.env.ONE_FREE_PRODUCT_ERC ?? 'FREE-APP-001';
 const paidProductERC = process.env.ONE_PAID_PRODUCT_ERC ?? 'PAID-APP-001';
@@ -50,17 +39,11 @@ test.describe.fixme('[FLOW-PRODUCT-PURCHASE-ENTRY] purchase wizard', () => {
 
 		await expect(spaPage.customElement.first()).toBeAttached();
 
-		// Account selection: pick an account, then Continue unlocks.
-
 		await page.getByRole('radio').first().check();
 		await page.getByRole('button', {name: /continue/i}).click();
 
-		// License step (paid app): a license card is offered.
-
 		await expect(page.getByText(/license/i).first()).toBeVisible();
 		await page.getByRole('button', {name: /continue/i}).click();
-
-		// Payment method step, then summary.
 
 		await page.getByRole('button', {name: /continue/i}).click();
 
@@ -81,16 +64,12 @@ test.describe.fixme('[FLOW-CHECKOUT-FREE] free app checkout', () => {
 		await page.getByRole('radio').first().check();
 		await page.getByRole('button', {name: /continue/i}).click();
 
-		// A free app goes straight to the summary — no license or payment step.
-
 		await expect(
 			page.getByRole('heading', {name: /summary/i})
 		).toBeVisible();
 
 		await page.getByRole('checkbox').check();
 		await page.getByRole('button', {name: /get app/i}).click();
-
-		// Completion lands on a confirmation; entitlement generation has run.
 
 		await expect(
 			page.getByText(/order|confirmation|success/i).first()
@@ -109,11 +88,7 @@ test.describe.fixme('[FLOW-CHECKOUT-PAID] paid app checkout', () => {
 		await page.getByRole('radio').first().check();
 		await page.getByRole('button', {name: /continue/i}).click();
 
-		// License step.
-
 		await page.getByRole('button', {name: /continue/i}).click();
-
-		// Payment-method step: a billing address is required before continuing.
 
 		await expect(
 			page.getByRole('heading', {name: /payment method/i})

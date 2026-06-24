@@ -5,30 +5,9 @@
 
 /* eslint-disable no-console -- CLI script; console output is its user interface */
 
-/**
- * check-plan — verifies the testing plan covers the actual code surface.
- *
- * For every enumerable surface (routes, pages, REST endpoints, crons,
- * subscribers, objects, roles, integrations) it diffs the code against the
- * plan's Source anchors and reports:
- *
- *   - GAPS:   code that ships but has no plan row   (plan is incomplete)
- *   - STALE:  plan rows pointing at code that is gone (plan is out of date)
- *   - ORPHAN: a plan-ID-shaped tag in a test that resolves to no plan item
- *             (a typo or a tag left behind when a plan ID was renamed) — such a
- *             tag silently counts toward nothing, so it is treated as an error.
- *
- * `spec:*` plan sources are ignored (they have no enumerable code symbol).
- * Exits non-zero on any gap, stale row, orphan tag, or plan validation error.
- *
- *   node scripts/check-plan.ts
- *
- * Fix gaps/stale automatically with: node scripts/scaffold-plan.ts
- */
-
 import {parsePlan, validatePlan} from './lib/plan.ts';
 import {ENUMERABLE_PREFIXES, enumerateSurface} from './lib/surface.ts';
-import {findOrphanTags} from './lib/tests-index.ts';
+import {findOrphanTags} from './lib/testsIndex.ts';
 
 function sourcePrefix(source: string): string {
 	return source.split(':', 1)[0];
@@ -56,7 +35,7 @@ function main(): number {
 	let gapCount = 0;
 	let staleCount = 0;
 
-	console.log('check-plan — does the plan cover the code surface?\n');
+	console.log('checkPlan — does the plan cover the code surface?\n');
 
 	for (const group of surface) {
 		const enumerated = new Set(group.anchors);
@@ -94,9 +73,6 @@ function main(): number {
 		}
 	}
 
-	// Surface any plan sources whose prefix we do not enumerate, other than the
-	// deliberate spec:* requirements.
-
 	const unknown = [...plannedSources].filter(
 		(source) =>
 			!ENUMERABLE_PREFIXES.includes(sourcePrefix(source)) &&
@@ -110,8 +86,6 @@ function main(): number {
 			console.log(`  ? unknown Source prefix: ${source}`);
 		}
 	}
-
-	// Orphan tags: plan-ID-shaped references in tests that match no plan item.
 
 	const orphans = findOrphanTags(new Set(items.map((item) => item.id)));
 
@@ -144,7 +118,7 @@ function main(): number {
 
 		console.log(
 			`FAIL — ${reasons.join(', ')}. ` +
-				`Run \`node scripts/scaffold-plan.ts\` to reconcile gaps/stale rows; ` +
+				`Run \`node scripts/scaffoldPlan.ts\` to reconcile gaps/stale rows; ` +
 				`fix orphan tags to match a plan ID.`
 		);
 

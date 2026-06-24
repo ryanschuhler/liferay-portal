@@ -8,24 +8,16 @@ import {expect, test} from '@playwright/test';
 const springBootBaseURL =
 	process.env.SPRING_BOOT_BASE_URL ?? 'http://localhost:58081';
 
-// Every endpoint except /ready sits behind OAuth2 — the client extension
-// excludes only /ready via `liferay.oauth.urls.excludes`. An unauthenticated
-// caller must be rejected with 401 before any controller logic — or any
-// outbound Jira, GCS, or commerce call — runs. Because the filter rejects
-// before the controller, the path-variable values below are throwaway. This
-// covers the full protected REST surface; it needs no token, no scopes, and
-// touches no external system, so it is safe to run locally and in CI.
-//
-// Mirrors the endpoint list in tests/plan/rest.md (ordered DELETE, GET, POST,
-// PUT). Keep the two lists in sync when an endpoint is added or removed.
-
 const protectedRequests = [
 	{method: 'delete', path: '/jira/accounts/ACCNT-001/business-events/1'},
 	{method: 'delete', path: '/ticket-attachments/1'},
 	{method: 'get', path: '/accounts/ACCNT-001/jira/object-key'},
 	{method: 'get', path: '/jira/accounts/ACCNT-001/business-events'},
 	{method: 'get', path: '/jira/accounts/ACCNT-001/business-events/1'},
-	{method: 'get', path: '/jira/accounts/ACCNT-001/business-events/1/versions'},
+	{
+		method: 'get',
+		path: '/jira/accounts/ACCNT-001/business-events/1/versions',
+	},
 	{method: 'get', path: '/jira/accounts/ACCNT-001/tickets'},
 	{method: 'get', path: '/jira/business-events/fields/priority/options'},
 	{method: 'get', path: '/jira/product-versions'},
@@ -56,7 +48,9 @@ test.describe('liferay-one-etc-spring-boot auth', () => {
 		test(`[AUTH-UNAUTHENTICATED] ${method.toUpperCase()} ${path} rejects an unauthenticated request`, async ({
 			request,
 		}) => {
-			const response = await request[method](`${springBootBaseURL}${path}`);
+			const response = await request[method](
+				`${springBootBaseURL}${path}`
+			);
 
 			expect(response.status(), await response.text()).toBe(401);
 		});

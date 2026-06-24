@@ -6,15 +6,7 @@
 import {expect, test} from '@playwright/test';
 
 import {SPAPage} from '../pages/SPAPage';
-import {liferayLogin, liferayLogout} from '../utils/login';
-
-// FLOW: FLOW-ADMIN-DASHBOARD — the Marketplace admin dashboard for entitled
-// staff. The summary (ROUTE-ADMIN-MP-SUMMARY) renders KPIs and the orders table
-// (ROUTE-ADMIN-MP-ORDERS) paginates, sorts, and filters.
-//
-// DEFERRED. The seed admin is not Liferay Staff and sees the Restricted Page, so
-// this needs an entitled staff user and seeded marketplace data. Provision
-// ONE_STAFF_EMAIL / ONE_STAFF_PASSWORD and drop `.fixme`.
+import {liferayLogin, liferayLogout} from '../utils/loginUtils';
 
 const staffEmail = process.env.ONE_STAFF_EMAIL ?? 'test@liferay.com';
 const staffPassword = process.env.ONE_STAFF_PASSWORD ?? 'test';
@@ -39,9 +31,6 @@ test.describe.fixme(
 
 			await expect(spaPage.customElement.first()).toBeAttached();
 
-			// Staff are not gated — the dashboard renders rather than the Restricted
-			// Page.
-
 			await expect(page.getByText(/restricted page/i)).toHaveCount(0);
 			await expect(
 				page.getByRole('heading', {name: /administrator dashboard/i})
@@ -64,15 +53,11 @@ test.describe.fixme(
 				.nth(1)
 				.textContent();
 
-			// Sort by a column header and confirm the leading row changes.
-
 			await page.getByRole('columnheader', {name: /date/i}).click();
 
 			await expect
 				.poll(async () => table.getByRole('row').nth(1).textContent())
 				.not.toBe(firstRowBefore);
-
-			// Advance a page through the pagination control.
 
 			await page
 				.getByRole('button', {name: /next|2/i})

@@ -8,13 +8,6 @@ import {expect} from '@playwright/test';
 import {apiTest as test} from '../fixtures/apiTest';
 import {HeadlessPage} from '../helpers/APIHelpers';
 
-// FLOWS: FLOW-TRIAL-PROVISIONING and FLOW-TRIAL-EXPIRY.
-//
-// SPEC-ONLY / DEFERRED. Neither a trial provisioning nor a trial expiry endpoint
-// is implemented yet — both depend on the Liferay Cloud integration. These
-// bodies pin the intended contract so the test is ready when the endpoints land;
-// set ONE_TRIAL_PRODUCT_ERC and drop `.fixme` then.
-
 const trialProductERC =
 	process.env.ONE_TRIAL_PRODUCT_ERC ?? 'TRIAL-PRODUCT-001';
 

@@ -5,18 +5,6 @@
 
 /* eslint-disable no-console -- CLI script; console output is its user interface */
 
-/**
- * Generates / refreshes the by-surface plan files under tests/plan from the
- * enumerated code surface.
- *
- * Merge-aware: existing rows (matched by ID) keep their curated Requirement,
- * Type, Priority, and Status. New code anchors are appended with defaults.
- * Anchors that no longer exist in code are dropped. Human curation is safe to
- * re-run against.
- *
- *   node scripts/scaffold-plan.ts
- */
-
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -32,13 +20,10 @@ interface FileSpec {
 	title: string;
 }
 
-// One markdown file per surface family. Scope is limited to the two client
-// extensions under test — the custom-element SPA and the Spring Boot service.
-
 const FILES: FileSpec[] = [
 	{
 		description:
-			'Every custom-element SPA route. The SPA mounts one of seven page-group routers (chosen by the host widget\'s `route` attribute); six carry nested route tables enumerated below, and the seventh (account-selector) is a single page with no nested routes. Most route groups are static route tables, covered by Vitest route-wiring unit tests that assert the declared paths, elements, and titles. Route groups with conditional wiring (e.g. ProductPurchase\'s free/paid steps) additionally warrant an e2e test that loads the route and asserts it renders for the right persona. A few routes are declared inline in the *Router.tsx files rather than the static table (the MyAccount account guard and project layout, the ProductPurchase completion pages); these only render behind entitlement or commerce state, so they are e2e/deferred and exercised by the flows in flows.md.',
+			"Every custom-element SPA route. The SPA mounts one of seven page-group routers (chosen by the host widget's `route` attribute); six carry nested route tables enumerated below, and the seventh (account-selector) is a single page with no nested routes. Most route groups are static route tables, covered by Vitest route-wiring unit tests that assert the declared paths, elements, and titles. Route groups with conditional wiring (e.g. ProductPurchase's free/paid steps) additionally warrant an e2e test that loads the route and asserts it renders for the right persona. A few routes are declared inline in the *Router.tsx files rather than the static table (the MyAccount account guard and project layout, the ProductPurchase completion pages); these only render behind entitlement or commerce state, so they are e2e/deferred and exercised by the flows in flows.md.",
 		file: 'routes.md',
 		prefixes: ['route'],
 		title: 'Routes',
@@ -89,10 +74,6 @@ const ID_PREFIX: Record<string, string> = {
 	subscriber: 'SUB',
 };
 
-// Every enumerable surface is unit-tested in isolation (JUnit MockMvc/Mockito
-// for Spring, Vitest for routes). The real in-action integration/e2e coverage
-// is curated as cross-cutting journeys in flows.md, not auto-scaffolded here.
-
 const DEFAULT_TYPE: Record<string, string> = {
 	converter: 'unit',
 	cron: 'unit',
@@ -101,8 +82,6 @@ const DEFAULT_TYPE: Record<string, string> = {
 	service: 'unit',
 	subscriber: 'unit',
 };
-
-// Anchors that gate go-live and should draw attention first.
 
 const P0_ANCHORS = new Set([
 	'route:product-purchase:summary',
@@ -183,8 +162,6 @@ function buildTable(
 function main() {
 	fs.mkdirSync(PLAN_DIR, {recursive: true});
 
-	// Index already-curated rows by ID so a re-run preserves human edits.
-
 	const curated = new Map<string, Curated>();
 
 	for (const item of parsePlan()) {
@@ -225,7 +202,7 @@ function main() {
 			'',
 			spec.description,
 			'',
-			`> Auto-scaffolded from the code surface (${total} items). Edit the Requirement, Type, Priority, and Status columns freely — \`scaffold-plan\` preserves them on re-run. Do not hand-edit the ID or Source columns.`,
+			`> Auto-scaffolded from the code surface (${total} items). Edit the Requirement, Type, Priority, and Status columns freely — \`scaffoldPlan\` preserves them on re-run. Do not hand-edit the ID or Source columns.`,
 			...sections,
 			'',
 		].join('\n');

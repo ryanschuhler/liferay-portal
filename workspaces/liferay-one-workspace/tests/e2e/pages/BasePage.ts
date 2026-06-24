@@ -5,7 +5,7 @@
 
 import {Page} from '@playwright/test';
 
-import {gotoStable} from '../utils/navigation';
+import gotoStable from '../utils/gotoStable';
 
 export abstract class BasePage {
 	readonly page: Page;

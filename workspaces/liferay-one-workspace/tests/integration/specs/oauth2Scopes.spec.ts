@@ -5,28 +5,7 @@
 
 import {APIRequestContext, expect, test} from '@playwright/test';
 
-// FLOW: AUTH-OAUTH2-SCOPES — positive-path OAuth2 scope enforcement.
-//
-// DEFERRED. springBootAuth.spec.ts already proves the unauthenticated 401
-// contract across the whole surface. This is the complementary positive path:
-// a *valid* token that is missing the scope an endpoint requires must be
-// rejected with 403 by the `/o/one/v1` proxy before the controller runs, and a
-// token that carries the scope must reach the controller (anything but 401/403).
-//
-// Blocked locally by two things, both part of the same environment work:
-//   - the local portal does not expose the `/o/one/v1` proxy path, so scope
-//     enforcement never engages; and
-//   - minting a *scoped* token needs an OAuth2 application whose allowed scopes
-//     can be narrowed per request (`scripts/extract_oauth_credentials.sh`).
-//
-// When that lands, drop `.fixme`, point BASE_URL at the proxy host, and set
-// OAUTH_CLIENT_ID / OAUTH_CLIENT_SECRET for a client granted every scope below.
-
 const baseURL = process.env.BASE_URL ?? 'http://localhost:8080';
-
-// One representative endpoint per scope. The proxy — not the controller —
-// enforces the scope, so the path variables are throwaway: a request missing
-// the scope is rejected before any controller, Jira, GCS, or commerce call.
 
 const scopedRequests = [
 	{
@@ -79,10 +58,6 @@ test.describe.fixme('[AUTH-OAUTH2-SCOPES] OAuth2 scope enforcement', () => {
 		test(`[AUTH-OAUTH2-SCOPES] ${method.toUpperCase()} ${path} requires ${scope}`, async ({
 			request,
 		}) => {
-
-			// A token granted the required scope reaches the controller: the
-			// proxy lets it through, so the status is anything but 401/403.
-
 			const granted = await tokenFor(request, scope);
 
 			const allowed = await request[method](`${baseURL}${path}`, {
@@ -90,9 +65,6 @@ test.describe.fixme('[AUTH-OAUTH2-SCOPES] OAuth2 scope enforcement', () => {
 			});
 
 			expect([401, 403]).not.toContain(allowed.status());
-
-			// A valid token that lacks the scope is rejected with 403 before the
-			// controller runs — not 401 (it is authenticated) and not 200.
 
 			const denied = await tokenFor(request, 'openid');
 

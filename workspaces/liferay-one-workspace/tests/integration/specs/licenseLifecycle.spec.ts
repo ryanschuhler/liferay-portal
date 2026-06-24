@@ -8,16 +8,6 @@ import {APIRequestContext, expect} from '@playwright/test';
 import {apiTest as test} from '../fixtures/apiTest';
 import {HeadlessPage} from '../helpers/APIHelpers';
 
-// FLOWS: FLOW-LICENSE-GENERATION, FLOW-LICENSE-EXPIRATION-EMAIL, and
-// FLOW-LICENSE-REVOCATION — the license-key lifecycle around a subscription.
-//
-// DEFERRED. All three need seeded subscription + license-key data and the
-// `/o/one/v1` proxy; generation also needs the license signer, the expiry
-// reminder needs an on-demand trigger for CRON-SCHEDULEDSENDEXPIRINGLICENSEKEYEMAILS,
-// and revocation has no endpoint implemented yet (spec-only). Set
-// ONE_SUBSCRIPTION_ERC / CRON_TRIGGER_URL and drop `.fixme` per requirement as
-// the pieces land.
-
 const subscriptionERC = process.env.ONE_SUBSCRIPTION_ERC ?? 'SUBSCRIPTION-001';
 const cronTriggerURL = process.env.CRON_TRIGGER_URL ?? '';
 
@@ -60,8 +50,6 @@ test.describe.fixme('[FLOW-LICENSE-GENERATION] license generation', () => {
 				subscriptionERC
 			);
 
-			// The key is signed — the signature is what the portal verifies.
-
 			expect(licenseKey.signature).toBeTruthy();
 			expect(licenseKey.key).toBeTruthy();
 		}
@@ -77,9 +65,6 @@ test.describe.fixme(
 		}) => {
 			await triggerCron(request, 'scheduledSendExpiringLicenseKeyEmails');
 
-			// The cron queues 30/14/0-day templated emails; a notification queue
-			// entry lands for each subscribed user on an expiring key.
-
 			const page = await api.get<HeadlessPage<{type: string}>>(
 				'/o/c/notificationqueueentries?pageSize=100'
 			);
@@ -92,9 +77,6 @@ test.describe.fixme(
 		});
 	}
 );
-
-// Spec-only: no license-key revocation endpoint or object action is implemented
-// yet, so this body describes the intended contract for when one lands.
 
 test.describe.fixme('[FLOW-LICENSE-REVOCATION] license revocation', () => {
 	test('[FLOW-LICENSE-REVOCATION] deactivates a revoked license key', async ({
