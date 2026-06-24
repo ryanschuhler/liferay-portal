@@ -6,12 +6,7 @@
 import {expect, test} from '@playwright/test';
 
 import {SPAPage} from '../pages/SPAPage';
-import {liferayLogin, liferayLogout} from '../utils/login';
-
-// The entitlement-gated page groups mount the SPA but render the Restricted Page
-// view for a user without the required entitlement — which the seed admin lacks.
-// This proves the custom element mounts and routes in the browser and that the
-// access gate holds; the entitled happy path needs a provisioned user (deferred).
+import {liferayLogin, liferayLogout} from '../utils/loginUtils';
 
 const gatedPages = [
 	{name: 'Admin', path: '/web/one/admin#/mp-summary'},

@@ -2,7 +2,7 @@
 
 Every liferay-one-etc-spring-boot REST endpoint. Each is unit-tested at the controller level (JUnit MockMvc) for its contract, status codes, validation, and error handling. The real in-action integration coverage — through the OAuth2 proxy, against external systems — is tracked as journeys in flows.md.
 
-> Auto-scaffolded from the code surface (24 items). Edit the Requirement, Type, Priority, and Status columns freely — `scaffold-plan` preserves them on re-run. Do not hand-edit the ID or Source columns.
+> Auto-scaffolded from the code surface (24 items). Edit the Requirement, Type, Priority, and Status columns freely — `scaffoldPlan` preserves them on re-run. Do not hand-edit the ID or Source columns.
 
 | ID | Requirement | Type | Priority | Status | Source |
 | --- | --- | --- | --- | --- | --- |

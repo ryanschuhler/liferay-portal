@@ -7,23 +7,10 @@ import {APIRequestContext, expect} from '@playwright/test';
 
 import {apiTest as test} from '../fixtures/apiTest';
 
-// FLOW: FLOW-TICKET-DOWNLOAD — signed-URL download with member-vs-non-member
-// access enforcement. Covers REST-GET-TICKET-ATTACHMENTS-BY-ID-ID-DOWNLOAD,
-// REST-GET-TICKET-ATTACHMENTS-BY-EXTERNAL-REFERENCE-CODE-EXTERNALREFERENCECODE-DOWNLOAD,
-// and REST-GET-TICKETS-TICKETID-TICKET-ATTACHMENTS-DOWNLOAD-ACCESS-CHECK.
-//
-// DEFERRED. Needs the `/o/one/v1` proxy, a GCS stub that mints signed URLs, and
-// a seeded attachment plus an account the test user is NOT a member of. Set
-// ONE_TICKET_ID / ONE_ATTACHMENT_ID / ONE_ATTACHMENT_ERC / ONE_FOREIGN_TICKET_ID
-// and a non-member token (ONE_NON_MEMBER_*), then drop `.fixme`.
-
 const ticketId = process.env.ONE_TICKET_ID ?? '1';
 const attachmentId = process.env.ONE_ATTACHMENT_ID ?? '1';
 const attachmentERC = process.env.ONE_ATTACHMENT_ERC ?? 'ATTACH-001';
 const foreignTicketId = process.env.ONE_FOREIGN_TICKET_ID ?? '2';
-
-// A GCS V4 signed URL carries its lifetime in the X-Goog-Expires query param,
-// in seconds. The controller caps download URLs at 15 minutes.
 
 function signedURLExpirySeconds(url: string): number {
 	return Number(new URL(url).searchParams.get('X-Goog-Expires'));
@@ -84,11 +71,6 @@ test.describe.fixme('[FLOW-TICKET-DOWNLOAD] ticket attachment download', () => {
 	test('[FLOW-TICKET-DOWNLOAD] denies a non-member with 403', async ({
 		request,
 	}) => {
-
-		// A user who is neither a provisioning member, support-ticket-role
-		// holder, nor in the account's organization is forbidden — proven
-		// with a token for a user outside the foreign ticket's account.
-
 		const response = await downloadAccessCheckAsNonMember(
 			request,
 			foreignTicketId

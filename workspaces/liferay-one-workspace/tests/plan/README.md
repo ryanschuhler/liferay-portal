@@ -10,9 +10,9 @@ REST endpoint, scheduled cron, and Pub/Sub subscriber as a row with a stable ID,
 plus hand-curated cross-cutting flows. Tests reference those IDs, and two scripts
 keep the plan honest:
 
-- **`check-plan`** proves the plan covers the code. It enumerates the actual
+- **`checkPlan`** proves the plan covers the code. It enumerates the actual
   code surface and fails if anything ships without a plan row.
-- **`check-coverage`** proves tests cover the plan. It scans the test suites for
+- **`checkCoverage`** proves tests cover the plan. It scans the test suites for
   plan IDs and reports the percentage complete — our distance to go-live.
 
 ## Files
@@ -44,7 +44,7 @@ Every plan file holds Markdown tables with this exact header:
 - **Status** — `planned` (counts toward go-live and needs a test), `deferred`,
   or `n/a` (both excluded from the denominator).
 - **Source** — the code anchor. Enumerable prefixes are reconciled against code
-  by `check-plan`; `spec:*` anchors are curated by hand and never enumerated.
+  by `checkPlan`; `spec:*` anchors are curated by hand and never enumerated.
 
 ## How tests link to the plan
 
@@ -61,7 +61,7 @@ test('[ROUTE-ADMIN-MP-ORDERS] renders the orders table', async () => { ... });
 @DisplayName("[REST-POST-ENTITLEMENTS-GENERATE] generates an entitlement")
 ```
 
-`check-coverage` scans for ID-shaped tokens, so any framework works and one test
+`checkCoverage` scans for ID-shaped tokens, so any framework works and one test
 may cover several IDs (list them all in the title). An ID also counts when it
 appears as a bare token rather than bracketed — e.g. a data-driven test whose
 table holds `planId: 'OBJ-LICENSEKEY'` and builds the title dynamically — so
@@ -84,7 +84,7 @@ separates **real** tests from **pending** stubs, so it answers "how close are we
 *really*?". It prints a per-surface breakdown and writes a full per-item
 traceability report to `tests/test-results/plan-report.md`.
 
-`check-plan` reports three kinds of problem:
+`checkPlan` reports three kinds of problem:
 
 - **GAP** — new code shipped without a plan row: run `yarn plan:scaffold` to add
   it, then curate the new row.
@@ -96,5 +96,5 @@ traceability report to `tests/test-results/plan-report.md`.
   a real plan prefix (`ROUTE-`, `REST-`) are flagged, so unrelated hyphenated tokens
   are ignored.
 
-`check-coverage` accepts `--list` (show every uncovered item) and `--min <pct>`
+`checkCoverage` accepts `--list` (show every uncovered item) and `--min <pct>`
 (fail under a threshold — wire this into CI as the go-live bar rises).

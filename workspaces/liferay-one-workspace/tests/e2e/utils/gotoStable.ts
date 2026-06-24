@@ -5,12 +5,7 @@
 
 import {Page, Response} from '@playwright/test';
 
-/**
- * Navigates to a path, tolerating the transient net::ERR_ABORTED that the
- * portal raises when the requested URL issues a server-side redirect and the
- * original navigation is superseded. Retries once before giving up.
- */
-export async function gotoStable(
+export default async function gotoStable(
 	page: Page,
 	path: string
 ): Promise<Response | null> {

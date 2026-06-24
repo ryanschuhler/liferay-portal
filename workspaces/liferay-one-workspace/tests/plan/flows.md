@@ -8,7 +8,7 @@ the integration (`request` against a booted portal) and e2e (browser through
 the custom element) tests that exercise those same symbols for real, as the
 multi-surface user journeys they belong to.
 
-Journeys use `spec:` Source anchors, which `check-plan` intentionally does not
+Journeys use `spec:` Source anchors, which `checkPlan` intentionally does not
 enumerate — curate these rows by hand.
 
 Most journeys are implemented in code but cannot run end to end against a local
@@ -100,7 +100,7 @@ upsert→dedupe→deactivate) are already pinned with `test.describe.configure({
 ## Surface coverage matrix
 
 Proof that the journeys above collectively exercise every unit-tested surface in
-action. This table is informational — `check-plan` does not parse it (it is not
+action. This table is informational — `checkPlan` does not parse it (it is not
 a six-column plan table). "Status" is the real-test status, not the unit-test
 status; every surface here already has unit coverage in its per-surface file.
 

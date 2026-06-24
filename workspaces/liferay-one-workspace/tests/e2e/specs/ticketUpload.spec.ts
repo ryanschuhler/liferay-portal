@@ -6,18 +6,7 @@
 import {expect, test} from '@playwright/test';
 
 import {SPAPage} from '../pages/SPAPage';
-import {liferayLogin, liferayLogout} from '../utils/login';
-
-// FLOW: FLOW-TICKET-UPLOAD — attachment upload through the custom element.
-// Selecting an account and ticket (ROUTE-TICKET-ATTACHMENTS-NEW) and uploading a file
-// (ROUTE-TICKET-ATTACHMENTS-NEW-TICKETID) initiates a GCS resumable session
-// (REST-POST-TICKET-ATTACHMENTS-INITIATE-UPLOAD), completes with an MD5 check and
-// posts a Jira comment (REST-POST-TICKET-ATTACHMENTS-TICKETATTACHMENTID-COMPLETE-UPLOAD),
-// with CRON-SCHEDULEDUPDATETICKETATTACHMENTDRAFTCOMMENTBODY as the comment-retry
-// fallback.
-//
-// DEFERRED. Needs Jira + GCS stubs and an entitled support user with upload
-// access. Provision ONE_ENTITLED_EMAIL / ONE_ENTITLED_PASSWORD and drop `.fixme`.
+import {liferayLogin, liferayLogout} from '../utils/loginUtils';
 
 const entitledEmail = process.env.ONE_ENTITLED_EMAIL ?? 'test@liferay.com';
 const entitledPassword = process.env.ONE_ENTITLED_PASSWORD ?? 'test';
@@ -43,8 +32,6 @@ test.describe.fixme('[FLOW-TICKET-UPLOAD] ticket attachment upload', () => {
 
 		await expect(spaPage.customElement.first()).toBeAttached();
 
-		// Select an account, then the tickets for that account load.
-
 		const [accountSelect, ticketSelect] = await page
 			.getByRole('combobox')
 			.all();
@@ -52,8 +39,6 @@ test.describe.fixme('[FLOW-TICKET-UPLOAD] ticket attachment upload', () => {
 		await accountSelect.selectOption({index: 1});
 		await expect(ticketSelect).toBeEnabled();
 		await ticketSelect.selectOption({index: 1});
-
-		// [ROUTE-TICKET-ATTACHMENTS-NEW-TICKETID] the uploader opens for the ticket.
 
 		await page.getByRole('button', {name: /continue|next|upload/i}).click();
 
@@ -64,8 +49,6 @@ test.describe.fixme('[FLOW-TICKET-UPLOAD] ticket attachment upload', () => {
 		});
 
 		await page.getByRole('button', {name: /upload|submit|attach/i}).click();
-
-		// The resumable upload completes and the attachment is listed.
 
 		await expect(page.getByText(/evidence\.txt/i)).toBeVisible({
 			timeout: 30000,

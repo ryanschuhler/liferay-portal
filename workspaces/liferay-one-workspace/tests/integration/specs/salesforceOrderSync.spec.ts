@@ -8,24 +8,7 @@ import {APIRequestContext, expect} from '@playwright/test';
 import {apiTest as test} from '../fixtures/apiTest';
 import {HeadlessPage} from '../helpers/APIHelpers';
 
-// FLOW: FLOW-SALESFORCE-ORDER-SYNC — SUB-SALESFORCEOBJECTPUBSUBSUBSCRIBER.
-//
-// Inbound Salesforce Pub/Sub messages upsert Commerce products, SKUs, and price
-// entries. The message handler (action + salesforceObjectName + records) is
-// unit-covered in SalesforceObjectPubsubSubscriberTest; this is the in-action
-// proof that a published message lands in Commerce, idempotently, and that a
-// "delete" deactivates the product.
-//
-// DEFERRED. Needs a Pub/Sub broker (or the GCP emulator) the subscriber is
-// subscribed to, plus seeded SALESFORCE_PRICE_LIST_<currency> price lists for
-// the price-entry path. Point PUBSUB_PUBLISH_URL at the broker's publish
-// endpoint and drop `.fixme`.
-
 const publishURL = process.env.PUBSUB_PUBLISH_URL ?? '';
-
-// The subscriber consumes {action, salesforceObjectName, records[]}; Product2
-// records carry id/name/description, PricebookEntry records carry
-// id/currencyIsoCode/product2Id/unitPrice/isActive.
 
 function product2Message(action: string, id: string, name: string) {
 	return {
@@ -65,10 +48,6 @@ async function productByERC(
 test.describe.fixme(
 	'[FLOW-SALESFORCE-ORDER-SYNC] [SUB-SALESFORCEOBJECTPUBSUBSUBSCRIBER] Salesforce object sync',
 	() => {
-
-		// Upsert, dedupe, and deactivate operate on one product in sequence;
-		// serial mode keeps a failed upsert from cascading into the later tests.
-
 		test.describe.configure({mode: 'serial'});
 
 		const productId = 'SF-PRODUCT-SYNC-001';
@@ -100,9 +79,6 @@ test.describe.fixme(
 			await publish(request, message);
 			await publish(request, message);
 
-			// A redelivered message must not create a second product — the ERC
-			// keeps the upsert idempotent.
-
 			const page = await api.get<HeadlessPage<CommerceProduct>>(
 				`/o/headless-commerce-admin-catalog/v1.0/products?filter=${encodeURIComponent(
 					`externalReferenceCode eq '${productId}'`
@@ -125,8 +101,6 @@ test.describe.fixme(
 				request,
 				product2Message('delete', productId, 'Synced Product')
 			);
-
-			// Deactivation removes the product from the active catalog listing.
 
 			await expect
 				.poll(async () => await productByERC(api, productId))

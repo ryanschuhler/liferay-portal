@@ -7,12 +7,6 @@ import {Locator, Page} from '@playwright/test';
 
 import {BasePage} from './BasePage';
 
-/**
- * A page hosting the `liferay-one-custom-element` SPA. The custom element mounts
- * one of the page-group routers (admin, my-account, product-purchase, …) chosen
- * by the widget instance's `route` attribute; `customElement` is the mount point
- * an e2e test waits on to prove the SPA rendered.
- */
 export class SPAPage extends BasePage {
 	readonly customElement: Locator;
 

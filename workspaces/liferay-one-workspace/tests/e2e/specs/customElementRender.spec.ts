@@ -5,22 +5,8 @@
 
 import {test} from '@playwright/test';
 
-import {gotoAndExpectRender} from '../utils/customElement';
-import {liferayLogin, liferayLogout} from '../utils/login';
-
-// [FLOW-SPA-RENDER-SMOKE] A fresh-local health check that the React app boots
-// and renders a first header (or visible content) on every custom-element route
-// across all seven page groups. Each page group mounts the SPA at its own site
-// page; sub-routes are HashRouter paths under that page. Parameterized routes
-// (:orderId, :ticketId, :accountERC, …) are exercised with placeholder IDs —
-// they resolve to a detail view, an empty state, or a redirect, all of which
-// still prove the SPA rendered. Gated groups (Admin, My Account) render the
-// restricted view for the seed admin; that counts too.
-//
-// Run against a spun-up local:
-//   cd tests && yarn test:e2e --grep "@render"
-
-// Site page friendly URLs that host the custom element (site "one").
+import {gotoAndExpectRender} from '../utils/customElementUtils';
+import {liferayLogin, liferayLogout} from '../utils/loginUtils';
 
 const ADMIN = '/web/one/admin';
 const BUSINESS_EVENTS = '/web/one/support/business-events';
@@ -29,9 +15,6 @@ const MY_ACCOUNT = '/web/one/my-account';
 const PRODUCT_PURCHASE = '/web/one/product-purchase';
 const PUBLISHER_DASHBOARD = '/web/one/my-account/publisher-dashboard';
 const TICKET_ATTACHMENTS = '/web/one/support/ticket-attachments';
-
-// Placeholder path parameters. Lowercase on purpose so they never collide with
-// a plan-ID-shaped token in the coverage indexer.
 
 const ACCOUNT = 'placeholder-account';
 const ERC = 'placeholder-erc';
@@ -45,16 +28,11 @@ interface RouteCheck {
 }
 
 const ROUTE_CHECKS: RouteCheck[] = [
-
-	// Header account selector (mounts in the master page on every page) + home.
-
 	{
 		name: 'account-selector mounts in the page header',
 		planId: 'FLOW-SPA-RENDER-SMOKE',
 		url: HOME,
 	},
-
-	// Admin — entitlement-gated for the seed admin (renders the restricted view).
 
 	{
 		name: 'admin marketplace summary',
@@ -142,9 +120,6 @@ const ROUTE_CHECKS: RouteCheck[] = [
 		url: `${ADMIN}#/license-key-uploads`,
 	},
 
-	// My Account — entitlement-gated for the seed admin. Account-scoped routes
-	// nest under the :accountERC guard.
-
 	{
 		name: 'my account account details',
 		planId: 'ROUTE-MY-ACCOUNT-ACCOUNT-DETAILS',
@@ -206,8 +181,6 @@ const ROUTE_CHECKS: RouteCheck[] = [
 		url: `${MY_ACCOUNT}#/${ACCOUNT}/project/${PROJECT}/applications/placeholder-app`,
 	},
 
-	// Publisher Dashboard.
-
 	{
 		name: 'publisher dashboard published apps',
 		planId: 'ROUTE-PUBLISHER-DASHBOARD-PUBLISHED-APPS',
@@ -228,8 +201,6 @@ const ROUTE_CHECKS: RouteCheck[] = [
 		planId: 'ROUTE-PUBLISHER-DASHBOARD-EDIT',
 		url: `${PUBLISHER_DASHBOARD}#/publisher-profile/edit`,
 	},
-
-	// Business Events — backed by Jira; account-scoped under :accountKey.
 
 	{
 		name: 'business events list',
@@ -257,8 +228,6 @@ const ROUTE_CHECKS: RouteCheck[] = [
 		url: `${BUSINESS_EVENTS}#/${ACCOUNT}/business-events/${ID}/activity-history`,
 	},
 
-	// Ticket Attachments — backed by Jira + GCS.
-
 	{
 		name: 'ticket attachments new',
 		planId: 'ROUTE-TICKET-ATTACHMENTS-NEW',
@@ -284,9 +253,6 @@ const ROUTE_CHECKS: RouteCheck[] = [
 		planId: 'ROUTE-TICKET-ATTACHMENTS-TICKETID',
 		url: `${TICKET_ATTACHMENTS}#/${ID}`,
 	},
-
-	// Product Purchase — needs a productId query parameter; the wizard steps are
-	// HashRouter paths and the completion pages are declared inline in the router.
 
 	{
 		name: 'product purchase summary',

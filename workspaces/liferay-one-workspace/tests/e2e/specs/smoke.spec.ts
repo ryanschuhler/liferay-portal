@@ -6,7 +6,7 @@
 import {expect} from '@playwright/test';
 
 import {pagesTest as test} from '../fixtures/pagesTest';
-import {liferayLogin, liferayLogout} from '../utils/login';
+import {liferayLogin, liferayLogout} from '../utils/loginUtils';
 
 test.afterEach(async ({page}) => {
 	await liferayLogout(page);

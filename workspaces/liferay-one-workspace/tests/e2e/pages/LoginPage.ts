@@ -23,9 +23,6 @@ export class LoginPage extends BasePage {
 	}
 
 	async goto() {
-
-		// Redirects to the site's custom /sign-in page hosting the login portlet.
-
 		await this.navigateTo('/c/portal/login');
 	}
 }

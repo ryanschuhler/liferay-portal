@@ -16,7 +16,7 @@ export default defineConfig({
 		timeout: 15 * 1000,
 	},
 	forbidOnly: !!process.env.CI,
-	fullyParallel: false,
+	fullyParallel: true,
 	globalTimeout: 30 * 60 * 1000,
 	projects: [
 		{
@@ -50,5 +50,5 @@ export default defineConfig({
 	],
 	retries: process.env.CI ? 1 : 0,
 	timeout: 90 * 1000,
-	workers: 1,
+	workers: process.env.CI ? 2 : undefined,
 });

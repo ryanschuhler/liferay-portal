@@ -2,7 +2,7 @@
 
 Every Spring service in liferay-one-etc-spring-boot. Services holding branching logic (dedupe guards, validation, null/error fallbacks) are `planned` and unit-tested with JUnit + Mockito — this is where the logic the controllers delegate to actually lives. Thin HTTP CRUD wrappers with no branch worth proving are kept `n/a`: enumerated so the surface stays honest, but excluded from the go-live denominator.
 
-> Auto-scaffolded from the code surface (19 items). Edit the Requirement, Type, Priority, and Status columns freely — `scaffold-plan` preserves them on re-run. Do not hand-edit the ID or Source columns.
+> Auto-scaffolded from the code surface (19 items). Edit the Requirement, Type, Priority, and Status columns freely — `scaffoldPlan` preserves them on re-run. Do not hand-edit the ID or Source columns.
 
 | ID | Requirement | Type | Priority | Status | Source |
 | --- | --- | --- | --- | --- | --- |

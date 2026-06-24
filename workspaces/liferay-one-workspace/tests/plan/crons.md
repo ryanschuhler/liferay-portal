@@ -2,7 +2,7 @@
 
 Every scheduled background task in liferay-one-etc-spring-boot. Each is unit-tested at the handler level (JUnit + Mockito), including idempotency. The real in-action integration coverage is tracked as journeys in flows.md.
 
-> Auto-scaffolded from the code surface (5 items). Edit the Requirement, Type, Priority, and Status columns freely — `scaffold-plan` preserves them on re-run. Do not hand-edit the ID or Source columns.
+> Auto-scaffolded from the code surface (5 items). Edit the Requirement, Type, Priority, and Status columns freely — `scaffoldPlan` preserves them on re-run. Do not hand-edit the ID or Source columns.
 
 | ID | Requirement | Type | Priority | Status | Source |
 | --- | --- | --- | --- | --- | --- |

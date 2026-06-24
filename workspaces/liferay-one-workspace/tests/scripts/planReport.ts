@@ -5,31 +5,12 @@
 
 /* eslint-disable no-console -- CLI script; console output is its user interface */
 
-/**
- * plan-report — the true go-live picture, beyond the pass/fail of check-coverage.
- *
- * check-coverage counts an item as covered when any test references its ID, so a
- * hard-failing pending stub counts the same as a real test. This report tells
- * the two apart by looking at WHICH file covers each item, classifying every
- * plan item as:
- *
- *   ✓ real      — a non-stub test covers it
- *   ⏳ pending   — only a pending.spec.ts / pendingFlows.spec.ts stub covers it
- *   ✗ uncovered — no test references it
- *   ⊘ deferred  — status is deferred / n/a (excluded from go-live)
- *
- * It prints a per-surface summary and writes a full per-item traceability report
- * to tests/test-results/plan-report.md (gitignored) for sharing / PRs.
- *
- *   node scripts/plan-report.ts
- */
-
 import * as fs from 'fs';
 import * as path from 'path';
 
 import {type PlanItem, VALID_TYPES, parsePlan} from './lib/plan.ts';
 import {WORKSPACE_ROOT} from './lib/surface.ts';
-import {indexTaggedTests} from './lib/tests-index.ts';
+import {indexTaggedTests} from './lib/testsIndex.ts';
 
 const OUTPUT = path.join(WORKSPACE_ROOT, 'tests/test-results/plan-report.md');
 
@@ -97,16 +78,12 @@ function main(): void {
 	const count = (klass: Klass, list = classified) =>
 		list.filter((entry) => entry.klass === klass).length;
 
-	// Go-live denominator excludes deferred / n/a items.
-
 	const planned = classified.filter((entry) => entry.klass !== 'deferred');
 	const real = count('real', planned);
 
-	// Console: per-surface real coverage + an overall summary.
-
 	const files = [...new Set(items.map((item) => item.file))].sort();
 
-	console.log('plan-report — real test coverage vs pending stubs\n');
+	console.log('planReport — real test coverage vs pending stubs\n');
 
 	for (const file of files) {
 		const inFile = planned.filter((entry) => entry.item.file === file);
@@ -135,18 +112,18 @@ function main(): void {
 			`uncovered ${count('uncovered')} · deferred ${count('deferred')}`
 	);
 
-	// By-tier lens: the same rows grouped by their Type column. Surface vs tier
-	// are orthogonal — this is the tier view without reorganizing the files.
-
 	const tiers = VALID_TYPES.map((tier) => {
 		const inTier = classified.filter((entry) => entry.item.type === tier);
-		const plannedInTier = inTier.filter((entry) => entry.klass !== 'deferred');
+		const plannedInTier = inTier.filter(
+			(entry) => entry.klass !== 'deferred'
+		);
 		const realInTier = plannedInTier.filter(
 			(entry) => entry.klass === 'real'
 		).length;
 
 		return {
-			deferred: inTier.filter((entry) => entry.klass === 'deferred').length,
+			deferred: inTier.filter((entry) => entry.klass === 'deferred')
+				.length,
 			planned: plannedInTier.length,
 			real: realInTier,
 			tier,
@@ -156,14 +133,17 @@ function main(): void {
 	console.log('');
 	console.log('  Coverage by tier (real / planned · deferred):');
 
-	for (const {deferred, planned: plannedCount, real: realCount, tier} of tiers) {
+	for (const {
+		deferred,
+		planned: plannedCount,
+		real: realCount,
+		tier,
+	} of tiers) {
 		console.log(
 			`  ${bar(realCount, plannedCount)} ${pct(realCount, plannedCount).padStart(6)}  ` +
 				`${tier.padEnd(12)} ${realCount}/${plannedCount} real · ${deferred} deferred`
 		);
 	}
-
-	// Markdown artifact: full per-item traceability.
 
 	const lines: string[] = [
 		'# Liferay One — Testing Plan Report',

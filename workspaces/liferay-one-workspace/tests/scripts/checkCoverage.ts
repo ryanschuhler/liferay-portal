@@ -5,24 +5,8 @@
 
 /* eslint-disable no-console -- CLI script; console output is its user interface */
 
-/**
- * check-coverage — measures how much of the plan has tests, i.e. how close the
- * project is to go-live.
- *
- * A plan item is "covered" when at least one test file references its ID in
- * square brackets (see lib/tests-index.ts). Items with status `deferred` or
- * `n/a` are excluded from the denominator.
- *
- *   node scripts/check-coverage.ts            # report
- *   node scripts/check-coverage.ts --min 80   # also fail if below 80%
- *   node scripts/check-coverage.ts --list     # list every uncovered item
- *
- * Always reconcile the plan first with check-plan; coverage is only meaningful
- * against a complete plan.
- */
-
 import {parsePlan, validatePlan} from './lib/plan.ts';
-import {indexTaggedTests} from './lib/tests-index.ts';
+import {indexTaggedTests} from './lib/testsIndex.ts';
 
 function pct(covered: number, total: number): string {
 	if (total === 0) {
@@ -48,7 +32,7 @@ function main(): number {
 	const {errors} = validatePlan(items);
 
 	if (errors.length) {
-		console.error('Plan validation errors (run check-plan):\n');
+		console.error('Plan validation errors (run checkPlan):\n');
 
 		for (const error of errors) {
 			console.error(`  ✗ ${error}`);
@@ -67,11 +51,9 @@ function main(): number {
 
 	const coveredItems = planned.filter((item) => isCovered(item.id));
 
-	// Per-file breakdown.
-
 	const files = [...new Set(planned.map((item) => item.file))].sort();
 
-	console.log('check-coverage — how close is the plan to go-live?\n');
+	console.log('checkCoverage — how close is the plan to go-live?\n');
 
 	for (const file of files) {
 		const inFile = planned.filter((item) => item.file === file);
@@ -82,8 +64,6 @@ function main(): number {
 				`${file.replace(/\.md$/, '').padEnd(20)} ${done}/${inFile.length}`
 		);
 	}
-
-	// Per-priority breakdown.
 
 	console.log('');
 
