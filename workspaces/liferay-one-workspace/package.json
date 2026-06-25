@@ -33,6 +33,7 @@
 	"workspaces": {
 		"packages": [
 			"client-extensions/liferay-one-custom-element",
+			"client-extensions/liferay-one-ci",
 			"tools/eslint-plugin-local"
 		]
 	}

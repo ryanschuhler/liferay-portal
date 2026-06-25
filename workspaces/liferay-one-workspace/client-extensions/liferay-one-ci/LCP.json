@@ -1,0 +1,38 @@
+{
+	"cpu": 2,
+	"env": {
+		"BUILD_PROFILE": "uat",
+		"DEPLOY_BRANCH": "uat",
+		"GITHUB_WEBHOOK_SECRET": "@github-webhook-secret",
+		"LCP_ENVIRONMENT": "uat",
+		"LCP_INFRASTRUCTURE": "liferay.cloud",
+		"LCP_PROJECT": "__LCP_PROJECT__",
+		"LCP_REMOTE": "lcp",
+		"REPO_URL": "__REPO_URL__",
+		"WORKSPACE_SUBDIR": "."
+	},
+	"environments": {
+		"infra": {
+			"deploy": false
+		}
+	},
+	"id": "__PROJECT_ID__",
+	"kind": "Deployment",
+	"livenessProbe": {
+		"httpGet": {
+			"path": "/ready",
+			"port": 3001
+		}
+	},
+	"loadBalancer": {
+		"targetPort": 3001
+	},
+	"memory": 4096,
+	"readinessProbe": {
+		"httpGet": {
+			"path": "/ready",
+			"port": 3001
+		}
+	},
+	"scale": 1
+}
