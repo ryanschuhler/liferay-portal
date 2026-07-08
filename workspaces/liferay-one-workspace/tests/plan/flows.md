@@ -54,6 +54,16 @@ upsert→dedupe→deactivate) are already pinned with `test.describe.configure({
 | FLOW-RESTRICTED-PAGE | Entitlement-gated page groups (Admin, My Account) mount the SPA but render the Restricted Page view for a user without the entitlement — proves the custom element mounts and routes in-browser and the access gate holds | e2e | P1 | planned | spec:flow#restricted-page |
 | FLOW-SPA-RENDER-SMOKE | Every custom-element route across all seven page groups mounts the `liferay-one-custom-element` web component and renders a first header or visible content (gated groups render the restricted view, missing-data routes render an empty state) — a fresh-local health check that the React app boots and renders on every route, runnable today against a spun-up local with the seed admin. Implemented: `e2e/specs/customElementRender.spec.ts` | e2e | P1 | planned | spec:flow#spa-render-smoke |
 
+## Role-Based Access Control (LPD-95398)
+
+The LPD-95398 permissions matrix — what each account-level and project-level role may view (👁), act on (✅), or is denied (❌) across the Account Management area. Every row drives `e2e/specs/rolePermissionsMatrix.spec.ts`, one `test` per matrix cell.
+
+| ID | Requirement | Type | Priority | Status | Source |
+| --- | --- | --- | --- | --- | --- |
+| FLOW-ROLE-ACCOUNT-PERMISSIONS | Deferred — needs users provisioned with each account role (Account Admin, Partner Account Admin, Account Buyer, Account Member, null) on a shared account; the seed admin sees the Restricted Page. Enforces the account-level matrix (LPD-95398): Account Details edit gated to admins, Account Members hidden from a Buyer-only user, Orders denied to a null role, Projects denied to Buyer/null. Staged: `e2e/specs/rolePermissionsMatrix.spec.ts` | e2e | P1 | deferred | spec:flow#role-account-permissions |
+| FLOW-ROLE-PROJECT-PERMISSIONS | Deferred — needs users provisioned with each project role (Project Admin, Project Requester, Project User) plus an Account Admin, all assigned to a shared project. Enforces the project-level matrix (LPD-95398): project details view for all, member management gated to Admins, Business Events / Ticket Attachments / support-ticket submission full for Requester and view-only for Project User. Staged: `e2e/specs/rolePermissionsMatrix.spec.ts` | e2e | P1 | deferred | spec:flow#role-project-permissions |
+| FLOW-ROLE-NULL-PROJECT-ACCESS | Deferred — needs a null-role user with no project membership and a second null-role user assigned to one project. Enforces the null-role project-access rules (LPD-95398): account-level pages only when unassigned, account-level plus the assigned project when assigned, and an unassigned project is not displayed in navigation. Staged: `e2e/specs/rolePermissionsMatrix.spec.ts` | e2e | P1 | deferred | spec:flow#role-null-project-access |
+
 ## Commerce: Purchase, Checkout & Entitlements
 
 | ID | Requirement | Type | Priority | Status | Source |
