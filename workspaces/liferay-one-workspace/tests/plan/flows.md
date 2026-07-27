@@ -163,6 +163,23 @@ undocumented; all are **spec-not-staged**.
 | FLOW-UTILIZATION-TRACKING | Spec-not-staged — project resource utilization/overage is computed and rendered in the project item detail (`buildUtilizationSections`, `resolveUtilizationProfile`) per the E20 profile; there is no backend utilization object yet, so this is a frontend-only Vitest target on the utilization builder plus an e2e render check once an entitled member is provisioned (E20, LPD-88249) | unit | P2 | deferred | spec:flow#utilization-tracking |
 | FLOW-PUBLISHER-SALES-SUMMARY | Spec-not-staged — publisher paid orders aggregate into quarterly sales summaries and render on the Publisher Dashboard via `PublisherSalesSummaries` on `ROUTE-PUBLISHER-DASHBOARD-*`; the aggregation job lives in the unscannable `liferay-one-etc-cron` (analog: marketplace `MarketplaceCommandLineRunner._processPublisherSalesSummary`), so only the SPA render is testable here until that source is vendored (E18, LPD-88250) | e2e | P2 | deferred | spec:flow#publisher-sales-summary |
 
+## Not-Yet-Built Epics (phase-completion tracking)
+
+Epics under LPD-87600 whose runtime feature has **no code in the two client
+extensions yet**. Unlike the deferred journeys above — which are implemented but
+cannot run locally — these are `planned` on purpose so they sit in the go-live
+denominator, each covered only by a `test.fixme` stub in `pendingFlows.spec.ts`.
+`plan:report` therefore classifies them **⏳ pending** (counted, not real), so the
+GO-LIVE (real) percentage measures how much of the phase is actually finished:
+when each epic lands, replace its stub with a real test and the number climbs.
+
+| ID | Requirement | Type | Priority | Status | Source |
+| --- | --- | --- | --- | --- | --- |
+| FLOW-CONSUMPTION-METERING | Not built yet — per-account and per-project usage is metered and aggregated into billable consumption records on the billing cycle. Pending stub: `integration/specs/pendingFlows.spec.ts` (E24, LPD-88265) | integration | P0 | planned | spec:flow#consumption-metering |
+| FLOW-CONSUMPTION-BILLING | Not built yet — aggregated consumption converts to Stripe charges/invoice lines, with overage above the plan allowance billed and idempotent on re-run. Pending stub: `integration/specs/pendingFlows.spec.ts` (E24, LPD-88265) | integration | P0 | planned | spec:flow#consumption-billing |
+| FLOW-MULTI-CURRENCY-CHECKOUT | Not built yet — catalog prices and checkout totals render in the account's currency and the resulting CommerceOrder persists that currency. Pending stub: `e2e/specs/pendingFlows.spec.ts` (E26, LPD-88263) | e2e | P1 | planned | spec:flow#multi-currency-checkout |
+| FLOW-LOCALIZATION | Not built yet — the custom element renders localized labels and formats per the user's locale across the page groups. Pending stub: `e2e/specs/pendingFlows.spec.ts` (E26, LPD-88263) | e2e | P1 | planned | spec:flow#localization |
+
 ## Surface coverage matrix
 
 Proof that the journeys above collectively exercise every unit-tested surface in
