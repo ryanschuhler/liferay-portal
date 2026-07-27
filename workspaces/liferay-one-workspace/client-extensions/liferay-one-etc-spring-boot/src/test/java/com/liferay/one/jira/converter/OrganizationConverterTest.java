@@ -29,7 +29,7 @@ import org.springframework.test.util.ReflectionTestUtils;
  */
 public class OrganizationConverterTest {
 
-	// Plan coverage (converter): [CONV-ORGANIZATIONCONVERTER]
+	// Plan coverage (converter): [CONV-JIRAORGANIZATIONCONVERTER]
 
 	@BeforeEach
 	public void setUp() {

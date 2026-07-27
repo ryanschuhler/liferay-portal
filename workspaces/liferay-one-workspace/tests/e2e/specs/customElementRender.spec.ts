@@ -204,7 +204,7 @@ const ROUTE_CHECKS: RouteCheck[] = [
 
 	{
 		name: 'business events list',
-		planId: 'ROUTE-BUSINESS-EVENTS-ACCOUNTKEY-BUSINESS-EVENTS',
+		planId: 'ROUTE-BUSINESS-EVENTS-PROJECTERC-BUSINESS-EVENTS',
 		url: `${BUSINESS_EVENTS}#/${ACCOUNT}/business-events`,
 	},
 	{

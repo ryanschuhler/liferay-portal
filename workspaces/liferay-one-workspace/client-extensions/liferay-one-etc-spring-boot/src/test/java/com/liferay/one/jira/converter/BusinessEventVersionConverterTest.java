@@ -28,7 +28,7 @@ import org.springframework.test.util.ReflectionTestUtils;
  */
 public class BusinessEventVersionConverterTest {
 
-	// Plan coverage (converter): [CONV-BUSINESSEVENTVERSIONCONVERTER]
+	// Plan coverage (converter): [CONV-JIRABUSINESSEVENTVERSIONCONVERTER]
 
 	@BeforeEach
 	public void setUp() {

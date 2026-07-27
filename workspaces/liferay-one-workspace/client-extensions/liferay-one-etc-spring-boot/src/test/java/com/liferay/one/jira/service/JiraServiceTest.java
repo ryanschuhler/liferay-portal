@@ -38,7 +38,8 @@ import org.springframework.test.util.ReflectionTestUtils;
  */
 public class JiraServiceTest {
 
-	// Plan coverage (service): [SVC-JIRASERVICE]
+	// Plan coverage (service): [SVC-JIRABUSINESSEVENTSERVICE]
+	// [SVC-JIRAISSUESERVICE]
 
 	@BeforeEach
 	public void setUp() {

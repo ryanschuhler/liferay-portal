@@ -28,7 +28,8 @@ import org.springframework.test.util.ReflectionTestUtils;
  */
 public class AssetObjectConverterTest {
 
-	// Plan coverage (converter): [CONV-ASSETOBJECTCONVERTER]
+	// Plan coverage (converter): [CONV-JIRABUSINESSEVENTCONVERTER]
+	// [CONV-JIRABUSINESSEVENTVERSIONCONVERTER] [CONV-JIRAORGANIZATIONCONVERTER]
 
 	// The concrete AssetObjectConverter was removed by LPD-90495. Its
 	// attribute-value resolution now lives in JiraAssetObject and is reached
