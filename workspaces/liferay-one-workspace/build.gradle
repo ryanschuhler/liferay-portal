@@ -32,3 +32,17 @@ allprojects {
 		}
 	}
 }
+
+// `./gradlew build` must not require a running portal. The Liferay Node plugin
+// auto-generates `packageRunTest` from the root package.json `test` script,
+// which runs the full Playwright e2e/integration suite -- and those specs need
+// a live Liferay, so `build` fails whenever the environment is down. Disable
+// the task to keep `build` offline; the suite runs explicitly through
+// `yarn test` (or the one-test skill) once the portal is up.
+allprojects {
+	tasks.matching {
+		it.name == "packageRunTest"
+	}.configureEach {
+		enabled = false
+	}
+}

@@ -5,7 +5,7 @@
 
 import {describe, expect, it} from 'vitest';
 
-import {AppRoute} from '../../../utils/routeUtils';
+import {AppRoute} from '../../utils/routeUtils';
 import {ticketAttachmentsRoutes} from './ticketAttachmentsRoutes';
 
 function paths(routes: AppRoute[]) {
