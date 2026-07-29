@@ -24,6 +24,7 @@ import com.liferay.one.salesforce.model.SalesforceOpportunityLineItem;
 import com.liferay.one.salesforce.model.SalesforceProject;
 import com.liferay.one.util.SupportLanguageUtil;
 import com.liferay.one.util.SupportRegionUtil;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.math.BigDecimal;
@@ -127,6 +128,89 @@ public class CommerceOrderService extends OneBaseService {
 
 			_provisionAiHub(order);
 		}
+	}
+
+	public Order createOverageOrder(
+			String accountExternalReferenceCode, Long contractId,
+			String currencyCode, String externalReferenceCode, Long projectId,
+			String projectName, String skuExternalReferenceCode,
+			BigDecimal unitPrice)
+		throws Exception {
+
+		com.liferay.headless.admin.user.client.dto.v1_0.Account account =
+			_accountService.getAccount(accountExternalReferenceCode);
+
+		Long channelId = _fetchChannelId();
+
+		JSONObject orderJSONObject = new JSONObject();
+
+		orderJSONObject.put(
+			"accountExternalReferenceCode", accountExternalReferenceCode
+		).put(
+			"channelId", channelId
+		).put(
+			"currencyCode", currencyCode
+		).put(
+			"externalReferenceCode", externalReferenceCode
+		).put(
+			"orderItems",
+			new JSONArray(
+			).put(
+				new JSONObject(
+				).put(
+					"quantity", 1
+				).put(
+					"skuExternalReferenceCode", skuExternalReferenceCode
+				).put(
+					"unitPrice", unitPrice
+				)
+			)
+		).put(
+			"orderStatus", CommerceOrderConstants.ORDER_STATUS_PENDING
+		).put(
+			"orderTypeExternalReferenceCode",
+			_OVERAGE_ORDER_TYPE_EXTERNAL_REFERENCE_CODE
+		).put(
+			"r_contractToCommerceOrder_c_contractId", contractId
+		);
+
+		if (account.getDefaultBillingAddressId() != null) {
+			orderJSONObject.put(
+				"billingAddressId", account.getDefaultBillingAddressId());
+		}
+
+		String creatorEmailAddress = _getAccountCreatorEmailAddress(
+			account.getId());
+
+		if (Validator.isNotNull(creatorEmailAddress)) {
+			orderJSONObject.put("creatorEmailAddress", creatorEmailAddress);
+		}
+
+		if (projectId != null) {
+			orderJSONObject.put(
+				"r_projectToCommerceOrder_c_projectId", projectId);
+		}
+
+		String response = post(
+			getAuthorization(), orderJSONObject.toString(),
+			UriComponentsBuilder.fromPath(
+				"/o/headless-commerce-admin-order/v1.0/orders"
+			).build(
+			).toUri());
+
+		JSONObject responseJSONObject = new JSONObject(response);
+
+		long orderId = responseJSONObject.getLong("id");
+
+		patchOrderCustomFields(
+			orderId,
+			HashMapBuilder.<String, Object>put(
+				"marketplaceOrderType", "overage"
+			).put(
+				"projectName", projectName
+			).build());
+
+		return fetchCommerceOrder(orderId);
 	}
 
 	public Order fetchCommerceOrder(long commerceOrderId) throws Exception {
@@ -399,6 +483,21 @@ public class CommerceOrderService extends OneBaseService {
 		_channelId = jsonObject.getLong("id");
 
 		return _channelId;
+	}
+
+	private String _getAccountCreatorEmailAddress(long accountId)
+		throws Exception {
+
+		List<UserAccount> userAccounts =
+			_userAccountService.getAccountUserAccounts(accountId);
+
+		for (UserAccount userAccount : userAccounts) {
+			if (Validator.isNotNull(userAccount.getEmailAddress())) {
+				return userAccount.getEmailAddress();
+			}
+		}
+
+		return null;
 	}
 
 	private String _getAddressCountry(Long defaultBillingAddressId)
@@ -719,6 +818,9 @@ public class CommerceOrderService extends OneBaseService {
 
 	private static final String _LIFERAY_ONE_CHANNEL = "LIFERAY_ONE_CHANNEL";
 
+	private static final String _OVERAGE_ORDER_TYPE_EXTERNAL_REFERENCE_CODE =
+		"DXP";
+
 	private static final int _PAGE_SIZE = 500;
 
 	private static final double _TAX_PERCENTAGE = 0.20;
@@ -730,6 +832,9 @@ public class CommerceOrderService extends OneBaseService {
 		"AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR",
 		"HR", "HU", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO",
 		"SE", "SI", "SK");
+
+	@Autowired
+	private AccountService _accountService;
 
 	@Autowired
 	private AIHubService _aiHubService;
