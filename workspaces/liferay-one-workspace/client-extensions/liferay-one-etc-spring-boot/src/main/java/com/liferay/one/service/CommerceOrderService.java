@@ -24,6 +24,7 @@ import com.liferay.one.salesforce.model.SalesforceOpportunityLineItem;
 import com.liferay.one.salesforce.model.SalesforceProject;
 import com.liferay.one.util.SupportLanguageUtil;
 import com.liferay.one.util.SupportRegionUtil;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.math.BigDecimal;
@@ -414,6 +415,30 @@ public class CommerceOrderService extends OneBaseService {
 		return postalAddress.getAddressCountry();
 	}
 
+	private String _getAIHubTier(Order order) {
+		OrderItem[] orderItems = order.getOrderItems();
+
+		if (orderItems == null) {
+			return _AI_HUB_TIER_ACTIVATE;
+		}
+
+		for (OrderItem orderItem : orderItems) {
+			Map<String, String> nameMap = orderItem.getName();
+
+			if (nameMap == null) {
+				continue;
+			}
+
+			String name = nameMap.get("en_US");
+
+			if ((name != null) && name.contains("Studio")) {
+				return _AI_HUB_TIER_STUDIO;
+			}
+		}
+
+		return _AI_HUB_TIER_ACTIVATE;
+	}
+
 	private Map<String, Object> _getCustomFields(
 		Long contractId, SalesforceOpportunity salesforceOpportunity,
 		SalesforceProject salesforceProject) {
@@ -657,13 +682,20 @@ public class CommerceOrderService extends OneBaseService {
 				}
 			}
 
+			String tier = _getAIHubTier(order);
+
 			JSONObject provisionJSONObject = new JSONObject(
+			).put(
+				"accountEntryExternalReferenceCode",
+				orderMetadataJSONObject.optString("salesforceProjectId", null)
 			).put(
 				"accountName", aiHubFormJSONObject.getString("aiHubAccountName")
 			).put(
 				"companyName",
 				order.getAccount(
 				).getName()
+			).put(
+				"tier", tier
 			).put(
 				"userAccounts",
 				new JSONArray(
@@ -683,32 +715,26 @@ public class CommerceOrderService extends OneBaseService {
 				provisionJSONObject);
 
 			if (aiHubJSONObject != null) {
-				_aiHubService.putAIHubApplication(
-					"AI-HUB-" + order.getAccountExternalReferenceCode(),
+				orderMetadataJSONObject.put(
+					"aiHub",
 					new JSONObject(
 					).put(
 						"accountEntryId",
 						aiHubJSONObject.getInt("accountEntryId")
 					).put(
-						"accountName",
-						aiHubFormJSONObject.getString("aiHubAccountName")
-					).put(
-						"administratorEmailAddress",
-						aiHubFormJSONObject.getString(
-							"administratorEmailAddress")
-					).put(
-						"r_accountToAIHubApplication_accountEntryERC",
-						order.getAccount(
-						).getExternalReferenceCode()
-					).put(
-						"r_orderToAIHubApplication_commerceOrderERC",
-						order.getExternalReferenceCode()
+						"tier", tier
 					));
+
+				patchOrderCustomFields(
+					order.getId(),
+					HashMapBuilder.put(
+						"order-metadata", orderMetadataJSONObject.toString()
+					).build());
 			}
 		}
 		catch (Exception exception) {
 			_log.error(
-				"Unable to provision AI Hub for order: " + order.getId(),
+				"Unable to provision AI Hub for order " + order.getId(),
 				exception);
 		}
 	}
@@ -716,6 +742,10 @@ public class CommerceOrderService extends OneBaseService {
 	private static final int _ACCOUNT_TYPE_BUSINESS = 2;
 
 	private static final int _ACCOUNT_TYPE_PERSON = 1;
+
+	private static final String _AI_HUB_TIER_ACTIVATE = "Activate";
+
+	private static final String _AI_HUB_TIER_STUDIO = "Studio";
 
 	private static final String _LIFERAY_ONE_CHANNEL = "LIFERAY_ONE_CHANNEL";
 

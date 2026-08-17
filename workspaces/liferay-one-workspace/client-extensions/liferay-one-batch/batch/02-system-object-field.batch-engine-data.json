@@ -52,6 +52,27 @@
 			"system": true
 		},
 		{
+			"externalReferenceCode": "L_COMMERCE_ORDER",
+			"name": "CommerceOrder",
+			"objectActions": [
+				{
+					"active": true,
+					"description": "Triggers Spring Boot CX to purchase the AI Hub prepaid token block once an AI Hub token order is paid.",
+					"externalReferenceCode": "OA_COMMERCE_ORDER_AI_HUB_TOKENS",
+					"name": "AIHubTokens",
+					"objectActionExecutorKey": "function#liferay-one-etc-spring-boot-object-action-ai-hub-tokens",
+					"objectActionTriggerKey": "onAfterUpdate",
+					"parameters": {
+					}
+				}
+			],
+			"objectFields": [
+			],
+			"objectRelationships": [
+			],
+			"system": true
+		},
+		{
 			"externalReferenceCode": "L_COMMERCE_ORDER_ITEM",
 			"name": "CommerceOrderItem",
 			"objectActions": [

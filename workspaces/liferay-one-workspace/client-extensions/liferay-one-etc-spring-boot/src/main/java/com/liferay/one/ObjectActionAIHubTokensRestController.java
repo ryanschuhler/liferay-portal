@@ -22,10 +22,11 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.StringUtil;
 
+import java.util.Objects;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,14 +84,18 @@ public class ObjectActionAIHubTokensRestController extends BaseRestController {
 			return;
 		}
 
-		JSONObject aiHubApplicationJSONObject =
-			_aiHubService.getAIHubApplicationJSONObject(
-				"AI-HUB-" + order.getAccountExternalReferenceCode());
+		if (!Objects.equals(
+				order.getOrderTypeExternalReferenceCode(), "AI_HUB_TOKEN")) {
 
-		if (aiHubApplicationJSONObject == null) {
+			return;
+		}
+
+		Order aiHubOrder = _fetchAIHubOrder(order.getAccountId());
+
+		if (aiHubOrder == null) {
 			if (_log.isInfoEnabled()) {
 				_log.info(
-					"AI Hub application was not found for order " +
+					"Unable to find a provisioned AI Hub order for order " +
 						order.getId());
 			}
 
@@ -105,8 +110,14 @@ public class ObjectActionAIHubTokensRestController extends BaseRestController {
 
 		OrderItem orderItem = orderItems[0];
 
-		String skuOptionValue = _getSkuOptionValue(
-			"license-usage-type", orderItem.getOptions());
+		String options = orderItem.getOptions();
+
+		if (options == null) {
+			return;
+		}
+
+		String skuOptionValue = CommerceOrderUtil.getSkuOptionValue(
+			"license-usage-type", options);
 
 		if (skuOptionValue == null) {
 			return;
@@ -115,8 +126,15 @@ public class ObjectActionAIHubTokensRestController extends BaseRestController {
 		String tokensAmount = StringUtil.removeSubstring(
 			skuOptionValue, "-lr-tokens");
 
+		JSONObject aiHubOrderMetadataJSONObject =
+			CommerceOrderUtil.getOrderMetadataJSONObject(aiHubOrder);
+
 		_aiHubService.purchaseQuotaPrepaidBlock(
-			aiHubApplicationJSONObject.getInt("accountEntryId"),
+			aiHubOrderMetadataJSONObject.getJSONObject(
+				"aiHub"
+			).getInt(
+				"accountEntryId"
+			),
 			new JSONObject(
 			).put(
 				"size", Long.valueOf(tokensAmount)
@@ -129,54 +147,31 @@ public class ObjectActionAIHubTokensRestController extends BaseRestController {
 			CommerceOrderConstants.ORDER_PAYMENT_STATUS_COMPLETED);
 
 		_setUpSalesforceOpportunity(
-			aiHubApplicationJSONObject, order, orderItem);
+			aiHubOrderMetadataJSONObject.optString("salesforceProjectId", null),
+			order, orderItem);
 	}
 
-	private String _getSalesforceProjectId(
-		JSONObject aiHubApplicationJSONObject) {
+	private Order _fetchAIHubOrder(Long accountId) throws Exception {
+		for (Order order : _commerceOrderService.getAccountOrders(accountId)) {
+			if (!Objects.equals(
+					order.getOrderTypeExternalReferenceCode(), "AI_HUB")) {
 
-		JSONObject orderMetadataJSONObject =
-			CommerceOrderUtil.getOrderMetadataJSONObject(
-				Order.toDTO(
-					String.valueOf(
-						aiHubApplicationJSONObject.getJSONObject(
-							"orderToAIHubApplication"))));
-
-		return orderMetadataJSONObject.getString("salesforceProjectId");
-	}
-
-	private String _getSkuOptionValue(String key, String options) {
-		if (options == null) {
-			return null;
-		}
-
-		try {
-			JSONArray optionsJSONArray = new JSONArray(options);
-
-			for (int i = 0; i < optionsJSONArray.length(); i++) {
-				JSONObject jsonObject = optionsJSONArray.getJSONObject(i);
-
-				String skuOptionKey = jsonObject.optString("key");
-
-				if (!skuOptionKey.endsWith(key)) {
-					continue;
-				}
-
-				JSONArray jsonArray = jsonObject.getJSONArray("value");
-
-				return jsonArray.getString(0);
+				continue;
 			}
-		}
-		catch (Exception exception) {
-			_log.error("Unable to parse SkuOption options JSON", exception);
+
+			JSONObject orderMetadataJSONObject =
+				CommerceOrderUtil.getOrderMetadataJSONObject(order);
+
+			if (orderMetadataJSONObject.has("aiHub")) {
+				return order;
+			}
 		}
 
 		return null;
 	}
 
 	private void _setUpSalesforceOpportunity(
-			JSONObject aiHubApplicationJSONObject, Order order,
-			OrderItem orderItem)
+			String salesforceProjectId, Order order, OrderItem orderItem)
 		throws Exception {
 
 		order.setCustomFields(
@@ -184,8 +179,7 @@ public class ObjectActionAIHubTokensRestController extends BaseRestController {
 				"order-metadata",
 				new JSONObject(
 				).put(
-					"salesforceProjectId",
-					_getSalesforceProjectId(aiHubApplicationJSONObject)
+					"salesforceProjectId", salesforceProjectId
 				).toString()
 			).build());
 
