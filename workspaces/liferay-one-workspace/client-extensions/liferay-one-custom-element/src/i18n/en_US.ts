@@ -1420,6 +1420,7 @@ export default {
 	'start-date': 'Start Date',
 	'start-date-exp-date': 'Start Date - Exp. Date',
 	'start-trial': 'Start Trial',
+	'start-your-free-trial': 'Start Your Free Trial',
 	'state': 'State',
 	'status': 'Status',
 	'step-x-of-x': 'Step {0} of {1}',
@@ -1467,6 +1468,8 @@ export default {
 	'technology-partnership-with-integrations':
 		'Technology Partnership With Integrations',
 	'telecommunications': 'Telecommunications',
+	'tell-us-a-bit-about-yourself-to-activate-your-90-day-trial':
+		'Tell us a bit about yourself to activate your 90 day trial.',
 	'term': 'Term',
 	'terms': 'Terms',
 	'terms-of-service': 'Terms of Service',
