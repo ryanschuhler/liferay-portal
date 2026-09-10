@@ -10,6 +10,8 @@ import {buildEnvironmentSections} from '~/pages/MyAccount/Projects/utils/buildEn
 
 import DetailsCard from '../DetailsCard/DetailsCard';
 
+import './LDPEnvironment.css';
+
 import type {ProjectEnvironment} from '~/hooks/useProjectEnvironments';
 
 type LDPEnvironmentProps = {
@@ -20,13 +22,13 @@ export default function LDPEnvironment({environment}: LDPEnvironmentProps) {
 	const [section] = buildEnvironmentSections([environment], 'workspace');
 
 	return (
-		<>
+		<div className="ldp-environment-cards">
 			<DetailedCard
 				cardIconAltText={i18n.translate(
 					'connect-your-liferay-data-platform'
 				)}
 				cardTitle={i18n.translate('connect-your-liferay-data-platform')}
-				className="mt-3"
+				className="detailed-card-compact mt-3"
 				clayIcon="diagram"
 				fitContent
 			>
@@ -57,6 +59,6 @@ export default function LDPEnvironment({environment}: LDPEnvironmentProps) {
 				rows={section?.rows ?? []}
 				title="workspace-info"
 			/>
-		</>
+		</div>
 	);
 }
