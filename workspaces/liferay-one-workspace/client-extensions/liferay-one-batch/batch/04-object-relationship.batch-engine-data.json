@@ -43,7 +43,7 @@
 			"type": "oneToMany"
 		},
 		{
-			"deletionType": "disassociate",
+			"deletionType": "cascade",
 			"externalReferenceCode": "R_ACCOUNT_ENTRY_TO_ENVIRONMENT",
 			"label": {
 				"en_US": "Account Entry to Environment"

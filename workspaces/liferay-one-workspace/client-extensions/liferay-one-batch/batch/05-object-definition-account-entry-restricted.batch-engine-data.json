@@ -32,6 +32,11 @@
 		},
 		{
 			"accountEntryRestricted": true,
+			"accountEntryRestrictedObjectFieldName": "r_accountEntryToEnvironment_accountEntryId",
+			"externalReferenceCode": "C_ENVIRONMENT"
+		},
+		{
+			"accountEntryRestricted": true,
 			"accountEntryRestrictedObjectFieldName": "r_accountEntryToOAuth2DxpAuthorization_accountEntryId",
 			"externalReferenceCode": "C_OAUTH2_DXP_AUTHORIZATION"
 		},
