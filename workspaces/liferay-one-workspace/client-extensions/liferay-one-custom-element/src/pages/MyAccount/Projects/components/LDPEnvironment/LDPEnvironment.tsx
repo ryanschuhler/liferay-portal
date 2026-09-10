@@ -23,6 +23,13 @@ export default function LDPEnvironment({environment}: LDPEnvironmentProps) {
 
 	return (
 		<div className="ldp-environment-cards">
+			<DetailsCard
+				compact
+				icon="document"
+				rows={section?.rows ?? []}
+				title="workspace-info"
+			/>
+
 			<DetailedCard
 				cardIconAltText={i18n.translate(
 					'connect-your-liferay-data-platform'
@@ -52,13 +59,6 @@ export default function LDPEnvironment({environment}: LDPEnvironmentProps) {
 					)}
 				</div>
 			</DetailedCard>
-
-			<DetailsCard
-				compact
-				icon="document"
-				rows={section?.rows ?? []}
-				title="workspace-info"
-			/>
 		</div>
 	);
 }
