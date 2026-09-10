@@ -1,0 +1,14 @@
+.ldp-environment-cards {
+	column-gap: var(--spacer-4, 1.5rem);
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.ldp-environment-cards > * {
+	display: flex;
+	flex-direction: column;
+}
+
+.ldp-environment-cards .detailed-card-container {
+	flex: 1;
+}
