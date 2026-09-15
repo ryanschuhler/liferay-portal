@@ -35,6 +35,10 @@ const config = {
 			parser: 'jsonc-eslint-parser',
 			plugins: ['jsonc'],
 			rules: {
+				// The TypeScript aware rules need a program, which the JSON
+				// parser cannot build. Leaving them on crashes the whole run.
+
+				'@typescript-eslint/naming-convention': 'off',
 				'@typescript-eslint/no-explicit-any': 'off',
 				'jsonc/no-dupe-keys': 'error',
 				'jsonc/sort-keys': 'error',

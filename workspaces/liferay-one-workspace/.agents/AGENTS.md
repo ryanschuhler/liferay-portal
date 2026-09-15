@@ -31,6 +31,7 @@ Run from `workspaces/liferay-one-workspace/`.
 - Liferay MCP setup: Run `/one-mcp` skill.
 - **Build:** `./gradlew build`
 - **Format:** Run the `/format-source` skill.
+- **Lint:** `yarn lint` for the per-file rules, `yarn lint:structure` for the import graph checks ([`rules/custom-element-structure.md`](./rules/custom-element-structure.md)).
 - **Deploy:** Run the `/one-deploy` skill.
 - **Pre-commit:** Run format and build first; do not deploy a failing build.
 - **Rebase:** Run the `/one-rebase` skill.
@@ -42,6 +43,7 @@ Run from `workspaces/liferay-one-workspace/`.
 
 - [`rules/code-style.md`](./rules/code-style.md) — sorting, log conventions, string concatenation, FreeMarker, Java ordering
 - [`rules/concurrency.md`](./rules/concurrency.md) — shared state on Spring singletons, formatter fields, React effect races
+- [`rules/custom-element-structure.md`](./rules/custom-element-structure.md) — where a file lives in the custom element: the folders under `src`, the service tiers, reads vs writes, page and component placement
 - [`rules/data-access.md`](./rules/data-access.md) — one-row reads, service calls in loops, pagination bounds
 - [`rules/naming.md`](./rules/naming.md) — brand name casing, file naming, REST controller naming
 - [`rules/object-naming.md`](./rules/object-naming.md) — ERC patterns, Object names, field casing

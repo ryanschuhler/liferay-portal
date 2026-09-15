@@ -7,7 +7,7 @@ name: one-format
 
 # Format Source
 
-Run all three steps from the workspace root (`workspaces/liferay-one-workspace`). Report errors and stop — do not continue to the next step if one fails.
+Run all four steps from the workspace root (`workspaces/liferay-one-workspace`). Report errors and stop — do not continue to the next step if one fails.
 
 ## 1. Gradle source formatter
 
@@ -29,6 +29,16 @@ yarn lint:fix
 yarn format
 ```
 
+## 4. Structure checks
+
+The two checks that need the whole import graph, which ESLint cannot do one file at a time — an undeclared or unused dependency, and a component sitting where its consumers say it does not belong:
+
+```bash
+yarn lint:structure
+```
+
+These only report; nothing is written, so they behave identically in check-only mode. See `.agents/rules/custom-element-structure.md` for what they enforce and the outstanding counts.
+
 ## Check-Only Mode
 
 Invoked as `one-format --check`, run the non-mutating counterpart of each step above and report violations instead of fixing them. Nothing is written, so a caller bound by a read-only rule can still verify formatting fully.
@@ -38,6 +48,7 @@ Invoked as `one-format --check`, run the non-mutating counterpart of each step a
 | 1. Gradle source formatter | `./gradlew formatSource` | `./gradlew checkSourceFormatting` |
 | 2. ESLint | `yarn lint:fix` | `yarn lint` |
 | 3. Prettier | `yarn format` | the `format` script's command with `--check` in place of `--write` |
+| 4. Structure checks | — | `yarn lint:structure` |
 
 Each check exits non-zero on a violation and names the offending file and rule. Report every violation; fix none of them. Never retry with the mutating command when a check fails — a failing check is the answer, not an error to work around.
 

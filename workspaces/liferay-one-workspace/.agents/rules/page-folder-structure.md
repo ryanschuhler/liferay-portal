@@ -2,18 +2,22 @@
 
 Every sub-page component inside a section under `src/pages/` must live in its own named subfolder, not directly in the section root.
 
+This file covers the section root. [`custom-element-structure.md`](./custom-element-structure.md) covers the rest of the custom element — the folders under `src`, the service tiers, and which components belong under a page rather than in `src/components`.
+
 ## The Rule
 
 Within any section directory (e.g., `pages/MyAccount/`, `pages/ProductPurchase/`), the **only** files permitted directly at the section root are:
 
 - `{Section}.tsx` — the root page component
-- `{Section}Router.tsx` — the HashRouter/router component
+- `{Section}Router.tsx` — the router component, which `main.tsx` lazy loads
 - `{section}Routes.tsx` — the route definitions
 - `{Section}.css` — section-level styles
-- `components/` — shared sub-components used by multiple pages within the section
-- `hooks/` — shared hooks used by multiple pages within the section
-- `types.ts` / `types.tsx` — shared type definitions
-- `utils.ts` — shared utilities
+- `components/` — sub-components used within the section
+- `hooks/` — hooks used within the section
+- `types/` — type definitions, one named file per concern
+- `utils/` — utilities, one named file per concern
+
+`types.ts` and `utils.ts` are not on that list: a catch-all file is a folder waiting to happen, and [`custom-element-structure.md`](./custom-element-structure.md) has the rest of the layout.
 
 Everything else — route guards, redirects, step pages, detail pages — must be in its own subfolder named after the component:
 
