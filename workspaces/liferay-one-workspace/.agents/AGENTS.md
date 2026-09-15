@@ -44,6 +44,7 @@ Run from `workspaces/liferay-one-workspace/`.
 - [`rules/code-style.md`](./rules/code-style.md) — sorting, log conventions, string concatenation, FreeMarker, Java ordering
 - [`rules/concurrency.md`](./rules/concurrency.md) — shared state on Spring singletons, formatter fields, React effect races
 - [`rules/custom-element-structure.md`](./rules/custom-element-structure.md) — where a file lives in the custom element: the folders under `src`, the service tiers, reads vs writes, page and component placement
+- [`rules/custom-element-safety.md`](./rules/custom-element-safety.md) — the custom element rules whose failure reaches a user: CSRF, XSS, filter injection, unbounded pagination, timezone-naive dates
 - [`rules/data-access.md`](./rules/data-access.md) — one-row reads, service calls in loops, pagination bounds
 - [`rules/naming.md`](./rules/naming.md) — brand name casing, file naming, REST controller naming
 - [`rules/object-naming.md`](./rules/object-naming.md) — ERC patterns, Object names, field casing

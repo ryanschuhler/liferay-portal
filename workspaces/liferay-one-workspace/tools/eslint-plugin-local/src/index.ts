@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import boundedPagination = require('./rules/boundedPagination');
 import componentFolderStructure = require('./rules/componentFolderStructure');
 import contextFileNaming = require('./rules/contextFileNaming');
 import cssFilenamePascalCase = require('./rules/cssFilenamePascalCase');
@@ -10,11 +11,19 @@ import filenameCamelcase = require('./rules/filenameCamelcase');
 import filenameMatchesDefaultExport = require('./rules/filenameMatchesDefaultExport');
 import hooksExportOnlyHooks = require('./rules/hooksExportOnlyHooks');
 import i18nKeyPlaceholder = require('./rules/i18nKeyPlaceholder');
+import i18nKeySlug = require('./rules/i18nKeySlug');
 import imageFilenameSnakeCase = require('./rules/imageFilenameSnakeCase');
 import noAmbientTypeDeclarations = require('./rules/noAmbientTypeDeclarations');
 import noBareUtilsOrTypesFile = require('./rules/noBareUtilsOrTypesFile');
 import noComments = require('./rules/noComments');
+import noDirectWebStorage = require('./rules/noDirectWebStorage');
 import noEslintDisable = require('./rules/noEslintDisable');
+import noRawFetch = require('./rules/noRawFetch');
+import noTimezoneNaiveDate = require('./rules/noTimezoneNaiveDate');
+import noUnsafeTypeCast = require('./rules/noUnsafeTypeCast');
+import noUnsanitizedHTML = require('./rules/noUnsanitizedHTML');
+import noUntranslatedText = require('./rules/noUntranslatedText');
+import odataFilterViaSearchBuilder = require('./rules/odataFilterViaSearchBuilder');
 import pageFolderStructure = require('./rules/pageFolderStructure');
 import serviceClassMatchesUrl = require('./rules/serviceClassMatchesUrl');
 import serviceLayerBoundary = require('./rules/serviceLayerBoundary');
@@ -26,6 +35,7 @@ const plugin = {
 		recommended: {
 			plugins: ['local'],
 			rules: {
+				'local/bounded-pagination': 'warn',
 				'local/component-folder-structure': 'error',
 				'local/context-file-naming': 'warn',
 				'local/css-filename-pascal-case': 'error',
@@ -33,11 +43,19 @@ const plugin = {
 				'local/filename-matches-default-export': 'error',
 				'local/hooks-export-only-hooks': 'warn',
 				'local/i18n-key-placeholder': 'warn',
+				'local/i18n-key-slug': 'warn',
 				'local/image-filename-snake-case': 'error',
 				'local/no-ambient-type-declarations': 'warn',
 				'local/no-bare-utils-or-types-file': 'warn',
 				'local/no-comments': 'warn',
+				'local/no-direct-web-storage': 'warn',
 				'local/no-eslint-disable': 'warn',
+				'local/no-raw-fetch': 'warn',
+				'local/no-timezone-naive-date': 'warn',
+				'local/no-unsafe-type-cast': 'warn',
+				'local/no-unsanitized-html': 'warn',
+				'local/no-untranslated-text': 'warn',
+				'local/odata-filter-via-search-builder': 'warn',
 				'local/page-folder-structure': 'warn',
 				'local/service-class-matches-url': 'error',
 				'local/service-layer-boundary': 'warn',
@@ -47,6 +65,7 @@ const plugin = {
 		},
 	},
 	rules: {
+		'bounded-pagination': boundedPagination,
 		'component-folder-structure': componentFolderStructure,
 		'context-file-naming': contextFileNaming,
 		'css-filename-pascal-case': cssFilenamePascalCase,
@@ -54,11 +73,19 @@ const plugin = {
 		'filename-matches-default-export': filenameMatchesDefaultExport,
 		'hooks-export-only-hooks': hooksExportOnlyHooks,
 		'i18n-key-placeholder': i18nKeyPlaceholder,
+		'i18n-key-slug': i18nKeySlug,
 		'image-filename-snake-case': imageFilenameSnakeCase,
 		'no-ambient-type-declarations': noAmbientTypeDeclarations,
 		'no-bare-utils-or-types-file': noBareUtilsOrTypesFile,
 		'no-comments': noComments,
+		'no-direct-web-storage': noDirectWebStorage,
 		'no-eslint-disable': noEslintDisable,
+		'no-raw-fetch': noRawFetch,
+		'no-timezone-naive-date': noTimezoneNaiveDate,
+		'no-unsafe-type-cast': noUnsafeTypeCast,
+		'no-unsanitized-html': noUnsanitizedHTML,
+		'no-untranslated-text': noUntranslatedText,
+		'odata-filter-via-search-builder': odataFilterViaSearchBuilder,
 		'page-folder-structure': pageFolderStructure,
 		'service-class-matches-url': serviceClassMatchesUrl,
 		'service-layer-boundary': serviceLayerBoundary,

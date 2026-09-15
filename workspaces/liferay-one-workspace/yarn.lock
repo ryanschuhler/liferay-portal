@@ -744,6 +744,19 @@
   dependencies:
     "@clayui/icon" "^3.166.0"
 
+"@clayui/shared@^3.159.0", "@clayui/shared@^3.166.0":
+  version "3.166.0"
+  resolved "https://registry.yarnpkg.com/@clayui/shared/-/shared-3.166.0.tgz#ec8505a116736be88742211bd8bb317c70e6b4f3"
+  integrity sha512-DCjUMLo58UowEjeOTLDw1YxN9R4VxNWbA09GRBp/VU05/GnF0sr6BZDLd+H6t0DCQYcUngowQkjPehIHcIJdow==
+  dependencies:
+    "@clayui/button" "^3.166.0"
+    "@clayui/link" "^3.166.0"
+    "@clayui/provider" "^3.166.0"
+    aria-hidden "^1.2.2"
+    classnames "2.3.1"
+    dom-align "^1.12.2"
+    warning "^4.0.3"
+
 "@clayui/shared@^3.163.0":
   version "3.163.0"
   resolved "https://registry.yarnpkg.com/@clayui/shared/-/shared-3.163.0.tgz#ff7a4ebc3274930bea8c19670a434fc1a286dc31"
@@ -778,19 +791,6 @@
     "@clayui/button" "^3.165.0"
     "@clayui/link" "^3.165.0"
     "@clayui/provider" "^3.165.0"
-    aria-hidden "^1.2.2"
-    classnames "2.3.1"
-    dom-align "^1.12.2"
-    warning "^4.0.3"
-
-"@clayui/shared@^3.166.0":
-  version "3.166.0"
-  resolved "https://registry.yarnpkg.com/@clayui/shared/-/shared-3.166.0.tgz#ec8505a116736be88742211bd8bb317c70e6b4f3"
-  integrity sha512-DCjUMLo58UowEjeOTLDw1YxN9R4VxNWbA09GRBp/VU05/GnF0sr6BZDLd+H6t0DCQYcUngowQkjPehIHcIJdow==
-  dependencies:
-    "@clayui/button" "^3.166.0"
-    "@clayui/link" "^3.166.0"
-    "@clayui/provider" "^3.166.0"
     aria-hidden "^1.2.2"
     classnames "2.3.1"
     dom-align "^1.12.2"

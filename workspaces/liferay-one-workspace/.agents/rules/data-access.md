@@ -4,6 +4,8 @@ Nearly every read in this workspace is a network call — a headless API request
 
 These rules are about the *shape* of a read. They apply to both lanes: the migration scripts in the sibling `scripts` checkout hit the same APIs, over far more records.
 
+In `liferay-one-custom-element`, the filter, pagination, and raw-fetch rules below are enforced by `yarn lint` — see [`custom-element-safety.md`](./custom-element-safety.md).
+
 ## One Record Means One Row
 
 When exactly one record is expected, the query must ask for one. Never fetch a page and index into it.

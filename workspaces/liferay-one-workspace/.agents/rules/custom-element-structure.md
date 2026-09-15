@@ -4,6 +4,8 @@ Where a file lives in `liferay-one-custom-element` is the first thing a reader l
 
 Most of them are enforced — `yarn lint` for anything a single file can prove, `yarn lint:structure` for the two questions that need the whole import graph. The enforced rules are listed in the ledger at the bottom. Everything else here is a convention a reviewer applies.
 
+This file is about where things live. [`custom-element-safety.md`](./custom-element-safety.md) covers the rules whose failure reaches a user — CSRF, XSS, filter injection, timezone-naive dates.
+
 ## The Folders Under `src`
 
 There are nine, and no others:
@@ -157,6 +159,18 @@ Every substitution in a key is written `x`, however many there are — never `y`
 'includes-x-add-on-buckets-x-on-top-of-the-x-base-allotment-per-month':
 	'Includes {0} add-on buckets (+{1}) on top of the {2} base allotment per month.',
 ```
+
+A key is a lowercase kebab-case slug and carries no punctuation — the English text is the value, not the key:
+
+```ts
+// Wrong
+'need-help-getting-started?': 'Need help getting started?',
+
+// Correct
+'need-help-getting-started': 'Need help getting started?',
+```
+
+User-facing text is never written inline. A literal in `alt`, `aria-label`, `label`, `placeholder`, or `title`, or as visible JSX text, is invisible to every locale but English — give it a key and call `translate()`.
 
 ## Never Silence The Linter
 

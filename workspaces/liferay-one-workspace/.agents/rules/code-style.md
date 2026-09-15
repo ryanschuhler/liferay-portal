@@ -103,6 +103,8 @@ Never string-replace `https://` to `http://` on an image or document URL in ship
 
 ## Date Input Values Are Timezone-Naive
 
+Enforced in the custom element by `local/no-timezone-naive-date` ([`custom-element-safety.md`](./custom-element-safety.md)).
+
 Never feed a `yyyy-MM-dd` value from an `<input type="date">` straight into `new Date(...).toISOString()`. A bare date string is parsed as **UTC midnight**, so in any UTC-negative timezone (all of the Americas) `.toISOString()` and any later local-time display shift the day backward by one — the saved start/expiration date is off by one from what the user picked.
 
 ```ts

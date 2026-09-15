@@ -10,7 +10,7 @@ Read the lane's rule files first — they carry the detail the lenses below deli
 
 | Lane | Rule files under `.agents/rules/` |
 | --- | --- |
-| Workspace | `code-style.md`, `concurrency.md`, `custom-element-structure.md`, `data-access.md`, `naming.md`, `object-naming.md`, `page-folder-structure.md`, `pr-hygiene.md` |
+| Workspace | `code-style.md`, `concurrency.md`, `custom-element-safety.md`, `custom-element-structure.md`, `data-access.md`, `naming.md`, `object-naming.md`, `page-folder-structure.md`, `pr-hygiene.md` |
 | Scripts | `architecture.md`, `code-quality.md`, `no-comments.md`, `script-conventions.md`, `sensitive-data.md`, plus the workspace's `data-access.md` — the scripts call the same APIs over far more records |
 
 ## The Lenses, in Order
