@@ -12,7 +12,7 @@ import {DetailedCard} from '~/components/DetailedCard/DetailedCard';
 import Loading from '~/components/Loading/Loading';
 import Modal from '~/components/Modal/Modal';
 import {Tooltip} from '~/components/Tooltip/Tooltip';
-import {useProject} from '~/context/ProjectContext';
+import {useProject} from '~/context/ProjectContextProvider';
 import {useProjectEnvironments} from '~/hooks/useProjectEnvironments';
 import {Word, sub, translate} from '~/i18n';
 import {filterEnvironmentsByProject} from '~/pages/MyAccount/Projects/utils/filterEnvironmentsByProject';

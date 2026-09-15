@@ -18,8 +18,8 @@ import {
 import {AppRoute, toRouteObjects} from '~/utils/routeUtils';
 
 import ProductPurchaseLayout from './components/ProductPurchaseLayout/ProductPurchaseLayout';
-import {AppPurchaseProvider} from './context/AppPurchaseContext';
-import {CartProvider} from './context/CartContext';
+import {AppPurchaseProvider} from './context/AppPurchaseContextProvider';
+import {CartProvider} from './context/CartContextProvider';
 import {
 	getProductPurchaseSteps,
 	toStepItems,

@@ -6,8 +6,8 @@
 import ClayTable from '@clayui/table';
 import {useMemo} from 'react';
 import {DetailedCard} from '~/components/DetailedCard/DetailedCard';
-import {useProject} from '~/context/ProjectContext';
-import {useProperties} from '~/context/PropertiesContext';
+import {useProject} from '~/context/ProjectContextProvider';
+import {useProperties} from '~/context/PropertiesContextProvider';
 import {LearnLinks} from '~/enums/Learn';
 import {Word, translate} from '~/i18n';
 import ActivationKeyDownload from '~/pages/MyAccount/Projects/components/ActivationKeyDownload/ActivationKeyDownload';

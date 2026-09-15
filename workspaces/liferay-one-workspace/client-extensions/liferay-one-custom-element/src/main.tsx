@@ -11,7 +11,7 @@ import {SWRConfig, SWRConfiguration} from 'swr';
 import ErrorBoundary from '~/components/ErrorBoundary/ErrorBoundary';
 import Loading from '~/components/Loading/Loading';
 import OneContextProvider from '~/context/OneContextProvider';
-import {PropertiesProvider} from '~/context/PropertiesContext';
+import {PropertiesProvider} from '~/context/PropertiesContextProvider';
 import preloadAppData from '~/preloadAppData';
 import SWRCacheProvider from '~/services/fetcher/SWRCacheProvider';
 import fetcher from '~/services/fetcher/fetcher';

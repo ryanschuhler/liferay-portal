@@ -7,7 +7,7 @@ import {useCallback, useEffect} from 'react';
 import HeadlessCommerceDeliveryCart from '~/services/headless/HeadlessCommerceDeliveryCart';
 import {Liferay} from '~/services/liferay/liferay';
 
-import {useCartContext} from '../context/CartContext';
+import {useCartContext} from '../context/CartContextProvider';
 
 import type {CartItem} from '~/types/orders';
 import type {DeliveryProduct} from '~/types/product';

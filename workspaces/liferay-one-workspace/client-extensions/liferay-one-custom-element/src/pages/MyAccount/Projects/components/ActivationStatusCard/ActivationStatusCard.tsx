@@ -10,7 +10,7 @@ import {useState} from 'react';
 import Button from '~/components/Button/Button';
 import Loading from '~/components/Loading/Loading';
 import Modal from '~/components/Modal/Modal';
-import {useProject} from '~/context/ProjectContext';
+import {useProject} from '~/context/ProjectContextProvider';
 import {useProjectEnvironments} from '~/hooks/useProjectEnvironments';
 import {Word, translate} from '~/i18n';
 import {filterEnvironmentsByProject} from '~/pages/MyAccount/Projects/utils/filterEnvironmentsByProject';

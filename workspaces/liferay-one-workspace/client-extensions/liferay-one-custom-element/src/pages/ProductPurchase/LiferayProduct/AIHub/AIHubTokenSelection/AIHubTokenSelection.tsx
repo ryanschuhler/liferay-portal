@@ -11,8 +11,8 @@ import RadioCardList, {
 } from '~/components/RadioCardList/RadioCardList';
 import i18n from '~/i18n';
 import {useProductPurchaseLayoutContext as useProductPurchaseOutletContext} from '~/pages/ProductPurchase/components/ProductPurchaseLayout/ProductPurchaseLayout';
-import {useAppPurchaseContext} from '~/pages/ProductPurchase/context/AppPurchaseContext';
-import {useCartContext} from '~/pages/ProductPurchase/context/CartContext';
+import {useAppPurchaseContext} from '~/pages/ProductPurchase/context/AppPurchaseContextProvider';
+import {useCartContext} from '~/pages/ProductPurchase/context/CartContextProvider';
 import HeadlessCommerceDeliveryCart from '~/services/headless/HeadlessCommerceDeliveryCart';
 import {Liferay} from '~/services/liferay/liferay';
 import {getAiHubTokenSKUs} from '~/utils/productUtils';

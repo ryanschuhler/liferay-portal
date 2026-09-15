@@ -702,9 +702,9 @@ export default {
 		'In the future, you will be able to submit your app source code for additional support and partnership opportunities with Liferay.',
 	'inactive': 'Inactive',
 	'incident-report-contacts': 'Incident Report Contacts',
-	'includes-1-add-on-bucket-x-on-top-of-the-y-base-allotment-per-month':
+	'includes-1-add-on-bucket-x-on-top-of-the-x-base-allotment-per-month':
 		'Includes 1 add-on bucket (+{0}) on top of the {1} base allotment per month.',
-	'includes-x-add-on-buckets-y-on-top-of-the-z-base-allotment-per-month':
+	'includes-x-add-on-buckets-x-on-top-of-the-x-base-allotment-per-month':
 		'Includes {0} add-on buckets (+{1}) on top of the {2} base allotment per month.',
 	'income': 'Income',
 	'incomplete': 'Incomplete',

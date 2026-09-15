@@ -10,7 +10,7 @@ import {MouseEvent, useEffect, useRef} from 'react';
 import {useNavigate, useSearchParams} from 'react-router-dom';
 import Button from '~/components/Button/Button';
 import Page from '~/components/Page/Page';
-import {useProject} from '~/context/ProjectContext';
+import {useProject} from '~/context/ProjectContextProvider';
 import {
 	ProjectActivationKey,
 	useProjectActivationKeys,

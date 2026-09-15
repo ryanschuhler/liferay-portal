@@ -13,7 +13,7 @@ import Loading from '~/components/Loading/Loading';
 import ProjectSelector from '~/components/ProjectSelector/ProjectSelector';
 import RestrictedFeatureMessage from '~/components/RestrictedFeatureMessage/RestrictedFeatureMessage';
 import {useOneContext} from '~/context/OneContextProvider';
-import {useProperties} from '~/context/PropertiesContext';
+import {useProperties} from '~/context/PropertiesContextProvider';
 import {useConfirmationModal} from '~/hooks/useConfirmationModal';
 import {useFetch} from '~/hooks/useFetch';
 import {translate} from '~/i18n';

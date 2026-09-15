@@ -7,7 +7,7 @@ import AlertBox from '~/components/AlertBox/AlertBox';
 import ProductPurchase from '~/components/ProductPurchase/ProductPurchase';
 import i18n from '~/i18n';
 import {useProductPurchaseLayoutContext} from '~/pages/ProductPurchase/components/ProductPurchaseLayout/ProductPurchaseLayout';
-import {useAppPurchaseContext} from '~/pages/ProductPurchase/context/AppPurchaseContext';
+import {useAppPurchaseContext} from '~/pages/ProductPurchase/context/AppPurchaseContextProvider';
 
 const NoContractAvailable = () => {
 	const {

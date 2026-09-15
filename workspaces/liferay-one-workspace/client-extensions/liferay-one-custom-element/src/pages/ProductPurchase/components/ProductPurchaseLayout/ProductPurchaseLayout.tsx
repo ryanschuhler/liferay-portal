@@ -25,7 +25,7 @@ import {
 	isLDPProduct,
 } from '~/utils/productUtils';
 
-import {useAppPurchaseContext} from '../../context/AppPurchaseContext';
+import {useAppPurchaseContext} from '../../context/AppPurchaseContextProvider';
 import useAccounts from '../../hooks/useAccounts';
 import useProductPurchaseCart from '../../hooks/useProductPurchaseCart';
 import {ProductPurchaseStepItem} from '../../productPurchaseRoutes';

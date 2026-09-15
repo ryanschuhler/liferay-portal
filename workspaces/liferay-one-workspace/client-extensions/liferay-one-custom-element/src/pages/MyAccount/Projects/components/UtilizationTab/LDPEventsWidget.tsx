@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import {useMemo, useState} from 'react';
 import Loading from '~/components/Loading/Loading';
 import {Tooltip} from '~/components/Tooltip/Tooltip';
-import {useProject} from '~/context/ProjectContext';
+import {useProject} from '~/context/ProjectContextProvider';
 import {useProjectCommerce} from '~/hooks/useProjectCommerce';
 import i18n from '~/i18n';
 import {useProjectEventUsage} from '~/pages/MyAccount/Projects/hooks/useProjectEventUsage';
@@ -66,13 +66,13 @@ function getAddOnMessage(eventUsage?: ProjectEventUsage): string | undefined {
 
 	if (addOnBucketCount === 1) {
 		return i18n.sub(
-			'includes-1-add-on-bucket-x-on-top-of-the-y-base-allotment-per-month',
+			'includes-1-add-on-bucket-x-on-top-of-the-x-base-allotment-per-month',
 			[addedCount, formatCount(baseAllotment)]
 		);
 	}
 
 	return i18n.sub(
-		'includes-x-add-on-buckets-y-on-top-of-the-z-base-allotment-per-month',
+		'includes-x-add-on-buckets-x-on-top-of-the-x-base-allotment-per-month',
 		[String(addOnBucketCount), addedCount, formatCount(baseAllotment)]
 	);
 }

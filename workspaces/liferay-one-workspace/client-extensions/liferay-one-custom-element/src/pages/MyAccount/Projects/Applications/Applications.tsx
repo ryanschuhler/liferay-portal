@@ -6,7 +6,7 @@
 import {useMemo} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router-dom';
 import {RowAction} from '~/components/RowActionsMenu/RowActionsMenu';
-import {useProject} from '~/context/ProjectContext';
+import {useProject} from '~/context/ProjectContextProvider';
 import {ProjectProduct} from '~/hooks/useProjectCommerce';
 import {
 	useProjectItems,

@@ -7,7 +7,7 @@ import ClayButton from '@clayui/button';
 import {useModal} from '@clayui/modal';
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {useProperties} from '~/context/PropertiesContext';
+import {useProperties} from '~/context/PropertiesContextProvider';
 import useModalContext from '~/hooks/useModalContext';
 import i18n from '~/i18n';
 import {Liferay} from '~/services/liferay/liferay';

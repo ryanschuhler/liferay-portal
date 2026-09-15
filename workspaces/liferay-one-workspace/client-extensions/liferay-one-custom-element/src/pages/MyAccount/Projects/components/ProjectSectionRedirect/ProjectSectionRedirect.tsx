@@ -5,7 +5,7 @@
 
 import {Navigate, useParams} from 'react-router-dom';
 import Loading from '~/components/Loading/Loading';
-import {useProject} from '~/context/ProjectContext';
+import {useProject} from '~/context/ProjectContextProvider';
 import {
 	useProjectItems,
 	useProjectsWithProjectItemType,

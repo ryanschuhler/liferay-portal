@@ -4,8 +4,8 @@
  */
 
 import {HashRouter, Navigate, useRoutes} from 'react-router-dom';
-import {AccountProvider} from '~/context/AccountContext';
-import {ProjectProvider} from '~/context/ProjectContext';
+import {AccountProvider} from '~/context/AccountContextProvider';
+import {ProjectProvider} from '~/context/ProjectContextProvider';
 import useRequireSignIn from '~/hooks/useRequireSignIn';
 import {toRouteObjects} from '~/utils/routeUtils';
 

@@ -4,7 +4,7 @@
  */
 
 import {differenceInDays, format} from 'date-fns';
-import {useProject} from '~/context/ProjectContext';
+import {useProject} from '~/context/ProjectContextProvider';
 import {useFetch} from '~/hooks/useFetch';
 import {Word} from '~/i18n';
 import {isUnassignedProject} from '~/pages/MyAccount/Projects/utils/isUnassignedProject';

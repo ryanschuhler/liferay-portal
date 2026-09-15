@@ -8,7 +8,7 @@ import contractTermIconUrl from '~/assets/icons/contract_term_icon.svg';
 import EntitySelector, {
 	SelectorItem,
 } from '~/components/EntitySelector/EntitySelector';
-import {useProject} from '~/context/ProjectContext';
+import {useProject} from '~/context/ProjectContextProvider';
 import {
 	resolveDefaultContractERC,
 	useProjectCommerce,

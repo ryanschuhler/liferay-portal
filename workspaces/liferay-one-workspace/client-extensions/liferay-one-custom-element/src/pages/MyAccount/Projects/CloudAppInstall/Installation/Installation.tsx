@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import {useMemo} from 'react';
 import Loading from '~/components/Loading/Loading';
 import ProductPurchase from '~/components/ProductPurchase/ProductPurchase';
-import {useProperties} from '~/context/PropertiesContext';
+import {useProperties} from '~/context/PropertiesContextProvider';
 import i18n from '~/i18n';
 
 import WizardFooter from '../WizardFooter/WizardFooter';

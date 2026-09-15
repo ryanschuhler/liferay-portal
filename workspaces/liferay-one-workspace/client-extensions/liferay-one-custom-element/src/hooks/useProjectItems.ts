@@ -4,7 +4,7 @@
  */
 
 import {useMemo} from 'react';
-import {useProject} from '~/context/ProjectContext';
+import {useProject} from '~/context/ProjectContextProvider';
 import {
 	useChannelProducts,
 	useProjectCommerce,

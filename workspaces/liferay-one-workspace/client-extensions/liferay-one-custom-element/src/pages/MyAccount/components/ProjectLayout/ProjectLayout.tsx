@@ -8,7 +8,7 @@ import {useMatch, useNavigate, useParams} from 'react-router-dom';
 import AppLayout from '~/components/AppLayout/AppLayout';
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb';
 import ProjectSelector from '~/components/ProjectSelector/ProjectSelector';
-import {useProject} from '~/context/ProjectContext';
+import {useProject} from '~/context/ProjectContextProvider';
 import i18n from '~/i18n';
 import {buildNavItems} from '~/utils/routeUtils';
 

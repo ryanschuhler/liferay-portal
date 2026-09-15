@@ -7,7 +7,7 @@ import ClayIcon from '@clayui/icon';
 import {useMemo} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import RowActionsMenu from '~/components/RowActionsMenu/RowActionsMenu';
-import {useProject} from '~/context/ProjectContext';
+import {useProject} from '~/context/ProjectContextProvider';
 import {ProjectOrder, useProjectOrders} from '~/hooks/useProjectOrders';
 import {Word, translate} from '~/i18n';
 import {getStatusColor} from '~/pages/MyAccount/Projects/utils/getStatusColor';
