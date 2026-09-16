@@ -120,6 +120,12 @@ pages/ProductPurchase/types/PurchaseStep.ts
 
 A file whose name matches its folder matches its casing too — `Projects/Projects.ts`, never `Projects/projects.ts`.
 
+## One File, One Job
+
+A module is capped at 400 lines and 12 hook calls. Neither number is sacred; both are the point at which a file has stopped doing one thing. Split along the seam the file already has — a sub-component, a hook, the service call it wraps. Language files and tests are exempt: one is data, the other grows with what it covers.
+
+Modules must not import each other in a cycle. A cycle is not a style problem: whichever module in the ring loads first sees the others half-initialized, so a constant read at module scope is `undefined` in a way that depends on which entry point ran. `yarn lint:imports` reports the rings, and the same pass reports exports nothing imports.
+
 ## Components
 
 `src/components/` is for what more than one page shares. A component only one page reaches belongs under that page, where a reader looking at the page can see it — that is where `AppPublish` and the `AppReview*` family belong, since only `PublisherDashboard` reaches them.
@@ -195,8 +201,9 @@ The workspace has not been cleaned up yet, so every structural rule is `warn`. T
 | `no-bare-utils-or-types-file` | 11 |
 | `context-file-naming` | 5 |
 | `no-eslint-disable` | 4 |
-| `i18n-key-placeholder` | 2 |
+| `file-complexity-budget` | 47 |
 | `yarn lint:placement` | 38 |
-| `yarn lint:deps` | 1 |
+| `yarn lint:imports` cycles | 18 |
+| `yarn lint:imports` dead exports | 407 |
 
 New code is held to the rule regardless of the ledger. The counts only go down.

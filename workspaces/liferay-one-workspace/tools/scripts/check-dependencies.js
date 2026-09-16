@@ -25,7 +25,7 @@ const PACKAGE_DIR = path.join(
 
 const SOURCE_DIRECTORIES = ['src', '@vite'];
 
-const ROOT_FILES = ['vite.config.ts'];
+const ROOT_FILES = ['vite.config.ts', 'vitest.config.ts', 'vitest.setup.ts'];
 
 const NODE_BUILTINS = new Set([
 	'assert',
@@ -46,7 +46,7 @@ const NODE_BUILTINS = new Set([
 ]);
 
 const IMPORT_PATTERN =
-	/(?:^|[^.\w])(?:import|export)\s[^;]*?from\s*['"]([^'"]+)['"]|(?:^|[^.\w])import\s*\(\s*['"]([^'"]+)['"]\s*\)|(?:^|[^.\w])require\s*\(\s*['"]([^'"]+)['"]\s*\)/gm;
+	/(?:^|[^.\w])(?:import|export)\s[^;]*?from\s*['"]([^'"]+)['"]|(?:^|[^.\w])import\s*\(\s*['"]([^'"]+)['"]\s*\)|(?:^|[^.\w])require\s*\(\s*['"]([^'"]+)['"]\s*\)|(?:^|[^.\w])import\s+['"]([^'"]+)['"]/gm;
 
 // Declared for their side effects, their types, or to satisfy a peer range,
 // so no import names them. Add to this list only with the reason.
@@ -57,15 +57,24 @@ const IMPLICITLY_USED = new Set([
 
 	'@clayui/css',
 
+	// Peer of @testing-library/jest-dom.
+
+	'@testing-library/dom',
+
 	'@types/dompurify',
 	'@types/react',
 	'@types/react-dom',
 	'@types/spark-md5',
 
+	// Named in vitest.config.ts as the test environment, never imported.
+
+	'jsdom',
+
 	// Invoked by the build, not imported by the app.
 
 	'typescript',
 	'vite',
+	'vitest',
 ]);
 
 /**
@@ -163,7 +172,9 @@ function main() {
 		let match;
 
 		while ((match = IMPORT_PATTERN.exec(source)) !== null) {
-			const name = getPackageName(match[1] ?? match[2] ?? match[3]);
+			const name = getPackageName(
+				match[1] ?? match[2] ?? match[3] ?? match[4]
+			);
 
 			if (!name) {
 				continue;

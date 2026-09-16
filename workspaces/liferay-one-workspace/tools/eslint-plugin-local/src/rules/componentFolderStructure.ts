@@ -31,6 +31,11 @@ const rule: TSESLint.RuleModule<MessageId, []> = {
 
 				const parts = match[1].split('/');
 				const fileName = parts[parts.length - 1];
+
+				if (/\.test\.tsx?$/.test(fileName)) {
+					return;
+				}
+
 				const baseName = fileName.replace(/\.[^.]+$/, '');
 
 				if (parts.length === 1) {

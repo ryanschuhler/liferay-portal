@@ -33,11 +33,6 @@ describe('SearchBuilder', () => {
 	});
 
 	describe('escaping', () => {
-
-		// A value reaches these operators straight from an account, project,
-		// or product name, all of which originate outside this app. A single
-		// quote closes the literal early, so it has to be doubled.
-
 		it('escapes a quote in eq', () => {
 			expect(SearchBuilder.eq('name', "O'Brien")).toBe(
 				"name eq 'O''Brien'"

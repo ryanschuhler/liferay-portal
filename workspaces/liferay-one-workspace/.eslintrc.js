@@ -5,6 +5,16 @@
 
 const path = require('path');
 
+const jsxA11y = require('eslint-plugin-jsx-a11y');
+
+// The accessibility defects are real but predate the rule, so they are warnings
+// until the count reaches zero. Mapping the plugin's own recommended set keeps
+// this in step with the plugin instead of pinning a list that goes stale.
+
+const accessibilityRules = Object.fromEntries(
+	Object.keys(jsxA11y.configs.recommended.rules).map((rule) => [rule, 'warn'])
+);
+
 const config = {
 	env: {
 		browser: true,
@@ -52,9 +62,10 @@ const config = {
 		},
 		ecmaVersion: 2023,
 	},
-	plugins: ['@liferay', 'local'],
+	plugins: ['@liferay', 'jsx-a11y', 'local'],
 	root: true,
 	rules: {
+		...accessibilityRules,
 		'@liferay/empty-line-between-elements': 'off',
 		'@liferay/import-extensions': 'off',
 		'@liferay/portal/deprecation': 'off',

@@ -33,13 +33,6 @@ export default class SearchBuilder {
 		this.useURIEncode = useURIEncode;
 	}
 
-	/**
-	 * Wraps a value as an OData string literal. Values reach these operators
-	 * straight from an account, project, or product name, none of which this
-	 * app controls, and a single quote would otherwise close the literal early
-	 * and change which rows match.
-	 */
-
 	private static quote(value: Value) {
 		return `'${escapeODataString(String(value))}'`;
 	}
@@ -115,11 +108,6 @@ export default class SearchBuilder {
 	}
 
 	public build() {
-
-		// Only a standalone trailing connector is dropped. Matching on the
-		// bare word would truncate a value that happens to end in one, such
-		// as "Ferdinand".
-
 		const query = this.query.trim().replace(/\s+(and|or)$/, '');
 
 		this.lock = true;

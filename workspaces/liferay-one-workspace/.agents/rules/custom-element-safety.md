@@ -71,6 +71,10 @@ return value ? new Date(`${value}T12:00:00`).toISOString() : undefined;
 
 `localStorage` and `sessionStorage` are reached through `MarketplaceStorage` in `services/liferay/`, which owns the key names and survives a browser that refuses storage. A direct read throws in a private window and takes the render down with it.
 
+## The Array Index Is Not A Key
+
+`key={index}` ties component state to a position rather than to a thing. Remove or reorder an item and React keeps the old state on whatever moved into that slot — a checked row stays checked, a half-typed input keeps its text. Key on an id, an `externalReferenceCode`, or any value unique within the list.
+
 ## No `as unknown as`
 
 The double cast turns off the check that two types have anything to do with each other, so the next field rename compiles and fails at runtime. Fix the type the value actually has: widen the DTO, narrow with a type guard, or model the difference the cast is hiding.
@@ -82,7 +86,9 @@ Every rule is `warn` until its count reaches zero, then it becomes `error` in `t
 | Rule | Open |
 | --- | --- |
 | `no-untranslated-text` | 116 |
+| `no-array-index-key` | 68 |
 | `no-unsafe-type-cast` | 58 |
+| `jsx-a11y/*` | 82 |
 | `no-raw-fetch` | 42 |
 | `bounded-pagination` | 18 |
 | `i18n-key-slug` | 15 |
@@ -90,6 +96,8 @@ Every rule is `warn` until its count reaches zero, then it becomes `error` in `t
 | `no-unsanitized-html` | 9 |
 | `no-direct-web-storage` | 8 |
 | `no-timezone-naive-date` | 1 |
+
+Accessibility is enforced through `eslint-plugin-jsx-a11y`. Its recommended set ships as errors; `.eslintrc.js` maps the plugin's own rule list down to warnings so the count can be worked off, which keeps it in step with the plugin rather than pinning a list that goes stale.
 
 `no-raw-fetch` is concentrated: `utils/apiUtils.ts` is a whole undeclared service tier, raw `fetch` and hand-built headers against `/o/headless-commerce-*` and `/o/c/*`. Clearing that file clears most of the count and most of `no-unsafe-type-cast` with it.
 

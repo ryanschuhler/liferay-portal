@@ -24,7 +24,7 @@ const rule: TSESLint.RuleModule<MessageId, []> = {
 				const parts = match[1].split('/');
 				const fileName = parts[parts.length - 1];
 
-				if (!/\.tsx?$/.test(fileName)) {
+				if (!/\.tsx?$/.test(fileName) || /\.test\.tsx?$/.test(fileName)) {
 					return;
 				}
 

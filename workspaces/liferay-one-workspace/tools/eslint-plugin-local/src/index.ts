@@ -7,6 +7,7 @@ import boundedPagination = require('./rules/boundedPagination');
 import componentFolderStructure = require('./rules/componentFolderStructure');
 import contextFileNaming = require('./rules/contextFileNaming');
 import cssFilenamePascalCase = require('./rules/cssFilenamePascalCase');
+import fileComplexityBudget = require('./rules/fileComplexityBudget');
 import filenameCamelcase = require('./rules/filenameCamelcase');
 import filenameMatchesDefaultExport = require('./rules/filenameMatchesDefaultExport');
 import hooksExportOnlyHooks = require('./rules/hooksExportOnlyHooks');
@@ -14,6 +15,7 @@ import i18nKeyPlaceholder = require('./rules/i18nKeyPlaceholder');
 import i18nKeySlug = require('./rules/i18nKeySlug');
 import imageFilenameSnakeCase = require('./rules/imageFilenameSnakeCase');
 import noAmbientTypeDeclarations = require('./rules/noAmbientTypeDeclarations');
+import noArrayIndexKey = require('./rules/noArrayIndexKey');
 import noBareUtilsOrTypesFile = require('./rules/noBareUtilsOrTypesFile');
 import noComments = require('./rules/noComments');
 import noDirectWebStorage = require('./rules/noDirectWebStorage');
@@ -39,6 +41,7 @@ const plugin = {
 				'local/component-folder-structure': 'error',
 				'local/context-file-naming': 'warn',
 				'local/css-filename-pascal-case': 'error',
+				'local/file-complexity-budget': 'warn',
 				'local/filename-camelcase': 'error',
 				'local/filename-matches-default-export': 'error',
 				'local/hooks-export-only-hooks': 'warn',
@@ -46,6 +49,7 @@ const plugin = {
 				'local/i18n-key-slug': 'warn',
 				'local/image-filename-snake-case': 'error',
 				'local/no-ambient-type-declarations': 'warn',
+				'local/no-array-index-key': 'warn',
 				'local/no-bare-utils-or-types-file': 'warn',
 				'local/no-comments': 'warn',
 				'local/no-direct-web-storage': 'warn',
@@ -69,6 +73,7 @@ const plugin = {
 		'component-folder-structure': componentFolderStructure,
 		'context-file-naming': contextFileNaming,
 		'css-filename-pascal-case': cssFilenamePascalCase,
+		'file-complexity-budget': fileComplexityBudget,
 		'filename-camelcase': filenameCamelcase,
 		'filename-matches-default-export': filenameMatchesDefaultExport,
 		'hooks-export-only-hooks': hooksExportOnlyHooks,
@@ -76,6 +81,7 @@ const plugin = {
 		'i18n-key-slug': i18nKeySlug,
 		'image-filename-snake-case': imageFilenameSnakeCase,
 		'no-ambient-type-declarations': noAmbientTypeDeclarations,
+		'no-array-index-key': noArrayIndexKey,
 		'no-bare-utils-or-types-file': noBareUtilsOrTypesFile,
 		'no-comments': noComments,
 		'no-direct-web-storage': noDirectWebStorage,
