@@ -14,6 +14,19 @@ Lists, arrays, and JSON entries must always be in sorted order. This applies to:
 
 When Brian sees items out of order, he comments `"sort"` and bounces the PR back.
 
+`yarn lint:sorted` enforces this on the batch definitions, and `yarn lint` now covers `liferay-one-batch` for duplicate and unsorted object keys.
+
+### Order-Bearing Arrays Are Not Sorted
+
+An array whose order *is* the data must never be alphabetized. Sorting one changes the product rather than tidying it:
+
+- a site navigation menu renders in array order,
+- a fragment's `fieldSets` order is the order the configuration panel shows,
+- `objectStates` is a state machine whose **first entry is the initial state**,
+- `optionValues` and list type entries render in the order they are defined.
+
+This is why `check-sorted-json.js` uses an allowlist of array paths rather than sorting every keyed array it finds. Adding a path to that list is a claim that the order carries nothing — check before making it.
+
 ## Log Message Conventions
 
 Do not write log statements like AI-generated code. Specifically:

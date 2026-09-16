@@ -216,7 +216,9 @@ function main() {
 				const source_ = name.split(/\s+as\s+/)[0].trim();
 
 				if (source_) {
-					imported.add(`${target}:${source_.replace(/^type\s+/, '')}`);
+					imported.add(
+						`${target}:${source_.replace(/^type\s+/, '')}`
+					);
 				}
 			}
 		}
@@ -227,11 +229,12 @@ function main() {
 			names.add(match[1]);
 		}
 
-
-
 		for (const match of source.matchAll(EXPORT_LIST_PATTERN)) {
 			for (const name of match[1].split(',')) {
-				const exportedName = name.split(/\s+as\s+/).pop().trim();
+				const exportedName = name
+					.split(/\s+as\s+/)
+					.pop()
+					.trim();
 
 				if (exportedName) {
 					names.add(exportedName.replace(/^type\s+/, ''));

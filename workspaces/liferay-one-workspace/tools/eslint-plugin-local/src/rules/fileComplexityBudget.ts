@@ -11,8 +11,9 @@ const DEFAULTS: Options[0] = {maxHooks: 12, maxLines: 400};
 
 type MessageId = 'tooManyHooks' | 'tooManyLines';
 
-// Language files are data, and a test file grows with what it covers, so
-// neither is held to the budget.
+// The budget is about modules. Data — a language file, a batch definition,
+// anything that is not TypeScript — is exempt, and so is a test, which grows
+// with what it covers.
 
 const rule: TSESLint.RuleModule<MessageId, Options> = {
 	create(context) {
@@ -20,6 +21,7 @@ const rule: TSESLint.RuleModule<MessageId, Options> = {
 		const filename = context.getFilename().replace(/\\/g, '/');
 
 		if (
+			!/\.tsx?$/.test(filename) ||
 			/\/src\/i18n\//.test(filename) ||
 			/\.test\.tsx?$/.test(filename)
 		) {

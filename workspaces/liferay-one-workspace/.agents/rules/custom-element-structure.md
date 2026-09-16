@@ -194,16 +194,21 @@ The workspace has not been cleaned up yet, so every structural rule is `warn`. T
 
 | Rule | Open |
 | --- | --- |
+| `yarn lint:imports` dead exports | 407 |
 | `service-layer-boundary` | 63 |
-| `src-folder-structure` | 21 |
+| `yarn lint:placement` | 38 |
+| `file-complexity-budget` | 34 |
+| `src-folder-structure` | 22 |
 | `hooks-export-only-hooks` | 20 |
+| `yarn lint:imports` cycles | 18 |
 | `page-folder-structure` | 12 |
 | `no-bare-utils-or-types-file` | 11 |
-| `context-file-naming` | 5 |
 | `no-eslint-disable` | 4 |
-| `file-complexity-budget` | 47 |
-| `yarn lint:placement` | 38 |
-| `yarn lint:imports` cycles | 18 |
-| `yarn lint:imports` dead exports | 407 |
+| `yarn lint:deps` | 0 |
+| `yarn lint:sorted` | 0 |
+| `context-file-naming` | 0 |
+| `i18n-key-placeholder` | 0 |
+
+`context-file-naming`, `i18n-key-placeholder`, `lint:deps`, and `lint:sorted` are at zero and should be errors — flip them once a cleanup branch is not in flight.
 
 New code is held to the rule regardless of the ledger. The counts only go down.

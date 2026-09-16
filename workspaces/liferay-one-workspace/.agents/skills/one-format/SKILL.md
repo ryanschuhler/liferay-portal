@@ -53,7 +53,7 @@ The two checks that need the whole import graph, which ESLint cannot do one file
 yarn lint:structure
 ```
 
-These only report; nothing is written, so they behave identically in check-only mode. See `.agents/rules/custom-element-structure.md` for what they enforce and the outstanding counts.
+These only report; nothing is written, so they behave identically in check-only mode. They cover dependencies, component placement, the import graph, and batch JSON ordering. See `.agents/rules/custom-element-structure.md` for what they enforce and the outstanding counts.
 
 ## Check-Only Mode
 

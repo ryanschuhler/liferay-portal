@@ -26,21 +26,21 @@
 				},
 				{
 					"active": true,
-					"description": "Triggers Spring Boot CX to sync the updated account to JSM.",
-					"externalReferenceCode": "OA_ACCOUNT_UPDATE",
-					"name": "AccountUpdate",
-					"objectActionExecutorKey": "function#liferay-one-etc-spring-boot-object-action-account-update",
-					"objectActionTriggerKey": "onAfterUpdate",
-					"parameters": {
-					}
-				},
-				{
-					"active": true,
 					"description": "Triggers Spring Boot CX to delete the account from JSM.",
 					"externalReferenceCode": "OA_ACCOUNT_DELETE",
 					"name": "AccountDelete",
 					"objectActionExecutorKey": "function#liferay-one-etc-spring-boot-object-action-account-delete",
 					"objectActionTriggerKey": "onAfterDelete",
+					"parameters": {
+					}
+				},
+				{
+					"active": true,
+					"description": "Triggers Spring Boot CX to sync the updated account to JSM.",
+					"externalReferenceCode": "OA_ACCOUNT_UPDATE",
+					"name": "AccountUpdate",
+					"objectActionExecutorKey": "function#liferay-one-etc-spring-boot-object-action-account-update",
+					"objectActionTriggerKey": "onAfterUpdate",
 					"parameters": {
 					}
 				}
@@ -194,21 +194,21 @@
 				},
 				{
 					"active": true,
-					"description": "Triggers Spring Boot CX to sync the updated team to JSM.",
-					"externalReferenceCode": "OA_ORGANIZATION_UPDATE",
-					"name": "OrganizationUpdate",
-					"objectActionExecutorKey": "function#liferay-one-etc-spring-boot-object-action-organization-update",
-					"objectActionTriggerKey": "onAfterUpdate",
-					"parameters": {
-					}
-				},
-				{
-					"active": true,
 					"description": "Triggers Spring Boot CX to delete the team from JSM.",
 					"externalReferenceCode": "OA_ORGANIZATION_DELETE",
 					"name": "OrganizationDelete",
 					"objectActionExecutorKey": "function#liferay-one-etc-spring-boot-object-action-organization-delete",
 					"objectActionTriggerKey": "onAfterDelete",
+					"parameters": {
+					}
+				},
+				{
+					"active": true,
+					"description": "Triggers Spring Boot CX to sync the updated team to JSM.",
+					"externalReferenceCode": "OA_ORGANIZATION_UPDATE",
+					"name": "OrganizationUpdate",
+					"objectActionExecutorKey": "function#liferay-one-etc-spring-boot-object-action-organization-update",
+					"objectActionTriggerKey": "onAfterUpdate",
 					"parameters": {
 					}
 				}
@@ -253,21 +253,21 @@
 				},
 				{
 					"active": true,
-					"description": "Triggers Spring Boot CX to sync the updated contact to JSM.",
-					"externalReferenceCode": "OA_USER_UPDATE",
-					"name": "UserUpdate",
-					"objectActionExecutorKey": "function#liferay-one-etc-spring-boot-object-action-user-update",
-					"objectActionTriggerKey": "onAfterUpdate",
-					"parameters": {
-					}
-				},
-				{
-					"active": true,
 					"description": "Triggers Spring Boot CX to delete the contact from JSM and clean up subscription entries.",
 					"externalReferenceCode": "OA_USER_DELETE",
 					"name": "UserDelete",
 					"objectActionExecutorKey": "function#liferay-one-etc-spring-boot-object-action-user-delete",
 					"objectActionTriggerKey": "onAfterDelete",
+					"parameters": {
+					}
+				},
+				{
+					"active": true,
+					"description": "Triggers Spring Boot CX to sync the updated contact to JSM.",
+					"externalReferenceCode": "OA_USER_UPDATE",
+					"name": "UserUpdate",
+					"objectActionExecutorKey": "function#liferay-one-etc-spring-boot-object-action-user-update",
+					"objectActionTriggerKey": "onAfterUpdate",
 					"parameters": {
 					}
 				}
