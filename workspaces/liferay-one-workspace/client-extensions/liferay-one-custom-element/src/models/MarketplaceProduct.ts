@@ -16,7 +16,7 @@ export class MarketplaceProduct extends MarketplaceDeliveryProduct {
 		super(product as unknown as DeliveryProduct);
 	}
 
-	get specificationValues() {
+	override get specificationValues() {
 		const specificationValues = super.specificationValues;
 
 		for (const key of Object.keys(

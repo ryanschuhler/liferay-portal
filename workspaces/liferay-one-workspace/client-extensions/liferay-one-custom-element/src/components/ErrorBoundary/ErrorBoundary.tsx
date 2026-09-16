@@ -25,11 +25,11 @@ export default class ErrorBoundary extends Component<Props, State> {
 		return {hasError: true};
 	}
 
-	componentDidCatch(error: Error, info: ErrorInfo) {
+	override componentDidCatch(error: Error, info: ErrorInfo) {
 		console.error(error, info.componentStack);
 	}
 
-	componentDidUpdate(prevProps: Props) {
+	override componentDidUpdate(prevProps: Props) {
 		if (
 			this.state.hasError &&
 			this.props.resetKeys?.some(
@@ -40,7 +40,7 @@ export default class ErrorBoundary extends Component<Props, State> {
 		}
 	}
 
-	render() {
+	override render() {
 		if (this.state.hasError) {
 			return this.props.fallback ?? null;
 		}

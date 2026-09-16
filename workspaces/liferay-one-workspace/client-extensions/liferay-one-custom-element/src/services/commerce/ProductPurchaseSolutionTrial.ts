@@ -10,9 +10,10 @@ import ProductPurchase from './ProductPurchase';
 import type {Cart, OrderTypes} from '~/types/orders';
 
 export default class ProductPurchaseSolutionTrial extends ProductPurchase {
-	protected orderTypeExternalReferenceCode: OrderTypes = 'SOLUTIONS7';
+	protected override orderTypeExternalReferenceCode: OrderTypes =
+		'SOLUTIONS7';
 
-	public async createOrder(cart?: Cart): Promise<Cart> {
+	public override async createOrder(cart?: Cart): Promise<Cart> {
 		const order = await super.createOrder(cart);
 
 		trialOAuth2.provisioningTrial(order.id);
@@ -20,7 +21,7 @@ export default class ProductPurchaseSolutionTrial extends ProductPurchase {
 		return order;
 	}
 
-	public async getNextStepsLink(cart: Cart) {
+	public override async getNextStepsLink(cart: Cart) {
 		const maxTrialsReached = await this.isTrialOnHold();
 
 		const searchParams = new URLSearchParams({

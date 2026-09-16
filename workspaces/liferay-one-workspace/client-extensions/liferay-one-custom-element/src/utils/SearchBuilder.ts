@@ -115,6 +115,7 @@ export default class SearchBuilder {
 	}
 
 	public build() {
+
 		// Only a standalone trailing connector is dropped. Matching on the
 		// bare word would truncate a value that happens to end in one, such
 		// as "Ferdinand".

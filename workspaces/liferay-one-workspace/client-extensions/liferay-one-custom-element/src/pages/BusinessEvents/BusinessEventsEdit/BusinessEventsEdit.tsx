@@ -354,7 +354,7 @@ const BusinessEventsEditPage: React.FC<IProps> = ({originalBusinessEvent}) => {
 	useEffect(() => {
 		if (productVersions?.length) {
 			setNewLiferayVersionOptions([
-				...productVersions.filter((version, index, versions) => {
+				...productVersions.filter((_version, index, versions) => {
 					if (businessEvent.currentLiferayVersion?.key) {
 						return (
 							index <

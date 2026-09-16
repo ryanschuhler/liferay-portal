@@ -18,7 +18,7 @@ type AIHubOpenBetaForm = z.infer<typeof zodSchema.aiHubOpenBetaForm> & {
 
 export class ProductPurchaseAIHubOpenBeta extends ProductPurchase {
 	private form?: AIHubOpenBetaForm;
-	protected orderTypeExternalReferenceCode: OrderTypes = 'AI_HUB';
+	protected override orderTypeExternalReferenceCode: OrderTypes = 'AI_HUB';
 	private salesforceContract?: SalesforceContract;
 	private skuId?: number;
 	private tier?: string;
@@ -39,7 +39,7 @@ export class ProductPurchaseAIHubOpenBeta extends ProductPurchase {
 		this.tier = tier;
 	}
 
-	protected getCart() {
+	protected override getCart() {
 		const baseCart = super.getCart();
 
 		return {
@@ -59,7 +59,7 @@ export class ProductPurchaseAIHubOpenBeta extends ProductPurchase {
 		} as Cart;
 	}
 
-	public async createOrder(cart: Cart, cartOptions: unknown) {
+	public override async createOrder(cart: Cart, cartOptions: unknown) {
 		if (!this.form) {
 			throw new Error('Form is missing.');
 		}
@@ -76,7 +76,7 @@ export class ProductPurchaseAIHubOpenBeta extends ProductPurchase {
 		);
 	}
 
-	public async getNextStepsLink(cart: Cart) {
+	public override async getNextStepsLink(cart: Cart) {
 		return super.getPaymentNextStepsLink(cart);
 	}
 }

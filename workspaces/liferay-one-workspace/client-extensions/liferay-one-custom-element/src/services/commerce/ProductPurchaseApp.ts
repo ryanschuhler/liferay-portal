@@ -32,7 +32,7 @@ export default class ProductPurchaseApp extends ProductPurchase {
 		super(account, product);
 	}
 
-	protected analyticsTrack(): void {
+	protected override analyticsTrack(): void {
 		const {isFreeApp} = getProductPriceModel(this.product);
 
 		Analytics.track('APP_PURCHASE', {
@@ -41,7 +41,7 @@ export default class ProductPurchaseApp extends ProductPurchase {
 		});
 	}
 
-	public async createOrder(cart?: Cart): Promise<Cart> {
+	public override async createOrder(cart?: Cart): Promise<Cart> {
 		const order = await super.createOrder(this.getAppPurchaseCart(cart));
 
 		const {priceModel} = getProductPriceModel(this.product);
@@ -93,7 +93,7 @@ export default class ProductPurchaseApp extends ProductPurchase {
 		} as Cart;
 	}
 
-	public async getNextStepsLink(cart: Cart) {
+	public override async getNextStepsLink(cart: Cart) {
 		return `/purchase-completed?orderId=${cart.id}`;
 	}
 

@@ -24,19 +24,16 @@ describe('SearchBuilder', () => {
 		});
 
 		it('builds an in from mixed values', () => {
-			expect(SearchBuilder.in('id', [1, 'two'])).toBe(
-				"id in (1,'two')"
-			);
+			expect(SearchBuilder.in('id', [1, 'two'])).toBe("id in (1,'two')");
 		});
 
 		it('leaves a comparison unquoted', () => {
-			expect(SearchBuilder.gt('totalAmount', 0)).toBe(
-				'totalAmount gt 0'
-			);
+			expect(SearchBuilder.gt('totalAmount', 0)).toBe('totalAmount gt 0');
 		});
 	});
 
 	describe('escaping', () => {
+
 		// A value reaches these operators straight from an account, project,
 		// or product name, all of which originate outside this app. A single
 		// quote closes the literal early, so it has to be doubled.
@@ -104,9 +101,7 @@ describe('SearchBuilder', () => {
 		});
 
 		it('keeps a value that ends in a connector', () => {
-			const query = new SearchBuilder()
-				.eq('name', 'Ferdinand')
-				.build();
+			const query = new SearchBuilder().eq('name', 'Ferdinand').build();
 
 			expect(query).toBe("name eq 'Ferdinand'");
 		});

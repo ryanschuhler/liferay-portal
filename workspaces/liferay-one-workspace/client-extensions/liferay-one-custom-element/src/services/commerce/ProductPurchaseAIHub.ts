@@ -19,7 +19,7 @@ type AIHubForm = z.infer<typeof zodSchema.aiHubForm>;
 
 export class ProductPurchaseAIHub extends ProductPurchase {
 	private form?: AIHubForm;
-	protected orderTypeExternalReferenceCode: OrderTypes = 'AI_HUB';
+	protected override orderTypeExternalReferenceCode: OrderTypes = 'AI_HUB';
 
 	constructor(
 		account: Account,
@@ -33,7 +33,7 @@ export class ProductPurchaseAIHub extends ProductPurchase {
 		this.form = form;
 	}
 
-	protected getCart() {
+	protected override getCart() {
 		const baseCart = super.getCart();
 		const cartItems = super.getCartItems();
 
@@ -56,7 +56,7 @@ export class ProductPurchaseAIHub extends ProductPurchase {
 		} as Cart;
 	}
 
-	public async createOrder() {
+	public override async createOrder() {
 		if (!this.form) {
 			throw new Error('Form is missing.');
 		}
@@ -68,7 +68,7 @@ export class ProductPurchaseAIHub extends ProductPurchase {
 		return order;
 	}
 
-	public async getNextStepsLink(cart: Cart) {
+	public override async getNextStepsLink(cart: Cart) {
 		if (cart.orderTypeExternalReferenceCode !== 'AI_HUB') {
 			return super.getNextStepsLink(cart);
 		}

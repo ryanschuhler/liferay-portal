@@ -63,7 +63,7 @@ export default function LDPEventsDayPicker({
 
 	const selectedDateString = toUTCDateString(selectedDate);
 
-	const cells = Array.from({length: CALENDAR_CELLS}, (unused, index) => {
+	const cells = Array.from({length: CALENDAR_CELLS}, (_unused, index) => {
 		const date = new Date(
 			Date.UTC(viewYear, viewMonth, index + 1 - leadingDays)
 		);

@@ -132,7 +132,7 @@ export function getUTCMonthNames(): string[] {
 			{month: 'long', timeZone: 'UTC'}
 		);
 
-		monthNames = Array.from({length: 12}, (unused, month) =>
+		monthNames = Array.from({length: 12}, (_unused, month) =>
 			dateTimeFormat.format(new Date(Date.UTC(REFERENCE_YEAR, month, 1)))
 		);
 	}
@@ -151,7 +151,7 @@ export function getUTCWeekdayNarrowNames(firstDayOfWeek = 0): string[] {
 
 		const firstSunday = 1 + ((7 - firstOfYear.getUTCDay()) % 7);
 
-		weekdayNarrowNames = Array.from({length: 7}, (unused, offset) =>
+		weekdayNarrowNames = Array.from({length: 7}, (_unused, offset) =>
 			dateTimeFormat.format(
 				new Date(Date.UTC(REFERENCE_YEAR, 0, firstSunday + offset))
 			)

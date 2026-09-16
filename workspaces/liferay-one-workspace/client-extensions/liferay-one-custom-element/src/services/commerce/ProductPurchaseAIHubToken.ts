@@ -21,9 +21,10 @@ type AIHubOrderMetadata = {
 
 export class ProductPurchaseAIHubToken extends ProductPurchase {
 	private aiHubOrderMetadata: AIHubOrderMetadata = {};
-	protected orderTypeExternalReferenceCode: OrderTypes = 'AI_HUB_TOKEN';
+	protected override orderTypeExternalReferenceCode: OrderTypes =
+		'AI_HUB_TOKEN';
 
-	protected getCart() {
+	protected override getCart() {
 		const baseCart = super.getCart();
 		const cartItems = super.getCartItems();
 
@@ -44,11 +45,11 @@ export class ProductPurchaseAIHubToken extends ProductPurchase {
 		} as Cart;
 	}
 
-	public get calculateTax() {
+	public override get calculateTax() {
 		return false;
 	}
 
-	public async createOrder(cart: Cart) {
+	public override async createOrder(cart: Cart) {
 		await this.resolveAIHubOrderMetadata();
 
 		const serviceCart = this.getCart();
@@ -60,7 +61,7 @@ export class ProductPurchaseAIHubToken extends ProductPurchase {
 		});
 	}
 
-	public async getNextStepsLink(cart: Cart) {
+	public override async getNextStepsLink(cart: Cart) {
 		return super.getPaymentNextStepsLink(cart);
 	}
 

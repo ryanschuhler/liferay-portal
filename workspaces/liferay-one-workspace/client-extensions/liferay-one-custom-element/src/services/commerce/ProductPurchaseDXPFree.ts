@@ -19,7 +19,7 @@ export type ActivationKeyFormData = z.infer<
 >;
 
 export default class ProductPurchaseDXPFree extends ProductPurchase {
-	protected orderTypeExternalReferenceCode: OrderTypes = 'DXP';
+	protected override orderTypeExternalReferenceCode: OrderTypes = 'DXP';
 
 	constructor(
 		account: Account,
@@ -29,7 +29,7 @@ export default class ProductPurchaseDXPFree extends ProductPurchase {
 		super(account, product);
 	}
 
-	public async createOrder(cart?: Cart): Promise<Cart> {
+	public override async createOrder(cart?: Cart): Promise<Cart> {
 		const order = await super.createOrder(cart);
 
 		const owner = this.form.businessEmailAddress;
@@ -60,7 +60,7 @@ export default class ProductPurchaseDXPFree extends ProductPurchase {
 		return order;
 	}
 
-	public async getNextStepsLink(cart: Cart) {
+	public override async getNextStepsLink(cart: Cart) {
 		return `/purchase-completed?orderId=${cart.id}`;
 	}
 }

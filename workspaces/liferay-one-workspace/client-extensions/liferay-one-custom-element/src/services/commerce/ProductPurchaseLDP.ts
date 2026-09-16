@@ -21,7 +21,7 @@ export type LDPSettings = {
 };
 
 export default class ProductPurchaseLDP extends ProductPurchase {
-	protected orderTypeExternalReferenceCode: OrderTypes = 'LDP';
+	protected override orderTypeExternalReferenceCode: OrderTypes = 'LDP';
 
 	constructor(
 		account: Account,
@@ -31,7 +31,7 @@ export default class ProductPurchaseLDP extends ProductPurchase {
 		super(account, product);
 	}
 
-	public async createOrder(cart?: Cart): Promise<Cart> {
+	public override async createOrder(cart?: Cart): Promise<Cart> {
 		const order = await super.createOrder({
 			...cart,
 			customFields: {
