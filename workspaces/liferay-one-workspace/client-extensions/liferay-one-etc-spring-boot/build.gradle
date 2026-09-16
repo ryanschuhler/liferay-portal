@@ -1,5 +1,6 @@
 buildscript {
 	dependencies {
+		classpath group: "com.github.spotbugs.snom", name: "spotbugs-gradle-plugin", version: "6.0.26"
 		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.defaults", version: "latest.release"
 		classpath group: "org.springframework.boot", name: "spring-boot-gradle-plugin", version: "2.7.18"
 	}
@@ -12,9 +13,12 @@ buildscript {
 		maven {
 			url "https://repository-cdn.liferay.com/nexus/content/groups/public"
 		}
+
+		gradlePluginPortal()
 	}
 }
 
+apply plugin: "com.github.spotbugs"
 apply plugin: "com.liferay.source.formatter"
 apply plugin: "java-library"
 apply plugin: "org.springframework.boot"
@@ -97,6 +101,30 @@ sourceSets {
 			srcDirs += "liferay-release-tool-ee/ext/shared/ext-impl/src"
 		}
 	}
+}
+
+spotbugs {
+	// The generated client jars and the sparse-checked release tool source are
+	// not this project's code to fix.
+
+	excludeFilter = file("spotbugs-exclude.xml")
+
+	ignoreFailures = true
+}
+
+spotbugsMain {
+	reports {
+		html {
+			required = true
+		}
+		xml {
+			required = true
+		}
+	}
+}
+
+spotbugsTest {
+	enabled = false
 }
 
 test {

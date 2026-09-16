@@ -7,7 +7,7 @@ name: one-format
 
 # Format Source
 
-Run all five steps from the workspace root (`workspaces/liferay-one-workspace`). Report errors and stop — do not continue to the next step if one fails.
+Run all six steps from the workspace root (`workspaces/liferay-one-workspace`). Report errors and stop — do not continue to the next step if one fails.
 
 ## 1. Gradle source formatter
 
@@ -35,7 +35,17 @@ yarn format
 yarn lint:css:fix
 ```
 
-## 5. Structure checks
+## 5. SpotBugs
+
+Static analysis on the Java lane. It reports only; nothing is written.
+
+```bash
+./gradlew :client-extensions:liferay-one-etc-spring-boot:spotbugsMain
+```
+
+See `.agents/rules/spring-boot-analysis.md` for what it covers and the open findings.
+
+## 6. Structure checks
 
 The two checks that need the whole import graph, which ESLint cannot do one file at a time — an undeclared or unused dependency, and a component sitting where its consumers say it does not belong:
 
@@ -55,7 +65,8 @@ Invoked as `one-format --check`, run the non-mutating counterpart of each step a
 | 2. ESLint | `yarn lint:fix` | `yarn lint` |
 | 3. Prettier | `yarn format` | the `format` script's command with `--check` in place of `--write` |
 | 4. Stylelint | `yarn lint:css:fix` | `yarn lint:css` |
-| 5. Structure checks | — | `yarn lint:structure` |
+| 5. SpotBugs | — | `./gradlew :client-extensions:liferay-one-etc-spring-boot:spotbugsMain` |
+| 6. Structure checks | — | `yarn lint:structure` |
 
 Each check exits non-zero on a violation and names the offending file and rule. Report every violation; fix none of them. Never retry with the mutating command when a check fails — a failing check is the answer, not an error to work around.
 

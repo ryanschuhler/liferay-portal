@@ -49,6 +49,7 @@ Run from `workspaces/liferay-one-workspace/`.
 - [`rules/naming.md`](./rules/naming.md) — brand name casing, file naming, REST controller naming
 - [`rules/object-naming.md`](./rules/object-naming.md) — ERC patterns, Object names, field casing
 - [`rules/page-folder-structure.md`](./rules/page-folder-structure.md) — one subfolder per sub-page component
+- [`rules/spring-boot-analysis.md`](./rules/spring-boot-analysis.md) — SpotBugs on the Java lane: what it covers, what it cannot, and the open findings
 - [`rules/pr-hygiene.md`](./rules/pr-hygiene.md) — PR scope, merge conflicts, commit messages
 
 ## Specs
