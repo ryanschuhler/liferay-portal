@@ -24,7 +24,7 @@
 
 .liferay-ai-hub-form {
 	& .loading-animation {
-		margin: 0px !important;
+		margin: 0 !important;
 	}
 }
 

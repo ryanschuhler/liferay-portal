@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import escapeODataString from './escapeODataString';
+
 type Key = string;
 type Value = string | number | boolean | null;
 
@@ -25,10 +27,21 @@ export type SearchBuilderConstructor = {
 export default class SearchBuilder {
 	private lock: boolean = false;
 	private query: string = '';
-	private useURIEncode?: boolean = true;
+	private useURIEncode?: boolean;
 
 	constructor({useURIEncode}: SearchBuilderConstructor = {}) {
 		this.useURIEncode = useURIEncode;
+	}
+
+	/**
+	 * Wraps a value as an OData string literal. Values reach these operators
+	 * straight from an account, project, or product name, none of which this
+	 * app controls, and a single quote would otherwise close the literal early
+	 * and change which rows match.
+	 */
+
+	private static quote(value: Value) {
+		return `'${escapeODataString(String(value))}'`;
 	}
 
 	static unquote(criteria: string) {
@@ -36,42 +49,41 @@ export default class SearchBuilder {
 	}
 
 	static contains(key: Key, value: Value) {
-		return `contains(${key}, '${value}')`;
+		return `contains(${key}, ${SearchBuilder.quote(value)})`;
 	}
 
 	static eq(key: Key, value: Value) {
-		return `${key} eq ${typeof value === 'boolean' ? value : `'${value}'`}`;
+		return `${key} eq ${
+			typeof value === 'boolean' ? value : SearchBuilder.quote(value)
+		}`;
 	}
 
 	static in(key: Key, values: Value[]) {
 		if (values) {
-			const operator = `${key} in ({values})`;
-
-			return operator
-				.replace(
-					'{values}',
-					values
-						.map((value) =>
-							typeof value === 'number' ? value : `'${value}'`
-						)
-						.join(',')
+			const joined = values
+				.map((value) =>
+					typeof value === 'number'
+						? value
+						: SearchBuilder.quote(value)
 				)
-				.trim();
+				.join(',');
+
+			return `${key} in (${joined})`;
 		}
 
 		return '';
 	}
 
 	static lambda(key: Key, value: Value) {
-		return `(${key}/any(x:(x eq '${value}')))`;
+		return `(${key}/any(x:(x eq ${SearchBuilder.quote(value)})))`;
 	}
 
 	static lambdaContains(key: Key, value: Value) {
-		return `(${key}/any(x:contains(x, '${value}')))`;
+		return `(${key}/any(x:contains(x, ${SearchBuilder.quote(value)})))`;
 	}
 
 	static ne(key: Key, value: Value) {
-		return `${key} ne '${value}'`;
+		return `${key} ne ${SearchBuilder.quote(value)}`;
 	}
 
 	static gt(key: Key, value: Value) {
@@ -95,7 +107,7 @@ export default class SearchBuilder {
 	}
 
 	static startsWith(key: Key, value: Value) {
-		return `${key} startsWith '${value}'`;
+		return `${key} startsWith ${SearchBuilder.quote(value)}`;
 	}
 
 	public and() {
@@ -103,11 +115,11 @@ export default class SearchBuilder {
 	}
 
 	public build() {
-		const query = this.query.trim();
+		// Only a standalone trailing connector is dropped. Matching on the
+		// bare word would truncate a value that happens to end in one, such
+		// as "Ferdinand".
 
-		if (query.endsWith('or') || query.endsWith('and')) {
-			return query.substring(0, query.length - 3);
-		}
+		const query = this.query.trim().replace(/\s+(and|or)$/, '');
 
 		this.lock = true;
 

@@ -1039,7 +1039,7 @@ html body:not(.has-edit-mode-menu) .content #main-content.layout-content {
 	letter-spacing: normal;
 	line-height: 16px;
 	max-height: 24px;
-	transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 	vertical-align: middle;
 }
 

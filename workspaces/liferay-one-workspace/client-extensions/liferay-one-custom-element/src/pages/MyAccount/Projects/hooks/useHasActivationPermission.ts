@@ -8,7 +8,6 @@ import {useFetch} from '~/hooks/useFetch';
 import {PROJECT_ADMIN_ERC} from '~/pages/MyAccount/ProjectMembers/projectRoles';
 import {Liferay} from '~/services/liferay/liferay';
 import SearchBuilder from '~/utils/SearchBuilder';
-import escapeODataString from '~/utils/escapeODataString';
 
 import type {APIResponse} from '~/types/api';
 
@@ -35,7 +34,7 @@ export function useHasActivationPermission(
 	const filter = [
 		SearchBuilder.eq(
 			'r_projectToProjectMembership_c_projectERC',
-			escapeODataString(projectExternalReferenceCode)
+			projectExternalReferenceCode
 		),
 		SearchBuilder.eq('r_userToProjectMembership_userId', userId),
 		SearchBuilder.eq('roleExternalReferenceCode', PROJECT_ADMIN_ERC),

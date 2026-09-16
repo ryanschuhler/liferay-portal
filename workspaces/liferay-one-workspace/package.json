@@ -12,6 +12,7 @@
 		"eslint-plugin-local": "file:./tools/eslint-plugin-local",
 		"jsonc-eslint-parser": "^2.0.0",
 		"prettier": "3.2.5",
+		"stylelint": "^14.16.1",
 		"typescript": "4.4.2"
 	},
 	"private": true,
@@ -23,6 +24,8 @@
 		"build:plugin": "tsc --project tools/eslint-plugin-local/tsconfig.json",
 		"format": "node_modules/.bin/prettier --write \"client-extensions/liferay-one-custom-element/src/**/*.{ts,tsx,css}\" \"client-extensions/liferay-one-custom-element/@vite/**/*.ts\"",
 		"lint": "node_modules/.bin/eslint --ext .ts,.tsx,.json client-extensions/liferay-one-custom-element/src client-extensions/liferay-one-custom-element/@vite client-extensions/liferay-one-site-initializer",
+		"lint:css": "node_modules/.bin/stylelint \"client-extensions/**/*.css\" --ignore-pattern \"**/node_modules/**\" --ignore-pattern \"**/build/**\"",
+		"lint:css:fix": "node_modules/.bin/stylelint \"client-extensions/**/*.css\" --ignore-pattern \"**/node_modules/**\" --ignore-pattern \"**/build/**\" --fix",
 		"lint:deps": "node tools/scripts/check-dependencies.js",
 		"lint:fix": "node_modules/.bin/eslint --ext .ts,.tsx --fix client-extensions/liferay-one-custom-element/src client-extensions/liferay-one-custom-element/@vite",
 		"lint:fs": "node_modules/.bin/ls-lint",

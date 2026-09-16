@@ -28,7 +28,7 @@
 
 	& .ticket-label {
 		border-color: transparent;
-		border-radius: var(--border-radius-lg, 10px) 0px 0px
+		border-radius: var(--border-radius-lg, 10px) 0 0
 			var(--border-radius-lg, 10px);
 		border-style: solid;
 		border-width: 1px;
@@ -99,8 +99,8 @@
 
 	& .ticket-button {
 		border-color: transparent;
-		border-radius: 0px var(--border-radius-lg, 10px)
-			var(--border-radius-lg, 10px) 0px;
+		border-radius: 0 var(--border-radius-lg, 10px)
+			var(--border-radius-lg, 10px) 0;
 		border-style: solid;
 		border-width: 1px;
 

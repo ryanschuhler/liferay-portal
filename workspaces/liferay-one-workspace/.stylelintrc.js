@@ -5,10 +5,17 @@
 
 const {defaultConfig} = require('@liferay/stylelint-plugin');
 
+const rules = {...defaultConfig.rules};
+
+// Removed from stylelint, still referenced by the plugin's defaults. Leaving
+// the key in place fails config validation before a single file is read.
+
+delete rules['function-calc-no-invalid'];
+
 module.exports = {
 	plugins: require.resolve('@liferay/stylelint-plugin'),
 	rules: {
-		...defaultConfig.rules,
+		...rules,
 		'liferay/no-block-comments': null,
 		'selector-type-no-unknown': [
 			true,
