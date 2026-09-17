@@ -10,7 +10,7 @@ import * as path from 'path';
 
 import {type PlanItem, VALID_TYPES, parsePlan} from './lib/plan.ts';
 import {WORKSPACE_ROOT} from './lib/surface.ts';
-import {indexTaggedTests} from './lib/testsIndex.ts';
+import {type CoverageEntry, indexTests} from './lib/testsIndex.ts';
 
 const OUTPUT = path.join(WORKSPACE_ROOT, 'tests/test-results/plan-report.md');
 
@@ -31,25 +31,25 @@ function isPendingFile(file: string): boolean {
 
 function classify(
 	item: PlanItem,
-	coverage: Map<string, string[]>
-): {files: string[]; klass: Klass} {
+	coverage: Map<string, CoverageEntry[]>
+): {entries: CoverageEntry[]; klass: Klass} {
 	if (item.status !== 'planned') {
-		return {files: [], klass: 'deferred'};
+		return {entries: [], klass: 'deferred'};
 	}
 
-	const files = coverage.get(item.id) ?? [];
+	const entries = coverage.get(item.id) ?? [];
 
-	if (!files.length) {
-		return {files: [], klass: 'uncovered'};
+	if (!entries.length) {
+		return {entries: [], klass: 'uncovered'};
 	}
 
-	const realFiles = files.filter((file) => !isPendingFile(file));
+	const realEntries = entries.filter((entry) => !isPendingFile(entry.file));
 
-	if (!realFiles.length) {
-		return {files, klass: 'pending'};
+	if (!realEntries.length) {
+		return {entries, klass: 'pending'};
 	}
 
-	return {files: realFiles, klass: 'real'};
+	return {entries: realEntries, klass: 'real'};
 }
 
 function pct(part: number, whole: number): string {
@@ -68,7 +68,7 @@ function bar(part: number, whole: number, width = 24): string {
 
 function main(): void {
 	const items = parsePlan();
-	const coverage = indexTaggedTests(new Set(items.map((item) => item.id)));
+	const coverage = indexTests(items);
 
 	const classified = items.map((item) => ({
 		...classify(item, coverage),
@@ -150,7 +150,9 @@ function main(): void {
 		'',
 		'Per-requirement status. **Real** = a non-stub test covers it. **Pending** ' +
 			'= only a hard-failing stub covers it. **Uncovered** = no test. ' +
-			'**Deferred** = excluded from go-live. Regenerate with `yarn plan:report`.',
+			'**Deferred** = excluded from go-live. A covering file marked `*` was ' +
+			'matched by naming convention rather than an explicit plan-ID tag. ' +
+			'Regenerate with `yarn plan:report`.',
 		'',
 		'## Summary',
 		'',
@@ -189,9 +191,14 @@ function main(): void {
 		lines.push('| ID | Priority | Status | Covered by |');
 		lines.push('| --- | --- | --- | --- |');
 
-		for (const {files: coveringFiles, item, klass} of inFile) {
-			const covered = coveringFiles.length
-				? coveringFiles.join('<br>')
+		for (const {entries, item, klass} of inFile) {
+			const covered = entries.length
+				? entries
+						.map(
+							(entry) =>
+								entry.file + (entry.inferred ? ' *' : '')
+						)
+						.join('<br>')
 				: '—';
 
 			lines.push(

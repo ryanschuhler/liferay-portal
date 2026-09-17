@@ -6,7 +6,7 @@
 /* eslint-disable no-console -- CLI script; console output is its user interface */
 
 import {parsePlan, validatePlan} from './lib/plan.ts';
-import {indexTaggedTests} from './lib/testsIndex.ts';
+import {indexTests} from './lib/testsIndex.ts';
 
 function pct(covered: number, total: number): string {
 	if (total === 0) {
@@ -41,15 +41,18 @@ function main(): number {
 		return 1;
 	}
 
-	const knownIds = new Set(items.map((item) => item.id));
-	const coverage = indexTaggedTests(knownIds);
+	const coverage = indexTests(items);
 
 	const planned = items.filter((item) => item.status === 'planned');
 	const excluded = items.filter((item) => item.status !== 'planned');
 
 	const isCovered = (id: string) => (coverage.get(id)?.length ?? 0) > 0;
 
+	const isTagged = (id: string) =>
+		(coverage.get(id) ?? []).some((entry) => !entry.inferred);
+
 	const coveredItems = planned.filter((item) => isCovered(item.id));
+	const taggedItems = coveredItems.filter((item) => isTagged(item.id));
 
 	const files = [...new Set(planned.map((item) => item.file))].sort();
 
@@ -89,6 +92,10 @@ function main(): number {
 		`  ${bar(coveredItems.length, planned.length)} ${overall.padStart(6)}  ` +
 			`OVERALL              ${coveredItems.length}/${planned.length}` +
 			(excluded.length ? `  (+${excluded.length} deferred/n/a)` : '')
+	);
+	console.log(
+		`           explicit tag ${taggedItems.length} · ` +
+			`convention-inferred ${coveredItems.length - taggedItems.length}`
 	);
 	console.log('');
 

@@ -61,7 +61,13 @@ function kebab(value: string): string {
 		.toLowerCase();
 }
 
-export function enumerateRoutes(): string[] {
+export interface RouteDeclaration {
+	anchor: string;
+	file: string;
+	path: string;
+}
+
+export function enumerateRouteDeclarations(): RouteDeclaration[] {
 	const files = walk(
 		CUSTOM_ELEMENT_SRC,
 		(file) =>
@@ -69,7 +75,7 @@ export function enumerateRoutes(): string[] {
 			!file.includes('.test.')
 	);
 
-	const anchors: string[] = [];
+	const declarations: RouteDeclaration[] = [];
 
 	for (const file of files) {
 		const group = kebab(
@@ -90,22 +96,40 @@ export function enumerateRoutes(): string[] {
 				continue;
 			}
 
-			anchors.push(`route:${group}:${routePath}`);
+			declarations.push({
+				anchor: `route:${group}:${routePath}`,
+				file,
+				path: routePath,
+			});
 		}
 	}
 
-	return unique(anchors);
+	return declarations;
 }
 
-export function enumerateRestEndpoints(): string[] {
+export function enumerateRoutes(): string[] {
+	return unique(
+		enumerateRouteDeclarations().map((declaration) => declaration.anchor)
+	);
+}
+
+export interface RestEndpoint {
+	anchor: string;
+	file: string;
+	methodName: string;
+}
+
+export function enumerateRestEndpointDetails(): RestEndpoint[] {
 	const files = walk(SPRING_BOOT_JAVA, (file) =>
 		file.endsWith('RestController.java')
 	);
 
 	const methodRegex =
 		/@(Get|Post|Put|Delete|Patch)Mapping\b(?:\(\s*(?:(?:value|path)\s*=\s*)?"([^"]*)")?/g;
+	const methodNameRegex =
+		/(?:public|protected|private)\s+[\w<>,\s[\].?]+?\s+(\w+)\s*\(/;
 
-	const anchors: string[] = [];
+	const endpoints: RestEndpoint[] = [];
 
 	for (const file of files) {
 		const source = fs.readFileSync(file, 'utf8');
@@ -119,11 +143,25 @@ export function enumerateRestEndpoints(): string[] {
 			const method = match[1].toUpperCase();
 			const full = `${base}${match[2] ?? ''}`.replace(/\/{2,}/g, '/');
 
-			anchors.push(`rest:${method}:${full || '/'}`);
+			const nameMatch = source
+				.slice((match.index ?? 0) + match[0].length)
+				.match(methodNameRegex);
+
+			endpoints.push({
+				anchor: `rest:${method}:${full || '/'}`,
+				file,
+				methodName: nameMatch ? nameMatch[1] : '',
+			});
 		}
 	}
 
-	return unique(anchors);
+	return endpoints;
+}
+
+export function enumerateRestEndpoints(): string[] {
+	return unique(
+		enumerateRestEndpointDetails().map((endpoint) => endpoint.anchor)
+	);
 }
 
 export function enumerateCrons(): string[] {

@@ -115,9 +115,9 @@ const ROUTE_CHECKS: RouteCheck[] = [
 		url: `${ADMIN}#/pub-sub`,
 	},
 	{
-		name: 'admin license key uploads',
-		planId: 'ROUTE-ADMIN-LICENSE-KEY-UPLOADS',
-		url: `${ADMIN}#/license-key-uploads`,
+		name: 'admin activation key uploads',
+		planId: 'ROUTE-ADMIN-ACTIVATION-KEY-UPLOADS',
+		url: `${ADMIN}#/activation-key-uploads`,
 	},
 
 	{

@@ -97,6 +97,7 @@ function anchorToId(anchor: string): string {
 	const detail = rest
 		.join(':')
 		.toUpperCase()
+		.replace(/\?/g, '-OPTIONAL')
 		.replace(/[^A-Z0-9]+/g, '-')
 		.replace(/^-+|-+$/g, '');
 

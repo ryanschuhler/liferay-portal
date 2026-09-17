@@ -2,12 +2,12 @@
 
 Every custom-element SPA route. The SPA mounts one of seven page-group routers (chosen by the host widget's `route` attribute); six carry nested route tables enumerated below, and the seventh (account-selector) is a single page with no nested routes. Most route groups are static route tables, covered by Vitest route-wiring unit tests that assert the declared paths, elements, and titles. Route groups with conditional wiring (e.g. ProductPurchase's free/paid steps) additionally warrant an e2e test that loads the route and asserts it renders for the right persona. A few routes are declared inline in the *Router.tsx files rather than the static table (the MyAccount account guard and project layout, the ProductPurchase completion pages); these only render behind entitlement or commerce state, so they are e2e/deferred and exercised by the flows in flows.md.
 
-> Auto-scaffolded from the code surface (56 items). Edit the Requirement, Type, Priority, and Status columns freely — `scaffoldPlan` preserves them on re-run. Do not hand-edit the ID or Source columns.
+> Auto-scaffolded from the code surface (81 items). Edit the Requirement, Type, Priority, and Status columns freely — `scaffoldPlan` preserves them on re-run. Do not hand-edit the ID or Source columns.
 
 | ID | Requirement | Type | Priority | Status | Source |
 | --- | --- | --- | --- | --- | --- |
+| ROUTE-ADMIN-ACTIVATION-KEY-UPLOADS | Admin route table wires `activation-key-uploads` to the LicenseKeyUploads page with its nav entry | unit | P1 | planned | route:admin:activation-key-uploads |
 | ROUTE-ADMIN-DETAILS-ORDERID | Admin route table wires `details/:orderId` to the TrialDetails page (no nav entry, param-driven detail) | unit | P2 | planned | route:admin:details/:orderId |
-| ROUTE-ADMIN-LICENSE-KEY-UPLOADS | Admin route table wires `license-key-uploads` to the LicenseKeyUploads page with its nav entry | unit | P1 | planned | route:admin:license-key-uploads |
 | ROUTE-ADMIN-MANAGE-SSA-SAAS-USERS | Admin route table wires `manage-ssa-saas-users` to the ManageSsaSaasUsers page with its nav entry | unit | P1 | planned | route:admin:manage-ssa-saas-users |
 | ROUTE-ADMIN-MP-APPS | Admin route table wires `mp-apps` to the Apps list page with its nav entry | unit | P1 | planned | route:admin:mp-apps |
 | ROUTE-ADMIN-MP-APPS-PRODUCTID | Admin route table wires `mp-apps/:productId` to the AppDetail page (no nav entry, param-driven detail) | unit | P2 | planned | route:admin:mp-apps/:productId |
@@ -32,11 +32,14 @@ Every custom-element SPA route. The SPA mounts one of seven page-group routers (
 | ROUTE-BUSINESS-EVENTS-EDIT | Route table wires the `edit` child under `:id` to the BusinessEventsEdit page | unit | P1 | planned | route:business-events:edit |
 | ROUTE-MY-ACCOUNT-ACCOUNTERC | Account access guard: the `:accountERC` route validates the account and gates account-scoped pages; declared inline in MyAccountRouter. Exercised by FLOW-MY-ACCOUNT-OVERVIEW (deferred — needs an entitled member) | e2e | P1 | deferred | route:my-account::accountERC |
 | ROUTE-MY-ACCOUNT-APPLICATIONERC | Project route table wires `applications/:applicationERC` to ProjectItemDetails with kind application | unit | P1 | planned | route:my-account::applicationERC |
+| ROUTE-MY-ACCOUNT-APPLICATIONERC-INSTALL-ORDERID | Project route table wires `applications/:applicationERC/install/:orderId` to the CloudAppInstall page | unit | P1 | planned | route:my-account::applicationERC/install/:orderId |
+| ROUTE-MY-ACCOUNT-LICENSEKEYERC | Project route table wires `activation-keys/:licenseKeyERC` to the LicenseKeyDetails page | unit | P1 | planned | route:my-account::licenseKeyERC |
 | ROUTE-MY-ACCOUNT-ORDERID | Account route table wires `orders/:orderId` to the OrderDetails page | unit | P1 | planned | route:my-account::orderId |
 | ROUTE-MY-ACCOUNT-PRODUCTERC | Project route table wires `products/:productERC` to ProjectItemDetails with kind product | unit | P1 | planned | route:my-account::productERC |
 | ROUTE-MY-ACCOUNT-PROJECTERC | Project detail route (`:projectERC`) renders the selected project; declared inline in MyAccountRouter. Exercised by FLOW-MY-ACCOUNT-OVERVIEW (deferred — needs an entitled member) | e2e | P1 | deferred | route:my-account::projectERC |
 | ROUTE-MY-ACCOUNT-ACCOUNT-DETAILS | Account route table wires `account-details` to the AccountDetails page under the AccountTabsLayout | unit | P1 | planned | route:my-account:account-details |
 | ROUTE-MY-ACCOUNT-ACCOUNT-MEMBERS | Account route table wires `account-members` to the AccountMembers page under the AccountTabsLayout | unit | P1 | planned | route:my-account:account-members |
+| ROUTE-MY-ACCOUNT-ACTIVATION-KEYS | Project route table wires the `activation-keys` branch whose index renders the LicenseKeys list, with its nav entry | unit | P1 | planned | route:my-account:activation-keys |
 | ROUTE-MY-ACCOUNT-APPLICATIONS | Project route table wires `applications` to the Applications list page with its nav entry | unit | P1 | planned | route:my-account:applications |
 | ROUTE-MY-ACCOUNT-HISTORY | Account route table wires `orders/history` to the OrderHistory page | unit | P1 | planned | route:my-account:history |
 | ROUTE-MY-ACCOUNT-ORDERS | Account route table wires the `orders` branch whose index renders the Orders list | unit | P1 | planned | route:my-account:orders |
@@ -47,16 +50,38 @@ Every custom-element SPA route. The SPA mounts one of seven page-group routers (
 | ROUTE-PRODUCT-PURCHASE-AI-HUB-FORM | AIHubForm step is emitted only when the product solution type is ai-hub; getProductPurchaseSteps must select the AI Hub step set and not the default flow | e2e | P1 | planned | route:product-purchase:ai-hub-form |
 | ROUTE-PRODUCT-PURCHASE-AI-HUB-OPEN-BETA-FORM | AIHubOpenBetaForm step is emitted only for the ai-hub-open-beta solution type without the aiHubTokens param; getProductPurchaseSteps must branch on solution type and search params | e2e | P1 | planned | route:product-purchase:ai-hub-open-beta-form |
 | ROUTE-PRODUCT-PURCHASE-BANK-TRANSFER-COMPLETED | Paid-checkout bank-transfer confirmation page; declared inline in ProductPurchaseRouter. Exercised by FLOW-CHECKOUT-PAID (deferred — needs commerce/payment stub) | e2e | P1 | deferred | route:product-purchase:bank-transfer-completed |
+| ROUTE-PRODUCT-PURCHASE-CONTRACT | ContractSelection step is emitted only in the ai-hub-open-beta flow without the aiHubTokens param; getProductPurchaseSteps must place it between project and the open beta form | e2e | P1 | planned | route:product-purchase:contract |
+| ROUTE-PRODUCT-PURCHASE-DSR-FORM | DSRForm step is emitted only when the product solution type is dsr; getProductPurchaseSteps must return the account-then-form pair and no paid steps | e2e | P1 | planned | route:product-purchase:dsr-form |
 | ROUTE-PRODUCT-PURCHASE-LICENSE | SPA route renders for the right persona: product-purchase:license | e2e | P1 | planned | route:product-purchase:license |
 | ROUTE-PRODUCT-PURCHASE-PAYMENT-METHOD | SPA route renders for the right persona: product-purchase:payment-method | e2e | P1 | planned | route:product-purchase:payment-method |
 | ROUTE-PRODUCT-PURCHASE-PROJECT | ProjectSelection step is emitted only in the ai-hub-open-beta flow; getProductPurchaseSteps must place it between account and the open beta form | e2e | P1 | planned | route:product-purchase:project |
 | ROUTE-PRODUCT-PURCHASE-PROVISIONING | LDPProvisioning step is included only for LDP products; getProductPurchaseSteps must gate it on isLDP and exclude it from non LDP flows | e2e | P1 | planned | route:product-purchase:provisioning |
 | ROUTE-PRODUCT-PURCHASE-PURCHASE-COMPLETED | Checkout completion page; declared inline in ProductPurchaseRouter. Exercised by FLOW-CHECKOUT-FREE / FLOW-CHECKOUT-PAID (deferred — needs commerce completion) | e2e | P1 | deferred | route:product-purchase:purchase-completed |
+| ROUTE-PRODUCT-PURCHASE-SEO-STUDIO-FORM | SEOStudioForm step is emitted only when the product solution type is seo-studio; getProductPurchaseSteps must place it after project selection and omit the paid steps | e2e | P1 | planned | route:product-purchase:seo-studio-form |
 | ROUTE-PRODUCT-PURCHASE-SUMMARY | SPA route renders for the right persona: product-purchase:summary | e2e | P0 | planned | route:product-purchase:summary |
+| ROUTE-PUBLISHER-DASHBOARD-PRODUCTID | Route table wires the `:productId` branch under `published-apps` to the AppSummary index, and under `newversion` to the new-version publish flow | unit | P1 | planned | route:publisher-dashboard::productId |
+| ROUTE-PUBLISHER-DASHBOARD-PRODUCTID-OPTIONAL | Route table wires the optional `:productId?` branch under `newapp` and `newsolution` so both flows start without a product and resume with one | unit | P1 | planned | route:publisher-dashboard::productId? |
+| ROUTE-PUBLISHER-DASHBOARD-BUILD | Route table wires the app flow `build` step to the Build page and makes it the new-version index redirect | unit | P1 | planned | route:publisher-dashboard:build |
+| ROUTE-PUBLISHER-DASHBOARD-COMPANY | Route table wires the solution flow `company` step to the CompanyProfile page | unit | P2 | planned | route:publisher-dashboard:company |
+| ROUTE-PUBLISHER-DASHBOARD-CONTACT | Route table wires the solution flow `contact` step to the ContactUs page | unit | P2 | planned | route:publisher-dashboard:contact |
+| ROUTE-PUBLISHER-DASHBOARD-DETAILS | Route table wires the solution flow `details` step to the Details page | unit | P2 | planned | route:publisher-dashboard:details |
 | ROUTE-PUBLISHER-DASHBOARD-EDIT | Route table wires the `publisher-profile/edit` child to the PublisherProfileEdit page | unit | P1 | planned | route:publisher-dashboard:edit |
+| ROUTE-PUBLISHER-DASHBOARD-HEADER | Route table wires the solution flow `header` step to the Header page | unit | P2 | planned | route:publisher-dashboard:header |
+| ROUTE-PUBLISHER-DASHBOARD-LICENSING | Route table wires the app flow `licensing` step to the Licensing page | unit | P1 | planned | route:publisher-dashboard:licensing |
+| ROUTE-PUBLISHER-DASHBOARD-LICENSING-PRICES | Route table wires the app flow `licensing-prices` step to the LicensePrices page | unit | P1 | planned | route:publisher-dashboard:licensing-prices |
+| ROUTE-PUBLISHER-DASHBOARD-NEWAPP | Route table wires the `newapp` branch that nests the app publish flow under the NewApp context provider | unit | P1 | planned | route:publisher-dashboard:newapp |
+| ROUTE-PUBLISHER-DASHBOARD-NEWSOLUTION | Route table wires the `newsolution` branch that nests the solution publish flow under the Solution context provider | unit | P1 | planned | route:publisher-dashboard:newsolution |
+| ROUTE-PUBLISHER-DASHBOARD-NEWVERSION | Route table wires the `newversion` branch that nests the app flow in NEW_VERSION publish mode | unit | P1 | planned | route:publisher-dashboard:newversion |
+| ROUTE-PUBLISHER-DASHBOARD-PRICING | Route table wires the app flow `pricing` step to the Pricing page | unit | P1 | planned | route:publisher-dashboard:pricing |
+| ROUTE-PUBLISHER-DASHBOARD-PROFILE | Route table wires the `profile` step to the app flow Profile page and to the solution flow Profile page respectively | unit | P1 | planned | route:publisher-dashboard:profile |
 | ROUTE-PUBLISHER-DASHBOARD-PUBLISHED-APPS | Route table wires `published-apps` to the PublishedApps page (nav entry) and makes it the default index redirect | unit | P1 | planned | route:publisher-dashboard:published-apps |
 | ROUTE-PUBLISHER-DASHBOARD-PUBLISHED-SOLUTIONS | Route table wires `published-solutions` to the PublishedSolutions page with its nav entry | unit | P1 | planned | route:publisher-dashboard:published-solutions |
+| ROUTE-PUBLISHER-DASHBOARD-PUBLISHER | Route table wires the `publisher` branch that mounts the publish outlet and makes Create the index of the app, solution, and new-version flows | unit | P1 | planned | route:publisher-dashboard:publisher |
 | ROUTE-PUBLISHER-DASHBOARD-PUBLISHER-PROFILE | Route table wires the `publisher-profile` branch whose index renders PublisherProfile and nests the edit child | unit | P1 | planned | route:publisher-dashboard:publisher-profile |
+| ROUTE-PUBLISHER-DASHBOARD-STOREFRONT | Route table wires the app flow `storefront` step to the Storefront page | unit | P2 | planned | route:publisher-dashboard:storefront |
+| ROUTE-PUBLISHER-DASHBOARD-SUBMIT | Route table wires the `submit` step to the app flow SubmitApp page and to the solution flow SubmitSolution page respectively | unit | P1 | planned | route:publisher-dashboard:submit |
+| ROUTE-PUBLISHER-DASHBOARD-SUPPORT | Route table wires the app flow `support` step to the Support page | unit | P2 | planned | route:publisher-dashboard:support |
+| ROUTE-PUBLISHER-DASHBOARD-VERSION | Route table wires the app flow `version` step to the Version page | unit | P1 | planned | route:publisher-dashboard:version |
 | ROUTE-TICKET-ATTACHMENTS-TICKETID | Route table wires the `:ticketId` path to the TicketAttachmentsUploaderOutlet under the TicketAttachmentsLayout | unit | P1 | planned | route:ticket-attachments::ticketId |
 | ROUTE-TICKET-ATTACHMENTS-ERC-TICKETATTACHMENTERC | Route table wires `erc/:ticketAttachmentERC` to the TicketAttachmentsDownloaderOutlet | unit | P1 | planned | route:ticket-attachments:erc/:ticketAttachmentERC |
 | ROUTE-TICKET-ATTACHMENTS-ID-TICKETATTACHMENTID | Route table wires `id/:ticketAttachmentId` to the TicketAttachmentsDownloaderOutlet | unit | P1 | planned | route:ticket-attachments:id/:ticketAttachmentId |
