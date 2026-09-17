@@ -16,6 +16,7 @@ import HeadlessAdminUser from '~/services/headless/HeadlessAdminUser';
 import {Liferay} from '~/services/liferay/liferay';
 import {getAccountImage} from '~/utils/getAccountImage';
 import {getSiteURL} from '~/utils/siteUtils';
+import DOMPurify from 'dompurify';
 
 type AIHubOpenBetaNextStepsProps = {
 	data: ReturnType<typeof useGetProductByOrderId>['data'];
@@ -78,21 +79,24 @@ const AIHubOpenBetaNextSteps: React.FC<AIHubOpenBetaNextStepsProps> = ({
 						<Header
 							description={
 								<span className="text-center">
-									<p className="mb-1 next-step-page-description">
-										Thank you for your purchase of{' '}
-										<strong>AI Hub.</strong> An order form
-										will be sent to your{' '}
-										<strong>email via DocuSign</strong>.
-										Please review, sign, and return it to
-										confirm your subscription. Once
-										received, we will provision your AI Hub
-										and notify you by email when it is ready
-										for use. If the message does not appear
-										in your inbox, please check your Spam or
-										Promotions folder.
-									</p>
+									<p
+										className="mb-1 next-step-page-description"
+										dangerouslySetInnerHTML={{
+											__html: DOMPurify.sanitize(
+												i18n.sub(
+													'thank-you-for-your-purchase-of-x-an-order-form-will-be-sent-to-your-x-please-review-sign-and-return-it-to-confirm-your-subscription-once-received-we-will-provision-your-ai-hub-and-notify-you-by-email-when-it-is-ready-for-use-if-the-message-does-not-appear-in-your-inbox-please-check-your-spam-or-promotions-folder',
+													[
+														`<strong>${i18n.translate('ai-hub')}</strong>`,
+														`<strong>${i18n.translate(
+															'email-via-docusign'
+														)}</strong>`,
+													]
+												)
+											),
+										}}
+									/>
 									<p className="mt-5">
-										Order ID:{' '}
+										{i18n.translate('order-id')}{' '}
 										<span className="next-step-page-text-highlight">
 											{placedOrder?.id}
 										</span>
@@ -146,7 +150,7 @@ const AIHubOpenBetaNextSteps: React.FC<AIHubOpenBetaNextStepsProps> = ({
 					</div>
 
 					<span className="font-weight-semi-bold">
-						Didn&apos;t receive the email?{' '}
+						{i18n.translate('didn-t-receive-the-email')}{' '}
 						<a
 							className="font-weight-bold"
 							href="mailto:support@liferay.com"

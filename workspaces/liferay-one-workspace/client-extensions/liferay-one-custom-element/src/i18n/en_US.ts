@@ -520,6 +520,7 @@ export default {
 	'elasticsearch': 'Elasticsearch',
 	'email': 'Email',
 	'email-address': 'Email Address',
+	'email-via-docusign': 'email via DocuSign',
 	'embed-video-url': 'Embed Video URL',
 	'employee-experience': 'Employee Experience',
 	'employee-portal': 'Employee Portal',
@@ -1539,6 +1540,8 @@ export default {
 	'thank-you-for-your': 'Thank you for your',
 	'thank-you-for-your-order-we-have-registered-your-request-and-will-send-you-the-invoice-by-email-with-all-the-details-to-complete-your-payment-check-your-spam-or-promotions-folder-if-you-dont-see-it-in-your-inbox-your-order-is-currently-pending-payment':
 		"Thank you for your order. We have registered your request and will send you the invoice by email with all the details to complete your payment. Check your Spam or Promotions folder if you don't see it in your inbox. Your order is currently pending payment.",
+	'thank-you-for-your-purchase-of-x-an-order-form-will-be-sent-to-your-x-please-review-sign-and-return-it-to-confirm-your-subscription-once-received-we-will-provision-your-ai-hub-and-notify-you-by-email-when-it-is-ready-for-use-if-the-message-does-not-appear-in-your-inbox-please-check-your-spam-or-promotions-folder':
+		'Thank you for your purchase of {0} An order form will be sent to your {1}. Please review, sign, and return it to confirm your subscription. Once received, we will provision your AI Hub and notify you by email when it is ready for use. If the message does not appear in your inbox, please check your Spam or Promotions folder.',
 	'thank-you-for-your-request': 'Thank You for Your Request!',
 	'the-account-was-successfully-synced-to-jsm':
 		'The account was successfully synced to JSM.',
