@@ -4,9 +4,10 @@
  */
 
 import DOMPurify from 'dompurify';
-import {AppReviewProps} from '~/components/AppReview/AppReview';
 import AppReviewSection from '~/components/AppReviewSection/AppReviewSection';
 import i18n from '~/i18n';
+
+import type {AppReviewProps} from '~/components/AppReview/AppReview';
 
 const AppReviewDescription = ({
 	context,

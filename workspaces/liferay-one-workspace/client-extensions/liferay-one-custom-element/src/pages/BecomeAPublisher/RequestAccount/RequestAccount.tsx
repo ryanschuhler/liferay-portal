@@ -6,7 +6,6 @@
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {z} from 'zod';
 import {useOneContext} from '~/context/OneContextProvider';
 import useListTypeDefinition from '~/hooks/useListTypeDefinition';
 import i18n from '~/i18n';
@@ -19,18 +18,9 @@ import PublisherRequestedCard from './components/PublisherRequestedCard';
 import PublisherSummaryContent from './components/PublisherSummaryContent';
 import RequestAccountForm from './components/RequestAccountForm';
 import RequestAccountSummary from './components/RequestAccountSummary';
+import {PublisherForm, RequestAccountStep} from './types/requestAccount';
 
 import type {UserAccount} from '~/types/accounts';
-
-export type PublisherForm = z.infer<
-	typeof publishingSchemas.becomePublisherForm
->;
-
-export enum RequestAccountStep {
-	FORM = 'form',
-	SUMMARY = 'summary',
-	REQUESTED = 'requested',
-}
 
 function buildDefaultValues(myUserAccount?: UserAccount): PublisherForm {
 	const telephones =

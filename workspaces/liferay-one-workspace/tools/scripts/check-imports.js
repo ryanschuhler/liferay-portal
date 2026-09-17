@@ -41,6 +41,12 @@ const DYNAMIC_IMPORT_PATTERN = /\bimport\s*\(\s*['"]([^'"]+)['"]/g;
 
 const STATIC_IMPORT_PATTERN = /from\s*['"]([^'"]+)['"]/g;
 
+// `import type` is erased before the code runs, so it cannot put two modules
+// in a ring at initialization time. It still counts for reachability.
+
+const TYPE_ONLY_IMPORT_PATTERN =
+	/\bimport\s+type\s+[^;]*?from\s*['"]([^'"]+)['"]/g;
+
 // Captures the clause between `import` and `from` so default, namespace, and
 // named bindings can all be attributed to the module they came from.
 
@@ -180,12 +186,22 @@ function main() {
 	for (const file of files) {
 		const moduleName = toModule(file);
 		const source = fs.readFileSync(file, 'utf8');
+		const typeOnly = new Set();
+
+		for (const match of source.matchAll(TYPE_ONLY_IMPORT_PATTERN)) {
+			const target = resolve(match[1], moduleName, modules);
+
+			if (target) {
+				typeOnly.add(target);
+			}
+		}
+
 		const targets = new Set();
 
 		for (const match of source.matchAll(STATIC_IMPORT_PATTERN)) {
 			const target = resolve(match[1], moduleName, modules);
 
-			if (target) {
+			if (target && !typeOnly.has(target)) {
 				targets.add(target);
 			}
 		}

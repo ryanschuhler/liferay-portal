@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {CONSENT_TYPE} from '~/services/liferay/MarketplaceStorage';
+import type {CONSENT_TYPE} from '~/services/liferay/MarketplaceStorage';
 
 export type LiferayStorage = Storage & {
 	getItem(key: string, consentType: CONSENT_TYPE): string | null;

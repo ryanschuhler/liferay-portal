@@ -18,7 +18,7 @@ import phones from '~/utils/phones';
 import {getSiteURL} from '~/utils/siteUtils';
 
 import {PUBLISHER_TYPE_TOOLTIPS, getPublisherTypeEntries} from '../../utils';
-import {PublisherForm, RequestAccountStep} from '../RequestAccount';
+import {PublisherForm, RequestAccountStep} from '../types/requestAccount';
 
 import type {ListTypeDefinition} from '~/types/listTypeDefinition';
 

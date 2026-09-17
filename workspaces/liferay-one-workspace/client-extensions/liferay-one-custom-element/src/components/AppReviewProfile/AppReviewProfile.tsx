@@ -4,7 +4,8 @@
  */
 
 import ClayIcon from '@clayui/icon';
-import {AppReviewProps} from '~/components/AppReview/AppReview';
+
+import type {AppReviewProps} from '~/components/AppReview/AppReview';
 
 const AppReviewProfile = ({context}: AppReviewProps) => {
 	return (

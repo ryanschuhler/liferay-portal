@@ -4,11 +4,11 @@
  */
 
 import ClayIcon from '@clayui/icon';
-import {AppReviewProps} from '~/components/AppReview/AppReview';
 import AppReviewSection from '~/components/AppReviewSection/AppReviewSection';
 import i18n from '~/i18n';
 import {ProductTypeOptions} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants/ProductTypeOptions';
 
+import type {AppReviewProps} from '~/components/AppReview/AppReview';
 import type {UploadedFile} from '~/components/FileList/FileList';
 
 const FileContent = ({

@@ -6,9 +6,10 @@
 import ClayButton from '@clayui/button';
 import {ClayCheckbox} from '@clayui/form';
 import React, {useEffect} from 'react';
-import {IFilterOption} from '~/components/Filter/Filter';
 import {Word, translate} from '~/i18n';
 import getKebabCase from '~/utils/getKebabCase';
+
+import type {IFilterOption} from '~/components/Filter/Filter';
 
 interface IProps {
 	filter: IFilterOption;

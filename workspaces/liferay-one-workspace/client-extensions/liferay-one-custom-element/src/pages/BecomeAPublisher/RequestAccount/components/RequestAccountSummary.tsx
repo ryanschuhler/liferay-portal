@@ -9,7 +9,7 @@ import i18n from '~/i18n';
 import {Liferay} from '~/services/liferay/liferay';
 import {getSiteURL} from '~/utils/siteUtils';
 
-import {RequestAccountStep} from '../RequestAccount';
+import {RequestAccountStep} from '../types/requestAccount';
 
 type RequestAccountSummaryProps = {
 	children: JSX.Element;

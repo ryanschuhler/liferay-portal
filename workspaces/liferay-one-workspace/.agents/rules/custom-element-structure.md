@@ -128,6 +128,8 @@ A module is capped at 400 lines and 12 hook calls. Neither number is sacred; bot
 
 Modules must not import each other in a cycle. A cycle is not a style problem: whichever module in the ring loads first sees the others half-initialized, so a constant read at module scope is `undefined` in a way that depends on which entry point ran. `yarn lint:imports` reports the rings, and the same pass reports exports nothing imports.
 
+Only a value import can form one. `import type` is erased before the code runs, and so is a dynamic `import('...')`, which is deferred. Almost every ring this app had was a child component importing its parent's props type with a value import — `import type` is the whole fix. The exception is an enum, which is a real runtime value however type-like it reads: `RequestAccountStep` had to move out of the parent into a module both sides could import.
+
 ## Components
 
 `src/components/` is for what more than one page shares. A component only one page reaches belongs under that page, where a reader looking at the page can see it — that is where `AppPublish` and the `AppReview*` family belong, since only `PublisherDashboard` reaches them.
@@ -207,9 +209,9 @@ The workspace has not been cleaned up yet, so every structural rule is `warn`. T
 | `yarn lint:placement` | 38 |
 | `file-complexity-budget` | 34 |
 | `hooks-export-only-hooks` | 20 |
-| `yarn lint:imports` cycles | 18 |
 | `no-bare-utils-or-types-file` | 11 |
 | `no-eslint-disable` | 4 |
+| `yarn lint:imports` cycles | 0 |
 | `page-folder-structure` | 0 |
 | `src-folder-structure` | 0 |
 | `context-file-naming` | 0 |

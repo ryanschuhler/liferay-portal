@@ -4,11 +4,12 @@
  */
 
 import ClayIcon from '@clayui/icon';
-import {AppReviewProps} from '~/components/AppReview/AppReview';
 import AppReviewSection from '~/components/AppReviewSection/AppReviewSection';
 import VideoThumbnail from '~/components/VideoThumbnail/VideoThumbnail';
 import i18n from '~/i18n';
 import {ProductTags} from '~/utils/productUtils';
+
+import type {AppReviewProps} from '~/components/AppReview/AppReview';
 
 const AppReviewStorefront = ({
 	context,

@@ -5,7 +5,6 @@
 
 import ClayButton from '@clayui/button';
 import {Text} from '@clayui/core';
-import {UploadedFile} from '~/components/FileList/FileList';
 
 import {Tooltip} from '../Tooltip/Tooltip';
 
@@ -17,6 +16,8 @@ import classNames from 'classnames';
 import CircularProgress from '~/components/CircularProgress/CircularProgress';
 
 import i18n from '../../i18n';
+
+import type {UploadedFile} from '~/components/FileList/FileList';
 
 type ImageFileItemProps = {
 	index: number;

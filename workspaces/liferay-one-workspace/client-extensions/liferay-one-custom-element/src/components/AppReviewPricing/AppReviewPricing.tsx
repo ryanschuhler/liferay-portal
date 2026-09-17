@@ -4,10 +4,11 @@
  */
 
 import ClayIcon from '@clayui/icon';
-import {AppReviewProps} from '~/components/AppReview/AppReview';
 import AppReviewSection from '~/components/AppReviewSection/AppReviewSection';
 import i18n from '~/i18n';
 import {PRICING_OPTIONS} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants/newAppConstants';
+
+import type {AppReviewProps} from '~/components/AppReview/AppReview';
 
 type PriceOptionsType = {
 	description: string;
