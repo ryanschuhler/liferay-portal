@@ -74,6 +74,16 @@ const rule: TSESLint.RuleModule<MessageId, []> = {
 
 				const stemLower = stem.toLowerCase();
 
+				// A file named for a kind rather than a symbol — fooUtils,
+				// fooConstants — is exempt however many things it exports.
+
+				if (
+					stemLower.endsWith('utils') ||
+					stemLower.endsWith('constants')
+				) {
+					return;
+				}
+
 				if (namedValueExportCount > 1) {
 					if (
 						!stemLower.endsWith('utils') &&

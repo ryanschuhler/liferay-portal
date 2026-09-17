@@ -18,9 +18,9 @@ import {getStatusColor} from '~/pages/MyAccount/Projects/utils/getStatusColor';
 import {
 	PaymentStatus,
 	getOrderStatusToken,
+	getProjectName,
 	paymentStatusLabels,
 } from '~/utils/orderUtils';
-import {getProjectName} from '~/utils/orderUtils';
 
 import {getOrderTotal} from '../Orders';
 

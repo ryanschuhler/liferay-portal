@@ -6,8 +6,11 @@
 import {format} from 'date-fns';
 import {useMemo} from 'react';
 import {Liferay} from '~/services/liferay/liferay';
-import {OrderCustomFields, getOrderStatusToken} from '~/utils/orderUtils';
-import {getProjectName} from '~/utils/orderUtils';
+import {
+	OrderCustomFields,
+	getOrderStatusToken,
+	getProjectName,
+} from '~/utils/orderUtils';
 
 import {placedOrdersQuery, usePlacedOrders} from './usePlacedOrder';
 
