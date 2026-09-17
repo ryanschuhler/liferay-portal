@@ -70,7 +70,7 @@ const DetailTable: React.FC<DetailTableProps> = ({
 						</tr>
 
 						{item.divider && (
-							<tr>
+							<tr aria-hidden="true">
 								<td>
 									<hr />
 								</td>

@@ -46,6 +46,7 @@ const CurrencyTrigger = (selectedNewCurrency: string) =>
 					ref={ref}
 					{...props}
 					className="form-control form-control-select"
+					role="button"
 					tabIndex={0}
 				>
 					{children || 'Choose a option'}
