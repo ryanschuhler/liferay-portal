@@ -45,27 +45,22 @@ const LicensePrices: React.FC<LicensePricesProps> = ({
 		</span>
 
 		<div className="d-flex justify-content-between">
-			{Object.entries(prices[currencyCode]).map(
-				([priceType, values], index) => (
-					<div key={index}>
-						<h5 className="licesing-price-type pt-2">
-							{priceType} License price
-						</h5>
+			{Object.entries(prices[currencyCode]).map(([priceType, values]) => (
+				<div key={priceType}>
+					<h5 className="licesing-price-type pt-2">
+						{priceType} License price
+					</h5>
 
-						{Object.entries(values).map(([unit, price], index) => (
-							<div className="licensing-unit-price" key={index}>
-								Quantity: <b>{unit}</b> - Unit Price:{' '}
-								<b>
-									{formatCurrency(
-										Number(price),
-										currencyCode
-									)}{' '}
-								</b>
-							</div>
-						))}
-					</div>
-				)
-			)}
+					{Object.entries(values).map(([unit, price]) => (
+						<div className="licensing-unit-price" key={unit}>
+							Quantity: <b>{unit}</b> - Unit Price:{' '}
+							<b>
+								{formatCurrency(Number(price), currencyCode)}{' '}
+							</b>
+						</div>
+					))}
+				</div>
+			))}
 		</div>
 
 		<hr />

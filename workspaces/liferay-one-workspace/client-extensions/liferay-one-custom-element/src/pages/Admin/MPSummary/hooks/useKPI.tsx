@@ -306,8 +306,8 @@ const useKPI = () => {
 							body: (
 								<ol>
 									{Object.entries(catalogs).map(
-										([catalog, products = []], index) => (
-											<li key={index}>
+										([catalog, products = []]) => (
+											<li key={catalog}>
 												<span className="font-weight-bold">
 													{catalog}
 												</span>

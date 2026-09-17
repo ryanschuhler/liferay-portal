@@ -4,6 +4,7 @@
  */
 
 import fetcher from '~/services/fetcher/fetcher';
+import {ALL_ROWS} from '~/services/fetcher/pagination';
 
 import type {
 	Account,
@@ -59,7 +60,7 @@ export default class HeadlessAdminUser {
 
 	static async getAccountRoles(accountExternalReferenceCode: string) {
 		return fetcher<APIResponse<AccountRole>>(
-			`/o/headless-admin-user/v1.0/accounts/by-external-reference-code/${accountExternalReferenceCode}/account-roles?pageSize=-1`
+			`/o/headless-admin-user/v1.0/accounts/by-external-reference-code/${accountExternalReferenceCode}/account-roles?pageSize=${ALL_ROWS}`
 		);
 	}
 

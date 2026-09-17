@@ -118,7 +118,7 @@ const AppReviewBuild = ({
 										</p>
 										{liferayPackage.versions.map(
 											(version, index) => (
-												<small key={index}>
+												<small key={version}>
 													{version}
 													{index + 1 <
 														liferayPackage.versions

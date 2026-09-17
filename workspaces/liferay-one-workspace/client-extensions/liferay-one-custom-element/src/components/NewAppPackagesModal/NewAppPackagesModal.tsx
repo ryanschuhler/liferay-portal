@@ -121,7 +121,7 @@ export function NewAppPackagesModal({
 									<ClayCheckbox
 										checked={isChecked}
 										disabled={isAlreadySelected}
-										key={index}
+										key={version}
 										label={version}
 										name={`version-${index}`}
 										onChange={handleCheckboxChange}

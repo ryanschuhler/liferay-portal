@@ -262,8 +262,8 @@ const RenderField = ({
 
 const Renderer: React.FC<RendererProps> = ({fields, ...otherProps}) => (
 	<div className="form-renderer">
-		{fields.map((field, index) => (
-			<div className="mb-4" key={index}>
+		{fields.map((field) => (
+			<div className="mb-4" key={field.name}>
 				<RenderField {...otherProps} field={field} />
 			</div>
 		))}

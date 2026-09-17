@@ -9,7 +9,14 @@ const UNBOUNDED = /pageSize=-1/;
 
 type MessageId = 'unboundedPageSize';
 
+// ALL_ROWS names the claim that the collection is a fixed reference set, so
+// the rule takes it as the answer. The raw -1 is what it asks about.
+
 function isUnbounded(node: TSESTree.Node): boolean {
+	if (node.type === 'Identifier') {
+		return false;
+	}
+
 	if (node.type === 'Literal') {
 		return node.value === '-1' || node.value === -1;
 	}

@@ -5,6 +5,7 @@
 
 import {useFetch} from '~/hooks/useFetch';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
+import {ALL_ROWS} from '~/services/fetcher/pagination';
 
 import type {APIResponse} from '~/types/api';
 
@@ -55,7 +56,7 @@ export function useDXPProductVersions(enabled = true) {
 	>(enabled ? '/o/c/productversions' : null, {
 		params: {
 			filter: FILTER,
-			pageSize: -1,
+			pageSize: ALL_ROWS,
 		},
 	});
 

@@ -327,7 +327,7 @@ const ProductPurchaseSteps: React.FC<ProductPurchaseStepsProps> = ({
 			<ClayMultiStepNav.Item
 				active={step.active}
 				expand={index + 1 !== steps.length}
-				key={index}
+				key={step.key}
 				state={
 					steps.findIndex(({active}) => active) > index
 						? 'complete'
@@ -387,7 +387,7 @@ const CircleSteps: React.FC<CircleStepsProps> = ({className, steps}) => {
 						done: index < activeStepIndex,
 						selected: step.active,
 					})}
-					key={index}
+					key={step.key}
 				>
 					<ClayIcon
 						className={classNames('mr-2 step', {

@@ -32,13 +32,13 @@ type ProjectUsingMarketplaceProps = {
 	order: ProjectOrder;
 };
 
-function ProjectUsingMarketplace({index, order}: ProjectUsingMarketplaceProps) {
+function ProjectUsingMarketplace({order}: ProjectUsingMarketplaceProps) {
 	const exactMatch =
 		order.projects.length === 1 ||
 		order.orderTypeExternalReferenceCode.startsWith('KOR-');
 
 	return (
-		<details className="border-0 list-group-item py-1" key={index}>
+		<details className="border-0 list-group-item py-1">
 			<summary>
 				<span>
 					<Label displayType={exactMatch ? 'success' : 'warning'}>
@@ -82,7 +82,7 @@ export default function ProjectsUsingMarketplace({
 	return (
 		<ul className="list-group list-group-flush">
 			{projectsUsingMarkeplaceApps.map(([key, project], index) => (
-				<li className="list-group-item" key={index}>
+				<li className="list-group-item" key={key}>
 					<div className="mb-1">
 						<strong className="mr-1 text-dark">
 							[{index + 1}] {key}
@@ -94,7 +94,7 @@ export default function ProjectsUsingMarketplace({
 					{project.orders?.map((order, index) => (
 						<ProjectUsingMarketplace
 							index={index}
-							key={index}
+							key={order.id}
 							order={order}
 						/>
 					))}

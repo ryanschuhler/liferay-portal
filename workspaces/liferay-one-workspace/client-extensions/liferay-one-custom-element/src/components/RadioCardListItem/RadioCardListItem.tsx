@@ -32,7 +32,7 @@ const RadioCardListItem = ({
 	disabled,
 	fullTitle = false,
 	imageURL,
-	index,
+
 	label,
 	leftRadio,
 	selectRadio,
@@ -49,7 +49,6 @@ const RadioCardListItem = ({
 					'radio-selected': activeRadio,
 				}
 			)}
-			key={index}
 			onClick={() => selectRadio()}
 		>
 			<div className="col">

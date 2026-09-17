@@ -103,7 +103,7 @@ export function FileList({
 						<ImageFileItem
 							index={index}
 							isProcessing={isProcessing}
-							key={index}
+							key={uploadedFile.id}
 							onArrowClick={onArrowClick}
 							onChangeInput={onChangeInput}
 							onDelete={onDelete}

@@ -48,7 +48,6 @@ const DetailTable: React.FC<DetailTableProps> = ({
 								'd-flex flex-column':
 									orientation === Orientation.VERTICAL,
 							})}
-							key={index}
 							style={{
 								width:
 									columns > 1

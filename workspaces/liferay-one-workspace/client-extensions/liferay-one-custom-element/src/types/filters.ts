@@ -6,6 +6,7 @@
 import {Params} from 'react-router-dom';
 import i18n from '~/i18n';
 import SearchBuilder, {Operators} from '~/services/fetcher/SearchBuilder';
+import {ALL_ROWS} from '~/services/fetcher/pagination';
 import {
 	OrderWorkflowStatusCode,
 	PaymentStatus,
@@ -243,8 +244,7 @@ export const filterSchema: FilterSchemas = {
 			overrides(baseFilters.type, {
 				label: i18n.translate('app-type'),
 				name: 'orderTypeExternalReferenceCode',
-				resource:
-					'o/headless-commerce-admin-order/v1.0/order-types?pageSize=-1&sort=name:asc',
+				resource: `o/headless-commerce-admin-order/v1.0/order-types?pageSize=${ALL_ROWS}&sort=name:asc`,
 				transformData: (item: unknown) => {
 					const {items = []} = item as {
 						items?: {

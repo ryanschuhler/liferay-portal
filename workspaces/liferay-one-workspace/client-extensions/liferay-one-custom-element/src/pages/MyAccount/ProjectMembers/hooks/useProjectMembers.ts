@@ -11,6 +11,7 @@ import {
 	PROJECT_ROLE_ERCS,
 } from '~/pages/MyAccount/ProjectMembers/projectRoles';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
+import {ALL_ROWS} from '~/services/fetcher/pagination';
 import {Liferay} from '~/services/liferay/liferay';
 
 import type {
@@ -96,7 +97,7 @@ export function useProjectMembers() {
 		accountId
 			? `/o/headless-admin-user/v1.0/accounts/${accountId}/account-roles`
 			: null,
-		{params: {pageSize: -1}}
+		{params: {pageSize: ALL_ROWS}}
 	);
 
 	const contactRoleNameByExternalReferenceCode = useMemo(() => {

@@ -228,11 +228,11 @@ function SolutionDetailContent({product}: {product: Product}) {
 						<Html value={solution.header.description} />
 					</Paragraph>
 
-					{solution.header.images.map((image, index) => (
+					{solution.header.images.map((image) => (
 						<ImageInfo
 							icon="document-image"
 							image={image}
-							key={index}
+							key={image.preview}
 						/>
 					))}
 
@@ -268,11 +268,11 @@ function SolutionDetailContent({product}: {product: Product}) {
 										<Html value={block.description} />
 									</Paragraph>
 
-									{block.images?.map((image, imageIndex) => (
+									{block.images?.map((image) => (
 										<ImageInfo
 											icon="document-image"
 											image={image}
-											key={imageIndex}
+											key={image.preview}
 										/>
 									))}
 

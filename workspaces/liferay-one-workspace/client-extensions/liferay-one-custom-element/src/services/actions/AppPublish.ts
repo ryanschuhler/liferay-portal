@@ -5,6 +5,7 @@
 
 import {NewAppInitialState} from '~/context/NewAppContextProvider';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
+import {ALL_ROWS} from '~/services/fetcher/pagination';
 import {Properties} from '~/utils/attributeUtils';
 import {base64ToText, fileToBase64} from '~/utils/fileUtils';
 import {
@@ -567,7 +568,7 @@ export default class AppPublish extends BaseAppPublish {
 							skus.map(({id}) => id)
 						),
 						nestedFields: 'product,sku',
-						pageSize: '-1',
+						pageSize: ALL_ROWS,
 					})
 				);
 

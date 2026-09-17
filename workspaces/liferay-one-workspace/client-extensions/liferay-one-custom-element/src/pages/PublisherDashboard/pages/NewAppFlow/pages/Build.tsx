@@ -107,7 +107,7 @@ const BuildContent = () => {
 				{liferayPackages.map((liferayPackage, index) => (
 					<div
 						className="mt-4 provide-app-build-page-dropzone-container"
-						key={index}
+						key={liferayPackage.id}
 					>
 						<div className="align-center d-flex font-weight-bold justify-content-between p-3 provide-app-build-page-dropzone-container-header">
 							<span>

@@ -77,8 +77,8 @@ export default function MPSummary() {
 			<div className="d-flex flex-column">
 				<div className="d-flex flex-wrap mb-3" style={{gap: '20px'}}>
 					<ErrorBoundary>
-						{kpis.map((chart, index) => (
-							<DonutKPIChart {...chart} key={index} />
+						{kpis.map((chart) => (
+							<DonutKPIChart {...chart} key={chart.title} />
 						))}
 					</ErrorBoundary>
 				</div>

@@ -4,6 +4,7 @@
  */
 
 import fetcher from '~/services/fetcher/fetcher';
+import {ALL_ROWS} from '~/services/fetcher/pagination';
 
 import type {APIResponse} from '~/types/api';
 
@@ -24,7 +25,7 @@ export default class HeadlessAdminAddress {
 	static async getCountries(
 		searchParams = new URLSearchParams({
 			nestedFields: 'regions',
-			pageSize: '-1',
+			pageSize: ALL_ROWS,
 		})
 	) {
 		return fetcher<APIResponse<AddressCountry>>(

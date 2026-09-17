@@ -21,8 +21,8 @@ const TicketList: React.FC<IProps> = ({
 }) => {
 	return (
 		<>
-			{tickets.map((ticket, index) => (
-				<div className="mb-3" key={`${index}-${ticket.ticketId}`}>
+			{tickets.map((ticket) => (
+				<div className="mb-3" key={ticket.ticketId}>
 					<TicketOption
 						primaryAction={primaryAction}
 						secondaryAction={secondaryAction}
