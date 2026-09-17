@@ -44,7 +44,7 @@ const plugin = {
 				'local/file-complexity-budget': 'warn',
 				'local/filename-camelcase': 'error',
 				'local/filename-matches-default-export': 'error',
-				'local/hooks-export-only-hooks': 'warn',
+				'local/hooks-export-only-hooks': 'error',
 				'local/i18n-key-placeholder': 'error',
 				'local/i18n-key-slug': 'error',
 				'local/image-filename-snake-case': 'error',

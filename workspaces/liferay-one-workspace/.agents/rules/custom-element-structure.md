@@ -77,6 +77,7 @@ There is one GraphQL client: `services/graphql/GraphQL.ts`. Import that client.
 - `services/commerce/` — commerce reads.
 - `services/fetcher/` — transport. This tier holds the fetcher, its error type, the SWR cache, the query string builders `SearchBuilder` and `CreateFilters`, and `filterSchemas`, which is the table those builders read. A query string builder is part of the transport, not a general helper, so it does not belong in `utils/`. The table is not a type, so it does not belong in `types/`.
 - `services/graphql/` — the GraphQL client.
+- `services/queries/` — read orchestration, and the counterpart to `services/actions/`. A file here exports a `DataQuery`: a `key` and a `fetcher` that a hook gives to SWR, and that `preloadAppData.ts` gives to the cache before the first render. The query belongs here, and not in the hook, because two callers use it. Name the file for the domain and use the plural form, as in `accountQueries.ts` and `orderQueries.ts`.
 - `services/headless/` — Liferay headless reads.
 - `services/liferay/` — the `Liferay` global and its wrappers.
 - `services/models/` — classes that wrap a service payload and expose derived fields.
@@ -244,10 +245,10 @@ A rule stays a warning while its count is above zero. The counts below give the 
 
 | Rule | Open |
 | --- | --- |
-| `service-layer-boundary` | 64 |
+| `service-layer-boundary` | 63 |
 | `file-complexity-budget` | 33 |
-| `hooks-export-only-hooks` | 9 |
 | `yarn lint:placement` | 4 |
+| `hooks-export-only-hooks` | 0 |
 | `yarn lint:imports` cycles | 0 |
 | `yarn lint:imports` dead exports | 0 |
 | `src-folder-structure` | 0 |

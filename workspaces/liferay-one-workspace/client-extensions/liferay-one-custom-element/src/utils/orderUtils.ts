@@ -3,11 +3,12 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {format} from 'date-fns';
 import {formatCurrency} from '~/utils/formatCurrency';
 import {safeJSONParse} from '~/utils/safeJSONParse';
 
 import type {OrderTypes} from '~/types/OrderTypes';
-import type {Order, PlacedOrder} from '~/types/orders';
+import type {Order, PlacedOrder, VirtualItem} from '~/types/orders';
 
 type NumericKeys<T> = {
 	[K in keyof T]: T[K] extends number | undefined ? K : never;
@@ -226,4 +227,82 @@ export function getProjectName(order: PlacedOrder): string {
 	);
 
 	return projects[0]?.name ?? '';
+}
+
+export type ProductOrderInfo = {
+	environment: ProductEnvironmentInfo;
+	orderDate: string;
+	orderId: string;
+	orderType: string;
+	purchaseNumber: string;
+	purchasedBy: string;
+	status: string;
+};
+
+export type ProductEnvironmentInfo = {
+	cloudProjectName: string;
+	projectName: string;
+};
+
+export function formatOrderDate(value?: string): string {
+	return value ? format(new Date(value), 'MMM d, yyyy') : '';
+}
+
+export function getProductOrderInfo(
+	placedOrders: PlacedOrder[],
+	productName: string
+): ProductOrderInfo {
+	const order = placedOrders.find((placedOrder) =>
+		(placedOrder.placedOrderItems ?? []).some(
+			(item) => item.name === productName
+		)
+	);
+
+	if (!order) {
+		return {
+			environment: {
+				cloudProjectName: '',
+				projectName: '',
+			},
+			orderDate: '',
+			orderId: '',
+			orderType: '',
+			purchaseNumber: '',
+			purchasedBy: '',
+			status: '',
+		};
+	}
+
+	const customFields = order.customFields ?? {};
+
+	return {
+		environment: {
+			cloudProjectName:
+				customFields[OrderCustomFields.CLOUD_PROJECT_NAME] ?? '',
+			projectName: customFields[OrderCustomFields.PROJECT_NAME] ?? '',
+		},
+		orderDate: formatOrderDate(order.createDate),
+		orderId: String(order.id),
+		orderType: order.orderTypeExternalReferenceCode ?? '',
+		purchaseNumber: order.purchaseOrderNumber ?? '',
+		purchasedBy: order.author ?? '',
+		status: getOrderStatusToken(order),
+	};
+}
+
+export function getProductVirtualItems(
+	placedOrders: PlacedOrder[],
+	productName: string
+): VirtualItem[] {
+	for (const placedOrder of placedOrders) {
+		const placedOrderItem = (placedOrder.placedOrderItems ?? []).find(
+			(item) => item.name === productName
+		);
+
+		if (placedOrderItem) {
+			return placedOrderItem.virtualItems ?? [];
+		}
+	}
+
+	return [];
 }

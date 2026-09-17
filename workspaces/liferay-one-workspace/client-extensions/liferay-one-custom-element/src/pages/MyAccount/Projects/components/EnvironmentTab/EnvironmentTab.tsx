@@ -14,8 +14,8 @@ import DSREnvironment from '../DSREnvironment/DSREnvironment';
 import EnvironmentCard from '../EnvironmentCard/EnvironmentCard';
 import SectionedDetailsCard from '../SectionedDetailsCard/SectionedDetailsCard';
 
-import type {ProductEnvironmentInfo} from '~/hooks/useProjectOrders';
 import type {EnvironmentProfile} from '~/pages/MyAccount/Projects/utils/resolveEnvironmentProfile';
+import type {ProductEnvironmentInfo} from '~/utils/orderUtils';
 
 type EnvironmentTabProps = {
 	environment: ProductEnvironmentInfo;

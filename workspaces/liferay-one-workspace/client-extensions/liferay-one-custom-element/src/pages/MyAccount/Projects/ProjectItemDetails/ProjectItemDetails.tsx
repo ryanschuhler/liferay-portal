@@ -15,11 +15,7 @@ import {
 	useProjectCommerce,
 } from '~/hooks/useProjectCommerce';
 import {useProjectItems} from '~/hooks/useProjectItems';
-import {
-	getProductOrderInfo,
-	getProductVirtualItems,
-	useProjectOrders,
-} from '~/hooks/useProjectOrders';
+import {useProjectOrders} from '~/hooks/useProjectOrders';
 import i18n, {Word} from '~/i18n';
 import AIHubAlert from '~/pages/MyAccount/Projects/components/AIHubAlert/AIHubAlert';
 import ActivationTab from '~/pages/MyAccount/Projects/components/ActivationTab/ActivationTab';
@@ -41,6 +37,7 @@ import {getProductIcon} from '~/pages/MyAccount/Projects/utils/getProductIcon';
 import {isUnassignedProject} from '~/pages/MyAccount/Projects/utils/isUnassignedProject';
 import {resolveProductTabConfig} from '~/pages/MyAccount/Projects/utils/resolveProductTabConfig';
 import {Liferay} from '~/services/liferay/liferay';
+import {getProductOrderInfo, getProductVirtualItems} from '~/utils/orderUtils';
 import {
 	getSpecificationValue,
 	getSpecificationValues,

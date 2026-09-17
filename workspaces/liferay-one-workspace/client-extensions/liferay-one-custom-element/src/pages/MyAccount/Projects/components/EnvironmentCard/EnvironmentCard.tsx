@@ -4,8 +4,8 @@
  */
 
 import {DetailedCard} from '~/components/DetailedCard/DetailedCard';
-import {ProductEnvironmentInfo} from '~/hooks/useProjectOrders';
 import i18n, {Word} from '~/i18n';
+import {ProductEnvironmentInfo} from '~/utils/orderUtils';
 
 import DetailsCard from '../DetailsCard/DetailsCard';
 

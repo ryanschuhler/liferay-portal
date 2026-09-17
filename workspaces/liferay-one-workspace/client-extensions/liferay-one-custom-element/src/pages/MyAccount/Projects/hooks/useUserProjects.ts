@@ -7,36 +7,15 @@ import {useOneContext} from '~/context/OneContextProvider';
 import {useDataQuery} from '~/hooks/useDataQuery';
 import {useFetch} from '~/hooks/useFetch';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
-import {queryGraphQL, toGraphQLString} from '~/services/graphql/GraphQL';
 import {Liferay} from '~/services/liferay/liferay';
+import {userProjectsQuery} from '~/services/queries/userProjectsQuery';
 
 import type {UserProject} from '~/pages/MyAccount/Projects/types/userProject';
-import type {APIResponse, DataQuery} from '~/types/api';
-
-type ProjectAPIItem = {
-	externalReferenceCode: string;
-	id: number;
-	liferayVersion?: string;
-	name: string;
-};
+import type {APIResponse} from '~/types/api';
 
 type ProjectMembershipAPIItem = {
 	r_projectToProjectMembership_c_projectERC: string;
 };
-
-export function userProjectsQuery(
-	accountId?: number | string | null
-): DataQuery<APIResponse<ProjectAPIItem>> {
-	return {
-		fetcher: () =>
-			queryGraphQL<{projects: APIResponse<ProjectAPIItem>}>(
-				`c { projects(filter: ${toGraphQLString(
-					`r_accountEntryToProject_accountEntryId eq '${accountId}'`
-				)}, pageSize: 200, sort: "name:asc") { items { externalReferenceCode id liferayVersion name } totalCount } }`
-			).then((data) => data.projects),
-		key: accountId ? `/graphql/projects/${accountId}` : null,
-	};
-}
 
 export function useUserProjects(): {
 	hasAccountProjects: boolean;

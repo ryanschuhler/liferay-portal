@@ -9,8 +9,8 @@ import {Liferay} from '~/services/liferay/liferay';
 import SectionedDetailsCard from '../SectionedDetailsCard/SectionedDetailsCard';
 
 import type {ProjectContract} from '~/hooks/useProjectCommerce';
-import type {ProductOrderInfo} from '~/hooks/useProjectOrders';
 import type {DetailsProfile} from '~/pages/MyAccount/Projects/utils/resolveDetailsProfile';
+import type {ProductOrderInfo} from '~/utils/orderUtils';
 
 type DetailsTabProps = {
 	contract?: ProjectContract;
