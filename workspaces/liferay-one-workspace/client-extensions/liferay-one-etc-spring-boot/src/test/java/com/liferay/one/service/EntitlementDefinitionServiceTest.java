@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -361,6 +362,41 @@ public class EntitlementDefinitionServiceTest {
 	}
 
 	@Test
+	public void testReconcileContinuesPastFailingProduct() throws Exception {
+
+		// [CRON-RECONCILEENTITLEMENTDEFINITIONS]
+
+		_setUpAppProduct(_createSku("SKU-SMALL", true, "Small"));
+
+		Mockito.when(
+			_commerceProductService.getProduct(_C_PRODUCT_ID + 1)
+		).thenThrow(
+			new NoSuchProductException(
+				"No product exists for commerce product ID " +
+					(_C_PRODUCT_ID + 1))
+		);
+
+		_entitlementDefinitionService.productsJSONArray = new JSONArray(
+		).put(
+			new JSONObject(
+			).put(
+				"productId", _C_PRODUCT_ID + 1
+			)
+		).put(
+			new JSONObject(
+			).put(
+				"productId", _C_PRODUCT_ID
+			)
+		);
+
+		_entitlementDefinitionService.reconcileEntitlementDefinitions();
+
+		Assertions.assertEquals(
+			List.of("SKU-SMALL"),
+			_getExternalReferenceCodes(_entitlementDefinitionService.putURIs));
+	}
+
+	@Test
 	public void testReconcileDeactivatesDefinitionWithDeletedSku()
 		throws Exception {
 
@@ -407,6 +443,49 @@ public class EntitlementDefinitionServiceTest {
 	}
 
 	@Test
+	public void testReconcileGeneratesForEveryApprovedProduct()
+		throws Exception {
+
+		// [CRON-RECONCILEENTITLEMENTDEFINITIONS]
+
+		_setUpAppProduct(_createSku("SKU-SMALL", true, "Small"));
+
+		Mockito.when(
+			_commerceProductService.getProduct(_C_PRODUCT_ID + 1)
+		).thenReturn(
+			_createProduct(
+				TaxonomyCategoryConstants.EXTERNAL_REFERENCE_CODE_APP,
+				"Other Test App",
+				ProductSpecificationConstants.TYPES_LICENSE_KEY_GENERATING[0])
+		);
+
+		Mockito.when(
+			_commerceSkuService.getSkus(_C_PRODUCT_ID + 1)
+		).thenReturn(
+			List.of(_createSku("SKU-LARGE", true, "Large"))
+		);
+
+		_entitlementDefinitionService.productsJSONArray = new JSONArray(
+		).put(
+			new JSONObject(
+			).put(
+				"productId", _C_PRODUCT_ID
+			)
+		).put(
+			new JSONObject(
+			).put(
+				"productId", _C_PRODUCT_ID + 1
+			)
+		);
+
+		_entitlementDefinitionService.reconcileEntitlementDefinitions();
+
+		Assertions.assertEquals(
+			List.of("SKU-SMALL", "SKU-LARGE"),
+			_getExternalReferenceCodes(_entitlementDefinitionService.putURIs));
+	}
+
+	@Test
 	public void testReconcileRequestsOnlyApprovedProducts() throws Exception {
 		_entitlementDefinitionService.reconcileEntitlementDefinitions();
 
@@ -423,6 +502,43 @@ public class EntitlementDefinitionServiceTest {
 		}
 
 		Assertions.assertTrue(filtered);
+	}
+
+	@Test
+	public void testReconcileSkipsConcurrentRun() throws Exception {
+
+		// [CRON-RECONCILEENTITLEMENTDEFINITIONS]
+
+		_setUpAppProduct(_createSku("SKU-SMALL", true, "Small"));
+
+		_entitlementDefinitionService.productsJSONArray = new JSONArray(
+		).put(
+			new JSONObject(
+			).put(
+				"productId", _C_PRODUCT_ID
+			)
+		);
+
+		AtomicBoolean reconciling =
+			(AtomicBoolean)ReflectionTestUtils.getField(
+				_entitlementDefinitionService, "_reconciling");
+
+		reconciling.set(true);
+
+		_entitlementDefinitionService.reconcileEntitlementDefinitions();
+
+		Assertions.assertTrue(_entitlementDefinitionService.getURIs.isEmpty());
+		Assertions.assertTrue(_entitlementDefinitionService.putURIs.isEmpty());
+
+		// The guard is released once the pass ends, so the next run proceeds
+
+		reconciling.set(false);
+
+		_entitlementDefinitionService.reconcileEntitlementDefinitions();
+
+		Assertions.assertEquals(
+			List.of("SKU-SMALL"),
+			_getExternalReferenceCodes(_entitlementDefinitionService.putURIs));
 	}
 
 	@Test

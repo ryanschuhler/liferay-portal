@@ -10,6 +10,7 @@ import com.liferay.headless.commerce.admin.order.client.dto.v1_0.Account;
 import com.liferay.headless.commerce.admin.order.client.dto.v1_0.Order;
 import com.liferay.one.constants.ClassNameConstants;
 import com.liferay.one.constants.CommerceOrderConstants;
+import com.liferay.one.exception.NoSuchLicenseKeyException;
 import com.liferay.one.license.LicenseKeyCSVExporter;
 import com.liferay.one.license.LicenseKeyExporter;
 import com.liferay.one.model.LicenseKey;
@@ -95,6 +96,9 @@ public class LicenseKeysRestControllerTest {
 
 	@Test
 	public void testGetLicenseKeysDownload() throws Exception {
+
+		// [REST-GET-LICENSE-KEYS-LICENSEKEYID-DOWNLOAD]
+
 		LicenseKeysRestController licenseKeysRestController =
 			_createController();
 
@@ -154,6 +158,8 @@ public class LicenseKeysRestControllerTest {
 	public void testGetLicenseKeysDownloadAggregatesActiveKeys()
 		throws Exception {
 
+		// [REST-GET-LICENSE-KEYS-DOWNLOAD]
+
 		LicenseKeysRestController licenseKeysRestController =
 			_createController();
 
@@ -206,8 +212,119 @@ public class LicenseKeysRestControllerTest {
 	}
 
 	@Test
+	public void testGetLicenseKeysDownloadEnforcesViewOnEveryKey()
+		throws Exception {
+
+		// [REST-GET-LICENSE-KEYS-DOWNLOAD]
+
+		LicenseKeysRestController licenseKeysRestController =
+			_createController();
+
+		LicenseKey licenseKey = Mockito.mock(LicenseKey.class);
+
+		Mockito.when(
+			licenseKey.getAccountEntryId()
+		).thenReturn(
+			_ACCOUNT_ID
+		);
+
+		Mockito.when(
+			licenseKey.isActive()
+		).thenReturn(
+			true
+		);
+
+		LicenseKey otherLicenseKey = Mockito.mock(LicenseKey.class);
+
+		Mockito.when(
+			otherLicenseKey.getAccountEntryId()
+		).thenReturn(
+			_OTHER_ACCOUNT_ID
+		);
+
+		Mockito.when(
+			_licenseKeyService.getLicenseKeysByIds(
+				Mockito.any(), Mockito.any(long[].class))
+		).thenReturn(
+			Arrays.asList(licenseKey, otherLicenseKey)
+		);
+
+		Mockito.doThrow(
+			new PrincipalException()
+		).when(
+			_licenseKeyPermission
+		).check(
+			Mockito.any(), Mockito.eq(_OTHER_ACCOUNT_ID),
+			Mockito.eq(ActionKeys.VIEW)
+		);
+
+		Assertions.assertThrows(
+			PrincipalException.class,
+			() -> licenseKeysRestController.getLicenseKeysDownload(
+				null, new long[] {1L, 2L}));
+
+		Mockito.verify(
+			_licenseKeyExporter, Mockito.never()
+		).toXML(
+			Mockito.anyList()
+		);
+	}
+
+	@Test
+	public void testGetLicenseKeysDownloadPropagatesUnknownLicenseKey()
+		throws Exception {
+
+		// [REST-GET-LICENSE-KEYS-LICENSEKEYID-DOWNLOAD]
+
+		LicenseKeysRestController licenseKeysRestController =
+			_createController();
+
+		Mockito.when(
+			_licenseKeyService.getLicenseKey(Mockito.any(), Mockito.anyLong())
+		).thenThrow(
+			new NoSuchLicenseKeyException("No license key exists with ID 1")
+		);
+
+		Assertions.assertThrows(
+			NoSuchLicenseKeyException.class,
+			() -> licenseKeysRestController.getLicenseKeysDownload(null, 1L));
+
+		Mockito.verifyNoInteractions(_licenseKeyExporter);
+		Mockito.verifyNoInteractions(_licenseKeyPermission);
+	}
+
+	@Test
+	public void testGetLicenseKeysDownloadPropagatesUnknownLicenseKeyIds()
+		throws Exception {
+
+		// [REST-GET-LICENSE-KEYS-DOWNLOAD]
+
+		LicenseKeysRestController licenseKeysRestController =
+			_createController();
+
+		LicenseKey licenseKey = Mockito.mock(LicenseKey.class);
+
+		Mockito.when(
+			_licenseKeyService.getLicenseKeysByIds(
+				Mockito.any(), Mockito.any(long[].class))
+		).thenReturn(
+			Collections.singletonList(licenseKey)
+		);
+
+		Assertions.assertThrows(
+			NoSuchLicenseKeyException.class,
+			() -> licenseKeysRestController.getLicenseKeysDownload(
+				null, new long[] {1L, 2L}));
+
+		Mockito.verifyNoInteractions(_licenseKeyExporter);
+		Mockito.verifyNoInteractions(_licenseKeyPermission);
+	}
+
+	@Test
 	public void testGetLicenseKeysDownloadThrowsForbiddenWhenAccountNotViewable()
 		throws Exception {
+
+		// [REST-GET-LICENSE-KEYS-LICENSEKEYID-DOWNLOAD]
 
 		LicenseKeysRestController licenseKeysRestController =
 			_createController();
@@ -249,6 +366,8 @@ public class LicenseKeysRestControllerTest {
 	public void testGetLicenseKeysDownloadThrowsNotFoundForOldVersion()
 		throws Exception {
 
+		// [REST-GET-LICENSE-KEYS-LICENSEKEYID-DOWNLOAD]
+
 		LicenseKeysRestController licenseKeysRestController =
 			_createController();
 
@@ -283,8 +402,58 @@ public class LicenseKeysRestControllerTest {
 	}
 
 	@Test
+	public void testGetLicenseKeysDownloadThrowsNotFoundWhenNoKeysAreActive()
+		throws Exception {
+
+		// [REST-GET-LICENSE-KEYS-DOWNLOAD]
+
+		LicenseKeysRestController licenseKeysRestController =
+			_createController();
+
+		LicenseKey licenseKey = Mockito.mock(LicenseKey.class);
+
+		Mockito.when(
+			licenseKey.getAccountEntryId()
+		).thenReturn(
+			_ACCOUNT_ID
+		);
+
+		Mockito.when(
+			licenseKey.isActive()
+		).thenReturn(
+			false
+		);
+
+		Mockito.when(
+			_licenseKeyService.getLicenseKeysByIds(
+				Mockito.any(), Mockito.any(long[].class))
+		).thenReturn(
+			Collections.singletonList(licenseKey)
+		);
+
+		ResponseStatusException responseStatusException =
+			Assertions.assertThrows(
+				ResponseStatusException.class,
+				() -> licenseKeysRestController.getLicenseKeysDownload(
+					null, new long[] {1L}));
+
+		Assertions.assertEquals(
+			HttpStatus.NOT_FOUND, responseStatusException.getStatusCode());
+
+		Mockito.verify(
+			_licenseKeyPermission
+		).check(
+			Mockito.any(), Mockito.eq(_ACCOUNT_ID), Mockito.eq(ActionKeys.VIEW)
+		);
+
+		Mockito.verifyNoInteractions(_licenseKeyExporter);
+	}
+
+	@Test
 	public void testGetLicenseKeysDownloadWhenLicenseKeyIdsExceedsTheMaximum()
 		throws Exception {
+
+		// [REST-GET-LICENSE-KEYS-DOWNLOAD]
 
 		LicenseKeysRestController licenseKeysRestController =
 			_createController();
@@ -304,6 +473,8 @@ public class LicenseKeysRestControllerTest {
 	@Test
 	public void testGetLicenseKeysDownloadWhenLicenseKeyIdsIsEmpty()
 		throws Exception {
+
+		// [REST-GET-LICENSE-KEYS-DOWNLOAD]
 
 		LicenseKeysRestController licenseKeysRestController =
 			_createController();
@@ -812,6 +983,8 @@ public class LicenseKeysRestControllerTest {
 	}
 
 	private static final long _ACCOUNT_ID = 555L;
+
+	private static final long _OTHER_ACCOUNT_ID = 556L;
 
 	private static final long _USER_ID = 123L;
 

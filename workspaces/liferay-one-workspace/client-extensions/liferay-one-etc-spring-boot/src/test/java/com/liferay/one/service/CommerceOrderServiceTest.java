@@ -560,8 +560,50 @@ public class CommerceOrderServiceTest {
 	}
 
 	@Test
+	public void testCompleteSettledOrdersIsIdempotentOnRerun()
+		throws Exception {
+
+		// [CRON-COMPLETESETTLEDORDERS]
+
+		Order order = _createOrder(
+			CommerceOrderConstants.ORDER_STATUS_PENDING, "DXP_APP",
+			CommerceOrderConstants.ORDER_PAYMENT_STATUS_COMPLETED);
+
+		Mockito.doReturn(
+			List.of(order)
+		).when(
+			_commerceOrderService
+		).getOrders(
+			ArgumentMatchers.anyString()
+		);
+
+		Mockito.doReturn(
+			order
+		).doReturn(
+			_createOrder(
+				CommerceOrderConstants.ORDER_STATUS_COMPLETED, "DXP_APP",
+				CommerceOrderConstants.ORDER_PAYMENT_STATUS_COMPLETED)
+		).when(
+			_commerceOrderService
+		).fetchCommerceOrder(
+			_ORDER_ID
+		);
+
+		_commerceOrderService.completeSettledOrders();
+		_commerceOrderService.completeSettledOrders();
+
+		Mockito.verify(
+			_commerceOrderService, Mockito.times(1)
+		).completeOrder(
+			_ORDER_ID, CommerceOrderConstants.ORDER_PAYMENT_STATUS_COMPLETED
+		);
+	}
+
+	@Test
 	public void testCompleteSettledOrdersSweepsEveryPendingSettledOrder()
 		throws Exception {
+
+		// [CRON-COMPLETESETTLEDORDERS]
 
 		Order order1 = _createOrder(
 			CommerceOrderConstants.ORDER_STATUS_PENDING, "DXP_APP",
@@ -615,6 +657,8 @@ public class CommerceOrderServiceTest {
 	@Test
 	public void testCompleteSettledOrdersSweepsPastFailingOrder()
 		throws Exception {
+
+		// [CRON-COMPLETESETTLEDORDERS]
 
 		Order order1 = _createOrder(
 			CommerceOrderConstants.ORDER_STATUS_PENDING, "DXP_APP",
