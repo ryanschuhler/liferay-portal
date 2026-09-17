@@ -9,9 +9,7 @@ import {useModal} from '@clayui/modal';
 import NavigationBar from '@clayui/navigation-bar';
 import {useCallback, useMemo, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
-import Table, {
-	IRow,
-} from '~/components/BusinessEventsTable/BusinessEventsTable';
+import Table from '~/components/BusinessEventsTable/BusinessEventsTable';
 import Loading from '~/components/Loading/Loading';
 import {translate} from '~/i18n';
 import ButtonDropDown from '~/pages/BusinessEvents/components/ButtonDropDown/ButtonDropDown';
@@ -258,10 +256,7 @@ const BusinessEventsActivityHistory = () => {
 			<div className="">
 				{businessEventVersions?.length ? (
 					<div className="versions-table">
-						<Table
-							columns={columns}
-							rows={rows as unknown as IRow[]}
-						/>
+						<Table columns={columns} rows={rows} />
 					</div>
 				) : (
 					<div className="p-3">

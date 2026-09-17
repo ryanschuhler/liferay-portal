@@ -52,7 +52,7 @@ const BusinessEventsAddPage: React.FC = () => {
 	} = useFormContext();
 
 	const values = watch();
-	const businessEvent = values.businessEvent as unknown as IBusinessEvent;
+	const businessEvent = values.businessEvent as IBusinessEvent;
 
 	const setFieldValue = useCallback(
 		(

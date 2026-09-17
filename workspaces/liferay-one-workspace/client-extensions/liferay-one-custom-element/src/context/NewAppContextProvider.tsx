@@ -383,7 +383,7 @@ const reducer = (state: NewAppInitialState, action: AppActions) => {
 					file: {
 						changed: false,
 						fileName: appIcon?.title?.en_US as string,
-						id: appIcon?.externalReferenceCode as unknown as string,
+						id: appIcon?.externalReferenceCode as string,
 						preview: _product.thumbnail,
 						progress: 100,
 						uploaded: true,
@@ -581,7 +581,7 @@ const reducer = (state: NewAppInitialState, action: AppActions) => {
 			};
 
 			if (key in updatedLicenseTierPrices) {
-				delete updatedLicenseTierPrices[key as unknown as number];
+				delete updatedLicenseTierPrices[key];
 			}
 
 			return {

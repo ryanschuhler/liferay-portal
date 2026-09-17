@@ -231,7 +231,7 @@ const Details = () => {
 										payload: {
 											content: {},
 											type: selectedBlock,
-										} as unknown as ContentBlock,
+										} as ContentBlock,
 										type: SolutionTypes.SET_NEW_BLOCK,
 									});
 

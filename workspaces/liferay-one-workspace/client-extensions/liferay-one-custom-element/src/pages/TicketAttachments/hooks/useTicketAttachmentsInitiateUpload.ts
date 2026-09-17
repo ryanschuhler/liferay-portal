@@ -54,7 +54,7 @@ const useTicketAttachmentsInitiateUpload = (): IProps => {
 					'liferay-one-etc-spring-boot-oaua'
 				);
 
-				const response: Response = (await oauth2Client.fetch(
+				const response = await oauth2Client.fetch(
 					'/ticket-attachments/initiate-upload',
 					{
 						body: JSON.stringify({
@@ -69,7 +69,7 @@ const useTicketAttachmentsInitiateUpload = (): IProps => {
 						method: 'POST',
 						signal: abortControllerRef.current.signal,
 					}
-				)) as unknown as Response;
+				);
 
 				const responseJSON = await response.json();
 

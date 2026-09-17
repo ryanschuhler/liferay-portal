@@ -25,7 +25,7 @@ const CloudResourceRequirements = () => {
 				<Form.Input
 					name="numberOfCPUs"
 					onChange={({target: {value}}) => {
-						if (!isNaN(value as unknown as number)) {
+						if (!isNaN(Number(value))) {
 							dispatch({
 								payload: {
 									resourceRequirements: {
@@ -55,7 +55,7 @@ const CloudResourceRequirements = () => {
 				<Form.Input
 					name="ram"
 					onChange={({target: {value}}) => {
-						if (!isNaN(value as unknown as number)) {
+						if (!isNaN(Number(value))) {
 							dispatch({
 								payload: {
 									resourceRequirements: {

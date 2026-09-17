@@ -35,8 +35,7 @@ export class MarketplaceDeliveryProduct {
 	get appType() {
 		const {APP_TYPE} = this.specificationValues;
 
-		let type: string =
-			ProductTypeLabels[APP_TYPE as unknown as ProductType];
+		let type: string = ProductTypeLabels[APP_TYPE as ProductType];
 
 		if (!type) {
 			const categories = this.getCategories(
@@ -158,8 +157,7 @@ export class MarketplaceDeliveryProduct {
 
 		return (
 			optionsTypes[
-				this.specificationValues
-					.APP_TYPE as unknown as keyof typeof optionsTypes
+				this.specificationValues.APP_TYPE as keyof typeof optionsTypes
 			] || ProductLicense.BASE
 		);
 	}

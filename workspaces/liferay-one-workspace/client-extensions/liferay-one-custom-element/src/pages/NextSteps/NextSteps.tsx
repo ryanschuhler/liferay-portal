@@ -93,7 +93,7 @@ export function NextStepsBody(props: NextStepsBodyProps) {
 
 	const {data: accountCommerce} = useSWR(
 		accountId ? `/next-steps/account-commerce/${accountId}` : null,
-		() => HeadlessAdminUser.getAccount(accountId as unknown as string)
+		() => HeadlessAdminUser.getAccount(accountId!)
 	);
 
 	const paymentStatus = placedOrder?.paymentStatus;

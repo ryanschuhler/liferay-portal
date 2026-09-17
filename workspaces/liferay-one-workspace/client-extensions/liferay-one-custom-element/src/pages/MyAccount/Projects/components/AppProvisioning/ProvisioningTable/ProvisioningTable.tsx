@@ -50,9 +50,9 @@ const ProvisioningTable: React.FC<ProvisioningTableProps> = ({
 
 	return (
 		<>
-			<Table
+			<Table<ProvisioningRow>
 				Actions={({row}) => {
-					const provisioningRow = row as unknown as ProvisioningRow;
+					const provisioningRow = row;
 
 					return (
 						<ClayDropDown
@@ -102,8 +102,7 @@ const ProvisioningTable: React.FC<ProvisioningTableProps> = ({
 					{
 						key: 'startDate',
 						render: (startDate, item) => {
-							const provisioningRow =
-								item as unknown as ProvisioningRow;
+							const provisioningRow = item;
 
 							return (
 								<>
@@ -128,8 +127,7 @@ const ProvisioningTable: React.FC<ProvisioningTableProps> = ({
 					{
 						key: 'status',
 						render: (status, item) => {
-							const provisioningRow =
-								item as unknown as ProvisioningRow;
+							const provisioningRow = item;
 
 							return (
 								<div className="align-items-center d-flex">
@@ -155,8 +153,7 @@ const ProvisioningTable: React.FC<ProvisioningTableProps> = ({
 					{
 						key: 'project',
 						render: (project, item) => {
-							const provisioningRow =
-								item as unknown as ProvisioningRow;
+							const provisioningRow = item;
 
 							return (
 								<>
@@ -186,15 +183,8 @@ const ProvisioningTable: React.FC<ProvisioningTableProps> = ({
 					},
 				]}
 				hasKebabButton
-				onClickRow={(row) =>
-					onOpenDetailsModal(row as unknown as ProvisioningRow)
-				}
-				rows={
-					provisioningTableData as unknown as Record<
-						string,
-						unknown
-					>[]
-				}
+				onClickRow={(row) => onOpenDetailsModal(row)}
+				rows={provisioningTableData}
 			/>
 
 			{selectedProvisioningRow && (

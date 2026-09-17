@@ -31,7 +31,7 @@ const useTicketAttachmentsCompleteUpload = (): IProps => {
 				'liferay-one-etc-spring-boot-oaua'
 			);
 
-			const response: Response = (await oauth2Client.fetch(
+			const response = await oauth2Client.fetch(
 				`/ticket-attachments/${ticketAttachmentId}/complete-upload`,
 				{
 					body: JSON.stringify({
@@ -39,7 +39,7 @@ const useTicketAttachmentsCompleteUpload = (): IProps => {
 					}),
 					method: 'POST',
 				}
-			)) as unknown as Response;
+			);
 
 			if (!response.ok) {
 				throw new Error(

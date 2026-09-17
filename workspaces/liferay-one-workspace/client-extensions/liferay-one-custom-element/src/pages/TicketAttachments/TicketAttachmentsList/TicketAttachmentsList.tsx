@@ -6,9 +6,7 @@
 import Button from '@clayui/button';
 import ClayLink from '@clayui/link';
 import {useNavigate} from 'react-router-dom';
-import Table, {
-	IRow,
-} from '~/components/BusinessEventsTable/BusinessEventsTable';
+import Table from '~/components/BusinessEventsTable/BusinessEventsTable';
 import Loading from '~/components/Loading/Loading';
 import ProjectSelector from '~/components/ProjectSelector/ProjectSelector';
 import RestrictedFeatureMessage from '~/components/RestrictedFeatureMessage/RestrictedFeatureMessage';
@@ -254,7 +252,7 @@ const TicketAttachmentsList = () => {
 				{!projectERC || loading ? (
 					<Loading.Page />
 				) : attachments.length ? (
-					<Table columns={columns} rows={rows as unknown as IRow[]} />
+					<Table columns={columns} rows={rows} />
 				) : (
 					<div className="p-3">
 						{translate('no-ticket-attachments-were-found')}

@@ -417,7 +417,7 @@ const reducer = (state: SolutionInitialState, action: AppActions) => {
 					title: specificationsMap.get(
 						ProductSpecificationKey.SOLUTION_HEADER_TITLE
 					),
-				} as unknown as SolutionInitialState['header'],
+				} as SolutionInitialState['header'],
 				profile: {
 					categories: filterProductVocabularies(
 						_product,
@@ -427,7 +427,7 @@ const reducer = (state: SolutionInitialState, action: AppActions) => {
 					file: {
 						changed: false,
 						fileName: appIcon?.title?.en_US as string,
-						id: appIcon?.externalReferenceCode as unknown as string,
+						id: appIcon?.externalReferenceCode as string,
 						preview: _product.thumbnail,
 						progress: 100,
 						uploaded: true,

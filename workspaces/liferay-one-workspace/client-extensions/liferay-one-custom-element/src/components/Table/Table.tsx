@@ -52,7 +52,7 @@ type PaginationProps = {
 	totalItems: number;
 };
 
-const Table: React.FC<TableProps> = ({
+const Table = <T extends Record<string, unknown>>({
 	Actions,
 	children,
 	className,
@@ -64,7 +64,7 @@ const Table: React.FC<TableProps> = ({
 	onClickRow,
 	paginationProps,
 	rows,
-}) => {
+}: TableProps<T>) => {
 	return (
 		<>
 			<ClayTable

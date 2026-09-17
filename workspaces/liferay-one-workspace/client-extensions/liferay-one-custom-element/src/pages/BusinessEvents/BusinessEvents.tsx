@@ -10,9 +10,7 @@ import ClayIcon from '@clayui/icon';
 import {useModal} from '@clayui/modal';
 import {useCallback, useMemo, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
-import Table, {
-	IRow,
-} from '~/components/BusinessEventsTable/BusinessEventsTable';
+import Table from '~/components/BusinessEventsTable/BusinessEventsTable';
 import Loading from '~/components/Loading/Loading';
 import ProjectSelector from '~/components/ProjectSelector/ProjectSelector';
 import RestrictedFeatureMessage from '~/components/RestrictedFeatureMessage/RestrictedFeatureMessage';
@@ -461,10 +459,7 @@ const BusinessEvents = () => {
 			<div>
 				{filteredBusinessEvents.length ? (
 					<>
-						<Table
-							columns={columns}
-							rows={rows as unknown as IRow[]}
-						/>
+						<Table columns={columns} rows={rows} />
 
 						{selectedBusinessEvent && open && (
 							<ManageEventModal

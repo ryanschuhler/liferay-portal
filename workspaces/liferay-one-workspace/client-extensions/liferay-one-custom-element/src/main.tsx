@@ -73,8 +73,7 @@ class WebComponent extends HTMLElement {
 					<SWRConfig
 						value={{
 							fetcher,
-							provider:
-								SWRCacheProvider as unknown as CacheProvider,
+							provider: SWRCacheProvider as CacheProvider,
 							revalidateIfStale: true,
 							revalidateOnFocus: false,
 						}}

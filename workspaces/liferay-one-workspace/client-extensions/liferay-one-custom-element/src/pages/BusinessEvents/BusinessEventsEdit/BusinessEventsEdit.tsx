@@ -63,7 +63,7 @@ const BusinessEventsEditPage: React.FC<IProps> = ({originalBusinessEvent}) => {
 	} = useFormContext();
 
 	const values = watch();
-	const businessEvent = values.businessEvent as unknown as IBusinessEvent;
+	const businessEvent = values.businessEvent as IBusinessEvent;
 
 	const setFieldValue = useCallback(
 		(
