@@ -70,6 +70,15 @@ export type TextImageBlock = {
 	type: 'text-images-block';
 };
 
+export type StoredTextImageBlock = {
+	content: {
+		description: string;
+		files: string[];
+		title: string;
+	};
+	type: 'text-images-block';
+};
+
 export type TextVideoBlock = {
 	content: {
 		description: string;
@@ -81,6 +90,11 @@ export type TextVideoBlock = {
 };
 
 export type ContentBlock = TextBlock | TextImageBlock | TextVideoBlock;
+
+export type StoredContentBlock =
+	| StoredTextImageBlock
+	| TextBlock
+	| TextVideoBlock;
 
 export type HeaderContentType =
 	| HeaderContentTypeEmbeded
@@ -358,7 +372,7 @@ const reducer = (state: SolutionInitialState, action: AppActions) => {
 				const blocks = safeJSONParse(
 					blockDetails,
 					solutionInitialState.details
-				) as ContentBlock[];
+				) as StoredContentBlock[];
 
 				const newBlocks = blocks.map((block) => {
 					if (block.type === 'text-images-block') {
@@ -369,8 +383,7 @@ const reducer = (state: SolutionInitialState, action: AppActions) => {
 								files: block.content.files?.map((file) => {
 									const image = solutionDetailsImages.find(
 										({externalReferenceCode}) =>
-											externalReferenceCode ===
-											(file as unknown as string)
+											externalReferenceCode === file
 									);
 
 									const newFile = {
