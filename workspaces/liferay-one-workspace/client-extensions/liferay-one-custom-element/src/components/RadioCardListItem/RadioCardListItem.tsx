@@ -50,6 +50,14 @@ const RadioCardListItem = ({
 				}
 			)}
 			onClick={() => selectRadio()}
+			onKeyDown={(event) => {
+				if (event.key === 'Enter' || event.key === ' ') {
+					event.preventDefault();
+					selectRadio();
+				}
+			}}
+			role="button"
+			tabIndex={0}
 		>
 			<div className="col">
 				<div

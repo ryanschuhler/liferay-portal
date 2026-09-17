@@ -48,6 +48,12 @@ const RadioCard = ({
 			className
 		)}
 		onClick={disabled ? undefined : onChange}
+		onKeyDown={(event) => {
+			if (!disabled && (event.key === 'Enter' || event.key === ' ')) {
+				event.preventDefault();
+				onChange?.();
+			}
+		}}
 		role="button"
 		tabIndex={disabled ? -1 : 0}
 		title={tooltip}

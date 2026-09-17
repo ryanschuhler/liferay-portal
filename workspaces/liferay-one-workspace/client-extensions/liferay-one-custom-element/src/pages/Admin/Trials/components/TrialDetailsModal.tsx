@@ -111,8 +111,8 @@ const TrialDetailsModal: React.FC<TrialDetailsProps> = ({order}) => {
 				{
 					title: 'Error',
 					value: (
-						<span
-							className="cursor-pointer text-secondary"
+						<button
+							className="btn btn-unstyled cursor-pointer text-secondary"
 							onClick={() =>
 								alert(
 									JSON.stringify(
@@ -122,9 +122,10 @@ const TrialDetailsModal: React.FC<TrialDetailsProps> = ({order}) => {
 									)
 								)
 							}
+							type="button"
 						>
 							{i18n.translate('details')}
-						</span>
+						</button>
 					),
 					visible: !!trialError,
 				},

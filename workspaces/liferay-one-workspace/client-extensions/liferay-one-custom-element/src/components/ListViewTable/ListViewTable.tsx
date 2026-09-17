@@ -179,18 +179,19 @@ const ListViewTable = <T extends Record<string, unknown>>({
 							key={String(column.id)}
 						>
 							<span className="d-flex justify-content-between">
-								<span
-									className={classNames({
-										'cursor-pointer': column.sortable,
-									})}
-									onClick={() => {
-										if (column.sortable) {
-											changeSort(column.id.toString());
+								{column.sortable ? (
+									<button
+										className="btn btn-unstyled cursor-pointer"
+										onClick={() =>
+											changeSort(column.id.toString())
 										}
-									}}
-								>
-									{column.name}
-								</span>
+										type="button"
+									>
+										{column.name}
+									</button>
+								) : (
+									<span>{column.name}</span>
+								)}
 
 								{column.sortable && (
 									<ClayIcon

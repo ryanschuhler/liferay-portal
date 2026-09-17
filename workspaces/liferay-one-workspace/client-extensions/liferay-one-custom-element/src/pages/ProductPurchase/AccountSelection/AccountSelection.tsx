@@ -110,6 +110,15 @@ const AccountSelection = () => {
 							)}
 							key={account.id}
 							onClick={() => setSelectedAccount(account)}
+							onKeyDown={(event) => {
+								if (
+									event.key === 'Enter' ||
+									event.key === ' '
+								) {
+									event.preventDefault();
+									setSelectedAccount(account);
+								}
+							}}
 							role="button"
 							tabIndex={0}
 						>

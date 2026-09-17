@@ -57,10 +57,7 @@ const FilterNavigation: React.FC<IProps> = ({
 			<div className="drilldown-item-inner">
 				{header && (
 					<>
-						<div
-							className="dropdown-header text-neutral-8"
-							onClick={onBack}
-						>
+						<div className="dropdown-header text-neutral-8">
 							<ClayButtonWithIcon
 								aria-label={header}
 								className="component-action dropdown-item-indicator-start text-neutral-2"
