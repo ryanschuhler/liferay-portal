@@ -32,6 +32,8 @@ import {safeJSONParse} from '~/utils/safeJSONParse';
 
 import './ManagementToolbarFilters.css';
 
+import type {Filter} from '~/services/fetcher/CreateFilters';
+
 type ManagementToolbarFilterProps = {
 	availableOptions?: FieldOptions;
 	filterSchema?: FilterSchema;
@@ -205,17 +207,21 @@ const FilterBody: React.FC<FilterBodyProps> = ({
 				value: filterCleaned[key] as string,
 			}));
 
+			const toFilterValue = (value: Filter[string]) => {
+				if (!Array.isArray(value)) {
+					return value;
+				}
+
+				return value.map((option) =>
+					typeof option === 'object'
+						? option.value || option.label
+						: option
+				);
+			};
+
 			const filters = Object.keys(filterCleaned).map((key) => ({
 				name: key,
-				value: Array.isArray(filterCleaned[key])
-					? (filterCleaned as unknown as Record<string, Option[]>)[
-							key
-						].map((options: Option) =>
-							options?.value
-								? options?.value
-								: options?.label || options
-						)
-					: filterCleaned[key],
+				value: toFilterValue(filterCleaned[key]),
 			}));
 
 			const formattedFilter = filters.reduce(

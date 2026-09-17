@@ -98,11 +98,9 @@ const PublisherRequestModal: React.FC<PublisherRequestModalProps> = ({
 						publisherType: Array.isArray(
 							selectedRequest?.publisherType
 						)
-							? (
-									selectedRequest?.publisherType as unknown as {
-										name: string;
-									}[]
-								)?.map(({name}) => name)
+							? selectedRequest.publisherType.map((type) =>
+									typeof type === 'string' ? type : type.name
+								)
 							: ['App Publisher'],
 					} as PublisherRequestInfo
 				}

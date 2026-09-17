@@ -25,13 +25,14 @@ const FormMultiSelect: React.FC<MultiSelectProps> = ({
 	value,
 }) => {
 	const [visible, setVisible] = useState(false);
-	const multiselectRef = useRef<{blur?: () => void} | null>(null);
+	const multiselectRef =
+		useRef<SelectInstance<unknown, true, GroupBase<unknown>>>(null);
 
 	useEffect(() => {
 		const current = multiselectRef.current;
 
 		if (!visible) {
-			current?.blur?.();
+			current?.blur();
 		}
 	}, [visible]);
 
@@ -67,11 +68,7 @@ const FormMultiSelect: React.FC<MultiSelectProps> = ({
 				onMenuClose={() => setVisible(false)}
 				openMenuOnClick
 				options={options}
-				ref={
-					multiselectRef as unknown as React.RefObject<
-						SelectInstance<unknown, true, GroupBase<unknown>>
-					>
-				}
+				ref={multiselectRef}
 				tabSelectsValue={false}
 				value={value as PropsValue<unknown>}
 			/>

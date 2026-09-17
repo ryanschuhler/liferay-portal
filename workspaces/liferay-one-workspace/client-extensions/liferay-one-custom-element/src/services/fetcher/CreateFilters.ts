@@ -7,8 +7,13 @@ import {FilterVariables, RendererFields} from '~/types/filters';
 
 import SearchBuilder from './SearchBuilder';
 
-type Filter = {
-	[key: string]: string | number | string[] | number[];
+export type Filter = {
+	[key: string]:
+		| number
+		| number[]
+		| string
+		| string[]
+		| {label: string; value: string}[];
 };
 
 type Value = string | number | boolean | null;

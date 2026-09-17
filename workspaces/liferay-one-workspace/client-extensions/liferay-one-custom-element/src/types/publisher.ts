@@ -41,7 +41,7 @@ export type PublisherRequestInfo = {
 		flag: string;
 	};
 	phoneNumber?: string;
-	publisherType: string[];
+	publisherType: ({name: string} | string)[];
 	requestDescription?: string;
 	requestStatus?: {
 		key: string;
