@@ -24,7 +24,6 @@ import {Liferay} from '~/services/liferay/liferay';
 import {OrderCustomFields} from '~/utils/orderUtils';
 import {getProductType} from '~/utils/productUtils';
 
-import type {Account} from '~/types/accounts';
 import type {DeliveryProduct} from '~/types/product';
 
 type NewTrialModalProps = {
@@ -93,7 +92,7 @@ const NewTrialModal: React.FC<NewTrialModalProps> = ({onClose, revalidate}) => {
 
 		const account = accountBriefs.find(
 			({id}) => id === Number(form.accountId)
-		) as unknown as Account;
+		)!;
 
 		const productPurchase = new ProductPurchaseSolutionTrial(
 			account,

@@ -15,7 +15,7 @@ import HeadlessCommerceAdminOrder from '~/services/headless/HeadlessCommerceAdmi
 import trialOAuth2, {Availability} from '~/services/spring-boot/Trial';
 import {OrderWorkflowStatusCode} from '~/utils/orderUtils';
 
-import type {PlacedOrder} from '~/types/orders';
+import type {Order} from '~/types/orders';
 
 const ACTIVE_REFRESH_INTERVAL = 60 * 1000;
 const DEFAULT_REFRESH_INTERVAL = 240 * 1000;
@@ -101,7 +101,7 @@ const useTrialMetrics = (param: MetricPeriod) => {
 		onHoldResponse,
 	] = trialDataResponse as [
 		Availability | undefined,
-		{items?: PlacedOrder[]; totalCount?: number} | undefined,
+		{items?: Order[]; totalCount?: number} | undefined,
 		{totalCount?: number} | undefined,
 		{totalCount?: number} | undefined,
 		{totalCount?: number} | undefined,

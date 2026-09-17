@@ -19,7 +19,7 @@ export default class ProductPurchase {
 	protected HeadlessCommerceDeliveryCart = HeadlessCommerceDeliveryCart;
 
 	constructor(
-		protected readonly account: Account,
+		protected readonly account: Pick<Account, 'id'>,
 		protected readonly product: DeliveryProduct
 	) {}
 

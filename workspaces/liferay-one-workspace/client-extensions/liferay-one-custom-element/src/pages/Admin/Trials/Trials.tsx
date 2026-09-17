@@ -14,8 +14,6 @@ import {Availability} from '~/services/spring-boot/Trial';
 import TrialTable from './components/TrialTable';
 import useTrialMetrics from './hooks/useTrialMetrics';
 
-import type {Order} from '~/types/orders';
-
 const getAvailabilityResourceLabel = (availability: Availability) => {
 	if (availability.fallback) {
 		return i18n.translate('deactivated');
@@ -131,9 +129,7 @@ export default function Trials() {
 
 				<div className="border d-flex flex-column justify-content-center p-6 rounded-lg">
 					<TrialTable
-						items={
-							(orderTableData?.items as unknown as Order[]) || []
-						}
+						items={orderTableData?.items || []}
 						revalidate={mutate}
 					/>
 				</div>
