@@ -11,6 +11,7 @@ import {
 	PROJECT_ROLE_ERCS,
 } from '~/pages/MyAccount/ProjectMembers/projectRoles';
 import {Liferay} from '~/services/liferay/liferay';
+import SearchBuilder from '~/utils/SearchBuilder';
 
 import type {
 	AccountMemberOption,
@@ -46,7 +47,10 @@ export function useProjectMembers() {
 	>(accountId ? '/o/c/projects' : null, {
 		params: {
 			fields: 'externalReferenceCode,id,name',
-			filter: `r_accountEntryToProject_accountEntryId eq '${accountId}'`,
+			filter: SearchBuilder.eq(
+				'r_accountEntryToProject_accountEntryId',
+				accountId ?? ''
+			),
 			pageSize: -1,
 			sort: 'name:asc',
 		},
@@ -61,7 +65,10 @@ export function useProjectMembers() {
 		{
 			params: {
 				fields: 'id,r_projectToProjectMembership_c_projectERC,r_userToProjectMembership_userId,roleExternalReferenceCode',
-				filter: `r_accountEntryToProjectMembership_accountEntryId eq '${accountId}'`,
+				filter: SearchBuilder.eq(
+					'r_accountEntryToProjectMembership_accountEntryId',
+					accountId ?? ''
+				),
 				pageSize: -1,
 			},
 		}

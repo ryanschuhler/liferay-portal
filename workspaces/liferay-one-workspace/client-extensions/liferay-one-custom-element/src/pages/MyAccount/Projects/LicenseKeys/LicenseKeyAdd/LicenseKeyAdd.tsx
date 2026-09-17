@@ -13,6 +13,7 @@ import {ProjectProduct} from '~/hooks/useProjectCommerce';
 import {translate} from '~/i18n';
 import commerceSchemas from '~/schema/commerceSchemas';
 import LicenseKeys from '~/services/objects/LicenseKeys';
+import {toISODateFromDateInput} from '~/utils/dateUtils';
 
 const CLUSTER_KEY_TYPES = ['cluster', 'developer-cluster', 'virtual-cluster'];
 
@@ -55,10 +56,6 @@ type LicenseKeyAddProps = {
 	products: ProjectProduct[];
 	projectExternalReferenceCode?: string;
 };
-
-function toISODate(value?: string): string | undefined {
-	return value ? new Date(value).toISOString() : undefined;
-}
 
 export default function LicenseKeyAdd({
 	accountId,
@@ -189,7 +186,9 @@ export default function LicenseKeyAdd({
 							] ?? '',
 					})),
 				}),
-				customExpirationDate: toISODate(values.expirationDate),
+				customExpirationDate: toISODateFromDateInput(
+					values.expirationDate
+				),
 				description: values.description || undefined,
 				domains: values.domains,
 				hostName: values.hostName || undefined,
@@ -208,7 +207,7 @@ export default function LicenseKeyAdd({
 					: undefined,
 				r_projectToLicenseKey_c_projectERC:
 					projectExternalReferenceCode || undefined,
-				startDate: toISODate(values.startDate),
+				startDate: toISODateFromDateInput(values.startDate),
 			});
 
 			onGenerated();

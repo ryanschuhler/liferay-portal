@@ -8,6 +8,7 @@ import {useDataQuery} from '~/hooks/useDataQuery';
 import {useFetch} from '~/hooks/useFetch';
 import {queryGraphQL, toGraphQLString} from '~/services/graphql/GraphQL';
 import {Liferay} from '~/services/liferay/liferay';
+import SearchBuilder from '~/utils/SearchBuilder';
 
 import type {UserProject} from '~/pages/MyAccount/Projects/types';
 import type {APIResponse, DataQuery} from '~/types/api';
@@ -58,7 +59,14 @@ export function useUserProjects(): {
 	>(enabled && !showAllAccountProjects ? '/o/c/projectmemberships' : null, {
 		params: {
 			fields: 'r_projectToProjectMembership_c_projectERC',
-			filter: `r_accountEntryToProjectMembership_accountEntryId eq '${accountId}' and r_userToProjectMembership_userId eq '${userId}'`,
+			filter: new SearchBuilder({useURIEncode: false})
+				.eq(
+					'r_accountEntryToProjectMembership_accountEntryId',
+					accountId ?? ''
+				)
+				.and()
+				.eq('r_userToProjectMembership_userId', userId)
+				.build(),
 			pageSize: 200,
 		},
 	});

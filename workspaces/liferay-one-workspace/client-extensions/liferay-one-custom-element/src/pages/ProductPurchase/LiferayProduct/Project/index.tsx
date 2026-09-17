@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import DOMPurify from 'dompurify';
 import Loading from '~/components/Loading/Loading';
 import ProductPurchase from '~/components/ProductPurchase/ProductPurchase';
 import RadioCardList, {
@@ -14,6 +15,7 @@ import i18n from '~/i18n';
 import {useProductPurchaseLayoutContext} from '~/pages/ProductPurchase/components/ProductPurchaseLayout/ProductPurchaseLayout';
 import {useAppPurchaseContext} from '~/pages/ProductPurchase/context/AppPurchaseContextProvider';
 import {Liferay} from '~/services/liferay/liferay';
+import SearchBuilder from '~/utils/SearchBuilder';
 
 import NoProjectAvailable from './NoProjectAvailable/NoProjectAvailable';
 
@@ -40,7 +42,10 @@ const ProjectSelection = () => {
 		APIResponse<ProjectAPIItem>
 	>(selectedAccount?.id ? '/o/c/projects' : null, {
 		params: {
-			filter: `r_accountEntryToProject_accountEntryId eq '${selectedAccount.id}'`,
+			filter: SearchBuilder.eq(
+				'r_accountEntryToProject_accountEntryId',
+				selectedAccount.id
+			),
 			pageSize: 200,
 			sort: 'name:asc',
 		},
@@ -76,10 +81,12 @@ const ProjectSelection = () => {
 			<span
 				className="mb-4 secondary-text"
 				dangerouslySetInnerHTML={{
-					__html: i18n.sub('x-available-for-you', [
-						'projects-and-resources',
-						Liferay.ThemeDisplay.getUserEmailAddress(),
-					]),
+					__html: DOMPurify.sanitize(
+						i18n.sub('x-available-for-you', [
+							'projects-and-resources',
+							Liferay.ThemeDisplay.getUserEmailAddress(),
+						])
+					),
 				}}
 			/>
 			<RadioCardList<ProjectAPIItem>

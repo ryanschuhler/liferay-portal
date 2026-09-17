@@ -6,6 +6,7 @@
 import {useProject} from '~/context/ProjectContextProvider';
 import {useFetch} from '~/hooks/useFetch';
 import {isUnassignedProject} from '~/pages/MyAccount/Projects/utils/isUnassignedProject';
+import SearchBuilder from '~/utils/SearchBuilder';
 
 import type {APIResponse} from '~/types/api';
 
@@ -86,7 +87,10 @@ export function useProjectUsage() {
 		projectExternalReferenceCode ? '/o/c/entitlements' : null,
 		{
 			params: {
-				filter: `r_projectToEntitlement_c_projectERC eq '${projectExternalReferenceCode}'`,
+				filter: SearchBuilder.eq(
+					'r_projectToEntitlement_c_projectERC',
+					projectExternalReferenceCode ?? ''
+				),
 				nestedFields: 'entitlementDefinition',
 				pageSize: 200,
 			},

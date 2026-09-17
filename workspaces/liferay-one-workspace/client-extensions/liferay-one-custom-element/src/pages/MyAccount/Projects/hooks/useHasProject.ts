@@ -5,6 +5,7 @@
 
 import {useFetch} from '~/hooks/useFetch';
 import {Liferay} from '~/services/liferay/liferay';
+import SearchBuilder from '~/utils/SearchBuilder';
 
 import type {APIResponse} from '~/types/api';
 
@@ -20,7 +21,10 @@ export function useHasProject(): {hasProject: boolean; loading: boolean} {
 		{
 			params: {
 				fields: 'id',
-				filter: `r_accountEntryToProject_accountEntryId eq '${accountId}'`,
+				filter: SearchBuilder.eq(
+					'r_accountEntryToProject_accountEntryId',
+					accountId ?? ''
+				),
 				pageSize: 1,
 			},
 		}

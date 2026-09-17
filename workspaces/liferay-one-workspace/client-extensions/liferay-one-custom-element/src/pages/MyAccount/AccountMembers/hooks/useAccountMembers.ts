@@ -14,6 +14,7 @@ import {
 import {getProjectRoleLabel} from '~/pages/MyAccount/ProjectMembers/projectRoles';
 import {Liferay} from '~/services/liferay/liferay';
 import Accounts from '~/services/spring-boot/Accounts';
+import SearchBuilder from '~/utils/SearchBuilder';
 
 import type {AccountMemberRow} from '~/pages/MyAccount/AccountMembers/types';
 import type {Account, UserAccount} from '~/types/accounts';
@@ -63,7 +64,7 @@ export function useAccountMembers() {
 		isLoading: userAccountsLoading,
 		mutate: mutateUserAccounts,
 	} = useFetch<APIResponse<UserAccount>>(
-		accountId
+		accountId ?? ''
 			? `/o/headless-admin-user/v1.0/accounts/${accountId}/user-accounts`
 			: null,
 		{params: {pageSize: -1, sort: 'givenName:asc'}}
@@ -87,7 +88,10 @@ export function useAccountMembers() {
 		{
 			params: {
 				fields: 'externalReferenceCode,name',
-				filter: `r_accountEntryToProject_accountEntryId eq '${accountId}'`,
+				filter: SearchBuilder.eq(
+					'r_accountEntryToProject_accountEntryId',
+					accountId ?? ''
+				),
 				pageSize: -1,
 			},
 		}

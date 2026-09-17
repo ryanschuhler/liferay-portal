@@ -5,6 +5,7 @@
 
 import {useFetch} from '~/hooks/useFetch';
 import {Liferay} from '~/services/liferay/liferay';
+import SearchBuilder from '~/utils/SearchBuilder';
 
 import type {APIResponse} from '~/types/api';
 
@@ -78,7 +79,10 @@ export function useProjectEnvironments() {
 		accountId ? '/o/c/environments' : null,
 		{
 			params: {
-				filter: `r_accountEntryToEnvironment_accountEntryId eq '${accountId}'`,
+				filter: SearchBuilder.eq(
+					'r_accountEntryToEnvironment_accountEntryId',
+					accountId ?? ''
+				),
 				pageSize: 200,
 				sort: 'offering:asc',
 			},

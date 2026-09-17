@@ -228,6 +228,14 @@ export function shiftUTCMonths(
 	);
 }
 
+export function toISODateFromDateInput(value?: string): string | undefined {
+	if (!value) {
+		return undefined;
+	}
+
+	return new Date(`${value}T12:00:00`).toISOString();
+}
+
 export function toSlashDateUTC(date: Date): string {
 	const [year, month, day] = toUTCDateString(date).split('-');
 

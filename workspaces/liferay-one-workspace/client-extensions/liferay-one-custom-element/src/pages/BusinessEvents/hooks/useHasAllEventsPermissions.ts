@@ -6,6 +6,7 @@
 import {useOneContext} from '~/context/OneContextProvider';
 import {useFetch} from '~/hooks/useFetch';
 import {Liferay} from '~/services/liferay/liferay';
+import SearchBuilder from '~/utils/SearchBuilder';
 
 import type {APIResponse} from '~/types/api';
 
@@ -39,7 +40,14 @@ export default function useHasAllEventsPermissions(projectERC?: string): {
 		{
 			params: {
 				fields: 'roleExternalReferenceCode',
-				filter: `r_projectToProjectMembership_c_projectERC eq '${projectERC}' and r_userToProjectMembership_userId eq '${userId}'`,
+				filter: new SearchBuilder({useURIEncode: false})
+					.eq(
+						'r_projectToProjectMembership_c_projectERC',
+						projectERC ?? ''
+					)
+					.and()
+					.eq('r_userToProjectMembership_userId', userId)
+					.build(),
 				pageSize: 1,
 			},
 		}
