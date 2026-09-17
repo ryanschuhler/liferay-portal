@@ -9,7 +9,7 @@ import ButtonWithIcon from '~/components/ButtonWithIcon/ButtonWithIcon';
 import {Section} from '~/components/Section/Section';
 import {
 	LicensePrice,
-	LicensingPrices,
+	LicenseTierPrices,
 	NewAppTypes,
 	useNewAppContext,
 } from '~/context/NewAppContextProvider';
@@ -40,7 +40,7 @@ const licensePrices = [
 
 type LicensePricePanelProps = {
 	currencyCode: string;
-	tierPrices: LicensingPrices;
+	tierPrices: LicenseTierPrices;
 };
 
 const LicensePricePanel: React.FC<LicensePricePanelProps> = ({
@@ -140,7 +140,7 @@ const LicensePricePanel: React.FC<LicensePricePanelProps> = ({
 						index
 					) => {
 						const showSection =
-							ProductTypeLicenseOptions[appType]?.includes(
+							ProductTypeLicenseOptions[appType!]?.includes(
 								licenseType
 							);
 

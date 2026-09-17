@@ -272,7 +272,7 @@ export default class AppPublish extends BaseAppPublish {
 			vocabulariesAndCategories[
 				ProductVocabulary.LIFERAY_PLATFORM_OFFERING
 			]?.categories ?? [];
-		const platformOfferingLabels = getOfferingTypes(appType);
+		const platformOfferingLabels = getOfferingTypes(appType!);
 		const compatibleOfferings = compatibleOfferingCategories
 			.filter(({name}: {name: string}) =>
 				platformOfferingLabels.includes(name as ProductOfferingTypes)
@@ -617,10 +617,7 @@ export default class AppPublish extends BaseAppPublish {
 				);
 
 				if (priceEntry) {
-					await this.updatePriceEntry(
-						priceEntry,
-						tierPricesEntries
-					);
+					await this.updatePriceEntry(priceEntry, tierPricesEntries);
 
 					continue;
 				}
@@ -650,12 +647,7 @@ export default class AppPublish extends BaseAppPublish {
 				priceEntry.priceEntryId
 			);
 
-		if (
-			!isTierPriceChanged(
-				tierPrices,
-				tierPricesEntries
-			)
-		) {
+		if (!isTierPriceChanged(tierPrices, tierPricesEntries)) {
 			return;
 		}
 

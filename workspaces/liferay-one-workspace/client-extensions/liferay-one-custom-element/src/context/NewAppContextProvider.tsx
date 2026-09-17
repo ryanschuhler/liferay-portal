@@ -31,16 +31,12 @@ import type {Product, ProductLicenseTier, ProductType} from '~/types/product';
 export type LicensePrice = {key: number; value: number};
 export type LicenseType = 'Perpetual' | 'Subscription';
 
+export type LicenseTierPrices = {
+	[licenseTier: string]: {[quantity: number]: number};
+};
+
 export type LicensingPrices = {
-	[currency: string]: {
-		developer?: {
-			[key: number]: number;
-		};
-		standard: {
-			[key: number]: number;
-		};
-		trial?: undefined;
-	};
+	[currency: string]: LicenseTierPrices;
 };
 
 export type LiferayPackage = {
@@ -86,7 +82,7 @@ export enum NewAppTypes {
 export type NewAppInitialState = {
 	_product?: Product;
 	build: {
-		appType: ProductType;
+		appType: ProductType | null;
 
 		liferayPackages: LiferayPackage[];
 		resourceRequirements: {
@@ -183,7 +179,7 @@ type NewAppPayload = {
 
 const newAppInitialState: NewAppInitialState = {
 	build: {
-		appType: null as unknown as ProductType,
+		appType: null,
 		liferayPackages: [],
 		resourceRequirements: {
 			cpu: '',

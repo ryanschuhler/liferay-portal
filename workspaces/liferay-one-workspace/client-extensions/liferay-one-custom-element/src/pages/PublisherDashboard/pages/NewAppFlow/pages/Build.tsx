@@ -251,7 +251,7 @@ const Build = () => {
 								onClick={() => setActive(!active)}
 							>
 								<div className="align-items-center d-flex justify-content-between w-100">
-									<span>{getType(appType)}</span>
+									<span>{getType(appType!)}</span>
 
 									<ClayIcon symbol="caret-bottom" />
 								</div>

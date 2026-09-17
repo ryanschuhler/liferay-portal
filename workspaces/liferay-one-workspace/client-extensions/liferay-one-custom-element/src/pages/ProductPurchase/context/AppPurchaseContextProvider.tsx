@@ -30,7 +30,7 @@ type Payment = {
 type AppPurchaseState = {
 	licenseType: LicenseType;
 	payment: Payment;
-	project: ConsoleUserProject;
+	project: ConsoleUserProject | null;
 	salesforceContract: SalesforceContract | null;
 	salesforceProject: SalesforceProject | null;
 };
@@ -68,7 +68,7 @@ const initialState: AppPurchaseState = {
 		taxId: '',
 		type: PaymentMethodType.PAY_NOW,
 	},
-	project: null as unknown as ConsoleUserProject,
+	project: null,
 	salesforceContract: null,
 	salesforceProject: null,
 };
