@@ -9,7 +9,7 @@ import {DropzoneUpload} from '~/components/DropzoneUpload/DropzoneUpload';
 import {FileList, UploadedFile} from '~/components/FileList/FileList';
 import Form from '~/components/MarketplaceForm/MarketplaceForm';
 import RichText from '~/components/RichText/RichText';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {ACCEPT_FILE_TYPES} from '~/types/file';
 import {
 	MAX_DESCRIPTION_LENGTH,
@@ -66,7 +66,7 @@ const TextAndImages = ({
 					maxLength={MAX_TITLE_LENGTH}
 					name="title"
 					onChange={(event) => onChange({title: event.target.value})}
-					placeholder="Enter title"
+					placeholder={translate('enter-title')}
 					type="text"
 					value={content.title ?? ''}
 				/>

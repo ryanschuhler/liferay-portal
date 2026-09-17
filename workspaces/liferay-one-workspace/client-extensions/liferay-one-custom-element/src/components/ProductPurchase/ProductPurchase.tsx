@@ -10,7 +10,7 @@ import ClaySticker from '@clayui/sticker';
 import classNames from 'classnames';
 import {ComponentProps, ReactElement, ReactNode} from 'react';
 import createdProjectIcon from '~/assets/images/created_project.svg';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {useProductPurchaseLayoutContext as useProductPurchaseOutletContext} from '~/pages/ProductPurchase/components/ProductPurchaseLayout/ProductPurchaseLayout';
 import {Liferay} from '~/services/liferay/liferay';
 import {getSiteURL} from '~/utils/siteUtils';
@@ -69,7 +69,7 @@ const ProductPurchaseFeedback: React.FC<ProductPurchaseFeedbackProps> & {
 			)}
 		>
 			<img
-				alt="project icon"
+				alt={translate('project-icon')}
 				className="gate-card-image mb-6"
 				draggable={false}
 				src={createdProjectIcon}
@@ -216,7 +216,7 @@ const ProductPurchaseHeader: React.FC<ProductPurchaseHeaderProps> = ({
 			<div className="d-flex flex-row justify-content-between">
 				<div className="d-flex flex-row">
 					<img
-						alt="App Icon"
+						alt={translate('app-icon')}
 						className="object-fit-cover rounded"
 						draggable={false}
 						height="64px"

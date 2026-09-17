@@ -13,7 +13,7 @@ import Loading from '~/components/Loading/Loading';
 import Table from '~/components/Table/Table';
 import {useConfirmationModal} from '~/hooks/useConfirmationModal';
 import useModalContext from '~/hooks/useModalContext';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import HeadlessCommerceAdminOrder from '~/services/headless/HeadlessCommerceAdminOrder';
 import trialOAuth2 from '~/services/spring-boot/Trial';
 import {OrderCustomFields, OrderWorkflowStatusCode} from '~/utils/orderUtils';
@@ -277,7 +277,9 @@ const TrialTable: React.FC<TrialTableProps> = ({items, revalidate}) => {
 									filterKey="name"
 									trigger={
 										<ClayButton
-											aria-label="Action Dropdown"
+											aria-label={translate(
+												'action-dropdown'
+											)}
 											displayType="unstyled"
 										>
 											<ClayIcon symbol="ellipsis-v" />

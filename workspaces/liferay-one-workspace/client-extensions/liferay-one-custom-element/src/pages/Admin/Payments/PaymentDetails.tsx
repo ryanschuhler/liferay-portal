@@ -14,7 +14,7 @@ import PaymentDetailsHeader from '~/components/PaymentDetailsHeader/PaymentDetai
 import PaymentStatusBadge from '~/components/PaymentStatusBadge/PaymentStatusBadge';
 import Table from '~/components/Table/Table';
 import usePublisherSalesSummaryObject from '~/hooks/usePublisherSalesSummaryObject';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {Liferay} from '~/services/liferay/liferay';
 import PublisherSalesSummaries from '~/services/objects/PublisherSalesSummaries';
 import {formatDateTime} from '~/utils/dateUtils';
@@ -343,7 +343,7 @@ const PaymentDetails = () => {
 									<div className="pt-2">
 										<div className="d-flex">
 											<img
-												alt="App Icon"
+												alt={translate('app-icon')}
 												className="app-details-page-table-icon mr-2"
 												draggable={false}
 												src={placedOrderItem.thumbnail}

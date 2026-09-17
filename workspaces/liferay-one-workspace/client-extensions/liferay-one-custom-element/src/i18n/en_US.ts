@@ -8,6 +8,7 @@ import {Liferay} from '~/services/liferay/liferay';
 export default {
 	'1-data-source': '1 Data Source',
 	'1-ticket': '1 Ticket',
+	'30-day-trial': '30-day Trial',
 	'a-request-will-be-sent-to-deactivate-the-selected-activation-key-from-now-on-it-will-be-hidden-and-no-longer-visible':
 		'A request will be sent to deactivate the selected activation key. From now on, it will be hidden and no longer visible.',
 	'a-role-is-required': 'A role is required.',
@@ -32,6 +33,7 @@ export default {
 	'account-type': 'Account Type',
 	'accounts': 'Accounts',
 	'accounts-available-for-x-you': 'Accounts available for {0} (you)',
+	'action-dropdown': 'Action Dropdown',
 	'actions': 'Actions',
 	'activate': 'Activate',
 	'activated': 'Activated',
@@ -94,6 +96,7 @@ export default {
 	'ai-hub-account-name': 'AI Hub Account Name',
 	'ai-hub-details': 'AI Hub Details',
 	'ai-hub-information': 'AI Hub Information',
+	'ai-hub-token-icon': 'AI Hub Token Icon',
 	'ai-hub-url': 'AI Hub URL',
 	'all': 'All',
 	'all-commerce-modules-are-enabled-by-default':
@@ -150,12 +153,17 @@ export default {
 	'app-build': 'App Build',
 	'app-documentation': 'App Documentation',
 	'app-documentation-url': 'App Documentation URL',
+	'app-icon': 'App Icon',
+	'app-image': 'App Image',
 	'app-installation-and-uninstallation-guide':
 		'App Installation and Uninstallation Guide',
 	'app-installation-and-uninstallation-guide-url':
 		'App Installation and Uninstallation Guide URL',
 	'app-installation-guide-url': 'App Installation Guide URL',
+	'app-license': 'App License',
+	'app-logo': 'App logo',
 	'app-name': 'App Name',
+	'app-price': 'App Price',
 	'app-provisioning': 'App Provisioning',
 	'app-publisher': 'App Publisher',
 	'app-storefront-images': 'App Storefront Images',
@@ -198,6 +206,10 @@ export default {
 		'Are you sure you want to revoke the invitation for {0}? They will no longer be able to join this account with it.',
 	'area': 'Area',
 	'areas': 'Areas',
+	'arrow-left': 'arrow left',
+	'arrow-right': 'Arrow right',
+	'arrow-south': 'Arrow South',
+	'arrow-up': 'Arrow Up',
 	'assign-or-update-the-account-roles-for-x':
 		'Assign or update the account roles for {0}.',
 	'associated-tickets': 'Associated Tickets',
@@ -274,6 +286,7 @@ export default {
 	'category': 'Category',
 	'change': 'Change',
 	'change-planned-event-date': 'Change Planned Event Date',
+	'check-circle-icon': 'check circle icon',
 	'checkout': 'Checkout',
 	'choose-an-option': 'Choose an Option',
 	'choose-block': 'Choose Block',
@@ -438,6 +451,7 @@ export default {
 	'define-version-information-for-your-app-this-will-inform-users-about-this-versions-updates-on-the-storefront':
 		'Define version information for your app. This will inform users about this version’s updates on the storefront.',
 	'delete': 'Delete',
+	'delete-all-prices': 'Delete all prices',
 	'deleting': 'Deleting',
 	'deleting-a-service-cannot-be-undone-confirm-the-deletion-before-proceeding':
 		'Deleting a service cannot be undone! Confirm the deletion before proceeding.',
@@ -461,6 +475,7 @@ export default {
 	'disaster-recovery-data-center-region':
 		'Disaster Recovery Data Center Region',
 	'do-not-close-this-window': 'DO NOT CLOSE THIS WINDOW',
+	'document-icon': 'Document Icon',
 	'documentation': 'Documentation',
 	'does-not-expire': 'Does Not Expire',
 	'doha-qatar': 'Doha, Qatar',
@@ -508,11 +523,14 @@ export default {
 	'end-user-license-agreement': 'End User License Agreement',
 	'enter-administration-email-address': 'Enter administration email address',
 	'enter-app-description': 'Enter app description',
+	'enter-app-name': 'Enter app name',
 	'enter-domain-here': 'Enter domain here',
 	'enter-email-address': 'Enter email address',
 	'enter-ext': 'Enter +ext',
 	'enter-first-name': 'Enter first name',
 	'enter-last-name': 'Enter last name',
+	'enter-solution-description': 'Enter solution description',
+	'enter-solution-name': 'Enter solution name',
 	'enter-the-name-and-a-brief-description-of-the-app-you-would-like-to-submit':
 		'Enter the name and a brief description of the app you would like to submit.',
 	'enter-the-number-of-cpus': 'Enter the number of CPUs',
@@ -520,6 +538,7 @@ export default {
 		'Enter the required CPUs (0 is valid)',
 	'enter-the-required-ram': 'Enter the required RAM',
 	'enter-the-required-ram-0-is-valid': 'Enter the required RAM (0 is valid)',
+	'enter-title': 'Enter title',
 	'enter-title-header': 'Enter title header',
 	'enter-your-company-name': 'Enter your company name',
 	'enter-your-contact-details-in-the-fields-below-in-the-request-description-enter-the-name-and-a-brief-description-of-the-app-you-would-like-to-submit-we-will-be-in-contact-regarding-your-request':
@@ -561,6 +580,8 @@ export default {
 	'exclude': 'Exclude',
 	'excluding-vat': 'Excluding VAT',
 	'exit': 'Exit',
+	'exit-from-creating-a-solution': 'Exit from creating a solution',
+	'exit-from-creating-an-app': 'Exit from creating an App',
 	'exit-from-providing-app-build': 'Exit from providing app build',
 	'exp-date': 'Exp. Date',
 	'experience-management': 'Experience Management',
@@ -603,6 +624,7 @@ export default {
 	'financial-portal': 'Financial Portal',
 	'finish-activation': 'Finish Activation',
 	'first-name': 'First Name',
+	'folder-icon': 'Folder Icon',
 	'for-businesses-with-a-vat-tax-number-this-account-type-support-multiple-users':
 		'For businesses with a VAT/Tax number; this account type support multiple users.',
 	'for-businesses-with-a-vat-tax-number-this-account-type-support-multiple-users-it-also-possible-to-join-an-already-existing-business-account':
@@ -692,6 +714,7 @@ export default {
 		'If you could choose 3 top priorities for improvements, what would they be?',
 	'if-you-need-more-information-about-the-availability-of-your-x-activation-keys-please-ask-one-of-your-administrator-team-members-to-update-your-permissions-so-you-can-contact-liferay-support-alternatively-team-members-with-administrator-or-requester-role-can-submit-a-support-ticket-on-your-behalf':
 		' If you need more information about the availability of your {0} activation keys, please ask one of your Administrator team members to update your permissions, so you can contact Liferay Support. Alternatively, team members with Administrator or Requester role can submit a support ticket on your behalf.',
+	'image-description': 'Image description',
 	'images': 'Images',
 	'important-images-will-be-displayed-following-the-numerical-order-above':
 		'Important: Images will be displayed following the numerical order above.',
@@ -823,6 +846,7 @@ export default {
 		'Lowercase letters, numbers, and dashes only.',
 	'mac-addresses': 'Mac Addresses',
 	'main': 'Main',
+	'main-account-logo': 'Main account logo',
 	'main-information': 'Main Information',
 	'make-sure-the-attachment-id-is-correct':
 		'Make sure the attachment ID is correct.',
@@ -934,6 +958,7 @@ export default {
 	'new-activation-key': 'New Activation Key',
 	'new-address': 'New Address',
 	'new-app': 'New App',
+	'new-app-logo': 'New App logo',
 	'new-attachment': 'New Attachment',
 	'new-key': 'New Key',
 	'new-potential-expiration-date': 'New Potential Expiration Date',
@@ -1065,6 +1090,7 @@ export default {
 	'payment-failed': 'Payment Failed',
 	'payment-method': 'Payment Method',
 	'payment-methods': 'Payment Methods',
+	'payment-pending-icon': 'payment pending icon',
 	'payment-status': 'Payment Status',
 	'payment-summary': 'Payment Summary',
 	'payments': 'Payments',
@@ -1165,6 +1191,7 @@ export default {
 	'project-admin-email': 'Project Admin Email',
 	'project-admin-name': 'Project Admin Name',
 	'project-admins': 'Project Admins',
+	'project-icon': 'project icon',
 	'project-id': 'Project ID',
 	'project-members': 'Project Members',
 	'project-members-successfully-updated':
@@ -1232,6 +1259,7 @@ export default {
 	'purchase-order-number': 'Purchase Order Number',
 	'purchased': 'Purchased',
 	'purchased-by': 'Purchased by',
+	'purchased-order-icon': 'Purchased Order Icon',
 	'purchasing': 'Purchasing',
 	'purpose': 'Purpose',
 	'qty': 'Qty',
@@ -1320,6 +1348,7 @@ export default {
 	'search': 'Search',
 	'search-event-name': 'Search Event Name',
 	'search-for-support-tickets': 'Search for Support Tickets',
+	'search-for-the-app-name': 'Search for the app name',
 	'section-that-shows-the-latest-sales-made':
 		'Section that shows the latest sales made.',
 	'section-that-shows-the-payments': 'Section that shows the payments.',
@@ -1350,6 +1379,8 @@ export default {
 	'select-content-block': 'Select Content Block',
 	'select-contract': 'Select Contract',
 	'select-desired-amount-of-tokens': 'Select Desired Amount of Tokens',
+	'select-desired-currency': 'Select Desired Currency',
+	'select-file': 'Select file',
 	'select-licensing-terms': 'Select Licensing Terms',
 	'select-products': 'Select Products',
 	'select-project': 'Select Project',
@@ -1371,6 +1402,7 @@ export default {
 	'self-managed': 'Self-Managed',
 	'self-service-portal': 'Self-Service Portal',
 	'send-invitation': 'Send Invitation',
+	'send-notification-email': 'Send Notification Email',
 	'send-request': 'Send Request',
 	'set-the-users-role-ssa-users-can-create-trials-while-ssa-admins-can-manage-users-roles-and-trials':
 		'Set the user’s role: SSA Users can create trials, while SSA Admins can manage users, roles, and trials.',
@@ -1467,6 +1499,8 @@ export default {
 	'technology-partnership-with-integrations':
 		'Technology Partnership With Integrations',
 	'telecommunications': 'Telecommunications',
+	'tell-why-you-need-to-extend-the-trial':
+		'Tell why you need to extend the trial',
 	'term': 'Term',
 	'terms': 'Terms',
 	'terms-of-service': 'Terms of Service',
@@ -1670,6 +1704,7 @@ export default {
 	'unable-to-update-publisher-profile': 'Unable to update publisher profile',
 	'under-review': 'Under Review',
 	'uninstall': 'Uninstall',
+	'unit-price': 'Unit Price',
 	'unknown-member': 'Unknown member',
 	'unlimited': 'Unlimited',
 	'unlock-exclusive-benefits-with-a-business-account':
@@ -1722,6 +1757,7 @@ export default {
 	'via-zip-upload': 'Via ZIP Upload',
 	'video': 'Video',
 	'video-description': 'Video description',
+	'video-thumbnail-empty': 'video thumbnail empty',
 	'video-url': 'Video URL',
 	'view': 'View',
 	'view-all': 'View All',

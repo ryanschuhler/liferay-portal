@@ -6,6 +6,7 @@
 import ClayIcon from '@clayui/icon';
 import {ReactNode} from 'react';
 import {Link} from 'react-router-dom';
+import {translate} from '~/i18n';
 
 type BackLinkProps = {
 	children: ReactNode;
@@ -16,7 +17,7 @@ export default function BackLink({children, path = '..'}: BackLinkProps) {
 	return (
 		<Link className="align-items-center d-flex text-dark" to={path}>
 			<ClayIcon
-				aria-label="arrow left"
+				aria-label={translate('arrow-left')}
 				className="mr-2"
 				symbol="order-arrow-left"
 			/>

@@ -6,7 +6,7 @@
 import {Input} from '~/components/Input/Input';
 import {Section} from '~/components/Section/Section';
 import {NewAppTypes, useNewAppContext} from '~/context/NewAppContextProvider';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {ProductSpecificationKey} from '~/utils/productUtils';
 
 const Version = () => {
@@ -25,7 +25,7 @@ const Version = () => {
 
 	return (
 		<Section
-			label="App Version"
+			label={translate('app-version')}
 			tooltip="When adding app versions, you can use your own numbering system, but be sure it is consistent and understandable by the customer."
 			tooltipText="More Info"
 		>
@@ -61,7 +61,7 @@ const Version = () => {
 						type: NewAppTypes.SET_VERSION,
 					})
 				}
-				placeholder="Enter app description"
+				placeholder={translate('enter-app-description')}
 				tooltip="Notes pertaining to the release of the project. These will be displayed when the customer goes to purchase and/or update the app."
 				value={notes}
 			/>

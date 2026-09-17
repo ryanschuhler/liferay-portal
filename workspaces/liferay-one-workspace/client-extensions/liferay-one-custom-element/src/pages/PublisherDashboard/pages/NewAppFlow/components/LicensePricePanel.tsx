@@ -13,7 +13,7 @@ import {
 	NewAppTypes,
 	useNewAppContext,
 } from '~/context/NewAppContextProvider';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {ProductLicenseTier} from '~/types/productEnums';
 import {currenciesCode} from '~/utils/currencyUtils';
 import {ProductTypeLicenseOptions} from '~/utils/productUtils';
@@ -125,7 +125,7 @@ const LicensePricePanel: React.FC<LicensePricePanelProps> = ({
 								})
 							}
 							symbol="trash"
-							title="Delete all prices"
+							title={translate('delete-all-prices')}
 						/>
 					)}
 				</div>

@@ -9,7 +9,7 @@ import ClayIcon from '@clayui/icon';
 import React, {ComponentProps, useState} from 'react';
 import Modal from '~/components/Modal/Modal';
 import {NewAppTypes, useNewAppContext} from '~/context/NewAppContextProvider';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {ProductLicenseTier} from '~/types/productEnums';
 import {currenciesCode} from '~/utils/currencyUtils';
 
@@ -106,7 +106,7 @@ const CurrencyModal = ({observer, onClose}: ReturnType<typeof useModal>) => {
 			observer={observer}
 			size={'md' as ComponentProps<typeof Modal>['size']}
 			subtitle="Choose one of the following currencies"
-			title="Select Desired Currency"
+			title={translate('select-desired-currency')}
 			visible
 		>
 			<div className="currency-selector-container">

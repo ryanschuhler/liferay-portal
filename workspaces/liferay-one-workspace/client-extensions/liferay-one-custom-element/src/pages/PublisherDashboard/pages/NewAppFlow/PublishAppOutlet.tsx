@@ -14,7 +14,7 @@ import {useNewAppContext} from '~/context/NewAppContextProvider';
 import PublishModeContextProvider from '~/context/PublishModeContextProvider';
 import usePublishAppSubmission from '~/hooks/usePublishAppSubmission';
 import usePublishHeader from '~/hooks/usePublishHeader';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import usePublishNavigation from '~/pages/PublisherDashboard/hooks/usePublishNavigation';
 import {ProductWorkflowStatusCode} from '~/utils/productUtils';
 
@@ -116,7 +116,7 @@ const PublishAppOutlet = ({mode}: {mode?: PublishMode}) => {
 						</>
 					}
 					observer={observer}
-					title="Exit from creating an app"
+					title={translate('exit-from-creating-an-app')}
 					visible={open}
 				>
 					<p>
@@ -138,7 +138,7 @@ const PublishAppOutlet = ({mode}: {mode?: PublishMode}) => {
 							</ClayButton>
 						}
 						observer={onExitModal.observer}
-						title="Exit from creating an App"
+						title={translate('exit-from-creating-an-app')}
 						visible={onExitModal.open}
 					>
 						<p>

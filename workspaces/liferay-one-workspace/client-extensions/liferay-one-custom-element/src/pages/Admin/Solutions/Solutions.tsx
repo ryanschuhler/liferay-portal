@@ -8,7 +8,7 @@ import {ComponentProps} from 'react';
 import {useNavigate} from 'react-router-dom';
 import ListView from '~/components/ListView/ListView';
 import Page from '~/components/Page/Page';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import {formatDate} from '~/utils/dateUtils';
 import {ProductWorkflowDisplayType} from '~/utils/productUtils';
@@ -59,7 +59,7 @@ export default function Solutions() {
 							render: (name, {thumbnail}) => (
 								<div>
 									<img
-										alt="App Image"
+										alt={translate('app-image')}
 										className="app-details-page-table-icon"
 										src={thumbnail}
 									/>

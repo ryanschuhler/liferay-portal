@@ -6,7 +6,7 @@
 import {RadioCard} from '~/components/RadioCard/RadioCard';
 import {Section} from '~/components/Section/Section';
 import {NewAppTypes, useNewAppContext} from '~/context/NewAppContextProvider';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {ProductWorkflowStatusCode} from '~/utils/productUtils';
 
 import {PRICING_OPTIONS} from '../constants/newAppConstants';
@@ -30,7 +30,7 @@ const Pricing = () => {
 	return (
 		<Section
 			className="mt-4"
-			label="App Price"
+			label={translate('app-price')}
 			required
 			tooltip="Choose Free or Paid. Apps that are free have no further payment obligations once installed."
 			tooltipText={i18n.translate('more-info')}

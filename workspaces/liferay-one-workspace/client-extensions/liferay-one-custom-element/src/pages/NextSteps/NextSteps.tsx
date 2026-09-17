@@ -16,7 +16,7 @@ import {Header} from '~/components/Header/Header';
 import Loading from '~/components/Loading/Loading';
 import {PageRenderer} from '~/components/Page/Page';
 import useGetProductByOrderId from '~/hooks/useGetProductByOrderId';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {ONE_TIME_PURCHASES} from '~/pages/MyAccount/Projects/Projects';
 import HeadlessAdminUser from '~/services/headless/HeadlessAdminUser';
 import {Liferay} from '~/services/liferay/liferay';
@@ -142,7 +142,7 @@ export function NextStepsBody(props: NextStepsBodyProps) {
 			icon={
 				<span className="d-flex justify-content-center">
 					<img
-						alt="payment pending icon"
+						alt={translate('payment-pending-icon')}
 						draggable="false"
 						src={timesCircleIcon}
 					/>
@@ -191,7 +191,7 @@ export function NextStepsBody(props: NextStepsBodyProps) {
 				icon={
 					<span className="d-flex justify-content-center">
 						<img
-							alt="check circle icon"
+							alt={translate('check-circle-icon')}
 							draggable="false"
 							src={checkCircleIcon}
 						/>
@@ -224,7 +224,7 @@ export function NextStepsBody(props: NextStepsBodyProps) {
 				icon={
 					<span className="d-flex justify-content-center">
 						<img
-							alt="payment pending icon"
+							alt={translate('payment-pending-icon')}
 							draggable="false"
 							src={paymentPendingIcon}
 						/>

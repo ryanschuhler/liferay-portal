@@ -11,7 +11,7 @@ import PaymentDetailsHeader from '~/components/PaymentDetailsHeader/PaymentDetai
 import PaymentStatusBadge from '~/components/PaymentStatusBadge/PaymentStatusBadge';
 import Table from '~/components/Table/Table';
 import useAdminOrderProduct from '~/hooks/useAdminOrderProduct';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import HeadlessCommerceAdminOrder from '~/services/headless/HeadlessCommerceAdminOrder';
 import {Liferay} from '~/services/liferay/liferay';
 import {formatDateTime} from '~/utils/dateUtils';
@@ -245,7 +245,7 @@ const OrderDetails = () => {
 									<div className="pt-2">
 										<div className="d-flex">
 											<img
-												alt="App Icon"
+												alt={translate('app-icon')}
 												className="app-details-page-table-icon mr-2"
 												draggable={false}
 												src={product?.thumbnail}

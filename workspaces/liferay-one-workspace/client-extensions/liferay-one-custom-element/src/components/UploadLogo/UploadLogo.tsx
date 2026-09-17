@@ -6,6 +6,7 @@
 import ClayIcon from '@clayui/icon';
 import {ClayTooltipProvider} from '@clayui/tooltip';
 import ReactDOMServer from 'react-dom/server';
+import {translate} from '~/i18n';
 
 import i18n from '../../i18n';
 import {UploadedFile} from '../FileList/FileList';
@@ -29,14 +30,14 @@ const UploadLogo: React.FC<UploadLogoProps> = ({
 			<div className="upload-logo-container">
 				{uploadedFile?.preview ? (
 					<img
-						alt="New App logo"
+						alt={translate('new-app-logo')}
 						className="upload-logo-icon"
 						src={uploadedFile?.preview}
 					/>
 				) : (
 					<div className="align-items-center bg-light d-flex justify-content-center rounded upload-logo-placeholder">
 						<ClayIcon
-							aria-label="New App logo"
+							aria-label={translate('new-app-logo')}
 							className="text-muted upload-logo-placeholder-icon"
 							symbol="picture"
 						/>

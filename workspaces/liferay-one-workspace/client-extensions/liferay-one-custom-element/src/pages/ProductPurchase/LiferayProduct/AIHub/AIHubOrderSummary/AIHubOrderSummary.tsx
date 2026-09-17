@@ -12,7 +12,7 @@ import {Navigate} from 'react-router-dom';
 import {z} from 'zod';
 import ProductPurchase from '~/components/ProductPurchase/ProductPurchase';
 import Section from '~/components/Section/Section';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import BillingAddress from '~/pages/ProductPurchase/PaymentMethod/components/BillingAddress/BillingAddress';
 import {useProductPurchaseLayoutContext as useProductPurchaseOutletContext} from '~/pages/ProductPurchase/components/ProductPurchaseLayout/ProductPurchaseLayout';
 import {useAppPurchaseContext} from '~/pages/ProductPurchase/context/AppPurchaseContextProvider';
@@ -190,7 +190,10 @@ const AIHubOrderSummary = () => {
 			title={i18n.translate('summary')}
 		>
 			{addresses.length === 1 ? (
-				<Section className="ai-hub-summary" label="Billing Address">
+				<Section
+					className="ai-hub-summary"
+					label={translate('billing-address')}
+				>
 					<div className="ai-hub-summary-infomation-card">
 						<ClayIcon
 							className="mr-3"
@@ -212,7 +215,10 @@ const AIHubOrderSummary = () => {
 				<BillingAddress />
 			)}
 
-			<Section className="ai-hub-summary" label="Payment Method">
+			<Section
+				className="ai-hub-summary"
+				label={translate('payment-method')}
+			>
 				<div className="ai-hub-alert-card">
 					<ClayIcon
 						className="mr-3"
@@ -247,7 +253,10 @@ const AIHubOrderSummary = () => {
 				</div>
 			</Section>
 
-			<Section className="ai-hub-summary" label="Order Summary">
+			<Section
+				className="ai-hub-summary"
+				label={translate('order-summary')}
+			>
 				<div className="d-flex mx-5">
 					<div className="col-1 d-flex justify-content-end m-0 p-0 text-nowrap">
 						{i18n.translate('net-price')}:

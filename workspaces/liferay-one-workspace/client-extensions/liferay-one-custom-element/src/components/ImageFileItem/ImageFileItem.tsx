@@ -14,6 +14,7 @@ import {ClayInput} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import classNames from 'classnames';
 import CircularProgress from '~/components/CircularProgress/CircularProgress';
+import {translate} from '~/i18n';
 
 import i18n from '../../i18n';
 
@@ -57,7 +58,7 @@ export function ImageFileItem({
 					onClick={() => onArrowClick(index, 'up')}
 				>
 					<ClayIcon
-						aria-label="Arrow Up"
+						aria-label={translate('arrow-up')}
 						className="image-file-item-arrow-icon"
 						symbol="order-arrow-up"
 					/>
@@ -70,7 +71,7 @@ export function ImageFileItem({
 					onClick={() => onArrowClick(index, 'down')}
 				>
 					<ClayIcon
-						aria-label="Arrow South"
+						aria-label={translate('arrow-south')}
 						className="image-file-item-arrow-icon"
 						symbol="order-arrow-down"
 					/>
@@ -143,7 +144,7 @@ export function ImageFileItem({
 
 							onChangeInput(uploadedImages);
 						}}
-						placeholder="Image description"
+						placeholder={translate('image-description')}
 						value={uploadedImages[index].imageDescription}
 					/>
 

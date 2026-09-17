@@ -9,6 +9,7 @@ import Dropzone, {FileRejection} from 'react-dropzone';
 import './DropzoneUpload.css';
 
 import ClayIcon from '@clayui/icon';
+import {translate} from '~/i18n';
 
 interface IDropzoneUploadProps {
 	acceptFileTypes: {
@@ -64,7 +65,7 @@ export function DropzoneUpload({
 					{showDocumentIcon && (
 						<div className="dropzone-upload-document-container">
 							<ClayIcon
-								aria-label="Document icon"
+								aria-label={translate('document-icon')}
 								className="dropzone-upload-document-icon"
 								symbol="document-text"
 							/>

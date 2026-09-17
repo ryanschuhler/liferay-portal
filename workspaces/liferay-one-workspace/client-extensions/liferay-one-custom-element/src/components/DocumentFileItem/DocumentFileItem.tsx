@@ -7,6 +7,7 @@ import './DocumentFileItem.css';
 
 import ClayIcon from '@clayui/icon';
 import CircularProgress from '~/components/CircularProgress/CircularProgress';
+import {translate} from '~/i18n';
 
 import type {UploadedFile} from '~/components/FileList/FileList';
 
@@ -44,7 +45,7 @@ export function DocumentFileItem({
 						/>
 					) : (
 						<ClayIcon
-							aria-label="Folder Icon"
+							aria-label={translate('folder-icon')}
 							className="document-file-list-item-left-content-icon"
 							symbol="folder"
 						/>

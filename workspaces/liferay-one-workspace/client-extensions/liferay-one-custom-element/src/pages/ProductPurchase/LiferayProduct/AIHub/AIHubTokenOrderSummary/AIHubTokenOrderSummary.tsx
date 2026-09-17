@@ -12,7 +12,7 @@ import {Navigate} from 'react-router-dom';
 import paypal from '~/assets/images/paypal.png';
 import ProductPurchase from '~/components/ProductPurchase/ProductPurchase';
 import Section from '~/components/Section/Section';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {useProductPurchaseLayoutContext as useProductPurchaseOutletContext} from '~/pages/ProductPurchase/components/ProductPurchaseLayout/ProductPurchaseLayout';
 import {useAppPurchaseContext} from '~/pages/ProductPurchase/context/AppPurchaseContextProvider';
 import {useCartContext} from '~/pages/ProductPurchase/context/CartContextProvider';
@@ -135,7 +135,9 @@ const AIHubTokenOrderSummary = () => {
 									<div className="mr-3">
 										<ClaySticker shape="circle" size="lg">
 											<ClaySticker.Image
-												alt="AI Hub Token Icon"
+												alt={translate(
+													'ai-hub-token-icon'
+												)}
 												src={
 													selectedSku.customFields?.find(
 														(field: CustomField) =>

@@ -5,7 +5,7 @@
 
 import ClayIcon from '@clayui/icon';
 import AppReviewSection from '~/components/AppReviewSection/AppReviewSection';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {ProductTypeOptions} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants/ProductTypeOptions';
 
 import type {AppReviewProps} from '~/components/AppReview/AppReview';
@@ -78,7 +78,9 @@ const AppReviewBuild = ({
 									<div className="align-items-center d-flex">
 										<div className="app-review-file-container">
 											<ClayIcon
-												aria-label="Folder Icon"
+												aria-label={translate(
+													'folder-icon'
+												)}
 												className="app-review-file-container-icon"
 												symbol="document-text"
 											/>

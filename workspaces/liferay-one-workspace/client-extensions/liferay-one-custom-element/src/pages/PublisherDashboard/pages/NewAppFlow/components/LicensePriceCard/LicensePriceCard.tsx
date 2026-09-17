@@ -7,6 +7,7 @@ import ClayForm, {ClayInput} from '@clayui/form';
 import classNames from 'classnames';
 import ButtonWithIcon from '~/components/ButtonWithIcon/ButtonWithIcon';
 import {FieldBase} from '~/components/FieldBase/FieldBase';
+import {translate} from '~/i18n';
 import {ProductLicenseTier} from '~/types/productEnums';
 import {currenciesCode} from '~/utils/currencyUtils';
 
@@ -46,7 +47,7 @@ const LicensePriceCard: React.FC<LicensePriceCardProps> = ({
 
 			<FieldBase
 				className="col-3 p-0"
-				label="Unit Price"
+				label={translate('unit-price')}
 				tooltip="Adding a unit price sets the amount you want to charge for each individual license when the set quantity is chosen."
 			/>
 		</div>

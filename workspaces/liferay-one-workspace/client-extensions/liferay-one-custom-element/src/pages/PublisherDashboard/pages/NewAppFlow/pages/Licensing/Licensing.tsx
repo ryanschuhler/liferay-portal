@@ -6,6 +6,7 @@
 import {RadioCard} from '~/components/RadioCard/RadioCard';
 import {Section} from '~/components/Section/Section';
 import {NewAppTypes, useNewAppContext} from '~/context/NewAppContextProvider';
+import {translate} from '~/i18n';
 
 import {
 	LICENSING_30_DAYS_TRIAL_OPTIONS,
@@ -26,7 +27,7 @@ const Licensing = () => {
 	return (
 		<div>
 			<Section
-				label="App License"
+				label={translate('app-license')}
 				required
 				tooltip="More Info"
 				tooltipText="More Info"
@@ -57,7 +58,7 @@ const Licensing = () => {
 			</Section>
 
 			<Section
-				label="30-day Trial"
+				label={translate('30-day-trial')}
 				required
 				tooltip="Trials can be offered to users for 30 days.  After this time, they will be notified of their pending trial expiration and given the opportunity to purchase the app at full price."
 				tooltipText="More Info"

@@ -12,7 +12,7 @@ import {KeyedMutator} from 'swr';
 import {z} from 'zod';
 import FormInput from '~/components/FormInput/FormInput';
 import Loading from '~/components/Loading/Loading';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {
 	EXTEND_OPTIONS,
 	EXTEND_TYPES,
@@ -174,7 +174,7 @@ const ExtendSSATrialModal: React.FC<ExtendSSATrialModalProps> = ({
 				boldLabel
 				label="Duration"
 				name="duration"
-				placeholder="Value between 1 and 60"
+				placeholder={translate('value-between-1-and-60')}
 				required={true}
 				type="number"
 			/>
@@ -183,7 +183,7 @@ const ExtendSSATrialModal: React.FC<ExtendSSATrialModalProps> = ({
 				boldLabel
 				label={i18n.translate('reason')}
 				name="reason"
-				placeholder="Tell why you need to extend the trial"
+				placeholder={translate('tell-why-you-need-to-extend-the-trial')}
 				required={true}
 				type="textarea"
 			/>

@@ -7,6 +7,7 @@ import ClayIcon from '@clayui/icon';
 import classnames from 'classnames';
 import Dropzone from 'react-dropzone';
 import Button from '~/components/Button/Button';
+import {translate} from '~/i18n';
 
 import './DropzoneUpload.css';
 
@@ -41,7 +42,7 @@ const DropzoneUpload = ({
 						<div className="dropzone-upload-document">
 							<div className="dropzone-upload-document-container">
 								<ClayIcon
-									aria-label="Document icon"
+									aria-label={translate('document-icon')}
 									className="dropzone-upload-document-icon"
 									symbol={
 										isDragActive
@@ -59,7 +60,7 @@ const DropzoneUpload = ({
 						</span>
 
 						<Button
-							aria-label="Select file"
+							aria-label={translate('select-file')}
 							className="btn btn-outline-primary d-flex dropzone-upload-button ml-2"
 							type="button"
 						>

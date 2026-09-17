@@ -4,6 +4,7 @@
  */
 
 import ClayIcon from '@clayui/icon';
+import {translate} from '~/i18n';
 
 import type {AppReviewProps} from '~/components/AppReview/AppReview';
 
@@ -12,13 +13,13 @@ const AppReviewProfile = ({context}: AppReviewProps) => {
 		<div className="align-items-center d-flex">
 			{context.profile.file.preview ? (
 				<img
-					alt="App logo"
+					alt={translate('app-logo')}
 					className="app-review-logo-icon"
 					src={context.profile.file.preview}
 				/>
 			) : (
 				<ClayIcon
-					aria-label="New App logo"
+					aria-label={translate('new-app-logo')}
 					className="app-review-logo-icon text-muted"
 					symbol="picture"
 				/>

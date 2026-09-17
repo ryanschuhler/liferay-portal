@@ -8,6 +8,8 @@ import OrderDetailsStatusDescription from '~/pages/Admin/SSADashboard/pages/Tria
 
 import './OrderDetailsHeader.css';
 
+import {translate} from '~/i18n';
+
 import type {PlacedOrder} from '~/types/orders';
 
 type OrderDetailsProps = {
@@ -36,7 +38,7 @@ const OrderDetailsHeader: React.FC<OrderDetailsProps> = ({
 	<div className={className}>
 		<div className="d-flex flex-row">
 			<img
-				alt="App Icon"
+				alt={translate('app-icon')}
 				className="order-details-publisher-icon"
 				draggable={false}
 				src={image}

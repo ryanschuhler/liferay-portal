@@ -13,7 +13,7 @@ import BackLink from '~/components/BackLink/BackLink';
 import DetailSection from '~/components/DetailSection/DetailSection';
 import {PageRenderer} from '~/components/Page/Page';
 import useAdminProduct from '~/hooks/useAdminProduct';
-import i18n from '~/i18n';
+import i18n, {Word} from '~/i18n';
 import {
 	ProductSpecificationKey,
 	ProductTypeLabels,
@@ -23,7 +23,6 @@ import {
 	getProductCategoriesByVocabularyName,
 } from '~/utils/productUtils';
 
-import type {Word} from '~/i18n';
 import type {Product} from '~/types/product';
 
 const APP_ICON_TAG = 'app-icon';

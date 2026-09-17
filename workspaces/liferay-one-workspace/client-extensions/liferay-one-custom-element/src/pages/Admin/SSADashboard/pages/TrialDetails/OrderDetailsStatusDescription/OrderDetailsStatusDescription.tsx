@@ -6,6 +6,7 @@
 import ClayLabel from '@clayui/label';
 import classNames from 'classnames';
 import purchasedAppIcon from '~/assets/icons/purchased_app_icon.svg';
+import {translate} from '~/i18n';
 import OrderStatus from '~/pages/Admin/SSADashboard/pages/TrialDetails/OrderStatus/OrderStatus';
 
 import type {PlacedOrder} from '~/types/orders';
@@ -53,7 +54,7 @@ const OrderDetailsStatusDescription = ({
 				<ClayLabel className="rounded" displayType="info" large>
 					<div className="align-items-center d-flex">
 						<img
-							alt="Purchased Order Icon"
+							alt={translate('purchased-order-icon')}
 							className="mr-1"
 							src={purchasedAppIcon}
 						/>

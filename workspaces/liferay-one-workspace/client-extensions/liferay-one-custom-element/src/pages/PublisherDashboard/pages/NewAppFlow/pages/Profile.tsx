@@ -10,7 +10,7 @@ import MultiSelect from '~/components/MultiSelect/MultiSelect';
 import Select from '~/components/Select/Select';
 import UploadLogo from '~/components/UploadLogo/UploadLogo';
 import {NewAppTypes, useNewAppContext} from '~/context/NewAppContextProvider';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {
 	ProductVocabulary,
 	ProductWorkflowStatusCode,
@@ -155,7 +155,7 @@ const Profile = () => {
 					maxLength={50}
 					name="name"
 					onChange={onChange}
-					placeholder="Enter app name"
+					placeholder={translate('enter-app-name')}
 					value={name}
 				/>
 			</Form.FormControl>
@@ -174,7 +174,7 @@ const Profile = () => {
 					maxLength={2000}
 					name="description"
 					onChange={onChange}
-					placeholder="Enter app description"
+					placeholder={translate('enter-app-description')}
 					type="textarea"
 					value={description}
 				/>

@@ -12,7 +12,7 @@ import {
 	SolutionTypes,
 	useSolutionContext,
 } from '~/context/SolutionContextProvider';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {ProductVocabulary} from '~/types/productEnums';
 import {ProductTags} from '~/utils/productUtils';
 import {getRandomID} from '~/utils/stringUtils';
@@ -139,7 +139,7 @@ const Profile = () => {
 					maxLength={50}
 					name="name"
 					onChange={onChange}
-					placeholder="Enter solution name"
+					placeholder={translate('enter-solution-name')}
 					type="text"
 					value={name}
 				/>
@@ -160,7 +160,7 @@ const Profile = () => {
 					maxLength={150}
 					name="description"
 					onChange={onChange}
-					placeholder="Enter solution description"
+					placeholder={translate('enter-solution-description')}
 					type="textarea"
 					value={description}
 				/>

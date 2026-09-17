@@ -5,6 +5,7 @@
 
 import ClayIcon from '@clayui/icon';
 import {ReactNode} from 'react';
+import {translate} from '~/i18n';
 
 import './VideoThumbnail.css';
 
@@ -43,7 +44,10 @@ const VideoThumbnail: React.FC<VideoThumbnailProps> = ({videoURL}) => {
 	if (!thumbnail) {
 		return (
 			<Wrapper>
-				<ClayIcon aria-label="video thumbnail empty" symbol="video" />
+				<ClayIcon
+					aria-label={translate('video-thumbnail-empty')}
+					symbol="video"
+				/>
 			</Wrapper>
 		);
 	}
@@ -62,7 +66,7 @@ const VideoThumbnail: React.FC<VideoThumbnailProps> = ({videoURL}) => {
 				/>
 
 				<ClayIcon
-					aria-label="video thumbnail empty"
+					aria-label={translate('video-thumbnail-empty')}
 					className="video-thumbnail-play-symbol"
 					symbol="video"
 				/>

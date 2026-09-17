@@ -10,14 +10,12 @@ import timesCircleIcon from '~/assets/icons/times_circle_icon.svg';
 import Button from '~/components/Button/Button';
 import {Header} from '~/components/Header/Header';
 import Loading from '~/components/Loading/Loading';
-import {translate} from '~/i18n';
+import {Word, translate} from '~/i18n';
 import {Liferay} from '~/services/liferay/liferay';
 import Invitations from '~/services/spring-boot/Invitations';
 import {getSiteURL} from '~/utils/siteUtils';
 
 import './AccountInvitation.css';
-
-import type {Word} from '~/i18n';
 
 const InvitationStatuses = {
 	ACCEPTED: 'accepted',

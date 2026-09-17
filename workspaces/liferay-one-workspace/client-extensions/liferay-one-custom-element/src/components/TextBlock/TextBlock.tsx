@@ -5,7 +5,7 @@
 
 import Form from '~/components/MarketplaceForm/MarketplaceForm';
 import RichText from '~/components/RichText/RichText';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {MAX_DESCRIPTION_LENGTH, MAX_TITLE_LENGTH} from '~/utils/blockConstants';
 
 import type {TextBlock as TextBlockType} from '~/context/SolutionContextProvider';
@@ -25,7 +25,7 @@ const TextBlock = ({
 				maxLength={MAX_TITLE_LENGTH}
 				name="title"
 				onChange={(event) => onChange({title: event.target.value})}
-				placeholder="Enter title"
+				placeholder={translate('enter-title')}
 				type="text"
 				value={content.title ?? ''}
 			/>

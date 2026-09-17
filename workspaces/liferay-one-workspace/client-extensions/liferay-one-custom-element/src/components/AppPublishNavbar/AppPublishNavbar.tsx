@@ -8,7 +8,7 @@ import ClayIcon from '@clayui/icon';
 import ClayManagementToolbar from '@clayui/management-toolbar';
 import classNames from 'classnames';
 import {ComponentProps} from 'react';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {getAccountImage} from '~/utils/getAccountImage';
 import {
 	ProductWorkflowStatusCode,
@@ -49,7 +49,7 @@ const AppPublishNavbar: React.FC<NavbarProps> = ({
 						<div className="d-flex">
 							<div className="new-app-tool-bar-main-account-logo">
 								<img
-									alt="Main account logo"
+									alt={translate('main-account-logo')}
 									className="new-app-tool-bar-main-account-logo-img"
 									draggable={false}
 									src={getAccountImage(accountImage)}
@@ -61,7 +61,7 @@ const AppPublishNavbar: React.FC<NavbarProps> = ({
 							</div>
 
 							<ClayIcon
-								aria-label="Arrow right"
+								aria-label={translate('arrow-right')}
 								className="new-app-tool-bar-arrow-right"
 								symbol="angle-right"
 							/>
@@ -69,7 +69,7 @@ const AppPublishNavbar: React.FC<NavbarProps> = ({
 							<div className="new-app-tool-bar-new-app-logo">
 								{appImage ? (
 									<img
-										alt="New App logo"
+										alt={translate('new-app-logo')}
 										className="new-app-tool-bar-new-app-logo-img"
 										draggable={false}
 										src={appImage}
@@ -77,7 +77,9 @@ const AppPublishNavbar: React.FC<NavbarProps> = ({
 								) : (
 									<div className="align-items-center bg-light d-flex justify-content-center new-app-tool-bar-new-app-logo-placeholder rounded">
 										<ClayIcon
-											aria-label="New App logo"
+											aria-label={translate(
+												'new-app-logo'
+											)}
 											className="text-muted"
 											symbol="picture"
 										/>

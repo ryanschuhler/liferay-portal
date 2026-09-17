@@ -11,7 +11,7 @@ import {AccountAndAppCard} from '~/components/AccountAndAppCard/AccountAndAppCar
 import {Header} from '~/components/Header/Header';
 import {PageRenderer} from '~/components/Page/Page';
 import useGetProductByOrderId from '~/hooks/useGetProductByOrderId';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import HeadlessAdminUser from '~/services/headless/HeadlessAdminUser';
 import {Liferay} from '~/services/liferay/liferay';
 import {getAccountImage} from '~/utils/getAccountImage';
@@ -102,7 +102,7 @@ const AIHubOpenBetaNextSteps: React.FC<AIHubOpenBetaNextStepsProps> = ({
 							icon={
 								<span className="d-flex justify-content-center mb-4">
 									<img
-										alt="payment pending icon"
+										alt={translate('payment-pending-icon')}
 										draggable="false"
 										src={documentCircleIcon}
 									/>

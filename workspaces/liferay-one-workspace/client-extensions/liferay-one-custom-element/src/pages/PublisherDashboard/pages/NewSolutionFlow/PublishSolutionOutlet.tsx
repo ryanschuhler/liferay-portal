@@ -12,7 +12,7 @@ import PublishModeContextProvider from '~/context/PublishModeContextProvider';
 import {useSolutionContext} from '~/context/SolutionContextProvider';
 import usePublishHeader from '~/hooks/usePublishHeader';
 import usePublishSolutionSubmission from '~/hooks/usePublishSolutionSubmission';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import usePublishNavigation from '~/pages/PublisherDashboard/hooks/usePublishNavigation';
 import {ProductWorkflowStatusCode} from '~/utils/productUtils';
 
@@ -106,7 +106,7 @@ const PublishSolutionOutlet = () => {
 						</>
 					}
 					observer={observer}
-					title="Exit from creating a solution"
+					title={translate('exit-from-creating-a-solution')}
 					visible={open}
 				>
 					<p>
@@ -128,7 +128,7 @@ const PublishSolutionOutlet = () => {
 							</ClayButton>
 						}
 						observer={onExitModal.observer}
-						title="Exit from creating a solution"
+						title={translate('exit-from-creating-a-solution')}
 						visible={onExitModal.open}
 					>
 						<p>

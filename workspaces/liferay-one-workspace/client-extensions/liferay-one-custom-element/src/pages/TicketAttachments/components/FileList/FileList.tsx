@@ -7,7 +7,7 @@ import {Button as ClayButton} from '@clayui/core';
 import ClayIcon from '@clayui/icon';
 import {filesize} from 'filesize';
 import Loading from '~/components/Loading/Loading';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 
 import CircularProgress from './CircularProgress/CircularProgress';
 
@@ -53,7 +53,7 @@ const FileList = ({
 							else {
 								return (
 									<ClayIcon
-										aria-label="Document Icon"
+										aria-label={translate('document-icon')}
 										className="file-list-item-left-content-icon"
 										symbol="document-default"
 									/>

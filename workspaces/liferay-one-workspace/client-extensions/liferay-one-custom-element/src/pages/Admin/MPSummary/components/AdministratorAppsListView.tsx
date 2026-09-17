@@ -7,7 +7,7 @@ import Label from '@clayui/label';
 import {ComponentProps} from 'react';
 import ListView, {ListViewProps} from '~/components/ListView/ListView';
 import {ManagementToolbarProps} from '~/components/ManagementToolbar/ManagementToolbar';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {formatDate} from '~/utils/dateUtils';
 import {
 	ProductSpecificationKey,
@@ -72,7 +72,7 @@ const AdministratorAppsListView: React.FC<AdministratorAppsListViewProps> = ({
 					render: (name, {thumbnail}) => (
 						<div>
 							<img
-								alt="App Image"
+								alt={translate('app-image')}
 								className="app-details-page-table-icon"
 								src={thumbnail}
 							/>

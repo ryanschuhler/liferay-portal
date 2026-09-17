@@ -16,7 +16,7 @@ import BaseWrapper from '~/components/BaseWrapper/BaseWrapper';
 import Select from '~/components/Select/Select';
 import {useOneContext} from '~/context/OneContextProvider';
 import useDebounce from '~/hooks/useDebounce';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {useTrialProducts} from '~/pages/Admin/Trials/hooks/useTrialProducts';
 import commerceSchemas from '~/schemas/commerceSchemas';
 import ProductPurchaseSolutionTrial from '~/services/commerce/ProductPurchaseSolutionTrial';
@@ -135,7 +135,7 @@ const NewTrialModal: React.FC<NewTrialModalProps> = ({onClose, revalidate}) => {
 
 	return (
 		<div className="pb-8">
-			<BaseWrapper boldLabel label="Cloud App" required>
+			<BaseWrapper boldLabel label={translate('cloud-app')} required>
 				<Autocomplete
 					filterKey="name"
 					items={apps?.items || []}
@@ -145,7 +145,7 @@ const NewTrialModal: React.FC<NewTrialModalProps> = ({onClose, revalidate}) => {
 						notFound: 'No results found',
 					}}
 					onChange={setSearch}
-					placeholder="Search for the app name"
+					placeholder={translate('search-for-the-app-name')}
 					value={search}
 				>
 					{(product) => (
@@ -225,7 +225,7 @@ const NewTrialModal: React.FC<NewTrialModalProps> = ({onClose, revalidate}) => {
 			</ClayInput.Group>
 
 			<ClayToggle
-				label="Send Notification Email"
+				label={translate('send-notification-email')}
 				onToggle={(value) => setValue('sendNotificationEmail', value)}
 				toggled={watch('sendNotificationEmail')}
 			/>
