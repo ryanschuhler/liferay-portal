@@ -1,0 +1,124 @@
+defaults:
+    run:
+        shell: bash
+        working-directory: workspaces/liferay-one-workspace
+jobs:
+    test-liferay-one-workspace-java:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout code
+                uses: actions/checkout@v4
+
+            # "liferay-one-etc-spring-boot" compiles three classes from the
+            # private "liferay/liferay-release-tool-ee" repository, which its
+            # "cloneReleaseToolEE" task clones over SSH. A runner has no SSH
+            # key, so the clone always fails. Checking the repository out here
+            # with a token satisfies the task's "onlyIf" guard, which skips the
+            # clone when the directory already exists.
+            #
+            # LIFERAY_RELEASE_TOOL_EE_TOKEN must be a personal access token with
+            # read access to "liferay/liferay-release-tool-ee". Without it this
+            # job fails on the step below rather than deep inside Gradle.
+            -   env:
+                    LIFERAY_RELEASE_TOOL_EE_TOKEN: ${{secrets.LIFERAY_RELEASE_TOOL_EE_TOKEN}}
+                name: Check access to liferay-release-tool-ee
+                run: |
+                    set -o errexit
+                    set -o nounset
+                    set -o pipefail
+
+                    function main {
+                        if [[ -z "${LIFERAY_RELEASE_TOOL_EE_TOKEN}" ]]
+                        then
+                            echo "::error::Unable to read the secret LIFERAY_RELEASE_TOOL_EE_TOKEN. Add a personal access token with read access to liferay/liferay-release-tool-ee."
+
+                            exit 1
+                        fi
+                    }
+
+                    main "${@}"
+            -   name: Checkout liferay-release-tool-ee
+                uses: actions/checkout@v4
+                with:
+                    path: workspaces/liferay-one-workspace/client-extensions/liferay-one-etc-spring-boot/liferay-release-tool-ee
+                    repository: liferay/liferay-release-tool-ee
+                    sparse-checkout: ext/shared
+                    token: ${{secrets.LIFERAY_RELEASE_TOOL_EE_TOKEN}}
+            -   name: Set up JDK 21
+                uses: actions/setup-java@v4
+                with:
+                    distribution: zulu
+                    java-version: "21"
+            -   name: Set up Gradle
+                uses: gradle/actions/setup-gradle@v4
+                with:
+                    build-root-directory: workspaces/liferay-one-workspace
+            -   name: Run Spring Boot unit tests
+                run: ./gradlew :client-extensions:liferay-one-etc-spring-boot:test
+            -   if: ${{!cancelled() && hashFiles('workspaces/liferay-one-workspace/client-extensions/liferay-one-etc-spring-boot/build/test-results/test/*.xml') != ''}}
+                name: Publish test report
+                uses: dorny/test-reporter@v2
+                with:
+                    fail-on-error: true
+                    list-tests: failed
+                    name: Liferay One Spring Boot unit tests
+                    path: workspaces/liferay-one-workspace/client-extensions/liferay-one-etc-spring-boot/build/test-results/test/*.xml
+                    reporter: java-junit
+            -   if: ${{!cancelled() && hashFiles('workspaces/liferay-one-workspace/client-extensions/liferay-one-etc-spring-boot/build/test-results/test/*.xml') != ''}}
+                name: Upload test results
+                uses: actions/upload-artifact@v4
+                with:
+                    if-no-files-found: ignore
+                    name: liferay-one-workspace-java-test-results
+                    path: workspaces/liferay-one-workspace/client-extensions/liferay-one-etc-spring-boot/build/test-results/test/*.xml
+    test-liferay-one-workspace-node:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout code
+                uses: actions/checkout@v4
+
+            # The workspace's root build.gradle pins Node 22.23.1 because Vite 8
+            # requires ">=22.12.0". Keep this in sync with that pin.
+            -   name: Set up Node
+                uses: actions/setup-node@v4
+                with:
+                    cache: yarn
+                    cache-dependency-path: workspaces/liferay-one-workspace/yarn.lock
+                    node-version: 22.23.1
+
+            # ".yarnrc" points "yarn-offline-mirror" at "node_modules_cache",
+            # so yarn reads package tarballs from there instead of the global
+            # yarn cache that "actions/setup-node" restores.
+            -   name: Cache the yarn offline mirror
+                uses: actions/cache@v4
+                with:
+                    key: liferay-one-workspace-yarn-offline-mirror-${{hashFiles('workspaces/liferay-one-workspace/yarn.lock')}}
+                    path: workspaces/liferay-one-workspace/node_modules_cache
+                    restore-keys: liferay-one-workspace-yarn-offline-mirror-
+            -   name: Install dependencies
+                run: yarn install --frozen-lockfile
+            -   continue-on-error: true
+                name: Lint
+                # Reporting only until the 45 pre-existing violations under
+                # client-extensions/liferay-one-custom-element/src are cleared,
+                # most of them no-explicit-any in the SEO Studio pages. Drop
+                # continue-on-error once they are, so lint blocks a merge.
+                run: yarn lint
+            -   if: ${{!cancelled()}}
+                name: Run Vitest unit tests
+                run: yarn test:unit
+            -   if: ${{!cancelled()}}
+                name: Check the test plan against the code surface
+                run: yarn plan:check
+
+            # "yarn test:e2e" and "yarn test:integration" run Playwright against
+            # a booted Liferay, so they cannot run here.
+on:
+    pull_request:
+        paths:
+            -   .github/workflows/ci-test-liferay-one-workspace.yaml
+            -   workspaces/liferay-one-workspace/**
+    workflow_dispatch:
+permissions:
+    checks: write
+    contents: read
