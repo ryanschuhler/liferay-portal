@@ -46,10 +46,10 @@ export default function Orders() {
 					className="d-flex flex-wrap info-container"
 					style={{marginBottom: 'var(--spacer-3)'}}
 				>
-					{infoCards.map((infoCard, index) => (
+					{infoCards.map((infoCard) => (
 						<InfoCard
 							{...infoCard}
-							key={index}
+							key={infoCard.title}
 							symbol="shopping-cart"
 							title={infoCard.title}
 							value={infoCard.value}

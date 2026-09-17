@@ -73,7 +73,7 @@ const AppPublishSidebar: React.FC<AppPublishSidebar> = ({
 					);
 
 					return (
-						<li className="side-nav-item" key={index}>
+						<li className="side-nav-item" key={path}>
 							{navigable ? (
 								<Link className={className} to={path}>
 									{content}

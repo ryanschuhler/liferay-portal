@@ -30,8 +30,8 @@ const AppReviewStorefront = ({
 							(image) =>
 								!image.tags?.includes(ProductTags.APP_ICON)
 						)
-						.map((image, index) => (
-							<div className="d-flex mt-3" key={index}>
+						.map((image) => (
+							<div className="d-flex mt-3" key={image.fileName}>
 								<img draggable={false} src={image.preview} />
 
 								<div className="d-flex flex-column ml-4">

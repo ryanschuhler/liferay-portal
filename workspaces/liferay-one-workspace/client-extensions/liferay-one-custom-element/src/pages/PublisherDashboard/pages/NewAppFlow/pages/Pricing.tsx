@@ -35,12 +35,12 @@ const Pricing = () => {
 			tooltip="Choose Free or Paid. Apps that are free have no further payment obligations once installed."
 			tooltipText={i18n.translate('more-info')}
 		>
-			{PRICING_OPTIONS.map((pricingOption, index) => (
+			{PRICING_OPTIONS.map((pricingOption) => (
 				<RadioCard
 					{...pricingOption}
 					className="mb-5"
 					disabled={isDisabled}
-					key={index}
+					key={pricingOption.title}
 					onChange={() => {
 						dispatch({
 							payload: {priceModel: pricingOption.title},

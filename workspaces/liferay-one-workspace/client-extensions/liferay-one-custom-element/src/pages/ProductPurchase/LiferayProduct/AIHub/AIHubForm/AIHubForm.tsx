@@ -234,9 +234,9 @@ const AIHubForm = () => {
 								}
 							>
 								<ClayDropDown.ItemList>
-									{phones.map((phone, index) => (
+									{phones.map((phone) => (
 										<ClayDropDown.Item
-											key={index}
+											key={phone.code}
 											onClick={() => {
 												setCurrentPhonesFlags({
 													code: phone.code,
@@ -324,10 +324,10 @@ const AIHubForm = () => {
 					}
 				>
 					<ClayDropDown.ItemList>
-						{PURPOSE_OPTIONS.map((option, index) => (
+						{PURPOSE_OPTIONS.map((option) => (
 							<ClayDropDown.Item
 								className="d-flex flex-column"
-								key={index}
+								key={option.value}
 								onClick={() => {
 									setActive(false);
 

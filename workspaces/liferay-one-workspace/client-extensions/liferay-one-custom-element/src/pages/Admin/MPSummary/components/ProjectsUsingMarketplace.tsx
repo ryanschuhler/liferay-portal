@@ -65,8 +65,10 @@ function ProjectUsingMarketplace({index, order}: ProjectUsingMarketplaceProps) {
 			{!exactMatch && (
 				<p>
 					{i18n.translate('projects')}:{' '}
-					{order.projects.map((customerProject, index) => (
-						<Label key={index}>{customerProject.name}</Label>
+					{order.projects.map((customerProject) => (
+						<Label key={customerProject.name}>
+							{customerProject.name}
+						</Label>
 					))}
 				</p>
 			)}

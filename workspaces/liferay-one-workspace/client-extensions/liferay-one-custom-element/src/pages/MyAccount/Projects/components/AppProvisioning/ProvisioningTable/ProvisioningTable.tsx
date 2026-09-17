@@ -70,9 +70,9 @@ const ProvisioningTable: React.FC<ProvisioningTableProps> = ({
 									.filter((action) =>
 										action.show(provisioningRow)
 									)
-									.map((action, index) => (
+									.map((action) => (
 										<ClayDropDown.Item
-											key={index}
+											key={action.title}
 											onClick={() =>
 												action.action(provisioningRow)
 											}

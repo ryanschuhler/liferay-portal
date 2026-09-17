@@ -77,10 +77,10 @@ export function SectionWithControllers({
 						}
 					>
 						<ClayDropDown.ItemList>
-							{dropdownItems.map((dropDownItem, index) => (
+							{dropdownItems.map((dropDownItem) => (
 								<ClayDropDown.Item
 									disabled={dropDownItem.disabled}
-									key={index}
+									key={dropDownItem.name}
 									onClick={dropDownItem.onClick}
 								>
 									{dropDownItem.name}

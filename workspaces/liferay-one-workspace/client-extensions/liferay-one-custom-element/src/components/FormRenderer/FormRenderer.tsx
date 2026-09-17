@@ -205,7 +205,7 @@ const RenderField = ({
 			<div>
 				<label>{label}</label>
 
-				{getOptions().map((option, index) => {
+				{getOptions().map((option) => {
 					const optionValue =
 						typeof option === 'string'
 							? option
@@ -222,7 +222,7 @@ const RenderField = ({
 								)
 							}
 							disabled={disabled}
-							key={index}
+							key={optionValue}
 							label={
 								typeof option === 'string'
 									? option

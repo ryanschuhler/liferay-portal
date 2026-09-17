@@ -179,10 +179,10 @@ const RequestAccountForm: React.FC<RequestAccountFormProps> = ({
 							)}
 						</label>
 
-						{listTypeEntries.map((listTypeEntry, index) => (
+						{listTypeEntries.map((listTypeEntry) => (
 							<div
 								className="align-items-center d-flex w-25"
-								key={index}
+								key={listTypeEntry.key}
 							>
 								<ClayCheckbox
 									aria-label={listTypeEntry.name}

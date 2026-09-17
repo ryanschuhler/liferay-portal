@@ -203,9 +203,9 @@ const Details = () => {
 							}
 							value={selectedBlock}
 						>
-							{BLOCK_OPTIONS.map((item, index) => (
+							{BLOCK_OPTIONS.map((item) => (
 								<ClaySelect.Option
-									key={index}
+									key={item.value}
 									label={item.label}
 									value={item.value}
 								/>

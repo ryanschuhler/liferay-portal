@@ -201,8 +201,8 @@ function SolutionDetailContent({product}: {product: Product}) {
 					{!!solution.categories.length && (
 						<Paragraph title={i18n.translate('categories')}>
 							<div className="d-flex flex-wrap">
-								{solution.categories.map((category, index) => (
-									<ClayLabel className="mr-2" key={index}>
+								{solution.categories.map((category) => (
+									<ClayLabel className="mr-2" key={category}>
 										{category}
 									</ClayLabel>
 								))}
@@ -213,8 +213,8 @@ function SolutionDetailContent({product}: {product: Product}) {
 					{!!solution.tags.length && (
 						<Paragraph title={i18n.translate('tags')}>
 							<div className="d-flex flex-wrap">
-								{solution.tags.map((tag, index) => (
-									<ClayLabel className="mr-2" key={index}>
+								{solution.tags.map((tag) => (
+									<ClayLabel className="mr-2" key={tag}>
 										{tag}
 									</ClayLabel>
 								))}
@@ -246,10 +246,10 @@ function SolutionDetailContent({product}: {product: Product}) {
 
 				{!!solution.details.length && (
 					<DetailSection title={i18n.translate('solution-details')}>
-						{solution.details.map((block, index) => (
+						{solution.details.map((block) => (
 							<div
 								className="border mb-3 overflow-hidden rounded-lg"
-								key={index}
+								key={block.title}
 							>
 								<div className="bg-light px-4 py-3">
 									<strong>

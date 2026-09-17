@@ -31,7 +31,7 @@ const Licensing = () => {
 				tooltip="More Info"
 				tooltipText="More Info"
 			>
-				{LICENSING_OPTIONS.map(({value, ...licensingOption}, index) => {
+				{LICENSING_OPTIONS.map(({value, ...licensingOption}) => {
 					const disabled = licensingOption.disabled(
 						priceModel as ProductPriceModel
 					);
@@ -41,7 +41,7 @@ const Licensing = () => {
 							{...licensingOption}
 							className="mb-5"
 							disabled={disabled}
-							key={index}
+							key={value}
 							onChange={() => {
 								dispatch({
 									payload: {

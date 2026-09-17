@@ -74,9 +74,12 @@ export default function ManageSsaSaasUsers() {
 
 								return (
 									<div className="d-flex flex-column">
-										{filteredRoles?.map((role, index) => {
+										{filteredRoles?.map((role) => {
 											return (
-												<p className="m-0" key={index}>
+												<p
+													className="m-0"
+													key={role.name}
+												>
 													{role.name}
 												</p>
 											);

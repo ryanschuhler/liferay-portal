@@ -47,7 +47,7 @@ const ProductPurchaseSteps = ({
 						done: index < activeStepIndex,
 						selected: step.active,
 					})}
-					key={index}
+					key={step.title}
 				>
 					<ClayIcon
 						className="mr-2"

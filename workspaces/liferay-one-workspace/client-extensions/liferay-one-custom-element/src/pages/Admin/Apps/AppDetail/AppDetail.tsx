@@ -86,8 +86,8 @@ function TagsSection({labels, title}: TagsSectionProps) {
 	return (
 		<DetailSection title={title}>
 			<div className="d-flex flex-wrap">
-				{labels.map((label, index) => (
-					<ClayLabel className="mr-2" key={index}>
+				{labels.map((label) => (
+					<ClayLabel className="mr-2" key={label}>
 						{label}
 					</ClayLabel>
 				))}
@@ -341,8 +341,8 @@ function AppDetailContent({product}: {product: Product}) {
 								{i18n.translate('images')}
 							</span>
 
-							{storefrontImages.map((image, index) => (
-								<div className="d-flex mt-3" key={index}>
+							{storefrontImages.map((image) => (
+								<div className="d-flex mt-3" key={image.src}>
 									<img
 										draggable={false}
 										src={image.src}

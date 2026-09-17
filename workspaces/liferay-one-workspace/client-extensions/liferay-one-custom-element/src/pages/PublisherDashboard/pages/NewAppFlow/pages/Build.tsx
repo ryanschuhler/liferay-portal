@@ -70,12 +70,12 @@ const BuildContent = () => {
 					appType === ProductType.CLOUD
 						? ProductType.CLOUD
 						: ProductType.DXP
-				].map((card, index) => (
+				].map((card) => (
 					<RadioCard
 						description={card.description}
 						disabled={card.disabled}
 						icon={card.icon}
-						key={index}
+						key={card.value}
 						onChange={() => {}}
 						selected={'upload' === card.value}
 						title={card.title}
@@ -161,7 +161,7 @@ const BuildContent = () => {
 								{i18n.translate('compatible-versions')}
 							</p>
 							{liferayPackage.versions.map((version, index) => (
-								<small key={index}>
+								<small key={version}>
 									{version}
 									{index + 1 <
 										liferayPackage.versions.length &&

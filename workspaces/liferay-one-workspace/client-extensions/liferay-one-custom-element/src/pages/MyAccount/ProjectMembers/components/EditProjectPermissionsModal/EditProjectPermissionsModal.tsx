@@ -301,7 +301,7 @@ const EditProjectPermissionsModal = ({
 					member.removed ? null : (
 						<div
 							className="project-permissions-grid-row"
-							key={index}
+							key={member.userId}
 						>
 							{member.isNew && !member.userId ? (
 								<MemberDropDown

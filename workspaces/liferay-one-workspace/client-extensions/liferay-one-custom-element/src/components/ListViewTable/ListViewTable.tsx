@@ -166,7 +166,7 @@ const ListViewTable = <T extends Record<string, unknown>>({
 		>
 			<ClayTable.Head>
 				<ClayTable.Row>
-					{_columns.map((column, index) => (
+					{_columns.map((column) => (
 						<ClayTable.Cell
 							className={
 								column.id === '_actions_'
@@ -174,7 +174,7 @@ const ListViewTable = <T extends Record<string, unknown>>({
 									: undefined
 							}
 							headingTitle
-							key={index}
+							key={String(column.id)}
 						>
 							<span className="d-flex justify-content-between">
 								<span

@@ -205,9 +205,9 @@ const AIHubOpenBetaForm = () => {
 								}
 							>
 								<ClayDropDown.ItemList>
-									{phones.map((phone, index) => (
+									{phones.map((phone) => (
 										<ClayDropDown.Item
-											key={index}
+											key={phone.code}
 											onClick={() => {
 												setValue(
 													'intlCode',

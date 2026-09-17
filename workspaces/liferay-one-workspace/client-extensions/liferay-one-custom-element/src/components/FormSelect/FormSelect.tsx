@@ -66,7 +66,7 @@ const FormSelect: React.FC<InputSelectProps> = ({
 				{isLoading ? (
 					<option value="">Loading...</option>
 				) : (
-					options?.map(({label, value}, index) => {
+					options?.map(({label, value}) => {
 						const valueOption =
 							name.includes('teamToComponents/name') ||
 							name.includes('componentToCaseResult/name')
@@ -75,7 +75,7 @@ const FormSelect: React.FC<InputSelectProps> = ({
 
 						return (
 							<option
-								key={index}
+								key={value}
 								label={label}
 								selected={
 									forceSelectOption

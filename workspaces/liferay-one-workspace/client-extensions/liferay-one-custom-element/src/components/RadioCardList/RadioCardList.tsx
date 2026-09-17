@@ -51,7 +51,7 @@ const RadioCardList = <T extends unknown>({
 					fullTitle={content.fullTitle}
 					imageURL={content.imageURL}
 					index={index}
-					key={index}
+					key={String(content.id)}
 					label={content.label}
 					leftRadio={leftRadio}
 					selectRadio={() =>
