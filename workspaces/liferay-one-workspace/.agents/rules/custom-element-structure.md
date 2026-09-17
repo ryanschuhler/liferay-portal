@@ -23,12 +23,14 @@ There are nine, and no others:
 | `types/` | Types, interfaces, and enums |
 | `utils/` | Plain functions |
 
-Folders that were removed, and where their contents go:
+Folders that used to exist, and where their contents went:
 
 - `enums/` → `types/`. An enum is a type. There is no separate tier for it.
 - `models/` → `services/models/`. A model wraps a service payload, so it belongs with the services that return it.
 - `schema/` → `schemas/`. Every other folder is plural.
 - `hooks/data/` → `hooks/`. Hooks are flat. A hook that reads data is still a hook.
+
+Two of those moves landed beside a file that already owned the name, so the enums kept a suffix rather than merging: `types/accountEnums.ts` and `types/productEnums.ts`. That is not the end state. `types/product.ts` declares `ProductType` as a union of string literals while `types/productEnums.ts` declares the same name as a const object over the same values, and different files import whichever one they found first. `AccountRoleType` is worse — the two declarations carry **different value sets**, so the name means two things depending on the import. Reconciling them changes behavior at every call site and needs its own ticket; merging the files before that is done would only hide it.
 
 ## Services
 
@@ -194,21 +196,19 @@ The workspace has not been cleaned up yet, so every structural rule is `warn`. T
 
 | Rule | Open |
 | --- | --- |
-| `yarn lint:imports` dead exports | 407 |
+| `yarn lint:imports` dead exports | 406 |
 | `service-layer-boundary` | 63 |
 | `yarn lint:placement` | 38 |
 | `file-complexity-budget` | 34 |
-| `src-folder-structure` | 22 |
 | `hooks-export-only-hooks` | 20 |
 | `yarn lint:imports` cycles | 18 |
 | `page-folder-structure` | 12 |
 | `no-bare-utils-or-types-file` | 11 |
 | `no-eslint-disable` | 4 |
-| `yarn lint:deps` | 0 |
-| `yarn lint:sorted` | 0 |
+| `src-folder-structure` | 0 |
 | `context-file-naming` | 0 |
 | `i18n-key-placeholder` | 0 |
-
-`context-file-naming`, `i18n-key-placeholder`, `lint:deps`, and `lint:sorted` are at zero and should be errors — flip them once a cleanup branch is not in flight.
+| `yarn lint:deps` | 0 |
+| `yarn lint:sorted` | 0 |
 
 New code is held to the rule regardless of the ledger. The counts only go down.

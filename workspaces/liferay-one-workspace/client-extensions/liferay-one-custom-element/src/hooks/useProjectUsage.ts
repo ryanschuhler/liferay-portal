@@ -6,7 +6,7 @@
 import {useProject} from '~/context/ProjectContextProvider';
 import {useFetch} from '~/hooks/useFetch';
 import {isUnassignedProject} from '~/pages/MyAccount/Projects/utils/isUnassignedProject';
-import SearchBuilder from '~/utils/SearchBuilder';
+import SearchBuilder from '~/services/fetcher/SearchBuilder';
 
 import type {APIResponse} from '~/types/api';
 

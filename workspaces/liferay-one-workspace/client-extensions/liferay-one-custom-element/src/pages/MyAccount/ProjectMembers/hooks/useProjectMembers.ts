@@ -10,8 +10,8 @@ import {
 	PROJECT_ADMIN_ERC,
 	PROJECT_ROLE_ERCS,
 } from '~/pages/MyAccount/ProjectMembers/projectRoles';
+import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import {Liferay} from '~/services/liferay/liferay';
-import SearchBuilder from '~/utils/SearchBuilder';
 
 import type {
 	AccountMemberOption,

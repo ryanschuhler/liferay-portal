@@ -5,7 +5,6 @@
 
 import {useMemo} from 'react';
 import useSWR from 'swr';
-import {EXPERIENCE_OFFERING_PRODUCT_EXTERNAL_REFERENCE_CODES} from '~/enums/Product';
 import {useDataQuery} from '~/hooks/useDataQuery';
 import i18n from '~/i18n';
 import {getProductContactRoleExternalReferenceCodes} from '~/pages/MyAccount/ProjectMembers/projectRoles';
@@ -14,11 +13,12 @@ import {
 	ONE_TIME_PURCHASES,
 	isUnassignedProject,
 } from '~/pages/MyAccount/Projects/projects';
+import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import fetcher from '~/services/fetcher/fetcher';
 import {queryGraphQL, toGraphQLString} from '~/services/graphql/GraphQL';
 import HeadlessCommerceDeliveryCatalog from '~/services/headless/HeadlessCommerceDeliveryCatalog';
 import {Liferay} from '~/services/liferay/liferay';
-import SearchBuilder from '~/utils/SearchBuilder';
+import {EXPERIENCE_OFFERING_PRODUCT_EXTERNAL_REFERENCE_CODES} from '~/types/productEnums';
 
 import type {APIResponse, DataQuery} from '~/types/api';
 import type {

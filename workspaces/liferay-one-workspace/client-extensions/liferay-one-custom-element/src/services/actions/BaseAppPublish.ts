@@ -4,10 +4,10 @@
  */
 
 import {LiferayPackage} from '~/context/NewAppContextProvider';
+import {ProductSpecificationKey} from '~/types/productEnums';
 import {base64ToText, fileToBase64} from '~/utils/fileUtils';
 
 import {UploadedFile} from '../../components/FileList/FileList';
-import {ProductSpecificationKey} from '../../enums/Product';
 import HeadlessCommerceAdminCatalogImpl from '../headless/HeadlessCommerceAdminCatalog';
 import HeadlessDelivery from '../headless/HeadlessDelivery';
 import HeadlessPublisherAsset from '../headless/HeadlessPublisherAsset';

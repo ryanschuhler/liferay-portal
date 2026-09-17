@@ -4,8 +4,8 @@
  */
 
 import {useFetch} from '~/hooks/useFetch';
+import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import {Liferay} from '~/services/liferay/liferay';
-import SearchBuilder from '~/utils/SearchBuilder';
 
 import type {APIResponse} from '~/types/api';
 

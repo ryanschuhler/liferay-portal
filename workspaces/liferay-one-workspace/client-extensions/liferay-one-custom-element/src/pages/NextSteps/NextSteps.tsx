@@ -16,13 +16,13 @@ import {AccountAndAppCard} from '~/components/AccountAndAppCard/AccountAndAppCar
 import {Header} from '~/components/Header/Header';
 import Loading from '~/components/Loading/Loading';
 import {PageRenderer} from '~/components/Page/Page';
-import {LearnLinks} from '~/enums/Learn';
 import useGetProductByOrderId from '~/hooks/useGetProductByOrderId';
 import i18n from '~/i18n';
 import {ONE_TIME_PURCHASES} from '~/pages/MyAccount/Projects/projects';
 import HeadlessAdminUser from '~/services/headless/HeadlessAdminUser';
 import {Liferay} from '~/services/liferay/liferay';
 import CommerceOrders from '~/services/spring-boot/CommerceOrders';
+import {LearnLinks} from '~/types/learn';
 import {getAccountImage} from '~/utils/getAccountImage';
 import {
 	getProductCategoriesByVocabularyName,

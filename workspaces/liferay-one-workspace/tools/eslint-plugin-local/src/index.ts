@@ -63,7 +63,7 @@ const plugin = {
 				'local/page-folder-structure': 'warn',
 				'local/service-class-matches-url': 'error',
 				'local/service-layer-boundary': 'warn',
-				'local/src-folder-structure': 'warn',
+				'local/src-folder-structure': 'error',
 				'local/util-filename': 'error',
 			},
 		},

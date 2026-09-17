@@ -9,8 +9,8 @@ import ClayIcon from '@clayui/icon';
 import React, {ComponentProps, useState} from 'react';
 import Modal from '~/components/Modal/Modal';
 import {NewAppTypes, useNewAppContext} from '~/context/NewAppContextProvider';
-import {ProductLicenseTier} from '~/enums/Product';
 import i18n from '~/i18n';
+import {ProductLicenseTier} from '~/types/productEnums';
 import {currenciesCode} from '~/utils/currencyUtils';
 
 export type CurrencyFlagProps = (typeof currenciesCode)[number];

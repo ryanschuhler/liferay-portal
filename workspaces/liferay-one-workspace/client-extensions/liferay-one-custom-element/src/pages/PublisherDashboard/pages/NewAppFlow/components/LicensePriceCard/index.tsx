@@ -7,7 +7,7 @@ import ClayForm, {ClayInput} from '@clayui/form';
 import classNames from 'classnames';
 import ButtonWithIcon from '~/components/ButtonWithIcon/ButtonWithIcon';
 import {FieldBase} from '~/components/FieldBase/FieldBase';
-import {ProductLicenseTier} from '~/enums/Product';
+import {ProductLicenseTier} from '~/types/productEnums';
 import {currenciesCode} from '~/utils/currencyUtils';
 
 import './LicensePriceCard.css';

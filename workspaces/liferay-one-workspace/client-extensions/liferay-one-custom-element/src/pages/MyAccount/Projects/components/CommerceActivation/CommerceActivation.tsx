@@ -8,10 +8,10 @@ import {useMemo} from 'react';
 import {DetailedCard} from '~/components/DetailedCard/DetailedCard';
 import {useProject} from '~/context/ProjectContextProvider';
 import {useProperties} from '~/context/PropertiesContextProvider';
-import {LearnLinks} from '~/enums/Learn';
 import {Word, translate} from '~/i18n';
 import ActivationKeyDownload from '~/pages/MyAccount/Projects/components/ActivationKeyDownload/ActivationKeyDownload';
 import requiresActivationKey from '~/pages/MyAccount/Projects/utils/requiresActivationKey';
+import {LearnLinks} from '~/types/learn';
 
 type CommerceInstructionRow = {
 	detail?: Word;

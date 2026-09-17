@@ -12,8 +12,8 @@ import {
 	SolutionTypes,
 	useSolutionContext,
 } from '~/context/SolutionContextProvider';
-import {ProductVocabulary} from '~/enums/Product';
 import i18n from '~/i18n';
+import {ProductVocabulary} from '~/types/productEnums';
 import {ProductTags} from '~/utils/productUtils';
 import {getRandomID} from '~/utils/stringUtils';
 

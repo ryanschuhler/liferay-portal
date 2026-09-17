@@ -12,7 +12,7 @@ import Checkbox from '~/components/Checkbox/Checkbox';
 import ExternalLink from '~/components/ExternalLink/ExternalLink';
 import Loading from '~/components/Loading/Loading';
 import {usePublishMode} from '~/context/PublishModeContextProvider';
-import {useAccount} from '~/hooks/data/useAccounts';
+import {useAccount} from '~/hooks/useAccounts';
 import i18n from '~/i18n';
 import {PublishMode} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants';
 
@@ -22,9 +22,9 @@ import usePublishNavigation from './hooks/usePublishNavigation';
 import './BasePublishAppOutlet.css';
 
 import type {UploadedFile} from '~/components/FileList/FileList';
-import type {ProductWorkflowStatusCode} from '~/enums/Product';
 import type {AppFlowItem} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants';
 import type {Product} from '~/types/product';
+import type {ProductWorkflowStatusCode} from '~/types/productEnums';
 
 export type PublishFlowContext = {
 	_product?: Product;

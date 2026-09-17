@@ -5,14 +5,14 @@
 
 import {addYears, format} from 'date-fns';
 import {useMemo} from 'react';
+import useGetProductByOrderId from '~/hooks/useGetProductByOrderId';
+import useGetResourceInfo from '~/hooks/useGetResourceInfo';
+import i18n from '~/i18n';
 import {
 	LicenseType,
 	ProductLicenseType,
 	ProductSpecificationKey,
-} from '~/enums/Product';
-import useGetProductByOrderId from '~/hooks/useGetProductByOrderId';
-import useGetResourceInfo from '~/hooks/useGetResourceInfo';
-import i18n from '~/i18n';
+} from '~/types/productEnums';
 import {parseProjectId} from '~/utils/parseProjectId';
 import {getProductSpecification} from '~/utils/productUtils';
 

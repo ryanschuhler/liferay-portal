@@ -5,9 +5,9 @@
 
 import ReactDOMServer from 'react-dom/server';
 import {NewAppInitialState} from '~/context/NewAppContextProvider';
-import {LearnLinks} from '~/enums/Learn';
 import i18n from '~/i18n';
-import zodSchema from '~/schema/zodSchema';
+import zodSchema from '~/schemas/zodSchema';
+import {LearnLinks} from '~/types/learn';
 import {ProductUploadType} from '~/utils/productUtils';
 
 import type {ProductPriceModel} from '~/types/product';

@@ -12,9 +12,9 @@ import {
 	sortRoleNames,
 } from '~/pages/MyAccount/AccountMembers/accountRoles';
 import {getProjectRoleLabel} from '~/pages/MyAccount/ProjectMembers/projectRoles';
+import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import {Liferay} from '~/services/liferay/liferay';
 import Accounts from '~/services/spring-boot/Accounts';
-import SearchBuilder from '~/utils/SearchBuilder';
 
 import type {AccountMemberRow} from '~/pages/MyAccount/AccountMembers/types';
 import type {Account, UserAccount} from '~/types/accounts';

@@ -4,14 +4,14 @@
  */
 
 import {SolutionInitialState} from '~/context/SolutionContextProvider';
+import {Liferay} from '~/services/liferay/liferay';
 import {
 	ProductSpecificationKey,
 	ProductTags,
 	ProductTypeVocabulary,
 	ProductVocabulary,
 	ProductWorkflowStatusCode,
-} from '~/enums/Product';
-import {Liferay} from '~/services/liferay/liferay';
+} from '~/types/productEnums';
 import {base64ToText, fileToBase64} from '~/utils/fileUtils';
 
 import HeadlessCommerceAdminCatalogImpl from '../headless/HeadlessCommerceAdminCatalog';

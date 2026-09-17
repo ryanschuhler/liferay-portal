@@ -13,7 +13,7 @@ import i18n from '~/i18n';
 import LicenseTermsCheckbox from '~/pages/ProductPurchase/components/LicenseTermsCheckbox/LicenseTermsCheckbox';
 import {useProductPurchaseLayoutContext} from '~/pages/ProductPurchase/components/ProductPurchaseLayout/ProductPurchaseLayout';
 import ProductPurchaseShell from '~/pages/ProductPurchase/components/ProductPurchaseShell/ProductPurchaseShell';
-import commerceSchemas from '~/schema/commerceSchemas';
+import commerceSchemas from '~/schemas/commerceSchemas';
 import ProductPurchaseDXPFree from '~/services/commerce/ProductPurchaseDXPFree';
 import FetcherError from '~/services/fetcher/FetcherError';
 import {Liferay} from '~/services/liferay/liferay';

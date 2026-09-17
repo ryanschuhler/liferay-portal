@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {ProductType, ProductVocabulary} from '~/enums/Product';
+import i18n from '~/i18n';
 import {ConsoleUserProject} from '~/services/spring-boot/types';
+import {ProductType, ProductVocabulary} from '~/types/productEnums';
 import {
 	ProductLicense,
 	ProductLicenseFriendlyName,
@@ -14,8 +15,6 @@ import {
 	ProductTypeLabels,
 } from '~/utils/productUtils';
 import {safeJSONParse} from '~/utils/publishUtils';
-
-import i18n from '../i18n';
 
 import type {DeliveryProduct} from '~/types/product';
 

@@ -3,8 +3,10 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import useSWR from 'swr';
 import {useDataQuery} from '~/hooks/useDataQuery';
 import {queryGraphQL, toGraphQLString} from '~/services/graphql/GraphQL';
+import HeadlessAdminUser from '~/services/headless/HeadlessAdminUser';
 import {Liferay} from '~/services/liferay/liferay';
 
 import type {Account} from '~/types/accounts';
@@ -50,6 +52,14 @@ export function currentAccountQuery(
 			).then((data) => toAccount(data.account)),
 		key: accountId ? `/graphql/account/${accountId}` : null,
 	};
+}
+
+export function useAccount() {
+	const accountId = Liferay.CommerceContext.account?.accountId ?? 0;
+
+	return useSWR(`/account/${accountId}`, () =>
+		HeadlessAdminUser.getAccount(accountId)
+	);
 }
 
 export function useAccounts(search = '') {

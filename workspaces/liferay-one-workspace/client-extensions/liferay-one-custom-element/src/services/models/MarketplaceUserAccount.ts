@@ -4,8 +4,7 @@
  */
 
 import {Liferay} from '~/services/liferay/liferay';
-
-import {AccountRoleType} from '../enums/Account';
+import {AccountRoleType} from '~/types/accountEnums';
 
 import type {UserAccount} from '~/types/accounts';
 

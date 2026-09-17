@@ -6,9 +6,9 @@
 import {useOneContext} from '~/context/OneContextProvider';
 import {useDataQuery} from '~/hooks/useDataQuery';
 import {useFetch} from '~/hooks/useFetch';
+import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import {queryGraphQL, toGraphQLString} from '~/services/graphql/GraphQL';
 import {Liferay} from '~/services/liferay/liferay';
-import SearchBuilder from '~/utils/SearchBuilder';
 
 import type {UserProject} from '~/pages/MyAccount/Projects/types';
 import type {APIResponse, DataQuery} from '~/types/api';

@@ -11,7 +11,7 @@ import {Input} from '~/components/Input/Input';
 import Select from '~/components/Select/Select';
 import {ProjectProduct} from '~/hooks/useProjectCommerce';
 import {translate} from '~/i18n';
-import commerceSchemas from '~/schema/commerceSchemas';
+import commerceSchemas from '~/schemas/commerceSchemas';
 import LicenseKeys from '~/services/objects/LicenseKeys';
 import {toISODateFromDateInput} from '~/utils/dateUtils';
 

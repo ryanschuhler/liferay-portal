@@ -13,8 +13,8 @@ import {
 	NewAppTypes,
 	useNewAppContext,
 } from '~/context/NewAppContextProvider';
-import {ProductLicenseTier} from '~/enums/Product';
 import i18n from '~/i18n';
+import {ProductLicenseTier} from '~/types/productEnums';
 import {currenciesCode} from '~/utils/currencyUtils';
 import {ProductTypeLicenseOptions} from '~/utils/productUtils';
 

@@ -4,9 +4,9 @@
  */
 
 import useSWR from 'swr';
+import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import HeadlessCommerceDeliveryCatalog from '~/services/headless/HeadlessCommerceDeliveryCatalog';
 import {Liferay} from '~/services/liferay/liferay';
-import SearchBuilder from '~/utils/SearchBuilder';
 
 const useSSAProduct = () => {
 	const commerceChannelId = Liferay.CommerceContext.commerceChannelId;

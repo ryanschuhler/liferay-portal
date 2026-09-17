@@ -15,8 +15,8 @@ import {DropzoneUpload} from '~/components/DropzoneUpload/DropzoneUpload';
 import {FileList, UploadedFile} from '~/components/FileList/FileList';
 import Form from '~/components/MarketplaceForm/MarketplaceForm';
 import RichText from '~/components/RichText/RichText';
-import {ACCEPT_FILE_TYPES} from '~/enums/File';
 import i18n from '~/i18n';
+import {ACCEPT_FILE_TYPES} from '~/types/file';
 import {getRandomID} from '~/utils/stringUtils';
 import {swapElements} from '~/utils/swapElements';
 

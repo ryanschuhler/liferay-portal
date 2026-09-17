@@ -20,8 +20,8 @@ import {
 	SolutionTypes,
 	useSolutionContext,
 } from '~/context/SolutionContextProvider';
-import {ACCEPT_FILE_TYPES} from '~/enums/File';
 import i18n from '~/i18n';
+import {ACCEPT_FILE_TYPES} from '~/types/file';
 import {getRandomID} from '~/utils/stringUtils';
 import {swapElements} from '~/utils/swapElements';
 

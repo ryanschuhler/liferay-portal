@@ -10,8 +10,11 @@ import MultiSelect from '~/components/MultiSelect/MultiSelect';
 import Select from '~/components/Select/Select';
 import UploadLogo from '~/components/UploadLogo/UploadLogo';
 import {NewAppTypes, useNewAppContext} from '~/context/NewAppContextProvider';
-import {ProductVocabulary, ProductWorkflowStatusCode} from '~/enums/Product';
 import i18n from '~/i18n';
+import {
+	ProductVocabulary,
+	ProductWorkflowStatusCode,
+} from '~/types/productEnums';
 import {ProductTags} from '~/utils/productUtils';
 import {getRandomID} from '~/utils/stringUtils';
 

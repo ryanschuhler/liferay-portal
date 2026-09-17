@@ -7,9 +7,9 @@ import {filesize} from 'filesize';
 import {DropzoneUpload} from '~/components/DropzoneUpload/DropzoneUpload';
 import {FileList, UploadedFile} from '~/components/FileList/FileList';
 import {NewAppTypes, useNewAppContext} from '~/context/NewAppContextProvider';
-import {ALLOWED_MIME_TYPES, PUBLISH_APP_UPLOAD_MAX_SIZE} from '~/enums/File';
 import i18n from '~/i18n';
 import {Liferay} from '~/services/liferay/liferay';
+import {ALLOWED_MIME_TYPES, PUBLISH_APP_UPLOAD_MAX_SIZE} from '~/types/file';
 import {ProductType} from '~/utils/productUtils';
 import {getRandomID} from '~/utils/stringUtils';
 
