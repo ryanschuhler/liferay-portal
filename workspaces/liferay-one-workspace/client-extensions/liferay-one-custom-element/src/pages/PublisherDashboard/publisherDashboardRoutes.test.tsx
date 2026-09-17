@@ -19,6 +19,9 @@ describe('publisherDashboardRoutes', () => {
 			'published-apps',
 			'published-solutions',
 			'publisher-profile',
+			'newapp',
+			'newsolution',
+			'newversion',
 			'*',
 		]);
 	});

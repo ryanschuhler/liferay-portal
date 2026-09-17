@@ -25,7 +25,10 @@ const themeDisplayStub = new Proxy(
 );
 
 (window as unknown as {Liferay: unknown}).Liferay = {
-	CommerceContext: {},
+	CommerceContext: {
+		commerceChannelId: '0',
+		currency: {currencyCode: 'USD'},
+	},
 	ThemeDisplay: themeDisplayStub,
 	Util: {
 		fetch: () =>

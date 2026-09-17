@@ -49,6 +49,7 @@ describe('projectDetailRoutes', () => {
 			'(index)',
 			'products',
 			'applications',
+			'activation-keys',
 			'*',
 		]);
 	});
@@ -69,6 +70,7 @@ describe('projectDetailRoutes', () => {
 		expect(paths(applicationsRoute?.children ?? [])).toEqual([
 			'(index)',
 			':applicationERC',
+			':applicationERC/install/:orderId',
 			'*',
 		]);
 	});
@@ -81,8 +83,9 @@ describe('projectDetailRoutes', () => {
 		);
 
 		expect(navLabels).toEqual({
-			applications: 'Applications',
-			products: 'Products',
+			'activation-keys': 'Activation Keys',
+			'applications': 'Applications',
+			'products': 'Products',
 		});
 	});
 });

@@ -33,7 +33,7 @@ describe('adminRoutes', () => {
 			'manage-ssa-saas-users',
 			'details/:orderId',
 			'pub-sub',
-			'license-key-uploads',
+			'activation-key-uploads',
 			'*',
 		]);
 	});
@@ -60,7 +60,7 @@ describe('adminRoutes', () => {
 		);
 
 		expect(navLabels).toEqual({
-			'license-key-uploads': 'License Key Uploads',
+			'activation-key-uploads': 'Activation Key Uploads',
 			'manage-ssa-saas-users': 'Manage SSA SaaS Users',
 			'mp-apps': 'Marketplace Apps',
 			'mp-finance-orders': 'Marketplace Finance Orders',
