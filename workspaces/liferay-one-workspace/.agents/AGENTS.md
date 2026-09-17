@@ -50,6 +50,7 @@ Run from `workspaces/liferay-one-workspace/`.
 - [`rules/object-naming.md`](./rules/object-naming.md) — ERC patterns, Object names, field casing
 - [`rules/page-folder-structure.md`](./rules/page-folder-structure.md) — one subfolder per sub-page component
 - [`rules/spring-boot-analysis.md`](./rules/spring-boot-analysis.md) — SpotBugs on the Java lane: what it covers, what it cannot, and the open findings
+- [`rules/simplified-technical-english.md`](./rules/simplified-technical-english.md) — ASD-STE100: the controlled language for every word written for a person to read
 - [`rules/pr-hygiene.md`](./rules/pr-hygiene.md) — PR scope, merge conflicts, commit messages
 
 ## Specs

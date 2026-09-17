@@ -34,6 +34,14 @@ import type {
 	TierPrice,
 } from '~/types/product';
 
+type TierPriceEntry = {
+	active: boolean;
+	minimumQuantity: number;
+	neverExpire: boolean;
+	price: number;
+	priceEntryId: number;
+};
+
 export type ProductConfig = {
 	isDraft: boolean;
 	isEdit?: boolean;
@@ -58,8 +66,8 @@ function normalizeCategory(category: {
 }
 
 function isTierPriceChanged(
-	currentTierPrices: TierPrice[],
-	newTierPrices: TierPrice[]
+	currentTierPrices: Pick<TierPrice, 'minimumQuantity' | 'price'>[],
+	newTierPrices: Pick<TierPrice, 'minimumQuantity' | 'price'>[]
 ): boolean {
 	if (currentTierPrices.length !== newTierPrices.length) {
 		return true;
@@ -611,7 +619,7 @@ export default class AppPublish extends BaseAppPublish {
 				if (priceEntry) {
 					await this.updatePriceEntry(
 						priceEntry,
-						tierPricesEntries as unknown as TierPrice[]
+						tierPricesEntries
 					);
 
 					continue;
@@ -635,7 +643,7 @@ export default class AppPublish extends BaseAppPublish {
 
 	private async updatePriceEntry(
 		priceEntry: PriceEntry,
-		tierPricesEntries: TierPrice[]
+		tierPricesEntries: TierPriceEntry[]
 	) {
 		const {items: tierPrices} =
 			await HeadlessCommerceAdminPricing.getTierPricesByPriceEntryId(
@@ -645,7 +653,7 @@ export default class AppPublish extends BaseAppPublish {
 		if (
 			!isTierPriceChanged(
 				tierPrices,
-				tierPricesEntries as unknown as TierPrice[]
+				tierPricesEntries
 			)
 		) {
 			return;
@@ -700,7 +708,7 @@ export default class AppPublish extends BaseAppPublish {
 
 	private async deleteUnusedTierPrices(
 		tierPrices: TierPrice[],
-		tierPricesEntries: TierPrice[]
+		tierPricesEntries: TierPriceEntry[]
 	) {
 		const priceEntriesToDelete = tierPrices.filter(
 			(tierPrice) =>

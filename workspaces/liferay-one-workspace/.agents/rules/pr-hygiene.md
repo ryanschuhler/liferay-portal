@@ -22,6 +22,10 @@ Never send a PR that has merge conflicts. Brian immediately closes them with the
 
 When your work depends on a PR that was already merged upstream by Brian, your PR must include or reference those merged commits. If Brian merged a dependency, rebase onto the latest `liferay-one/master-temp` before sending your PR so the upstream commits are included.
 
+## Commit Messages Use Simplified Technical English
+
+A commit message, a pull request title, and a pull request description are written for a person to read. They follow [`simplified-technical-english.md`](./simplified-technical-english.md): active voice, simple tenses, short sentences, exact counts, and no figures of speech.
+
 ## Commit Messages Must Have a Jira Ticket
 
 Every commit message must reference a valid Jira ticket (LPD-12345, LRSD-12345, etc.). The CI bot automatically closes PRs where any commit is missing this reference.
