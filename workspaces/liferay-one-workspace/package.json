@@ -39,7 +39,8 @@
 		"test:ui": "yarn workspace @liferay/liferay-one-workspace-tests test:ui",
 		"test:unit": "yarn workspace @liferay/liferay-one-custom-element test",
 		"test:unit:all": "yarn test:unit && yarn test:unit:java",
-		"test:unit:java": "./gradlew :client-extensions:liferay-one-etc-spring-boot:test"
+		"test:unit:java": "./gradlew :client-extensions:liferay-one-etc-spring-boot:test",
+		"typecheck": "yarn workspace @liferay/liferay-one-workspace-tests typecheck"
 	},
 	"workspaces": {
 		"packages": [

@@ -9,7 +9,7 @@ name: tests
 
 Playwright covers the surface exposed after deployment in this workspace. Unit tests live with the code they exercise, not here — see [`Layout`](#layout).
 
-All tests run against a local Liferay instance by default (`BASE_URL=http://localhost:8080`). The `liferay-one-etc-spring-boot` client extension is reached directly at `SPRING_BOOT_BASE_URL=http://localhost:58081` for unauthenticated probes, and through the Liferay OAuth2 proxy under `/o/one/v1` for everything else.
+All tests run against a local Liferay instance by default (`${BASE_URL}`, defaulting to `http://localhost:8080`). The `liferay-one-etc-spring-boot` client extension is reached directly at `${SPRING_BOOT_BASE_URL}` (defaulting to `http://localhost:58081`) for unauthenticated probes, and through the Liferay OAuth2 proxy under `/o/one/v1` for everything else.
 
 ## First Run Bootstrap
 
@@ -58,17 +58,26 @@ Controller tests use `MockMvcBuilders.standaloneSetup(...)` to instantiate contr
 ```
 tests/
 ├── playwright.config.ts         # Two projects: integration + e2e
-├── scripts/
-│   └── bootstrap.sh             # Wired to `yarn bootstrap:tests`
+├── TEST_PLAN.md                 # The what-to-test companion to this file
+├── tsconfig.json                # Typechecks the specs (CommonJS, for Playwright)
 ├── e2e/
 │   ├── fixtures/                # Playwright test.extend wrappers
 │   ├── pages/                   # Page object model
 │   ├── specs/                   # *.spec.ts run by the e2e project
 │   └── utils/                   # Login, constants, shared helpers
-└── integration/
-    ├── fixtures/                # api fixture
-    ├── helpers/                 # APIHelpers — auth + JSON wrapping
-    └── specs/                   # *.spec.ts run by the integration project
+├── integration/
+│   ├── fixtures/                # api fixture
+│   ├── helpers/                 # APIHelpers — auth + JSON wrapping
+│   └── specs/                   # *.spec.ts run by the integration project
+├── plan/                        # Structured plan rows, one file per surface
+└── scripts/
+    ├── bootstrap.sh             # Wired to `yarn bootstrap:tests`
+    ├── checkCoverage.ts         # Wired to `yarn plan:coverage`
+    ├── checkPlan.ts             # Wired to `yarn plan:check`
+    ├── planReport.ts            # Wired to `yarn plan:report`
+    ├── scaffoldPlan.ts          # Wired to `yarn plan:scaffold`
+    ├── tsconfig.json            # Typechecks the plan tooling (ESM, Node type stripping)
+    └── lib/                     # Shared plan, surface, and test index helpers
 ```
 
 ## Running
@@ -80,6 +89,8 @@ yarn test                        # Both projects
 yarn test:integration            # Integration only (no browser)
 yarn test:e2e                    # E2E only
 yarn test:ui                     # Playwright UI mode
+yarn test:report                 # Open the last HTML report
+yarn typecheck                   # Typecheck the specs and the plan tooling
 ```
 
 Or, from the workspace root:
@@ -88,22 +99,37 @@ Or, from the workspace root:
 yarn test:integration
 yarn test:e2e
 yarn test:unit                   # Vitest in liferay-one-custom-element
+yarn test:unit:java              # JUnit in liferay-one-etc-spring-boot
+yarn typecheck                   # Typecheck the specs and the plan tooling
 ```
 
 Run a single spec:
 
 ```bash
-yarn playwright integration/specs/springBootReady.spec.ts
+yarn playwright test integration/specs/springBootReady.spec.ts
 ```
 
-> `test` is intentionally not wired as a script in this package — `./gradlew build` auto-invokes any `yarn test` it finds, and running Playwright during a gradle build would require a running Liferay instance. Vitest owns the `test` slot in `liferay-one-custom-element` at build time; Playwright runs on demand via these scripts.
+> `test` is wired here as `playwright test`, and the workspace root delegates its own `test` script to it. Playwright still never runs during a Gradle build: the Liferay Node plugin generates a `packageRunTest` task from a project's `test` script, and the root [`build.gradle`](../build.gradle) disables that task for every project, so `./gradlew build` stays offline. The suite runs on demand through the scripts above, once the portal is up.
+
+## Plan Tooling
+
+[`TEST_PLAN.md`](./TEST_PLAN.md) and the structured rows under [`plan/`](./plan/) record what must be tested. Four scripts keep that plan honest against the code, and run from either this directory or the workspace root:
+
+```bash
+yarn plan:check                  # Fail if the code surface has no plan row
+yarn plan:coverage               # Report the share of plan rows a test references
+yarn plan:report                 # Write the real-versus-pending coverage report
+yarn plan:scaffold               # Reconcile gaps and stale rows into plan/
+```
+
+These scripts are ESM TypeScript run directly by Node's native type stripping, so they carry their own [`scripts/tsconfig.json`](./scripts/tsconfig.json). `yarn typecheck` checks both that project and the CommonJS one the Playwright specs use.
 
 ## Auth
 
 Integration tests authenticate via the `api` fixture:
 
-- If `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` are set, the helper fetches a bearer token from `/o/oauth2/token`. Populate them with `scripts/extract_oauth_credentials.sh <oauth-application-name>` after the environment is up.
-- Otherwise it falls back to basic auth with `LIFERAY_ADMIN_EMAIL` / `LIFERAY_ADMIN_PASSWORD` (defaults: `test@liferay.com` / `test`).
+- If `${OAUTH_CLIENT_ID}` and `${OAUTH_CLIENT_SECRET}` are set, the helper fetches a bearer token from `/o/oauth2/token`. Populate them with `scripts/bootstrap/extract_oauth_credentials.sh <oauth-application-name>` after the environment is up.
+- Otherwise it falls back to basic auth with `${LIFERAY_ADMIN_EMAIL}` / `${LIFERAY_ADMIN_PASSWORD}` (defaults: `test@liferay.com` / `test`).
 
 The default basic auth path works out of the box with the seed admin user. The `/o/one/v1` Spring Boot endpoints enforce OAuth2 scopes (`customer.read`, `ticket.read`, `ticket.write`, …), so tests that exercise them must use the OAuth2 path with a client granted those scopes.
 

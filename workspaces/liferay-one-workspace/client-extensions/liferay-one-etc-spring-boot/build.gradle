@@ -102,7 +102,7 @@ sourceSets {
 }
 
 test {
-	finalizedBy jacocoTestReport
+	finalizedBy jacocoTestCoverageVerification, jacocoTestReport
 
 	jvmArgs(
 		"--add-opens=java.base/java.lang=ALL-UNNAMED",
@@ -110,6 +110,39 @@ test {
 		"--add-opens=java.base/java.lang.reflect=ALL-UNNAMED"
 	)
 	useJUnitPlatform()
+}
+
+jacocoTestCoverageVerification {
+	dependsOn test
+
+	violationRules {
+		rule {
+			limit {
+				counter = "BRANCH"
+				minimum = 0.50
+			}
+
+			limit {
+				counter = "CLASS"
+				minimum = 0.70
+			}
+
+			limit {
+				counter = "INSTRUCTION"
+				minimum = 0.55
+			}
+
+			limit {
+				counter = "LINE"
+				minimum = 0.52
+			}
+
+			limit {
+				counter = "METHOD"
+				minimum = 0.52
+			}
+		}
+	}
 }
 
 jacocoTestReport {
@@ -122,6 +155,7 @@ jacocoTestReport {
 	}
 }
 
+check.dependsOn jacocoTestCoverageVerification
 compileJava.dependsOn cloneReleaseToolEE
 
 buildDockerImage {

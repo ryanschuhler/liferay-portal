@@ -18,7 +18,8 @@
 		"test:e2e": "playwright test --project=e2e",
 		"test:integration": "playwright test --project=integration",
 		"test:report": "playwright show-report",
-		"test:ui": "playwright test --ui"
+		"test:ui": "playwright test --ui",
+		"typecheck": "tsc --project tsconfig.json && tsc --project scripts/tsconfig.json"
 	},
 	"version": "1.0.0"
 }
