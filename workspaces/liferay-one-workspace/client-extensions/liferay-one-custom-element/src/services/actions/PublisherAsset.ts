@@ -152,8 +152,7 @@ export default class PublisherAsset {
 
 			const publisherAsset =
 				await HeadlessPublisherAssetses.createPublisherAsset({
-					[productRelationshipName]: this.product
-						.id as unknown as string,
+					[productRelationshipName]: this.product.id,
 					r_accountEntryToPublisherAsset_accountEntryId:
 						Liferay.CommerceContext.account?.accountId,
 					version: this.versions,

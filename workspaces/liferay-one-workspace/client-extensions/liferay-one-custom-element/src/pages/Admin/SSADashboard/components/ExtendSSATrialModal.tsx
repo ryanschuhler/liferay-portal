@@ -54,7 +54,7 @@ const ExtendSSATrialModal: React.FC<ExtendSSATrialModalProps> = ({
 		register,
 	} = useForm({
 		defaultValues: {
-			duration: '' as unknown as number,
+			duration: 0,
 			reason: '',
 		},
 		mode: 'onSubmit',

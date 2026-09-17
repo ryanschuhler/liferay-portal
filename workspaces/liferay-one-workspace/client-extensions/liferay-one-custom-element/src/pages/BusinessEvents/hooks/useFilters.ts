@@ -26,19 +26,19 @@ export default function useFilters(): {
 
 	const handleFilterChange = useCallback(
 		(newFilterOptions: IFilterOption[]) => {
-			setFilters(((prevFilters: IState) => ({
+			setFilters((prevFilters) => ({
 				...prevFilters,
 				selectedFilters: newFilterOptions,
-			})) as unknown as IState);
+			}));
 		},
 		[]
 	);
 
 	const handleSearchChange = useCallback((searchTerm: string) => {
-		setFilters(((prevFilters: IState) => ({
+		setFilters((prevFilters) => ({
 			...prevFilters,
 			searchTerm,
-		})) as unknown as IState);
+		}));
 	}, []);
 
 	return {filters, handleFilterChange, handleSearchChange};

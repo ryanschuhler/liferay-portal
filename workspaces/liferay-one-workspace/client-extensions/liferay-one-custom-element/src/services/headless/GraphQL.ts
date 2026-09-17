@@ -63,7 +63,7 @@ export default class GraphQL {
 				(metrics as Record<string, unknown>)[filterKey] = {
 					items: [],
 					totalCount: 0,
-				} as unknown as Metrics<T>;
+				};
 			}
 
 			return {

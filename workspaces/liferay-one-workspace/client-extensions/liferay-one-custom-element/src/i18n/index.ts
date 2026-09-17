@@ -24,7 +24,7 @@ export function translate(
 	languageId = Liferay.ThemeDisplay.getDefaultLanguageId()
 ): string {
 	const languageProperties = (
-		languages as unknown as Record<string, Partial<typeof en_US>>
+		languages as Record<string, Partial<Record<Word, string>>>
 	)[languageId];
 
 	return languageProperties?.[word] || en_US[word] || word;
