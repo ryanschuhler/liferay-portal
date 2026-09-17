@@ -32,7 +32,14 @@ const EXPORT_PATTERN =
 
 const EXPORT_LIST_PATTERN = /^export\s*\{([^}]*)\}/gm;
 
-const IMPORT_PATTERN = /from\s*['"]([^'"]+)['"]/g;
+// A static import decides initialization order, so a ring of them is a real
+// defect. A dynamic import('...') is deferred and orders nothing, so it counts
+// for reachability but never for cycles — and every lazy loaded page and route
+// is reached that way, which is why both forms have to be read.
+
+const DYNAMIC_IMPORT_PATTERN = /\bimport\s*\(\s*['"]([^'"]+)['"]/g;
+
+const STATIC_IMPORT_PATTERN = /from\s*['"]([^'"]+)['"]/g;
 
 // Captures the clause between `import` and `from` so default, namespace, and
 // named bindings can all be attributed to the module they came from.
@@ -175,7 +182,7 @@ function main() {
 		const source = fs.readFileSync(file, 'utf8');
 		const targets = new Set();
 
-		for (const match of source.matchAll(IMPORT_PATTERN)) {
+		for (const match of source.matchAll(STATIC_IMPORT_PATTERN)) {
 			const target = resolve(match[1], moduleName, modules);
 
 			if (target) {
@@ -184,6 +191,14 @@ function main() {
 		}
 
 		graph.set(moduleName, targets);
+
+		for (const match of source.matchAll(DYNAMIC_IMPORT_PATTERN)) {
+			const target = resolve(match[1], moduleName, modules);
+
+			if (target) {
+				imported.add(`${target}:default`);
+			}
+		}
 
 		for (const match of source.matchAll(IMPORT_CLAUSE_PATTERN)) {
 			const target = resolve(match[2], moduleName, modules);

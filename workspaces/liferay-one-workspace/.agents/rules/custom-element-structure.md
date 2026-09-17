@@ -188,6 +188,8 @@ User-facing text is never written inline. A literal in `alt`, `aria-label`, `lab
 
 `yarn lint:imports` reports every export nothing imports. A file that only its own dead neighbours import is dead too, however large and however plausible it looks — `utils/apiUtils.ts` was 650 lines of commerce API calls reached only from `utils/publishUtils.ts`, whose own three consumers wanted two helpers that already existed elsewhere. Neither file had a live caller. Check what imports a module before rewriting it; the answer is sometimes nothing.
 
+Reachability has to count `import('...')` as well as `from '...'`, or every lazy loaded page looks dead — that form is how `main.tsx` and every routes file reach their pages. Cycles are the opposite: a dynamic import is deferred and orders nothing, so only static edges can form the ring that leaves a module half-initialized. `check-imports.js` reads both and uses each for the question it answers.
+
 ## Dependencies
 
 `yarn lint:deps` reconciles `package.json` against what the source imports. It reports a dependency nothing imports, and an import nothing declares — the second is the dangerous one, since it resolves today only because a transitive dependency happens to hoist it, and breaks the moment that package moves.
@@ -200,7 +202,7 @@ The workspace has not been cleaned up yet, so every structural rule is `warn`. T
 
 | Rule | Open |
 | --- | --- |
-| `yarn lint:imports` dead exports | 356 |
+| `yarn lint:imports` dead exports | 344 |
 | `service-layer-boundary` | 63 |
 | `yarn lint:placement` | 38 |
 | `file-complexity-budget` | 34 |

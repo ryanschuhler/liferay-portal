@@ -28,7 +28,10 @@ const SOURCE_DIR = path.join(
 
 const APP_SHELL = 'the app shell';
 
-const IMPORT_PATTERN = /from\s*['"]([^'"]+)['"]/g;
+// `from '...'` and the dynamic `import('...')` that every lazy loaded page and
+// route uses. Missing the second form makes every page look unreachable.
+
+const IMPORT_PATTERN = /(?:from\s*|\bimport\s*\(\s*)['"]([^'"]+)['"]/g;
 
 function walk(directory, files = []) {
 	for (const entry of fs.readdirSync(directory, {withFileTypes: true})) {
