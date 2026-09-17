@@ -93,7 +93,7 @@ const TicketAttachmentsAdd = () => {
 					message={
 						hasAccountProjects
 							? translate(
-									'login-as-a-user-that-has-access-to-a-project-or-contact-your-project-administrator-to-add-you-to-a-project.'
+									'login-as-a-user-that-has-access-to-a-project-or-contact-your-project-administrator-to-add-you-to-a-project'
 								)
 							: undefined
 					}

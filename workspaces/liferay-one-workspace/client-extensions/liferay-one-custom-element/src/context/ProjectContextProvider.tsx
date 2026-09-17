@@ -30,6 +30,7 @@ import {
 	toProductsByProductId,
 	toProjectItemsByType,
 } from '~/pages/MyAccount/Projects/utils/projectItemsUtils';
+import MarketplaceStorage from '~/services/liferay/MarketplaceStorage';
 
 type ProjectContextValue = {
 	loading: boolean;
@@ -117,7 +118,9 @@ export function ProjectProvider({children}: {children: ReactNode}) {
 
 	useEffect(() => {
 		if (accessible) {
-			localStorage.setItem(LAST_PROJECT_STORAGE_KEY, projectId);
+			MarketplaceStorage.getInstance()
+				.getStorage('persisted')
+				.setItem(LAST_PROJECT_STORAGE_KEY, projectId);
 		}
 	}, [accessible, projectId]);
 

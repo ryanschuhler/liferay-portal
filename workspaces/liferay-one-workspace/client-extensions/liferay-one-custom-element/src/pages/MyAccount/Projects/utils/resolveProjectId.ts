@@ -3,10 +3,16 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import MarketplaceStorage from '~/services/liferay/MarketplaceStorage';
+
 import {LAST_PROJECT_STORAGE_KEY} from './constants';
 
 export function resolveProjectId(): string {
-	return localStorage.getItem(LAST_PROJECT_STORAGE_KEY) ?? '';
+	return (
+		MarketplaceStorage.getInstance()
+			.getStorage('persisted')
+			.getItem(LAST_PROJECT_STORAGE_KEY) ?? ''
+	);
 }
 
 export default resolveProjectId;

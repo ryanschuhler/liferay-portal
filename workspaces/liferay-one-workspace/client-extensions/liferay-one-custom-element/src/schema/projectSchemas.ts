@@ -55,7 +55,7 @@ export const projectSchemas = {
 			.optional()
 			.refine(
 				(value) => !value || value.startsWith('/'),
-				i18n.translate('the-workspace-url-should-start-with-/')
+				i18n.translate('the-workspace-url-should-start-with')
 			)
 			.refine(
 				(value) => !value || !value.includes(' '),

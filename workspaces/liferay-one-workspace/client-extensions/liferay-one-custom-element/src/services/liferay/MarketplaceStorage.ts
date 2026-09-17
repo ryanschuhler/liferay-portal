@@ -27,7 +27,7 @@ class Storage {
 	}
 
 	getItem(
-		key: STORAGE_KEYS,
+		key: string,
 		consentType: CONSENT_TYPE = CONSENT_TYPE.NECESSARY
 	): string | null {
 		return this.storage.getItem(key, consentType);

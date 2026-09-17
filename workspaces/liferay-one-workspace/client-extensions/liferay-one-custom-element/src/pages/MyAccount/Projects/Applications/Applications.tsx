@@ -85,7 +85,7 @@ export default function Applications() {
 					title: isOrderCompleted
 						? undefined
 						: translate(
-								'the-order-must-be-completed-before-licensing-this-app.'
+								'the-order-must-be-completed-before-licensing-this-app'
 							),
 				},
 				{
@@ -106,7 +106,7 @@ export default function Applications() {
 				title: isOrderCompleted
 					? undefined
 					: translate(
-							'this-order-must-be-completed-before-downloading-this-app.'
+							'this-order-must-be-completed-before-downloading-this-app'
 						),
 			});
 		}

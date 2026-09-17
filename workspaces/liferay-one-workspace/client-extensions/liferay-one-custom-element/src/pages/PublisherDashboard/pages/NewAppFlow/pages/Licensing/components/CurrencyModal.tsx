@@ -120,7 +120,7 @@ const CurrencyModal = ({observer, onClose}: ReturnType<typeof useModal>) => {
 					items={currenciesCode}
 					messages={{
 						itemDescribedby: i18n.translate(
-							'you-are-currently-on-a-text-element,-inside-of-a-list-box'
+							'you-are-currently-on-a-text-element-inside-of-a-list-box'
 						),
 						itemSelected: i18n.translate('x-selected'),
 					}}

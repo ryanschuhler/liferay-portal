@@ -226,7 +226,7 @@ const RequestAccountForm: React.FC<RequestAccountFormProps> = ({
 							boldLabel
 							className="custom-input"
 							helpMessage={i18n.translate(
-								'if-you-are-requesting-the-account-on-behalf-of-a-business-,-please-note-the-business-name'
+								'if-you-are-requesting-the-account-on-behalf-of-a-business-please-note-the-business-name'
 							)}
 							label={i18n.translate('request-description')}
 							name="requestDescription"

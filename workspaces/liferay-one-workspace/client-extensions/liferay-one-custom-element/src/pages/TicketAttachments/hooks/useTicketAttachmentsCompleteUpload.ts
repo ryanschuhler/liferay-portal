@@ -5,6 +5,7 @@
 
 import * as OAuth2 from '@liferay/oauth2-provider-web/client';
 import {useCallback, useState} from 'react';
+import MarketplaceStorage from '~/services/liferay/MarketplaceStorage';
 
 interface IParams {
 	comment: string;
@@ -46,7 +47,9 @@ const useTicketAttachmentsCompleteUpload = (): IProps => {
 				);
 			}
 
-			sessionStorage.removeItem(`gcsSessionURL:${fileMd5}`);
+			MarketplaceStorage.getInstance()
+				.getStorage('temporary')
+				.removeItem(`gcsSessionURL:${fileMd5}`);
 		}
 		finally {
 			setLoading(false);

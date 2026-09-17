@@ -155,7 +155,7 @@ export default {
 	'leave-a-comment': 'Pon un Comentario',
 	'life-sciences': 'Ciencias de la vida',
 	'liferay-dxp-version': 'Versión de Liferay DXP',
-	'login-as-a-user-that-has-access-to-a-project-or-contact-your-project-administrator-to-add-you-to-a-project.':
+	'login-as-a-user-that-has-access-to-a-project-or-contact-your-project-administrator-to-add-you-to-a-project':
 		'Inicia sesión como un usuario con acceso a un proyecto o contacta al administrador del proyecto para que te agregue.',
 	'logs': 'Logs',
 	'london-england': 'Londres, Inglaterra',
@@ -270,7 +270,7 @@ export default {
 		'El código de activación solicitado aún no está disponible.',
 	'the-workspace-url-must-not-have-spaces':
 		'La URL del espacio de trabajo no debe contener espacios.',
-	'the-workspace-url-should-start-with-/':
+	'the-workspace-url-should-start-with':
 		'La URL del espacio de trabajo debe empezar con «/».',
 	'there-are-currently-no-open-tickets-under-this-project':
 		'No hay tickets abiertos actualmente en este proyecto.',

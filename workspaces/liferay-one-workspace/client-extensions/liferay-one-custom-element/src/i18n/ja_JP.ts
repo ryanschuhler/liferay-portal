@@ -151,7 +151,7 @@ export default {
 	'leave-a-comment': 'コメントを残す',
 	'life-sciences': 'ライフサイエンス',
 	'liferay-dxp-version': 'Liferay DXP バージョン',
-	'login-as-a-user-that-has-access-to-a-project-or-contact-your-project-administrator-to-add-you-to-a-project.':
+	'login-as-a-user-that-has-access-to-a-project-or-contact-your-project-administrator-to-add-you-to-a-project':
 		'プロジェクトにアクセスできるユーザーとしてログインするか、プロジェクト管理者に追加を依頼してください。',
 	'logs': 'ログ',
 	'london-england': 'ロンドン、英国',
@@ -264,7 +264,7 @@ export default {
 		'リクエストされたアクティベーションキーはまだ利用できません。',
 	'the-workspace-url-must-not-have-spaces':
 		'ワークスペースの URL にはスペースを含めないでください。',
-	'the-workspace-url-should-start-with-/':
+	'the-workspace-url-should-start-with':
 		"ワークスペースの URL は '/' から始まる必要があります。",
 	'there-are-currently-no-open-tickets-under-this-project':
 		'現在、このプロジェクトで未解決のチケットはありません。',

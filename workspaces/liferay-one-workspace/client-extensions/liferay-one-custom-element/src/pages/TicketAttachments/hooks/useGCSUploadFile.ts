@@ -4,6 +4,7 @@
  */
 
 import {useCallback, useState} from 'react';
+import MarketplaceStorage from '~/services/liferay/MarketplaceStorage';
 import {IUpload} from '~/utils/types';
 
 import useGCSGetUploadOffset from './useGCSGetUploadOffset';
@@ -242,7 +243,9 @@ const useGCSUploadFile = (): IProps => {
 		if (abortController) {
 			abortController.abort();
 
-			sessionStorage.removeItem(`gcsSessionURL:${md5}`);
+			MarketplaceStorage.getInstance()
+				.getStorage('temporary')
+				.removeItem(`gcsSessionURL:${md5}`);
 			setLoading(false);
 			setProgress(0);
 		}

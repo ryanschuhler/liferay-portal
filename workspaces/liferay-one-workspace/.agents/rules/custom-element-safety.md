@@ -91,13 +91,13 @@ Every rule is `warn` until its count reaches zero, then it becomes `error` in `t
 | `jsx-a11y/*` | 82 |
 | `no-raw-fetch` | 42 |
 | `bounded-pagination` | 18 |
-| `i18n-key-slug` | 15 |
-| `no-direct-web-storage` | 8 |
+| `i18n-key-slug` | 0 |
+| `no-direct-web-storage` | 0 |
 | `odata-filter-via-search-builder` | 0 |
 | `no-unsanitized-html` | 0 |
 | `no-timezone-naive-date` | 0 |
 
-The three at zero are errors now. `no-untranslated-text` and the rest stay warnings until they follow.
+The five at zero are errors now. The rest stay warnings until they follow.
 
 Accessibility is enforced through `eslint-plugin-jsx-a11y`. Its recommended set ships as errors; `.eslintrc.js` maps the plugin's own rule list down to warnings so the count can be worked off, which keeps it in step with the plugin rather than pinning a list that goes stale.
 

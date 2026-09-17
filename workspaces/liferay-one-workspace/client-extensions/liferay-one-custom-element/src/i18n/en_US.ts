@@ -686,7 +686,7 @@ export default {
 		'If the app is compatible with different updates of 7.4, please upload multiple packages for each update or update the compatibility range.',
 	'if-there-is-no-project-admin-on-this-project-to-add-or-manage-team-members-contact-your-account-admin':
 		'There is no Project Admin on this project. To add or manage team members, contact your Account Admin.',
-	'if-you-are-requesting-the-account-on-behalf-of-a-business-,-please-note-the-business-name':
+	'if-you-are-requesting-the-account-on-behalf-of-a-business-please-note-the-business-name':
 		'If you are requesting the account on behalf of a business, please note the business name.',
 	'if-you-could-choose-3-top-priorities-for-improvements-what-would-they-be':
 		'If you could choose 3 top priorities for improvements, what would they be?',
@@ -811,7 +811,7 @@ export default {
 	'limit-reached': 'Limit Reached',
 	'list-with-latest-published-apps': 'List with latest published apps',
 	'loading': 'Loading…',
-	'login-as-a-user-that-has-access-to-a-project-or-contact-your-project-administrator-to-add-you-to-a-project.':
+	'login-as-a-user-that-has-access-to-a-project-or-contact-your-project-administrator-to-add-you-to-a-project':
 		'Login as a user that has access to a project or contact your project administrator to add you to a project.',
 	'logs': 'Logs',
 	'london-england': 'London, England',
@@ -928,7 +928,7 @@ export default {
 	'need-help': 'Need help?',
 	'need-help-activating-this-product-check-the':
 		'Need help activating this product? Check the',
-	'need-help-getting-started?': 'Need help getting started?',
+	'need-help-getting-started': 'Need help getting started?',
 	'net-price': 'Net Price',
 	'new-account': 'New Account',
 	'new-activation-key': 'New Activation Key',
@@ -1481,7 +1481,7 @@ export default {
 		'Thank you for choosing <b>{0}</b>. Your purchase has been successfully processed. To continue, please click the button below to download or install the app.',
 	'thank-you-for-submitting-this-request':
 		'Thank you for submitting this request!',
-	'thank-you-for-trying-the-beta-version-of-this-product-your-feedback-is-essential-to-improve-the-final-release-this-survey-takes-3–5-minutes':
+	'thank-you-for-trying-the-beta-version-of-this-product-your-feedback-is-essential-to-improve-the-final-release-this-survey-takes-3-5-minutes':
 		'Thank you for trying the beta version of this product! Your feedback is essential to improve the final release. This survey takes ~3–5 minutes.',
 	'thank-you-for-your': 'Thank you for your',
 	'thank-you-for-your-order-we-have-registered-your-request-and-will-send-you-the-invoice-by-email-with-all-the-details-to-complete-your-payment-check-your-spam-or-promotions-folder-if-you-dont-see-it-in-your-inbox-your-order-is-currently-pending-payment':
@@ -1501,7 +1501,7 @@ export default {
 		'The changes were saved successfully.',
 	'the-cloud-app-is-client-extension-based-and-compatible-with-liferay-saas-it-fully-supports-and-deploys-on-extension-environments':
 		'The cloud app is client extension based and compatible with Liferay SaaS. It fully supports and deploys on extension environments.',
-	'the-cloud-app-is-client-extension-based-and-is-compatible-with-a-customer’s-self-hosted-environment':
+	'the-cloud-app-is-client-extension-based-and-is-compatible-with-a-customer-s-self-hosted-environment':
 		'The cloud app is client extension based and is compatible with a customer’s self-hosted environment.',
 	'the-cloud-app-is-client-extension-based-and-is-compatible-with-liferays-self-managed-offering':
 		'The Cloud app is client extension based and is compatible with Liferay’s Self-Managed offering.',
@@ -1526,7 +1526,7 @@ export default {
 		'The Liferay Marketplace is the premier place for Liferay customers to find pre-built, pre-approved app extensions to quickly extend the Liferay platform to new and legacy technologies.',
 	'the-monthly-view-supports-a-date-range-of-up-to-ten-years':
 		'The monthly view supports a date range of up to ten years.',
-	'the-order-must-be-completed-before-licensing-this-app.':
+	'the-order-must-be-completed-before-licensing-this-app':
 		'The order must be completed before licensing this app.',
 	'the-published-version-is-x': 'The published version is {0}.',
 	'the-requested-activation-key-is-not-yet-available':
@@ -1539,7 +1539,7 @@ export default {
 		'The start date must be earlier than the end date.',
 	'the-workspace-url-must-not-have-spaces':
 		'The workspace URL must not have spaces.',
-	'the-workspace-url-should-start-with-/':
+	'the-workspace-url-should-start-with':
 		"The workspace URL should start with '/'.",
 	'theme': 'Theme',
 	'there-are-currently-no-open-tickets-under-this-project':
@@ -1570,7 +1570,7 @@ export default {
 		'This key is expired and cannot be downloaded.',
 	'this-may-restrict-the-functionality-available-to-you':
 		'This may restrict the functionality available to you.',
-	'this-order-must-be-completed-before-downloading-this-app.':
+	'this-order-must-be-completed-before-downloading-this-app':
 		'This order must be completed before downloading this app.',
 	'this-product-is-no-longer-available':
 		'This product is no longer available.',
@@ -1811,7 +1811,7 @@ export default {
 	'you': 'you',
 	'you-are-about-to-remove-this-user-from-ssa-they-will-lose-access-to-their-account-and-all-associated-features-but-dont-worry-you-can-invite-them-again-later-if-needed':
 		'You are about to remove this user from SSA. They will lose access to their account and all associated features, but don’t worry — you can invite them again later if needed.',
-	'you-are-currently-on-a-text-element,-inside-of-a-list-box':
+	'you-are-currently-on-a-text-element-inside-of-a-list-box':
 		'You are currently on a text element, inside of a list box.',
 	'you-are-finalizing-your-connection-with-the-marketplace':
 		'We are finalizing your connection with the Marketplace. Please, do not close the window until the connection is fully completed, as it will close automatically once it is done.',

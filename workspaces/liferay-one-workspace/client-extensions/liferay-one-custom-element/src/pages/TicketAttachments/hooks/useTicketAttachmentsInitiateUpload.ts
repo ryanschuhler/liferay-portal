@@ -5,6 +5,7 @@
 
 import * as OAuth2 from '@liferay/oauth2-provider-web/client';
 import {useCallback, useRef, useState} from 'react';
+import MarketplaceStorage from '~/services/liferay/MarketplaceStorage';
 import {IUpload} from '~/utils/types';
 
 interface IParams {
@@ -59,9 +60,9 @@ const useTicketAttachmentsInitiateUpload = (): IProps => {
 						body: JSON.stringify({
 							fileName,
 							fileSize,
-							gcsSessionURL: sessionStorage.getItem(
-								`gcsSessionURL:${fileMd5}`
-							),
+							gcsSessionURL: MarketplaceStorage.getInstance()
+								.getStorage('temporary')
+								.getItem(`gcsSessionURL:${fileMd5}`),
 							md5Checksum: fileMd5,
 							ticketId,
 						}),
@@ -72,10 +73,12 @@ const useTicketAttachmentsInitiateUpload = (): IProps => {
 
 				const responseJSON = await response.json();
 
-				sessionStorage.setItem(
-					`gcsSessionURL:${fileMd5}`,
-					responseJSON.gcsSessionURL
-				);
+				MarketplaceStorage.getInstance()
+					.getStorage('temporary')
+					.setItem(
+						`gcsSessionURL:${fileMd5}`,
+						responseJSON.gcsSessionURL
+					);
 
 				setGCSSessionURL(responseJSON.gcsSessionURL);
 				setTicketAttachmentId(responseJSON.ticketAttachmentId);
