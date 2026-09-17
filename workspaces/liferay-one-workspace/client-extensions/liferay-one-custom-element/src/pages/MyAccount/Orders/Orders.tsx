@@ -22,8 +22,7 @@ import i18n, {Word, translate} from '~/i18n';
 import {canAccessOrders} from '~/pages/MyAccount/AccountMembers/accountRoles';
 import {getStatusColor} from '~/pages/MyAccount/Projects/utils/getStatusColor';
 import {Liferay} from '~/services/liferay/liferay';
-import {OrderCustomFields, getOrderStatusToken} from '~/utils/orderUtils';
-import {safeJSONParse} from '~/utils/safeJSONParse';
+import {getOrderStatusToken, getProjectName} from '~/utils/orderUtils';
 
 import './Orders.css';
 
@@ -37,23 +36,6 @@ const FILTER_SEARCH_MIN_OPTIONS = 10;
 type FilterCategory = 'project' | 'status';
 
 type FilterOption = {label: string; value: number | string};
-
-export function getProjectName(order: PlacedOrder): string {
-	const customFields = order.customFields ?? {};
-
-	const projectName = customFields[OrderCustomFields.PROJECT_NAME];
-
-	if (projectName) {
-		return projectName;
-	}
-
-	const projects = safeJSONParse<{name: string}[]>(
-		customFields[OrderCustomFields.KORONEIKI_PROJECT],
-		[]
-	);
-
-	return projects[0]?.name ?? '';
-}
 
 export function getOrderTotal(order: PlacedOrder): string {
 	const {summary, totalFormatted} = order as PlacedOrder & {

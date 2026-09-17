@@ -20,8 +20,9 @@ import {
 	getOrderStatusToken,
 	paymentStatusLabels,
 } from '~/utils/orderUtils';
+import {getProjectName} from '~/utils/orderUtils';
 
-import {getOrderTotal, getProjectName} from '../Orders';
+import {getOrderTotal} from '../Orders';
 
 import '../Orders.css';
 

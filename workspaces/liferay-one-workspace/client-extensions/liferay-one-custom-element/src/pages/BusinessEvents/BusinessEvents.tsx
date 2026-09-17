@@ -17,6 +17,7 @@ import Loading from '~/components/Loading/Loading';
 import ProjectSelector from '~/components/ProjectSelector/ProjectSelector';
 import RestrictedFeatureMessage from '~/components/RestrictedFeatureMessage/RestrictedFeatureMessage';
 import {Word, sub, translate} from '~/i18n';
+import {IS_SAAS_ONLY} from '~/pages/BusinessEvents/utils/constants';
 import {useUserProjects} from '~/pages/MyAccount/Projects/Projects';
 import {Liferay} from '~/services/liferay/liferay';
 import getKebabCase from '~/utils/getKebabCase';
@@ -27,7 +28,6 @@ import TableHeader from './components/TableHeader/TableHeader';
 import useFilters from './hooks/useFilters';
 import useGetBusinessEvents from './hooks/useGetBusinessEvents';
 import useHasAllEventsPermissions from './hooks/useHasAllEventsPermissions';
-import useIsSaasOnly from './hooks/useIsSaasOnly';
 import {IBusinessEvent} from './types/businessEvent';
 import {getFormattedDate} from './utils/getFormattedDate';
 import {getFormattedTime} from './utils/getFormattedTime';
@@ -74,8 +74,6 @@ const BusinessEvents = () => {
 	const {hasAllEventsPermissions} = useHasAllEventsPermissions(
 		projectERC || ''
 	);
-
-	const {isSaasOnly} = useIsSaasOnly();
 
 	const {loading: projectsLoading, projects} = useUserProjects();
 
@@ -232,7 +230,7 @@ const BusinessEvents = () => {
 
 					return (
 						<div className="align-items-center d-flex">
-							{!isSaasOnly && (
+							{!IS_SAAS_ONLY && (
 								<>
 									<div className="text-neutral-10">
 										{
@@ -394,7 +392,7 @@ const BusinessEvents = () => {
 	}, [
 		filteredBusinessEvents,
 		hasAllEventsPermissions,
-		isSaasOnly,
+		IS_SAAS_ONLY,
 		navigate,
 		onOpenChange,
 		projectERC,

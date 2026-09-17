@@ -56,3 +56,5 @@ export const jsmObjectTypes = {
 	eventType: 'Event Type',
 	timeZone: 'Time Zone',
 };
+
+export const IS_SAAS_ONLY = false;

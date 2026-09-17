@@ -4,6 +4,7 @@
  */
 
 import {formatCurrency} from '~/utils/formatCurrency';
+import {safeJSONParse} from '~/utils/safeJSONParse';
 
 import type {Order, OrderTypes, PlacedOrder} from '~/types/orders';
 
@@ -207,4 +208,21 @@ export function toStatusToken(label: string): string {
 
 export function getOrderStatusToken(order: PlacedOrder): string {
 	return toStatusToken(getOrderStatusLabel(order));
+}
+
+export function getProjectName(order: PlacedOrder): string {
+	const customFields = order.customFields ?? {};
+
+	const projectName = customFields[OrderCustomFields.PROJECT_NAME];
+
+	if (projectName) {
+		return projectName;
+	}
+
+	const projects = safeJSONParse<{name: string}[]>(
+		customFields[OrderCustomFields.KORONEIKI_PROJECT],
+		[]
+	);
+
+	return projects[0]?.name ?? '';
 }

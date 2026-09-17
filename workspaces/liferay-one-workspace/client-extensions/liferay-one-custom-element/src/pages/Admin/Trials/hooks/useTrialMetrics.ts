@@ -6,23 +6,16 @@
 import {addDays} from 'date-fns';
 import {useEffect, useMemo, useState} from 'react';
 import useSWR from 'swr';
+import {
+	METRIC_PARAMETER,
+	MetricPeriod,
+} from '~/pages/Admin/MPSummary/utils/constants';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import HeadlessCommerceAdminOrder from '~/services/headless/HeadlessCommerceAdminOrder';
 import trialOAuth2, {Availability} from '~/services/spring-boot/Trial';
 import {OrderWorkflowStatusCode} from '~/utils/orderUtils';
 
 import type {PlacedOrder} from '~/types/orders';
-
-type FilterType = 'month' | 'q1' | 'q2' | 'q3' | 'q4' | 'week';
-
-export const METRIC_PARAMETER = {
-	month: 30,
-	q1: 1,
-	q2: 2,
-	q3: 3,
-	q4: 4,
-	week: 7,
-};
 
 const ACTIVE_REFRESH_INTERVAL = 60 * 1000;
 const DEFAULT_REFRESH_INTERVAL = 240 * 1000;
@@ -31,20 +24,14 @@ const trialSearchBuilder = new SearchBuilder()
 	.eq('orderTypeExternalReferenceCode', 'SOLUTIONS7')
 	.and();
 
-const useTrialMetrics = (param: FilterType) => {
+const useTrialMetrics = (param: MetricPeriod) => {
 	const [refreshInterval, setRefreshInterval] = useState(
 		DEFAULT_REFRESH_INTERVAL
 	);
 
-	const beforeLastPeriod = addDays(
-		new Date(),
-		-METRIC_PARAMETER[param as keyof typeof METRIC_PARAMETER] * 2
-	);
+	const beforeLastPeriod = addDays(new Date(), -METRIC_PARAMETER[param] * 2);
 
-	const lastPeriod = addDays(
-		new Date(),
-		-METRIC_PARAMETER[param as keyof typeof METRIC_PARAMETER]
-	);
+	const lastPeriod = addDays(new Date(), -METRIC_PARAMETER[param]);
 
 	beforeLastPeriod.setHours(0, 0, 0);
 	lastPeriod.setHours(23, 59, 59);

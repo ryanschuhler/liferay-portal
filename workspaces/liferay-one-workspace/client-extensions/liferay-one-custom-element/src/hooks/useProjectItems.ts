@@ -10,13 +10,14 @@ import {
 	useProjectCommerce,
 	useProjectEntitlements,
 } from '~/hooks/useProjectCommerce';
-import {getProjectName, useProjectOrders} from '~/hooks/useProjectOrders';
+import {useProjectOrders} from '~/hooks/useProjectOrders';
 import {ONE_TIME_PURCHASES} from '~/pages/MyAccount/Projects/utils/constants';
 import {isUnassignedProject} from '~/pages/MyAccount/Projects/utils/isUnassignedProject';
 import {
 	toProductsByProductId,
 	toProjectItemsByType,
 } from '~/pages/MyAccount/Projects/utils/projectItemsUtils';
+import {getProjectName} from '~/utils/orderUtils';
 
 import type {ProjectProduct} from '~/hooks/useProjectCommerce';
 import type {ProjectItemType} from '~/pages/MyAccount/Projects/types/projectItemType';

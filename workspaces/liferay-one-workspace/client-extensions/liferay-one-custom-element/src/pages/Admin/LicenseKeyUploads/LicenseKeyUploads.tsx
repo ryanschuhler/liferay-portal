@@ -22,7 +22,8 @@ import CommonLicenseKeys, {
 } from '~/services/spring-boot/CommonLicenseKeys';
 import {formatDate} from '~/utils/dateUtils';
 
-import useCommonLicenseKeys, {PAGE_SIZE} from './hooks/useCommonLicenseKeys';
+import useCommonLicenseKeys from './hooks/useCommonLicenseKeys';
+import {PAGE_SIZE} from './utils/constants';
 
 type Tab = 'commerce' | 'elasticsearch';
 

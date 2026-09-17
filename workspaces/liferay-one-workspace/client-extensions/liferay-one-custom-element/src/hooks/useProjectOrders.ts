@@ -7,7 +7,7 @@ import {format} from 'date-fns';
 import {useMemo} from 'react';
 import {Liferay} from '~/services/liferay/liferay';
 import {OrderCustomFields, getOrderStatusToken} from '~/utils/orderUtils';
-import {safeJSONParse} from '~/utils/safeJSONParse';
+import {getProjectName} from '~/utils/orderUtils';
 
 import {placedOrdersQuery, usePlacedOrders} from './usePlacedOrder';
 
@@ -108,23 +108,6 @@ export type ProductEnvironmentInfo = {
 	cloudProjectName: string;
 	projectName: string;
 };
-
-export function getProjectName(order: PlacedOrder): string {
-	const customFields = order.customFields ?? {};
-
-	const projectName = customFields[OrderCustomFields.PROJECT_NAME];
-
-	if (projectName) {
-		return projectName;
-	}
-
-	const projects = safeJSONParse<{name: string}[]>(
-		customFields[OrderCustomFields.KORONEIKI_PROJECT],
-		[]
-	);
-
-	return projects[0]?.name ?? '';
-}
 
 function getOrderTotal(order: PlacedOrder): string {
 	const {summary, totalFormatted} = order as PlacedOrder & {

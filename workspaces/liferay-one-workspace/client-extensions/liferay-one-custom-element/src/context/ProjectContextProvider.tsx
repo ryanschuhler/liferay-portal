@@ -17,7 +17,7 @@ import {
 	useChannelProducts,
 	useUnassignedCommerce,
 } from '~/hooks/useProjectCommerce';
-import {getProjectName, useProjectOrders} from '~/hooks/useProjectOrders';
+import {useProjectOrders} from '~/hooks/useProjectOrders';
 import i18n from '~/i18n';
 import {
 	LAST_PROJECT_STORAGE_KEY,
@@ -31,6 +31,7 @@ import {
 	toProjectItemsByType,
 } from '~/pages/MyAccount/Projects/utils/projectItemsUtils';
 import MarketplaceStorage from '~/services/liferay/MarketplaceStorage';
+import {getProjectName} from '~/utils/orderUtils';
 
 type ProjectContextValue = {
 	loading: boolean;

@@ -31,9 +31,9 @@ import useGetBusinessEventTypesList from '~/pages/BusinessEvents/hooks/useGetBus
 import useGetLiferayVersions from '~/pages/BusinessEvents/hooks/useGetLiferayVersions';
 import useGetUTCTimeZonesList from '~/pages/BusinessEvents/hooks/useGetUTCTimeZonesList';
 import useHasAllEventsPermissions from '~/pages/BusinessEvents/hooks/useHasAllEventsPermissions';
-import useIsSaasOnly from '~/pages/BusinessEvents/hooks/useIsSaasOnly';
 import useProjectTickets from '~/pages/BusinessEvents/hooks/useProjectTickets';
 import {IBusinessEvent} from '~/pages/BusinessEvents/types/businessEvent';
+import {IS_SAAS_ONLY} from '~/pages/BusinessEvents/utils/constants';
 import {containsOption} from '~/pages/BusinessEvents/utils/containsOption';
 import {
 	getFormattedEventDateTime,
@@ -119,8 +119,6 @@ const BusinessEventsEditPage: React.FC<IProps> = ({originalBusinessEvent}) => {
 		() => ['Migration', 'Upgrade'].includes(businessEvent.eventType?.key!),
 		[businessEvent.eventType?.key]
 	);
-
-	const {isSaasOnly} = useIsSaasOnly();
 
 	const {loading: loadingTickets, tickets} = useProjectTickets(
 		originalBusinessEvent,
@@ -435,7 +433,7 @@ const BusinessEventsEditPage: React.FC<IProps> = ({originalBusinessEvent}) => {
 			hasAllRequiredFieldsFilled && hasNewLiferayVersion;
 	}
 
-	if (!isSaasOnly) {
+	if (!IS_SAAS_ONLY) {
 		hasAllRequiredFieldsFilled =
 			hasAllRequiredFieldsFilled && hasCurrentLiferayVersion;
 	}
@@ -610,7 +608,7 @@ const BusinessEventsEditPage: React.FC<IProps> = ({originalBusinessEvent}) => {
 							/>
 						</div>
 
-						{!isSaasOnly && (
+						{!IS_SAAS_ONLY && (
 							<div className="event-edit-field mb-4">
 								<Controller
 									control={control}

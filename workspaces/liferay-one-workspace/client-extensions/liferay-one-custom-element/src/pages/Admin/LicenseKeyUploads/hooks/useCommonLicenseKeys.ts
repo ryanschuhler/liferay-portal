@@ -9,9 +9,9 @@ import CommonLicenseKeys, {
 	ProductGroup,
 } from '~/services/spring-boot/CommonLicenseKeys';
 
-import type {APIResponse} from '~/types/api';
+import {PAGE_SIZE} from '../utils/constants';
 
-export const PAGE_SIZE = 20;
+import type {APIResponse} from '~/types/api';
 
 export default function useCommonLicenseKeys(
 	productGroup: ProductGroup,

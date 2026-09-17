@@ -5,20 +5,13 @@
 
 import {addDays} from 'date-fns';
 import useSWR from 'swr';
+import {
+	METRIC_PARAMETER,
+	MetricPeriod,
+} from '~/pages/Admin/MPSummary/utils/constants';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import HeadlessCommerceAdminCatalog from '~/services/headless/HeadlessCommerceAdminCatalog';
 import {ProductWorkflowStatusCode} from '~/utils/productUtils';
-
-type FilterType = 'month' | 'q1' | 'q2' | 'q3' | 'q4' | 'week';
-
-export const METRIC_PARAMETER = {
-	month: 30,
-	q1: 1,
-	q2: 2,
-	q3: 3,
-	q4: 4,
-	week: 7,
-};
 
 const approved = new SearchBuilder()
 	.in('statusCode', [ProductWorkflowStatusCode.APPROVED])
@@ -33,16 +26,10 @@ const inReview = new SearchBuilder()
 
 const currentTime = new Date();
 
-const useAppsMetrics = (param: FilterType = 'week') => {
-	const beforeLastPeriod = addDays(
-		currentTime,
-		-METRIC_PARAMETER[param as keyof typeof METRIC_PARAMETER] * 2
-	);
+const useAppsMetrics = (param: MetricPeriod = 'week') => {
+	const beforeLastPeriod = addDays(currentTime, -METRIC_PARAMETER[param] * 2);
 
-	const lastPeriod = addDays(
-		currentTime,
-		-METRIC_PARAMETER[param as keyof typeof METRIC_PARAMETER]
-	);
+	const lastPeriod = addDays(currentTime, -METRIC_PARAMETER[param]);
 
 	beforeLastPeriod.setHours(0, 0, 0);
 	lastPeriod.setHours(23, 59, 59);
