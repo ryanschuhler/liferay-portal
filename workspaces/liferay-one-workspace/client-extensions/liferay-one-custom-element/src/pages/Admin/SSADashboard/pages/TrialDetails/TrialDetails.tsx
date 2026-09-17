@@ -8,6 +8,7 @@ import {ClayDropDownWithItems} from '@clayui/drop-down';
 import ClayIcon from '@clayui/icon';
 import {useMemo} from 'react';
 import {useParams, useSearchParams} from 'react-router-dom';
+import {KeyedMutator} from 'swr';
 import BackLink from '~/components/BackLink/BackLink';
 import {PageRenderer} from '~/components/Page/Page';
 import useGetProductByOrderId from '~/hooks/useGetProductByOrderId';
@@ -20,6 +21,7 @@ import {safeJSONParse} from '~/utils/safeJSONParse';
 import OrderDetailsHeader from './OrderDetailsHeader/OrderDetailsHeader';
 import TrialDetailsBody from './TrialDetailsBody';
 
+import type {APIResponse} from '~/types/api';
 import type {PlacedOrder} from '~/types/orders';
 import type {DeliveryProduct} from '~/types/product';
 
@@ -30,6 +32,9 @@ type TrialActionsProps = {
 
 function TrialActions({mutatePlacedOrder, placedOrder}: TrialActionsProps) {
 	const actions = useSSAActions();
+
+	const revalidatePlacedOrder: KeyedMutator<APIResponse<PlacedOrder>> = () =>
+		mutatePlacedOrder().then(() => undefined);
 
 	return (
 		<ClayDropDownWithItems
@@ -56,7 +61,7 @@ function TrialActions({mutatePlacedOrder, placedOrder}: TrialActionsProps) {
 							onClick: () =>
 								action?.onClick?.(
 									placedOrder,
-									mutatePlacedOrder
+									revalidatePlacedOrder
 								),
 						};
 					}) as React.ComponentProps<

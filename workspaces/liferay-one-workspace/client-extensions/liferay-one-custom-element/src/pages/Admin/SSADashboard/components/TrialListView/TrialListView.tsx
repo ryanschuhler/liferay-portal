@@ -27,7 +27,7 @@ import type {PlacedOrder} from '~/types/orders';
 import type {TrialExtend} from '~/types/trial';
 
 type TrialsListViewProps = {
-	actions: Action[];
+	actions: Action<PlacedOrder>[];
 	authorOnlyTrials?: boolean;
 	createTrialFormModal: ReturnType<typeof useModal>;
 	isSortable?: boolean;

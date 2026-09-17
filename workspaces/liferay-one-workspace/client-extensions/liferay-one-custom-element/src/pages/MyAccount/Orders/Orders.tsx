@@ -21,6 +21,7 @@ import {useFetch} from '~/hooks/useFetch';
 import i18n, {Word, translate} from '~/i18n';
 import {canAccessOrders} from '~/pages/MyAccount/AccountMembers/accountRoles';
 import {getStatusColor} from '~/pages/MyAccount/Projects/utils/getStatusColor';
+import FetcherError from '~/services/fetcher/FetcherError';
 import {Liferay} from '~/services/liferay/liferay';
 import {getOrderStatusToken, getProjectName} from '~/utils/orderUtils';
 
@@ -161,7 +162,7 @@ export default function Orders() {
 		data,
 		error,
 		isLoading: loading,
-	} = useFetch<APIResponse<PlacedOrder>>(
+	} = useFetch<APIResponse<PlacedOrder>, FetcherError>(
 		accountId && channelId
 			? `/o/headless-commerce-delivery-order/v1.0/channels/${channelId}/accounts/${accountId}/placed-orders`
 			: null,

@@ -12,11 +12,12 @@ import i18n from '~/i18n';
 import {Liferay} from '~/services/liferay/liferay';
 import trialOAuth2 from '~/services/spring-boot/Trial';
 
+import type {APIResponse} from '~/types/api';
 import type {Order, PlacedOrder} from '~/types/orders';
 
 type ExpireSSAModalProps = {
 	accountId: number;
-	mutate: KeyedMutator<Order | PlacedOrder>;
+	mutate: KeyedMutator<APIResponse<PlacedOrder>>;
 	onClose: () => void;
 	order: Order | PlacedOrder;
 };
@@ -62,7 +63,7 @@ const ExpireSSAModal: React.FC<ExpireSSAModalProps> = ({
 						try {
 							await trialOAuth2.expireTrial(order.id);
 
-							mutate((orders) => orders);
+							mutate(undefined, {revalidate: true});
 
 							Liferay.Util.openToast({
 								message: i18n.translate(

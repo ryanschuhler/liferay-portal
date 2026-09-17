@@ -5,7 +5,8 @@
 
 import {OrderCustomFields, OrderWorkflowStatusCode} from '~/utils/orderUtils';
 
-import type {OrderTypes, PlacedOrder} from '~/types/orders';
+import type {OrderTypes} from '~/types/OrderTypes';
+import type {PlacedOrder} from '~/types/orders';
 
 type CustomFields = {
 	[key in keyof typeof OrderCustomFields]: string;

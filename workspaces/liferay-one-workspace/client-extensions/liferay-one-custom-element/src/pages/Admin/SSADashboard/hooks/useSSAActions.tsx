@@ -155,7 +155,7 @@ const useSSAActions = () => {
 					});
 				},
 			},
-		] as Action[];
+		] as Action<PlacedOrder>[];
 	}, [
 		userAccountModel.isSSAAdmin,
 		modalContext,

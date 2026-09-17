@@ -38,7 +38,7 @@ export type Column<
 export type TableProps<
 	T extends Record<string, unknown> = Record<string, unknown>,
 > = {
-	actions?: Action[];
+	actions?: Action<T>[];
 	bodyVerticalAlignment?: 'bottom' | 'middle' | 'top';
 	columns: {
 		[K in keyof T]: Column<T, K>;
@@ -114,6 +114,10 @@ const ListViewTable = <T extends Record<string, unknown>>({
 								typeof action.hidden === 'boolean'
 									? action.hidden
 									: action?.hidden?.(item),
+							name:
+								typeof action.name === 'string'
+									? action.name
+									: action.name(item),
 							onClick: () => {
 								if (action.onClick) {
 									return action?.onClick(item, mutate);
@@ -130,23 +134,21 @@ const ListViewTable = <T extends Record<string, unknown>>({
 							/>
 						}
 					>
-						{(item, index) => (
+						{(action, index) => (
 							<ClayDropDown.Item
-								disabled={item.disabled}
-								hidden={!!item.hidden}
-								onClick={() => item.onClick()}
+								disabled={action.disabled}
+								hidden={!!action.hidden}
+								onClick={() => action.onClick()}
 								{...{['keyValue']: index}}
 							>
-								{item.icon && (
+								{action.icon && (
 									<ClayIcon
 										className="mr-2"
-										symbol={item.icon}
+										symbol={action.icon}
 									/>
 								)}
 
-								{typeof item.name === 'string'
-									? item.name
-									: item.name(item)}
+								{action.name}
 							</ClayDropDown.Item>
 						)}
 					</ClayDropDown>

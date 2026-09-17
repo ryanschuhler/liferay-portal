@@ -31,6 +31,7 @@ import ManagementToolbar, {
 import {useFetch} from '~/hooks/useFetch';
 import i18n from '~/i18n';
 import CreateFilters from '~/services/fetcher/CreateFilters';
+import FetcherError from '~/services/fetcher/FetcherError';
 import {
 	FilterSchema as FilterSchemaType,
 	FilterSchemaOption,
@@ -44,16 +45,16 @@ import useUpdateUrlParams from './hooks/useUpdateUrlParams';
 
 import type {APIResponse} from '~/types/api';
 
-type ChildrenOptions = {
+type ChildrenOptions<T> = {
 	dispatch: React.Dispatch<AppActions>;
 	listViewContext: ListViewContextState;
-	mutate: KeyedMutator<APIResponse<unknown>>;
+	mutate: KeyedMutator<APIResponse<T>>;
 };
 
 export type ListViewProps<T extends Record<string, unknown>> = {
 	children?: (
 		response: APIResponse<T>,
-		options: ChildrenOptions
+		options: ChildrenOptions<T>
 	) => ReactNode;
 
 	defaultFilters?: {filter: string};
@@ -232,7 +233,7 @@ const ListViewBase = <T extends Record<string, unknown>>({
 		isLoading: loading,
 		isValidating,
 		mutate,
-	} = useFetch(
+	} = useFetch<APIResponse<T>, FetcherError>(
 		resource,
 		{
 			params: getURLSearchParams(),
@@ -240,12 +241,12 @@ const ListViewBase = <T extends Record<string, unknown>>({
 		refreshInterval
 	);
 
-	const {
-		items = [],
-		page = 1,
-		pageSize,
-		totalCount = 0,
-	} = transformData(response || {items: []});
+	const transformed = response && transformData(response);
+
+	const items = transformed?.items ?? [];
+	const page = transformed?.page ?? 1;
+	const pageSize = transformed?.pageSize;
+	const totalCount = transformed?.totalCount ?? 0;
 
 	if (loading || (isValidating && searchParams.get('filter'))) {
 		return <Loading.Page />;

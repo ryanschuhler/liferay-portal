@@ -6,7 +6,8 @@
 import {formatCurrency} from '~/utils/formatCurrency';
 import {safeJSONParse} from '~/utils/safeJSONParse';
 
-import type {Order, OrderTypes, PlacedOrder} from '~/types/orders';
+import type {OrderTypes} from '~/types/OrderTypes';
+import type {Order, PlacedOrder} from '~/types/orders';
 
 type NumericKeys<T> = {
 	[K in keyof T]: T[K] extends number | undefined ? K : never;

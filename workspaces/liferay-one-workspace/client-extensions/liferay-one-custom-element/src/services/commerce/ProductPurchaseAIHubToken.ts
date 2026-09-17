@@ -11,7 +11,8 @@ import {safeJSONParse} from '~/utils/safeJSONParse';
 
 import ProductPurchase from './ProductPurchase';
 
-import type {Cart, OrderTypes} from '~/types/orders';
+import type {OrderTypes} from '~/types/OrderTypes';
+import type {Cart} from '~/types/orders';
 
 type AIHubOrderMetadata = {
 	contractEntityId?: number;

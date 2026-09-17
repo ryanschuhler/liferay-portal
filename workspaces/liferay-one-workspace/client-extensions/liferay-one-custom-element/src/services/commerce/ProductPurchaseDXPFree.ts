@@ -10,8 +10,9 @@ import LicenseKeys from '~/services/spring-boot/LicenseKeys';
 
 import ProductPurchase from './ProductPurchase';
 
+import type {OrderTypes} from '~/types/OrderTypes';
 import type {Account} from '~/types/accounts';
-import type {Cart, OrderTypes} from '~/types/orders';
+import type {Cart} from '~/types/orders';
 import type {DeliveryProduct} from '~/types/product';
 
 export type ActivationKeyFormData = z.infer<

@@ -165,14 +165,14 @@ const useManageUserActions = () => {
 
 										mutate(
 											(
-												usersPage: APIResponse<UserAccount>
-											) => {
-												return mutateUser(
+												usersPage?: APIResponse<UserAccount>
+											) =>
+												usersPage &&
+												mutateUser(
 													properties.ssaAccountExternalReferenceCode,
 													userAccount.id,
 													usersPage
-												);
-											},
+												),
 											{revalidate: false}
 										);
 
@@ -187,7 +187,7 @@ const useManageUserActions = () => {
 						});
 					},
 				},
-			] as Action[],
+			] as Action<UserAccount>[],
 		[
 			modalContext,
 			properties.ssaAccountExternalReferenceCode,

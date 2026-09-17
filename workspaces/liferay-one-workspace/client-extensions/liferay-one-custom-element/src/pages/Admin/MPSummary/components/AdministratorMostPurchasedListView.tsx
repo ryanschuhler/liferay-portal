@@ -11,7 +11,7 @@ import i18n from '~/i18n';
 import {SortOption} from '~/utils/appConstants';
 import {orderTypeLabel} from '~/utils/orderUtils';
 
-import type {OrderTypes} from '~/types/orders';
+import type {OrderTypes} from '~/types/OrderTypes';
 
 export type PurchasedItem = {
 	orderTypeExternalReferenceCode: string;

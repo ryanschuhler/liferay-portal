@@ -29,6 +29,7 @@ import '../../PublisherDashboard.css';
 
 import './PublishedProductsListView.css';
 
+import type {APIResponse} from '~/types/api';
 import type {
 	Product,
 	ProductSpecification,
@@ -230,7 +231,7 @@ export default function PublishedProductsListView({
 		? buildCatalogCategoryFilter(catalogId, categoryVocabulary)
 		: undefined;
 
-	const {data: catalogProducts} = useFetch(
+	const {data: catalogProducts} = useFetch<APIResponse<Product>>(
 		baseFilter ? PRODUCTS_RESOURCE : null,
 		{
 			params: {

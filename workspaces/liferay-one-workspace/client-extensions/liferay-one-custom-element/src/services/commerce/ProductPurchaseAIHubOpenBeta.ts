@@ -9,7 +9,8 @@ import {OrderCustomFields} from '~/utils/orderUtils';
 
 import ProductPurchase from './ProductPurchase';
 
-import type {Cart, OrderTypes} from '~/types/orders';
+import type {OrderTypes} from '~/types/OrderTypes';
+import type {Cart} from '~/types/orders';
 import type {SalesforceContract} from '~/types/salesforceContract';
 
 type AIHubOpenBetaForm = z.infer<typeof zodSchema.aiHubOpenBetaForm> & {

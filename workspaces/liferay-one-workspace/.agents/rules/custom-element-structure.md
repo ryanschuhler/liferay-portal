@@ -217,9 +217,9 @@ The workspace has not been cleaned up yet, so every structural rule is `warn`. T
 | `yarn lint:placement` | 38 |
 | `file-complexity-budget` | 34 |
 | `hooks-export-only-hooks` | 20 |
-| `no-eslint-disable` | 4 |
 | `yarn lint:imports` cycles | 0 |
 | `page-folder-structure` | 0 |
+| `no-eslint-disable` | 0 |
 | `no-bare-utils-or-types-file` | 0 |
 | `src-folder-structure` | 0 |
 | `context-file-naming` | 0 |

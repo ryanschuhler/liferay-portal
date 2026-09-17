@@ -5,6 +5,10 @@
 
 import * as OAuth2 from '@liferay/oauth2-provider-web/client';
 
+import type {IBusinessEventVersion} from '~/pages/BusinessEvents/types/businessEventVersion';
+import type {APIResponse} from '~/types/api';
+import type {ITicket} from '~/types/ticket';
+
 const OAUTH2_APP = 'liferay-one-etc-spring-boot-oaua';
 const BASE_PATH = '/jira';
 
@@ -17,8 +21,7 @@ async function jiraFetch(
 	return oauth2Client.fetch(`${BASE_PATH}${path}`, options);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function jiraFetchJSON<T = any>(
+async function jiraFetchJSON<T = unknown>(
 	path: string,
 	options?: RequestInit
 ): Promise<T> {
@@ -61,7 +64,7 @@ export async function getProjectTickets(
 		? `?${ticketIds.map((id) => `ticketIds=${id}`).join('&')}`
 		: '';
 
-	return jiraFetchJSON(
+	return jiraFetchJSON<APIResponse<ITicket>>(
 		`/projects/${projectExternalReferenceCode}/tickets${params}`
 	);
 }
@@ -103,7 +106,7 @@ export async function getBusinessEventVersions(
 	id: string,
 	projectExternalReferenceCode: string
 ) {
-	return jiraFetchJSON(
+	return jiraFetchJSON<APIResponse<IBusinessEventVersion>>(
 		`/projects/${projectExternalReferenceCode}/business-events/${id}/versions`
 	);
 }

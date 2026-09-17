@@ -7,7 +7,8 @@ import trialOAuth2 from '~/services/spring-boot/Trial';
 
 import ProductPurchase from './ProductPurchase';
 
-import type {Cart, OrderTypes} from '~/types/orders';
+import type {OrderTypes} from '~/types/OrderTypes';
+import type {Cart} from '~/types/orders';
 
 export default class ProductPurchaseSolutionTrial extends ProductPurchase {
 	protected override orderTypeExternalReferenceCode: OrderTypes =

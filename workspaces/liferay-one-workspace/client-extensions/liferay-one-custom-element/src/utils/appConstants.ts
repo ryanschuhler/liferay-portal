@@ -7,13 +7,12 @@ import {KeyedMutator} from 'swr';
 
 import type {APIResponse} from '~/types/api';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Action<T = any> = {
+export type Action<T = unknown> = {
 	disabled?: ((item: T) => boolean) | boolean;
 	hidden?: ((item: T) => boolean) | boolean;
 	icon?: string;
 	name: ((item: T) => string) | string;
-	onClick?: (item: T, mutate: KeyedMutator<APIResponse<T> | T>) => void;
+	onClick?: (item: T, mutate: KeyedMutator<APIResponse<T>>) => void;
 };
 
 export type SortDirection = keyof typeof SortOption;

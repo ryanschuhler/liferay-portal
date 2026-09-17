@@ -24,7 +24,7 @@ export const PublisherStatusDisplayType = {
 };
 
 type PublisherRequestModalProps = ReturnType<typeof useModal> & {
-	mutate: KeyedMutator<APIResponse>;
+	mutate: KeyedMutator<APIResponse<PublisherRequestInfo>>;
 	selectedRequest?: PublisherRequestInfo;
 };
 
@@ -51,7 +51,7 @@ const PublisherRequestModal: React.FC<PublisherRequestModalProps> = ({
 			}
 		);
 
-		mutate((items) => items, {revalidate: true});
+		mutate(undefined, {revalidate: true});
 
 		Liferay.Util.openToast({
 			message: i18n.translate('your-request-completed-successfully'),

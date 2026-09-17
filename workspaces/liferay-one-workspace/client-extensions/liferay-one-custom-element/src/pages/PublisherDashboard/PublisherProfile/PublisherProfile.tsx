@@ -19,7 +19,8 @@ import {
 	buildCatalogCategoryFilter,
 } from '../components/PublishedProductsListView/PublishedProductsListView';
 
-import type {ProductTypeVocabulary} from '~/types/product';
+import type {APIResponse} from '~/types/api';
+import type {Product, ProductTypeVocabulary} from '~/types/product';
 
 const EMPTY_VALUE = '-';
 
@@ -42,9 +43,12 @@ function useProductCount(
 		? buildCatalogCategoryFilter(catalogId, categoryVocabulary)
 		: undefined;
 
-	const {data} = useFetch(catalogId ? PRODUCTS_RESOURCE : null, {
-		params: {filter, pageSize: 1},
-	});
+	const {data} = useFetch<APIResponse<Product>>(
+		catalogId ? PRODUCTS_RESOURCE : null,
+		{
+			params: {filter, pageSize: 1},
+		}
+	);
 
 	return data?.totalCount as number | undefined;
 }

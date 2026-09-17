@@ -5,7 +5,7 @@
 
 import ProductPurchase from './ProductPurchase';
 
-import type {OrderTypes} from '~/types/orders';
+import type {OrderTypes} from '~/types/OrderTypes';
 
 export default class ProductPurchaseSSATrial extends ProductPurchase {
 	protected override orderTypeExternalReferenceCode: OrderTypes = 'SSA_SAAS';

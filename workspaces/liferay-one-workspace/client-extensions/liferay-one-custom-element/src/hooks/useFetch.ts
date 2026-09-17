@@ -72,8 +72,7 @@ const getBaseURL = (url: string | null, options?: APIParametersOptions) => {
 	return baseURL;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useFetch<Data = any, Error = any>(
+export function useFetch<Data = unknown, Error = unknown>(
 	url: string | null,
 	fetchParameters?: {params?: APIParametersOptions},
 	refreshInterval?: number

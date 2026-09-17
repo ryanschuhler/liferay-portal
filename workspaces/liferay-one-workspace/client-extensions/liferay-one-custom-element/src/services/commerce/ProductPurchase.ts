@@ -9,8 +9,9 @@ import {Analytics} from '~/services/liferay/Analytics';
 import {Liferay} from '~/services/liferay/liferay';
 import {getSiteURL} from '~/utils/siteUtils';
 
+import type {OrderTypes} from '~/types/OrderTypes';
 import type {Account} from '~/types/accounts';
-import type {Cart, OrderTypes} from '~/types/orders';
+import type {Cart} from '~/types/orders';
 import type {DeliveryProduct} from '~/types/product';
 
 export default class ProductPurchase {

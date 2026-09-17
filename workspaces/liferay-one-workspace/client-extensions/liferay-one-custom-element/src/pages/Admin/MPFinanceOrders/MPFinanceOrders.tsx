@@ -14,17 +14,19 @@ import HeadlessCommerceAdminOrder from '~/services/headless/HeadlessCommerceAdmi
 import {Liferay} from '~/services/liferay/liferay';
 import {PaymentStatus} from '~/utils/orderUtils';
 
+import type {APIResponse} from '~/types/api';
 import type {Order} from '~/types/orders';
 
-async function onClickMarkAsPaid(order: Order, mutate: KeyedMutator<unknown>) {
+async function onClickMarkAsPaid(
+	order: Order,
+	mutate: KeyedMutator<APIResponse<Order>>
+) {
 	try {
 		await HeadlessCommerceAdminOrder.patchOrder(order.id, {
 			paymentStatus: PaymentStatus.PAID,
 		});
 
-		mutate((response: Order) => response, {
-			revalidate: true,
-		});
+		mutate(undefined, {revalidate: true});
 
 		Liferay.Util.openToast({
 			message: i18n.translate('order-marked-as-paid'),
@@ -65,11 +67,14 @@ const MPFinanceOrders = () => {
 					actions: [
 						{
 							disabled(order) {
-								return [
-									PaymentStatus.CANCELED,
-									PaymentStatus.NOT_REQUIRED,
-									PaymentStatus.PAID,
-								].includes(order.paymentStatus);
+								return (
+									order.paymentStatus !== undefined &&
+									[
+										PaymentStatus.CANCELED,
+										PaymentStatus.NOT_REQUIRED,
+										PaymentStatus.PAID,
+									].includes(order.paymentStatus)
+								);
 							},
 							name: i18n.translate('mark-as-paid'),
 							onClick: onClickMarkAsPaid,

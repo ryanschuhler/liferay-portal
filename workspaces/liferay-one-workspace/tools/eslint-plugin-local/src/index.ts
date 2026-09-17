@@ -53,7 +53,7 @@ const plugin = {
 				'local/no-bare-utils-or-types-file': 'error',
 				'local/no-comments': 'error',
 				'local/no-direct-web-storage': 'error',
-				'local/no-eslint-disable': 'warn',
+				'local/no-eslint-disable': 'error',
 				'local/no-raw-fetch': 'error',
 				'local/no-timezone-naive-date': 'error',
 				'local/no-unsafe-type-cast': 'warn',

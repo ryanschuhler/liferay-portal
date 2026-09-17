@@ -24,7 +24,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 type ManageUserModalProps = {
 	accountERC: string;
-	mutate: KeyedMutator<unknown>;
+	mutate: KeyedMutator<APIResponse<UserAccount>>;
 	onClose: () => void;
 	user: UserAccount;
 };
@@ -110,9 +110,13 @@ const ManageUserRolesModal = ({
 
 			mutate(
 				(users?: APIResponse<UserAccount>) => {
+					if (!users) {
+						return users;
+					}
+
 					return {
 						...users,
-						items: users?.items.map((prevUser) => {
+						items: users.items.map((prevUser) => {
 							if (prevUser.id !== user.id) {
 								return prevUser;
 							}

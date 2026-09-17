@@ -17,11 +17,12 @@ import {
 	getTotalByOrderKey,
 } from '~/utils/orderUtils';
 
+import type {APIResponse} from '~/types/api';
 import type {PublisherSalesSummaryEntry} from '~/types/publisher';
 
 async function onClickMarkAsPaid(
 	entry: PublisherSalesSummaryEntry,
-	mutate: KeyedMutator<unknown>
+	mutate: KeyedMutator<APIResponse<PublisherSalesSummaryEntry>>
 ) {
 	try {
 		await PublisherSalesSummaries.patchPublisherSalesSummary(
@@ -35,9 +36,7 @@ async function onClickMarkAsPaid(
 			entry.id
 		);
 
-		mutate((response: PublisherSalesSummaryEntry) => response, {
-			revalidate: true,
-		});
+		mutate(undefined, {revalidate: true});
 
 		Liferay.Util.openToast({
 			message: i18n.translate('marked-as-paid'),
