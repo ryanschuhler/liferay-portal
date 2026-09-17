@@ -141,7 +141,11 @@ export function enumerateRestEndpointDetails(): RestEndpoint[] {
 
 		for (const match of source.matchAll(methodRegex)) {
 			const method = match[1].toUpperCase();
-			const full = `${base}${match[2] ?? ''}`.replace(/\/{2,}/g, '/');
+			const methodPath = match[2] ?? '';
+
+			const full = `${base}${
+				methodPath && !methodPath.startsWith('/') ? '/' : ''
+			}${methodPath}`.replace(/\/{2,}/g, '/');
 
 			const nameMatch = source
 				.slice((match.index ?? 0) + match[0].length)
