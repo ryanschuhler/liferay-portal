@@ -11,8 +11,6 @@ import Loading from '~/components/Loading/Loading';
 import {useProject} from '~/context/ProjectContextProvider';
 import {useDeliveryProduct} from '~/hooks/useDeliveryProduct';
 import {
-	getSpecificationValue,
-	getSpecificationValues,
 	useHasActiveExperienceOffering,
 	useProjectCommerce,
 } from '~/hooks/useProjectCommerce';
@@ -43,6 +41,10 @@ import {getProductIcon} from '~/pages/MyAccount/Projects/utils/getProductIcon';
 import {isUnassignedProject} from '~/pages/MyAccount/Projects/utils/isUnassignedProject';
 import {resolveProductTabConfig} from '~/pages/MyAccount/Projects/utils/resolveProductTabConfig';
 import {Liferay} from '~/services/liferay/liferay';
+import {
+	getSpecificationValue,
+	getSpecificationValues,
+} from '~/utils/productUtils';
 import {getSiteURL} from '~/utils/siteUtils';
 
 type ProjectItemDetailsProps = {

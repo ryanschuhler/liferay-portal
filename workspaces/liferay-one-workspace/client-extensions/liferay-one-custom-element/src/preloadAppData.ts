@@ -3,8 +3,6 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {accountsQuery, currentAccountQuery} from '~/hooks/useAccounts';
-import {preloadDataQuery} from '~/hooks/useDataQuery';
 import {
 	accountLevelContractsQuery,
 	channelProductsQuery,
@@ -13,10 +11,15 @@ import {
 } from '~/hooks/useProjectCommerce';
 import {projectOrdersQuery} from '~/hooks/useProjectOrders';
 import {userProjectsQuery} from '~/pages/MyAccount/Projects/hooks/useUserProjects';
+import {preloadDataQuery} from '~/services/fetcher/preloadDataQuery';
 import HeadlessAdminUser, {
 	MY_USER_ACCOUNT_URL,
 } from '~/services/headless/HeadlessAdminUser';
 import {Liferay} from '~/services/liferay/liferay';
+import {
+	accountsQuery,
+	currentAccountQuery,
+} from '~/services/queries/accountQueries';
 
 const MY_ACCOUNT_ROUTE = 'my-account';
 

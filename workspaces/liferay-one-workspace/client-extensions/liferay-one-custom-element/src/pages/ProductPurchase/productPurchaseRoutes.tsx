@@ -4,8 +4,8 @@
  */
 
 import {ReactNode, lazy} from 'react';
-import {getSpecificationValue} from '~/hooks/useProjectCommerce';
 import i18n from '~/i18n';
+import {getSpecificationValue} from '~/utils/productUtils';
 import {AppRoute} from '~/utils/routeUtils';
 
 import type {DeliveryProduct} from '~/types/product';

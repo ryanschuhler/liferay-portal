@@ -267,3 +267,23 @@ export function getAiHubTokenSKUs(product: DeliveryProduct) {
 				parseInt(b?.sku?.replace(/[^\d]/g, ''), 10)
 		);
 }
+
+export function getSpecificationValue(
+	product: DeliveryProduct,
+	key: string
+): string {
+	return (
+		(product.productSpecifications ?? []).find(
+			(specification) => specification.specificationKey === key
+		)?.value ?? ''
+	);
+}
+
+export function getSpecificationValues(
+	product: DeliveryProduct,
+	key: string
+): string[] {
+	return (product.productSpecifications ?? [])
+		.filter((specification) => specification.specificationKey === key)
+		.map((specification) => specification.value);
+}

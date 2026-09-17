@@ -4,12 +4,12 @@
  */
 
 import {format} from 'date-fns';
+import {ProjectProduct} from '~/hooks/useProjectCommerce';
+import {getOrderStatusToken} from '~/utils/orderUtils';
 import {
-	ProjectProduct,
 	getSpecificationValue,
 	getSpecificationValues,
-} from '~/hooks/useProjectCommerce';
-import {getOrderStatusToken} from '~/utils/orderUtils';
+} from '~/utils/productUtils';
 
 import {resolveProjectItemType} from './resolveProjectItemType';
 

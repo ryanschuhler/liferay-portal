@@ -13,6 +13,7 @@ import {
 	isUnassignedProject,
 } from '~/pages/MyAccount/Projects/Projects';
 import {useUserProjects} from '~/pages/MyAccount/Projects/hooks/useUserProjects';
+import resolveDefaultContractERC from '~/pages/MyAccount/Projects/utils/resolveDefaultContractERC';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import fetcher from '~/services/fetcher/fetcher';
 import {queryGraphQL, toGraphQLString} from '~/services/graphql/GraphQL';
@@ -179,28 +180,6 @@ function toProjectContract(contractNode: ContractNode): ProjectContract {
 	};
 }
 
-export function resolveDefaultContractERC(
-	contracts: ProjectContract[]
-): string | undefined {
-	const activeContracts = contracts.filter(
-		(contract) => contract.status === 'active'
-	);
-
-	const selectableContracts = activeContracts.length
-		? activeContracts
-		: contracts;
-
-	if (!selectableContracts.length) {
-		return undefined;
-	}
-
-	return selectableContracts.reduce((costliest, contract) =>
-		(contract.spendLimit ?? 0) > (costliest.spendLimit ?? 0)
-			? contract
-			: costliest
-	).externalReferenceCode;
-}
-
 function getEntitlementStatus(endDate?: string): string {
 	if (endDate && new Date(endDate) < new Date()) {
 		return 'expired';
@@ -254,26 +233,6 @@ function toProductsBySkuExternalReferenceCode(
 	);
 
 	return productsBySkuExternalReferenceCode;
-}
-
-export function getSpecificationValue(
-	product: DeliveryProduct,
-	key: string
-): string {
-	return (
-		(product.productSpecifications ?? []).find(
-			(specification) => specification.specificationKey === key
-		)?.value ?? ''
-	);
-}
-
-export function getSpecificationValues(
-	product: DeliveryProduct,
-	key: string
-): string[] {
-	return (product.productSpecifications ?? [])
-		.filter((specification) => specification.specificationKey === key)
-		.map((specification) => specification.value);
 }
 
 export function channelProductsQuery(

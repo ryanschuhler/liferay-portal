@@ -6,7 +6,7 @@
 import {
 	getSpecificationValue,
 	getSpecificationValues,
-} from '~/hooks/useProjectCommerce';
+} from '~/utils/productUtils';
 
 import type {DeliveryProduct} from '~/types/product';
 

@@ -9,12 +9,10 @@ import EntitySelector, {
 	SelectorItem,
 } from '~/components/EntitySelector/EntitySelector';
 import {useProject} from '~/context/ProjectContextProvider';
-import {
-	resolveDefaultContractERC,
-	useProjectCommerce,
-} from '~/hooks/useProjectCommerce';
+import {useProjectCommerce} from '~/hooks/useProjectCommerce';
 import i18n from '~/i18n';
 import {ONE_TIME_PURCHASES} from '~/pages/MyAccount/Projects/Projects';
+import resolveDefaultContractERC from '~/pages/MyAccount/Projects/utils/resolveDefaultContractERC';
 import {formatTermRange} from '~/utils/dateUtils';
 
 export default function ProjectHeader() {
