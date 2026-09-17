@@ -14,13 +14,13 @@ import {
 } from 'react-hook-form';
 import {useNavigate, useParams} from 'react-router-dom';
 import Button from '~/components/Button/Button';
-import DatePicker from '~/components/DatePicker/DatePicker';
 import Loading from '~/components/Loading/Loading';
-import TimePicker from '~/components/TimePicker/TimePicker';
 import {translate} from '~/i18n';
 import AssociatedTicketsContainer from '~/pages/BusinessEvents/components/AssociatedTicketsContainer/AssociatedTicketsContainer';
+import DatePicker from '~/pages/BusinessEvents/components/DatePicker/DatePicker';
 import Input from '~/pages/BusinessEvents/components/Input/Input';
 import Select, {IOption} from '~/pages/BusinessEvents/components/Select/Select';
+import TimePicker from '~/pages/BusinessEvents/components/TimePicker/TimePicker';
 import useCanViewTickets from '~/pages/BusinessEvents/hooks/useCanViewTickets';
 import useGetBusinessEventTypesList from '~/pages/BusinessEvents/hooks/useGetBusinessEventTypesList';
 import useGetLiferayVersions from '~/pages/BusinessEvents/hooks/useGetLiferayVersions';

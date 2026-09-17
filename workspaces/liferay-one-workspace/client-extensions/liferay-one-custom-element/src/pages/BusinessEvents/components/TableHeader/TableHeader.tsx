@@ -9,9 +9,11 @@ import {translate} from '~/i18n';
 
 import './TableHeader.css';
 
-import Filter, {IFilterOption} from '~/components/Filter/Filter';
-import SearchBar from '~/components/SearchBar/SearchBar';
+import Filter, {
+	IFilterOption,
+} from '~/pages/BusinessEvents/components/Filter/Filter';
 import FilterResults from '~/pages/BusinessEvents/components/FilterResults/FilterResults';
+import SearchBar from '~/pages/BusinessEvents/components/SearchBar/SearchBar';
 
 interface IProps {
 	availableFilters: IFilterOption[];

@@ -11,8 +11,8 @@ import {ClayTooltipProvider} from '@clayui/tooltip';
 import {formatDistance} from 'date-fns';
 import {Fragment} from 'react';
 import ListView, {ListViewProps} from '~/components/ListView/ListView';
-import {ManagementToolbarProps} from '~/components/ManagementToolbar/ManagementToolbar';
 import i18n from '~/i18n';
+import {ManagementToolbarProps} from '~/pages/Admin/components/ManagementToolbar/ManagementToolbar';
 import Orders from '~/services/spring-boot/Orders';
 import {FilterSchemaOption} from '~/types/filters';
 import {

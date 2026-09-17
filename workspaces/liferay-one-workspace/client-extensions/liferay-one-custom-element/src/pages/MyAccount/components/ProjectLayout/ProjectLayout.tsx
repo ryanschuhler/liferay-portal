@@ -6,10 +6,10 @@
 import {useMemo} from 'react';
 import {useMatch, useNavigate, useParams} from 'react-router-dom';
 import AppLayout from '~/components/AppLayout/AppLayout';
-import Breadcrumb from '~/components/Breadcrumb/Breadcrumb';
 import ProjectSelector from '~/components/ProjectSelector/ProjectSelector';
 import {useProject} from '~/context/ProjectContextProvider';
 import i18n from '~/i18n';
+import Breadcrumb from '~/pages/MyAccount/components/Breadcrumb/Breadcrumb';
 import {buildNavItems} from '~/utils/routeUtils';
 
 import {isUnassignedProject} from '../../Projects/Projects';

@@ -8,9 +8,9 @@ import {UploadedFile} from '~/components/FileList/FileList';
 import Form from '~/components/MarketplaceForm/MarketplaceForm';
 import MultiSelect from '~/components/MultiSelect/MultiSelect';
 import Select from '~/components/Select/Select';
-import UploadLogo from '~/components/UploadLogo/UploadLogo';
 import {NewAppTypes, useNewAppContext} from '~/context/NewAppContextProvider';
 import i18n, {translate} from '~/i18n';
+import UploadLogo from '~/pages/PublisherDashboard/components/UploadLogo/UploadLogo';
 import {
 	ProductVocabulary,
 	ProductWorkflowStatusCode,

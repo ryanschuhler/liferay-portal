@@ -4,12 +4,12 @@
  */
 
 import Form from '~/components/MarketplaceForm/MarketplaceForm';
-import RichText from '~/components/RichText/RichText';
 import {
 	SolutionTypes,
 	useSolutionContext,
 } from '~/context/SolutionContextProvider';
 import i18n from '~/i18n';
+import RichText from '~/pages/PublisherDashboard/components/RichText/RichText';
 import {MAX_DESCRIPTION_LENGTH} from '~/utils/blockConstants';
 
 const CompanyProfile = () => {

@@ -10,10 +10,10 @@ import DOMPurify from 'dompurify';
 import {ComponentProps, ReactNode} from 'react';
 import {useParams} from 'react-router-dom';
 import BackLink from '~/components/BackLink/BackLink';
-import DetailSection from '~/components/DetailSection/DetailSection';
 import {PageRenderer} from '~/components/Page/Page';
 import useAdminProduct from '~/hooks/useAdminProduct';
 import i18n, {Word} from '~/i18n';
+import DetailSection from '~/pages/Admin/components/DetailSection/DetailSection';
 import {
 	ProductSpecificationKey,
 	ProductWorkflowDisplayType,

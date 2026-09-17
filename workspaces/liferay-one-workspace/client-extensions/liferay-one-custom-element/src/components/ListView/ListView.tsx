@@ -23,13 +23,15 @@ import ListViewContextProvider, {
 	ListViewTypes,
 	Sort,
 } from '~/components/ListView/context/ListViewContextProvider';
-import Table, {TableProps} from '~/components/ListViewTable/ListViewTable';
 import Loading from '~/components/Loading/Loading';
-import ManagementToolbar, {
-	ManagementToolbarProps,
-} from '~/components/ManagementToolbar/ManagementToolbar';
 import {useFetch} from '~/hooks/useFetch';
 import i18n from '~/i18n';
+import Table, {
+	TableProps,
+} from '~/pages/Admin/components/ListViewTable/ListViewTable';
+import ManagementToolbar, {
+	ManagementToolbarProps,
+} from '~/pages/Admin/components/ManagementToolbar/ManagementToolbar';
 import CreateFilters from '~/services/fetcher/CreateFilters';
 import FetcherError from '~/services/fetcher/FetcherError';
 import {

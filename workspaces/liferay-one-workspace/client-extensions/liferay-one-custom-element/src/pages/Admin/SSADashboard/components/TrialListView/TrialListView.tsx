@@ -7,7 +7,6 @@ import {useModal} from '@clayui/core';
 import {useMemo} from 'react';
 import {Link} from 'react-router-dom';
 import ListView, {ListViewProps} from '~/components/ListView/ListView';
-import {ManagementToolbarProps} from '~/components/ManagementToolbar/ManagementToolbar';
 import {useOneContext} from '~/context/OneContextProvider';
 import i18n from '~/i18n';
 import CreateTrialModalForm from '~/pages/Admin/SSADashboard/components/CreateTrialModalForm';
@@ -15,6 +14,7 @@ import ExtensionStatus from '~/pages/Admin/SSADashboard/components/ExtensionStat
 import TrialStatus from '~/pages/Admin/SSADashboard/components/TrialStatus/TrialStatus';
 import {useSSADashboardOutlet} from '~/pages/Admin/SSADashboard/hooks/useSSADashboardOutlet';
 import {EXTEND_TRIAL_STATUS_LABEL} from '~/pages/Admin/SSADashboard/utils/constants';
+import {ManagementToolbarProps} from '~/pages/Admin/components/ManagementToolbar/ManagementToolbar';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import {Liferay} from '~/services/liferay/liferay';
 import {Action} from '~/utils/appConstants';

@@ -154,6 +154,8 @@ The opposite rule also applies. When a second page imports a component from unde
 
 One file does not show either condition, so `yarn lint:placement` reads the import graph and reports both.
 
+Run the check again after each set of moves. A move changes which pages reach the components below it, so the answer for one component depends on where the components above it live. The check reports the correct answer for the tree at that moment, and the answer changes as the tree changes. Two components in this app moved into a page and then reported that a second page reaches them, which is the second rule correcting the first. Move them back and run the check again. The count reached zero after 4 rounds.
+
 ## Contexts
 
 A context belongs in a `context/` folder. Put it in `src/context/` when two or more pages read it. Otherwise put it beside the page or the component that owns it. Name the file `<Name>ContextProvider.tsx`. The app uses this one suffix:
@@ -244,7 +246,7 @@ A rule stays a warning while its count is above zero. The counts below give the 
 | --- | --- |
 | `yarn lint:imports` dead exports | 332 |
 | `service-layer-boundary` | 63 |
-| `yarn lint:placement` | 38 |
+| `yarn lint:placement` | 4 |
 | `file-complexity-budget` | 34 |
 | `hooks-export-only-hooks` | 20 |
 | `yarn lint:imports` cycles | 0 |

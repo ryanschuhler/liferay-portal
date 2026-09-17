@@ -5,7 +5,7 @@
 
 import {ClayInput} from '@clayui/form';
 import {InputHTMLAttributes} from 'react';
-import BaseWrapper from '~/components/BaseWrapper/BaseWrapper';
+import BaseWrapper from '~/pages/Admin/components/BaseWrapper/BaseWrapper';
 
 import './FormInput.css';
 

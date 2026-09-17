@@ -4,9 +4,9 @@
  */
 
 import Button from '~/components/Button/Button';
-import {IFilterOption} from '~/components/Filter/Filter';
 import {Word, sub, translate} from '~/i18n';
 import BadgeButton from '~/pages/BusinessEvents/components/BadgeButton/BadgeButton';
+import {IFilterOption} from '~/pages/BusinessEvents/components/Filter/Filter';
 import getKebabCase from '~/utils/getKebabCase';
 
 export interface IProps {

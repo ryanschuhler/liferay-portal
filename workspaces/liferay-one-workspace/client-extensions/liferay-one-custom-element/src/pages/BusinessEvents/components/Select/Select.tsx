@@ -6,7 +6,7 @@
 import ClayForm, {ClaySelect} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import classNames from 'classnames';
-import Badge from '~/components/Badge/Badge';
+import Badge from '~/pages/BusinessEvents/components/Badge/Badge';
 
 import './Select.css';
 

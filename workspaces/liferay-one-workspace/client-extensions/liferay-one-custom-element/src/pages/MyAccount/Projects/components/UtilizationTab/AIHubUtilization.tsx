@@ -5,8 +5,8 @@
 
 import {DetailedCard} from '~/components/DetailedCard/DetailedCard';
 import ListView from '~/components/ListView/ListView';
-import OrderStatus from '~/components/OrderStatus/OrderStatus';
 import i18n from '~/i18n';
+import OrderStatus from '~/pages/MyAccount/components/OrderStatus/OrderStatus';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import {Liferay} from '~/services/liferay/liferay';
 import {safeJSONParse} from '~/utils/safeJSONParse';

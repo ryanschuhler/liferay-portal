@@ -4,7 +4,7 @@
  */
 
 import {useCallback, useState} from 'react';
-import {IFilterOption} from '~/components/Filter/Filter';
+import {IFilterOption} from '~/pages/BusinessEvents/components/Filter/Filter';
 import {initialFilter} from '~/pages/BusinessEvents/utils/constants';
 
 export interface IState {

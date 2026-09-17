@@ -6,8 +6,10 @@
 import React, {useMemo, useState} from 'react';
 import EmptyState from '~/components/EmptyState/EmptyState';
 import {Sort} from '~/components/ListView/context/ListViewContextProvider';
-import Table, {TableProps} from '~/components/ListViewTable/ListViewTable';
 import i18n from '~/i18n';
+import Table, {
+	TableProps,
+} from '~/pages/Admin/components/ListViewTable/ListViewTable';
 import {SortOption} from '~/utils/appConstants';
 import {orderTypeLabel} from '~/utils/orderUtils';
 

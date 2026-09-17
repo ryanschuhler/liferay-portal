@@ -5,7 +5,7 @@
 
 import classNames from 'classnames';
 import React, {SelectHTMLAttributes} from 'react';
-import BaseWrapper from '~/components/BaseWrapper/BaseWrapper';
+import BaseWrapper from '~/pages/Admin/components/BaseWrapper/BaseWrapper';
 
 import './Select.css';
 

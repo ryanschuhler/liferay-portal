@@ -7,8 +7,8 @@ import {useNavigate} from 'react-router-dom';
 import {KeyedMutator} from 'swr';
 import ListView from '~/components/ListView/ListView';
 import Page from '~/components/Page/Page';
-import PaymentStatus from '~/components/PaymentStatusBadge/PaymentStatusBadge';
 import i18n from '~/i18n';
+import PaymentStatus from '~/pages/Admin/components/PaymentStatusBadge/PaymentStatusBadge';
 import {Liferay} from '~/services/liferay/liferay';
 import PublisherSalesSummaries from '~/services/objects/PublisherSalesSummaries';
 import {

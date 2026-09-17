@@ -6,16 +6,16 @@
 import {ClayRadio, ClayRadioGroup} from '@clayui/form';
 import ClayModal, {useModal} from '@clayui/modal';
 import {filesize} from 'filesize';
-import {DropzoneUpload} from '~/components/DropzoneUpload/DropzoneUpload';
 import {FileList, UploadedFile} from '~/components/FileList/FileList';
 import Form from '~/components/MarketplaceForm/MarketplaceForm';
-import RichText from '~/components/RichText/RichText';
-import VideoThumbnail from '~/components/VideoThumbnail/VideoThumbnail';
 import {
 	SolutionTypes,
 	useSolutionContext,
 } from '~/context/SolutionContextProvider';
 import i18n from '~/i18n';
+import {DropzoneUpload} from '~/pages/PublisherDashboard/components/DropzoneUpload/DropzoneUpload';
+import RichText from '~/pages/PublisherDashboard/components/RichText/RichText';
+import VideoThumbnail from '~/pages/PublisherDashboard/components/VideoThumbnail/VideoThumbnail';
 import {ACCEPT_FILE_TYPES} from '~/types/file';
 import {
 	MAX_DESCRIPTION_LENGTH,

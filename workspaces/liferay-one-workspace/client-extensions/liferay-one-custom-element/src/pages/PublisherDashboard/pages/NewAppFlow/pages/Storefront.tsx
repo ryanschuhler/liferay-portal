@@ -4,13 +4,13 @@
  */
 
 import {filesize} from 'filesize';
-import {DropzoneUpload} from '~/components/DropzoneUpload/DropzoneUpload';
 import {FileList} from '~/components/FileList/FileList';
 import Form from '~/components/MarketplaceForm/MarketplaceForm';
 import {Section} from '~/components/Section/Section';
-import VideoThumbnail from '~/components/VideoThumbnail/VideoThumbnail';
 import {NewAppTypes, useNewAppContext} from '~/context/NewAppContextProvider';
 import i18n from '~/i18n';
+import {DropzoneUpload} from '~/pages/PublisherDashboard/components/DropzoneUpload/DropzoneUpload';
+import VideoThumbnail from '~/pages/PublisherDashboard/components/VideoThumbnail/VideoThumbnail';
 import {Liferay} from '~/services/liferay/liferay';
 import {ACCEPT_FILE_TYPES} from '~/types/file';
 import {ProductTags} from '~/utils/productUtils';

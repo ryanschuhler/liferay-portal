@@ -6,8 +6,8 @@
 import Label from '@clayui/label';
 import {ComponentProps} from 'react';
 import ListView, {ListViewProps} from '~/components/ListView/ListView';
-import {ManagementToolbarProps} from '~/components/ManagementToolbar/ManagementToolbar';
 import i18n, {translate} from '~/i18n';
+import {ManagementToolbarProps} from '~/pages/Admin/components/ManagementToolbar/ManagementToolbar';
 import {formatDate} from '~/utils/dateUtils';
 import {
 	ProductSpecificationKey,

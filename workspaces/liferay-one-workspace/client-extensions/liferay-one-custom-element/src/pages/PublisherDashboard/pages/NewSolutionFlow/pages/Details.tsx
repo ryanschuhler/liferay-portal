@@ -10,15 +10,15 @@ import ClayModal, {useModal} from '@clayui/modal';
 import {useState} from 'react';
 import ButtonWithIcon from '~/components/ButtonWithIcon/ButtonWithIcon';
 import Form from '~/components/MarketplaceForm/MarketplaceForm';
-import TextAndImages from '~/components/TextAndImages/TextAndImages';
-import TextAndVideo from '~/components/TextAndVideo/TextAndVideo';
-import TextBlock from '~/components/TextBlock/TextBlock';
 import {
 	BlockDirections,
 	SolutionTypes,
 	useSolutionContext,
 } from '~/context/SolutionContextProvider';
 import i18n from '~/i18n';
+import TextAndImages from '~/pages/PublisherDashboard/components/TextAndImages/TextAndImages';
+import TextAndVideo from '~/pages/PublisherDashboard/components/TextAndVideo/TextAndVideo';
+import TextBlock from '~/pages/PublisherDashboard/components/TextBlock/TextBlock';
 
 import {BLOCK_TYPES} from '../constants/newSolutionConstants';
 

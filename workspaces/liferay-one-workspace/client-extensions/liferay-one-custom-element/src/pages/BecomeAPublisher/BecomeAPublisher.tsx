@@ -11,8 +11,8 @@ import {getSiteURL} from '~/utils/siteUtils';
 
 import cash from '../../assets/images/cash.svg';
 import cloudUpload from '../../assets/images/cloud_upload.svg';
-import {GateCard} from '../../components/GateCard/GateCard';
 import {Header} from '../../components/Header/Header';
+import {GateCard} from './components/GateCard/GateCard';
 
 import './BecomeAPublisher.css';
 

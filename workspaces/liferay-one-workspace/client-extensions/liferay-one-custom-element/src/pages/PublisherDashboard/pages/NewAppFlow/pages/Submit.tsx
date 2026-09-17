@@ -4,12 +4,12 @@
  */
 
 import {useNavigate} from 'react-router-dom';
-import AppReview from '~/components/AppReview/AppReview';
-import AppReviewSection from '~/components/AppReviewSection/AppReviewSection';
 import {Section} from '~/components/Section/Section';
 import {useNewAppContext} from '~/context/NewAppContextProvider';
 import {usePublishMode} from '~/context/PublishModeContextProvider';
 import i18n from '~/i18n';
+import AppReview from '~/pages/PublisherDashboard/components/AppReview/AppReview';
+import AppReviewSection from '~/pages/PublisherDashboard/components/AppReviewSection/AppReviewSection';
 import {ProductWorkflowStatusCode} from '~/utils/productUtils';
 
 import {PublishMode} from '../constants/newAppConstants';

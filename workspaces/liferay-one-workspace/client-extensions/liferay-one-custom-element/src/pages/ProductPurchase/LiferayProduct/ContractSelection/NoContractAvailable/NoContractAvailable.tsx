@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import AlertBox from '~/components/AlertBox/AlertBox';
 import ProductPurchase from '~/components/ProductPurchase/ProductPurchase';
 import i18n from '~/i18n';
+import AlertBox from '~/pages/ProductPurchase/components/AlertBox/AlertBox';
 import {useProductPurchaseLayoutContext} from '~/pages/ProductPurchase/components/ProductPurchaseLayout/ProductPurchaseLayout';
 import {useAppPurchaseContext} from '~/pages/ProductPurchase/context/AppPurchaseContextProvider';
 

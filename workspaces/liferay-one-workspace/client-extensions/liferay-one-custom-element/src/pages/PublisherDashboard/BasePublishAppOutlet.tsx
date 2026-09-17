@@ -7,13 +7,13 @@ import ClayAlert from '@clayui/alert';
 import ClayButton from '@clayui/button';
 import {ReactNode, useMemo, useState} from 'react';
 import {Outlet} from 'react-router-dom';
-import AppPublish from '~/components/AppPublish/AppPublish';
 import Checkbox from '~/components/Checkbox/Checkbox';
-import ExternalLink from '~/components/ExternalLink/ExternalLink';
 import Loading from '~/components/Loading/Loading';
 import {usePublishMode} from '~/context/PublishModeContextProvider';
 import {useAccount} from '~/hooks/useAccounts';
 import i18n from '~/i18n';
+import AppPublish from '~/pages/PublisherDashboard/components/AppPublish/AppPublish';
+import ExternalLink from '~/pages/PublisherDashboard/components/ExternalLink/ExternalLink';
 import {PublishMode} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants/newAppConstants';
 
 import usePublishHeader from './hooks/usePublishHeader';

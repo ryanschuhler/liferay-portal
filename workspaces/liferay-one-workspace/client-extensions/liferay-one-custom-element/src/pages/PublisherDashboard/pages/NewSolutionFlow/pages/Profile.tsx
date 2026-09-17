@@ -7,12 +7,12 @@ import {filesize} from 'filesize';
 import {UploadedFile} from '~/components/FileList/FileList';
 import Form from '~/components/MarketplaceForm/MarketplaceForm';
 import MultiSelect from '~/components/MultiSelect/MultiSelect';
-import UploadLogo from '~/components/UploadLogo/UploadLogo';
 import {
 	SolutionTypes,
 	useSolutionContext,
 } from '~/context/SolutionContextProvider';
 import i18n, {translate} from '~/i18n';
+import UploadLogo from '~/pages/PublisherDashboard/components/UploadLogo/UploadLogo';
 import {ProductVocabulary} from '~/types/productEnums';
 import {ProductTags} from '~/utils/productUtils';
 import {getRandomID} from '~/utils/stringUtils';

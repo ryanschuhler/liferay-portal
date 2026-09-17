@@ -7,7 +7,7 @@ import ClayForm, {ClayInput} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import classNames from 'classnames';
 import {ReactNode} from 'react';
-import Badge from '~/components/Badge/Badge';
+import Badge from '~/pages/BusinessEvents/components/Badge/Badge';
 
 import './Input.css';
 

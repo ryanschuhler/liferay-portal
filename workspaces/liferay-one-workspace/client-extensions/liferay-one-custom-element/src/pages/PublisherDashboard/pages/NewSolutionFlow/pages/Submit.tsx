@@ -5,11 +5,11 @@
 
 import DOMPurify from 'dompurify';
 import {useNavigate} from 'react-router-dom';
-import AppReviewSection from '~/components/AppReviewSection/AppReviewSection';
 import {Section} from '~/components/Section/Section';
-import VideoThumbnail from '~/components/VideoThumbnail/VideoThumbnail';
 import {useSolutionContext} from '~/context/SolutionContextProvider';
 import i18n from '~/i18n';
+import AppReviewSection from '~/pages/PublisherDashboard/components/AppReviewSection/AppReviewSection';
+import VideoThumbnail from '~/pages/PublisherDashboard/components/VideoThumbnail/VideoThumbnail';
 
 import {BLOCK_TYPES} from '../constants/newSolutionConstants';
 

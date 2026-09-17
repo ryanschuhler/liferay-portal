@@ -4,11 +4,11 @@
  */
 
 import {useNavigate} from 'react-router-dom';
-import AppReview from '~/components/AppReview/AppReview';
 import Button from '~/components/Button/Button';
 import Page from '~/components/Page/Page';
 import {useNewAppContext} from '~/context/NewAppContextProvider';
 import i18n from '~/i18n';
+import AppReview from '~/pages/PublisherDashboard/components/AppReview/AppReview';
 import {
 	ProductWorkflowStatusCode,
 	ProductWorkflowStatusLabel,

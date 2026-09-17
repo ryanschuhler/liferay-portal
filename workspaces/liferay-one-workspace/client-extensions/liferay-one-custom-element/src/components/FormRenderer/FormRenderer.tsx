@@ -6,11 +6,11 @@
 import React, {memo} from 'react';
 import {Params} from 'react-router-dom';
 import Checkbox from '~/components/Checkbox/Checkbox';
-import DateRange from '~/components/DateRange/DateRange';
-import FormFieldInput from '~/components/FormFieldInput/FormFieldInput';
-import FormMultiSelect from '~/components/FormMultiSelect/FormMultiSelect';
-import FormSelect from '~/components/FormSelect/FormSelect';
 import i18n from '~/i18n';
+import DateRange from '~/pages/Admin/components/DateRange/DateRange';
+import FormFieldInput from '~/pages/Admin/components/FormFieldInput/FormFieldInput';
+import FormMultiSelect from '~/pages/Admin/components/FormMultiSelect/FormMultiSelect';
+import FormSelect from '~/pages/Admin/components/FormSelect/FormSelect';
 import {Operators} from '~/services/fetcher/SearchBuilder';
 
 type AutoCompleteProps = {
