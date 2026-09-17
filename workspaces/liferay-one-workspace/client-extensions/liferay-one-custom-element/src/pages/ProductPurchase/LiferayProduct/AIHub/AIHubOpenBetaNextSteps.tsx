@@ -5,6 +5,7 @@
 
 import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
+import DOMPurify from 'dompurify';
 import useSWR from 'swr';
 import documentCircleIcon from '~/assets/icons/document_circle_icon.svg';
 import {AccountAndAppCard} from '~/components/AccountAndAppCard/AccountAndAppCard';
@@ -16,7 +17,6 @@ import HeadlessAdminUser from '~/services/headless/HeadlessAdminUser';
 import {Liferay} from '~/services/liferay/liferay';
 import {getAccountImage} from '~/utils/getAccountImage';
 import {getSiteURL} from '~/utils/siteUtils';
-import DOMPurify from 'dompurify';
 
 type AIHubOpenBetaNextStepsProps = {
 	data: ReturnType<typeof useGetProductByOrderId>['data'];
