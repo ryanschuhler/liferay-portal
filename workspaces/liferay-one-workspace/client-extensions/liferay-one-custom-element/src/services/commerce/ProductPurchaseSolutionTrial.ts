@@ -14,7 +14,7 @@ export default class ProductPurchaseSolutionTrial extends ProductPurchase {
 	protected override orderTypeExternalReferenceCode: OrderTypes =
 		'SOLUTIONS7';
 
-	public override async createOrder(cart?: Cart): Promise<Cart> {
+	public override async createOrder(cart?: Partial<Cart>): Promise<Cart> {
 		const order = await super.createOrder(cart);
 
 		trialOAuth2.provisioningTrial(order.id);

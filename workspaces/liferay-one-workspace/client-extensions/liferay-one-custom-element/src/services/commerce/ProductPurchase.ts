@@ -76,7 +76,10 @@ export default class ProductPurchase {
 		});
 	}
 
-	public async createOrder(cart?: Cart, _options?: unknown): Promise<Cart> {
+	public async createOrder(
+		cart?: Partial<Cart>,
+		_options?: unknown
+	): Promise<Cart> {
 		const body = {
 			...this.getCart(),
 			...cart,

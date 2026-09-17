@@ -13,7 +13,7 @@ import {getSiteURL} from './siteUtils';
 
 import type {
 	DeliveryProduct,
-	DeliverySKUOption,
+	DeliverySKU,
 	ProductCategories,
 	ProductImageFallbackCategories,
 	ProductLicense,
@@ -131,7 +131,7 @@ export function getProductSpecificationValue<T = string>(
 	return getProductSpecification(key, product)?.value || (value as T);
 }
 
-export function isTrialSKU(sku: SKU) {
+export function isTrialSKU(sku: DeliverySKU | SKU) {
 	const skuName = sku.sku.toLowerCase();
 	const skuOptions = getNormalizedSKUOptions(sku) || [];
 
@@ -146,13 +146,12 @@ export function isTrialSKU(sku: SKU) {
 	);
 }
 
-export function getNormalizedSKUOptions(sku: SKU) {
+export function getNormalizedSKUOptions(sku: DeliverySKU | SKU) {
 	return (sku.skuOptions || []).map((skuOption) => {
-		if ((skuOption as unknown as DeliverySKUOption).skuOptionKey) {
+		if ('skuOptionKey' in skuOption) {
 			return {
-				key: (skuOption as unknown as DeliverySKUOption).skuOptionKey,
-				value: (skuOption as unknown as DeliverySKUOption)
-					.skuOptionValueKey,
+				key: skuOption.skuOptionKey,
+				value: skuOption.skuOptionValueKey,
 			};
 		}
 

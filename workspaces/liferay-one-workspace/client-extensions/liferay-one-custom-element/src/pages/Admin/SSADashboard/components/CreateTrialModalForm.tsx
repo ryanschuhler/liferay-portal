@@ -33,7 +33,7 @@ import trialOAuth2 from '~/services/spring-boot/Trial';
 import {OrderCustomFields, OrderWorkflowStatusCode} from '~/utils/orderUtils';
 
 import type {APIResponse} from '~/types/api';
-import type {Cart, PlacedOrder} from '~/types/orders';
+import type {PlacedOrder} from '~/types/orders';
 
 const SectionTitle = ({title}: {title: string}) => (
 	<>
@@ -151,7 +151,7 @@ const CreateTrialModalForm: React.FC<CreateTrialModalFormProps> = ({
 							siteInitializerKey: data.siteInitializerKey,
 						}),
 					},
-				} as unknown as Cart);
+				});
 
 				mutate(
 					(orders: APIResponse<PlacedOrder>) => ({

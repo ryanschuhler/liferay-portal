@@ -11,8 +11,6 @@ import {isTrialSKU} from '~/utils/productUtils';
 
 import LicenseCard from './components/LicenseCard/LicenseCard';
 
-import type {SKU} from '~/types/product';
-
 const License = () => {
 	const {
 		actions: {nextStep, previousStep},
@@ -27,10 +25,7 @@ const License = () => {
 	}
 
 	const purchasableSkus = (product.skus || []).filter(
-		(sku) =>
-			sku?.price?.price &&
-			sku.purchasable &&
-			!isTrialSKU(sku as unknown as SKU)
+		(sku) => sku?.price?.price && sku.purchasable && !isTrialSKU(sku)
 	);
 
 	const hasCartItems = productPurchaseCart.cartItems.some(

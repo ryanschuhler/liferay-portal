@@ -25,7 +25,6 @@ import {OrderCustomFields} from '~/utils/orderUtils';
 import {getProductType} from '~/utils/productUtils';
 
 import type {Account} from '~/types/accounts';
-import type {Cart} from '~/types/orders';
 import type {DeliveryProduct} from '~/types/product';
 
 type NewTrialModalProps = {
@@ -110,7 +109,7 @@ const NewTrialModal: React.FC<NewTrialModalProps> = ({onClose, revalidate}) => {
 						sendNotificationEmail: form.sendNotificationEmail,
 					}),
 				},
-			} as unknown as Cart);
+			});
 
 			await revalidate();
 
