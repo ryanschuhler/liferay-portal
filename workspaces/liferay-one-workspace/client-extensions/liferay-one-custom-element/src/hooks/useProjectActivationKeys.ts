@@ -12,7 +12,7 @@ import {Liferay} from '~/services/liferay/liferay';
 
 import type {APIResponse} from '~/types/api';
 
-export type ProjectActivationKeyProduct = {
+type ProjectActivationKeyProduct = {
 	externalReferenceCode: string;
 	name: string;
 	sizing: string;

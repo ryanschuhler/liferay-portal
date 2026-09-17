@@ -12,7 +12,7 @@ import type {BillingAddress} from '~/types/orders';
 import type {SalesforceContract} from '~/types/salesforceContract';
 import type {SalesforceProject} from '~/types/salesforceProject';
 
-export type LicenseType = 'TRIAL' | 'PAID';
+type LicenseType = 'TRIAL' | 'PAID';
 
 type Invoice = {
 	email: string;

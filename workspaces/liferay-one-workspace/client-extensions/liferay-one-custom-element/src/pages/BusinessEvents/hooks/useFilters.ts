@@ -7,7 +7,7 @@ import {useCallback, useState} from 'react';
 import {IFilterOption} from '~/pages/BusinessEvents/components/Filter/Filter';
 import {initialFilter} from '~/pages/BusinessEvents/utils/constants';
 
-export interface IState {
+interface IState {
 	availableFilters?: IFilterOption[];
 	searchTerm?: string;
 	selectedFilters?: IFilterOption[];

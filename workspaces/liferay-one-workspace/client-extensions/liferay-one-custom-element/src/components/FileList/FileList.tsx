@@ -9,13 +9,13 @@ import './FileList.css';
 
 import {ImageFileItem} from '~/components/ImageFileItem/ImageFileItem';
 
-export type ImageCustomField = {
+type ImageCustomField = {
 	customValue: {data: string[]};
 	dataType: string;
 	name: string;
 };
 
-export type UploadedImage = {
+type UploadedImage = {
 	uploadedImage: {
 		cdnEnabled: boolean;
 		cdnURL: string;

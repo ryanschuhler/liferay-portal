@@ -29,7 +29,7 @@ import type {Catalog} from '~/types/commerce';
 import type {Product, ProductLicenseTier, ProductType} from '~/types/product';
 
 export type LicensePrice = {key: number; value: number};
-export type LicenseType = 'Perpetual' | 'Subscription';
+type LicenseType = 'Perpetual' | 'Subscription';
 
 export type LicenseTierPrices = {
 	[licenseTier: string]: {[quantity: number]: number};
@@ -44,17 +44,6 @@ export type LiferayPackage = {
 	id: string;
 	uploaded: boolean;
 	versions: string[];
-};
-
-export type PriceEntry = {
-	hasTierPrice: boolean;
-	id: number;
-	price: number;
-	priceEntryId?: number;
-	priceListId: number;
-	sku: string;
-	skuExternalReferenceCode: string;
-	skuId: number;
 };
 
 export enum NewAppTypes {
@@ -650,7 +639,7 @@ const reducer = (state: NewAppInitialState, action: AppActions) => {
 	}
 };
 
-export const NewAppContext = createContext<
+const NewAppContext = createContext<
 	[NewAppInitialState, React.Dispatch<AppActions>]
 >([newAppInitialState, () => null]);
 

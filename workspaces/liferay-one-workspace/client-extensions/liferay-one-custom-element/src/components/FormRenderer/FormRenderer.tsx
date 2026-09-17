@@ -22,7 +22,7 @@ type AutoCompleteProps = {
 
 type RenderedFieldOptions = string[] | {label: string; value: string}[];
 
-export type RendererFields = {
+type RendererFields = {
 	disabled?: boolean;
 	isCustomFilter?: boolean;
 	label: string;
@@ -45,7 +45,7 @@ export type RendererFields = {
 		| 'textarea';
 } & Partial<AutoCompleteProps>;
 
-export type Options = {
+type Options = {
 	label: string;
 	value: string;
 };

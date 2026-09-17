@@ -12,28 +12,13 @@ export const LicenseType = {
 
 export type LicenseType = (typeof LicenseType)[keyof typeof LicenseType];
 
-export const ProductEditionOption = {
-	EE: 'EE',
-} as const;
-
-export type ProductEditionOption =
-	(typeof ProductEditionOption)[keyof typeof ProductEditionOption];
-
-export const ProductExternalReferenceCode = {
+const ProductExternalReferenceCode = {
 	PAAS_EXPERIENCE: 'PRDCT-PAAS',
 	SAAS_EXPERIENCE: 'PRDCT-SAAS',
 } as const;
 
-export type ProductExternalReferenceCode =
+type ProductExternalReferenceCode =
 	(typeof ProductExternalReferenceCode)[keyof typeof ProductExternalReferenceCode];
-
-export const ProductImageFallbackCategories = {
-	PRODUCT_ICON: 'productIcon',
-	PRODUCT_IMAGE: 'productImage',
-} as const;
-
-export type ProductImageFallbackCategories =
-	(typeof ProductImageFallbackCategories)[keyof typeof ProductImageFallbackCategories];
 
 export const ProductLicense = {
 	BASE: 'base-license-usage-type',
@@ -126,19 +111,6 @@ export const ProductSpecificationKey = {
 export type ProductSpecificationKey =
 	(typeof ProductSpecificationKey)[keyof typeof ProductSpecificationKey];
 
-export const ProductSupportSpecificationKey = {
-	APP_DOCUMENTATION_URL: 'appdocumentationurl',
-	APP_INSTALLATION_GUIDE_URL: 'appinstallationguideurl',
-	APP_USAGE_TERMS_URL: 'appusagetermsurl',
-	PUBLISHER_WEBSITE_URL: 'publisherwebsiteurl',
-	SUPPORT_EMAIL: 'supportemailaddress',
-	SUPPORT_PHONE: 'supportphone',
-	SUPPORT_URL: 'supporturl',
-} as const;
-
-export type ProductSupportSpecificationKey =
-	(typeof ProductSupportSpecificationKey)[keyof typeof ProductSupportSpecificationKey];
-
 export const ProductTags = {
 	APP_ICON: 'app-icon',
 	SOLUTION_DETAILS: 'solution-details',
@@ -179,13 +151,6 @@ export const ProductUploadType = {
 export type ProductUploadType =
 	(typeof ProductUploadType)[keyof typeof ProductUploadType];
 
-export const ProductVersionOption = {
-	'7.4x': '7.4',
-} as const;
-
-export type ProductVersionOption =
-	(typeof ProductVersionOption)[keyof typeof ProductVersionOption];
-
 export const ProductVocabulary = {
 	APP_AREA: 'marketplace-app-category',
 	APP_CATEGORY: 'marketplace-category',
@@ -220,42 +185,11 @@ export const SkuOptions = {
 
 export type SkuOptions = (typeof SkuOptions)[keyof typeof SkuOptions];
 
-export const SolutionTypes = {
-	AI_HUB: 'ai-hub',
-	AI_HUB_OPEN_BETA: 'ai-hub-open-beta',
-	ANALYTICS: 'analytics',
-	CMP: 'cmp',
-	DSR: 'dsr',
-	DXP: 'dxp',
-	LIFERAY_DATA_PLATFORM: 'liferay-data-platform',
-	PRE_BUILT_TRIAL: 'pre-built-trial',
-} as const;
-
-export type SolutionTypes = (typeof SolutionTypes)[keyof typeof SolutionTypes];
-
-const ALL_OFFERINGS = [
-	ProductOfferingTypes.LIFERAY_PAAS,
-	ProductOfferingTypes.LIFERAY_SAAS,
-	ProductOfferingTypes.LIFERAY_SELF_HOSTED,
-];
-
 export const EXPERIENCE_OFFERING_PRODUCT_EXTERNAL_REFERENCE_CODES: readonly ProductExternalReferenceCode[] =
 	[
 		ProductExternalReferenceCode.PAAS_EXPERIENCE,
 		ProductExternalReferenceCode.SAAS_EXPERIENCE,
 	];
-
-const offeringTypes = {
-	'client-extension': ALL_OFFERINGS,
-	'cloud': [ProductOfferingTypes.LIFERAY_SAAS],
-	'composite-app': [ProductOfferingTypes.LIFERAY_SELF_HOSTED],
-	'dxp': [
-		ProductOfferingTypes.LIFERAY_PAAS,
-		ProductOfferingTypes.LIFERAY_SELF_HOSTED,
-	],
-	'low-code-configuration': ALL_OFFERINGS,
-	'other': ALL_OFFERINGS,
-};
 
 export const ProductTypeLabels = {
 	[ProductType.AI_HUB]: 'AI Hub',
@@ -266,17 +200,6 @@ export const ProductTypeLabels = {
 	[ProductType.LOW_CODE_CONFIGURATION]: 'Low-Code Configuration',
 	[ProductType.OTHER]: 'Other',
 	[ProductType.SSA_SAAS]: 'SSA SaaS',
-} as const;
-
-export const SolutionTypeLabels = {
-	[SolutionTypes.AI_HUB]: 'AI Hub',
-	[SolutionTypes.AI_HUB_OPEN_BETA]: 'AI Hub Open Beta',
-	[SolutionTypes.ANALYTICS]: 'Analytics',
-	[SolutionTypes.CMP]: 'CMP',
-	[SolutionTypes.DSR]: 'DSR',
-	[SolutionTypes.DXP]: 'DXP',
-	[SolutionTypes.LIFERAY_DATA_PLATFORM]: 'Liferay Data Platform',
-	[SolutionTypes.PRE_BUILT_TRIAL]: 'Pre-Built Trial',
 } as const;
 
 export const ProductTypeLicenseOptions: Record<
@@ -309,7 +232,3 @@ export const ProductWorkflowStatusLabel = {
 	[ProductWorkflowStatusCode.DRAFT]: i18n.translate('draft'),
 	[ProductWorkflowStatusCode.PENDING]: i18n.translate('under-review'),
 };
-
-export function getOfferingTypes(type: ProductType) {
-	return offeringTypes[type as keyof typeof offeringTypes];
-}

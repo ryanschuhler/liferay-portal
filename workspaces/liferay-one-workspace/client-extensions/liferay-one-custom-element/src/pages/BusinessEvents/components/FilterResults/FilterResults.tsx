@@ -9,7 +9,7 @@ import BadgeButton from '~/pages/BusinessEvents/components/BadgeButton/BadgeButt
 import {IFilterOption} from '~/pages/BusinessEvents/components/Filter/Filter';
 import getKebabCase from '~/utils/getKebabCase';
 
-export interface IProps {
+interface IProps {
 	onChange: (selectedFilters: IFilterOption[]) => void;
 	searchResultsCount: number;
 	searchTerm: string;

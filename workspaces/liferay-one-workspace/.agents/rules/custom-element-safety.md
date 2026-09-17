@@ -91,11 +91,11 @@ Each rule is a warning until its count is zero. Then change the rule to an error
 
 | Rule | Open |
 | --- | --- |
-| `no-untranslated-text` | 116 |
-| `no-array-index-key` | 68 |
-| `no-unsafe-type-cast` | 58 |
-| `jsx-a11y/*` | 82 |
-| `bounded-pagination` | 18 |
+| `no-untranslated-text` | 26 |
+| `no-array-index-key` | 15 |
+| `bounded-pagination` | 11 |
+| `jsx-a11y/*` | 8 |
+| `no-unsafe-type-cast` | 6 |
 | `no-raw-fetch` | 0 |
 | `i18n-key-slug` | 0 |
 | `no-direct-web-storage` | 0 |
@@ -103,7 +103,7 @@ Each rule is a warning until its count is zero. Then change the rule to an error
 | `no-unsanitized-html` | 0 |
 | `no-timezone-naive-date` | 0 |
 
-The six rules at zero are errors. The other rules stay warnings until their counts reach zero.
+Each rule at zero is an error. Each other rule stays a warning until its count is zero.
 
 `eslint-plugin-jsx-a11y` enforces accessibility. The plugin ships its recommended rules as errors. `.eslintrc.js` reads the plugin's own rule list and sets each rule to a warning, so that the team can reduce the count. This method stays correct when the plugin adds a rule.
 

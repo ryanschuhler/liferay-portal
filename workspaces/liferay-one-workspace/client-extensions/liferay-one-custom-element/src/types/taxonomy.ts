@@ -5,7 +5,7 @@
 
 import type {APIResponse} from './api';
 
-export type TaxonomyCategory = {
+type TaxonomyCategory = {
 	externalReferenceCode: string;
 	id: number;
 	name: string;

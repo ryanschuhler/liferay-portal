@@ -45,7 +45,7 @@ export const STATUS_DOT_COLORS: {[key: string]: string} = {
 	'requested': 'var(--color-state-info)',
 };
 
-export type SupportLink = {
+type SupportLink = {
 	href: (value: string) => string;
 	label: Word;
 	specificationKey: string;

@@ -22,14 +22,14 @@ export type SolutionImage = {
 	preview: string;
 };
 
-export type SolutionCompany = {
+type SolutionCompany = {
 	description: string;
 	email: string;
 	phone: string;
 	website: string;
 };
 
-export type SolutionBlock = {
+type SolutionBlock = {
 	description: string;
 	images?: SolutionImage[];
 	title: string;
@@ -38,7 +38,7 @@ export type SolutionBlock = {
 	videoURL?: string;
 };
 
-export type SolutionDetail = {
+type SolutionDetail = {
 	categories: string[];
 	company?: SolutionCompany;
 	contactEmail: string;

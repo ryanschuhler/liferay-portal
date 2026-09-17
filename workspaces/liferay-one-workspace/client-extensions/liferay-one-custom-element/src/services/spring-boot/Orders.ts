@@ -6,8 +6,8 @@
 import CreateFilters from '~/services/fetcher/CreateFilters';
 import {
 	FilterSchemaOption,
-	filterSchema as filterSchemas,
-} from '~/types/filters';
+	filterSchemas,
+} from '~/services/fetcher/filterSchemas';
 import {downloadFile} from '~/utils/downloadFileUtils';
 
 import {OneSpringBootOAuth2} from './OAuth2Client';

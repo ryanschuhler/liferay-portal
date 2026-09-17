@@ -13,7 +13,7 @@ import i18n, {translate} from '~/i18n';
 import {ProductLicenseTier} from '~/types/productEnums';
 import {currenciesCode} from '~/utils/currencyUtils';
 
-export type CurrencyFlagProps = (typeof currenciesCode)[number];
+type CurrencyFlagProps = (typeof currenciesCode)[number];
 
 const CurrencyFlag = ({flag, iconSrc}: CurrencyFlagProps) => {
 	if (iconSrc) {

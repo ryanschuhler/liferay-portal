@@ -18,7 +18,7 @@ export interface IFilterOption {
 	}[];
 }
 
-export interface IProps {
+interface IProps {
 	availableFilters: IFilterOption[];
 	onChange: (selectedFilters: IFilterOption[]) => void;
 	selectedFilters: IFilterOption[];

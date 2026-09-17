@@ -13,8 +13,8 @@ import {Fragment} from 'react';
 import ListView, {ListViewProps} from '~/components/ListView/ListView';
 import i18n from '~/i18n';
 import {ManagementToolbarProps} from '~/pages/Admin/components/ManagementToolbar/ManagementToolbar';
+import {FilterSchemaOption} from '~/services/fetcher/filterSchemas';
 import Orders from '~/services/spring-boot/Orders';
-import {FilterSchemaOption} from '~/types/filters';
 import {
 	OrderCustomFields,
 	orderTypeLabel,

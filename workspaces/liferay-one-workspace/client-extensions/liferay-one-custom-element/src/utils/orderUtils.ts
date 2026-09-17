@@ -201,7 +201,7 @@ const STATUS_TOKEN_ALIASES: {[token: string]: string} = {
 	cancelled: 'canceled',
 };
 
-export function toStatusToken(label: string): string {
+function toStatusToken(label: string): string {
 	const token = label.toLowerCase().replace(/\s+/g, '-');
 
 	return STATUS_TOKEN_ALIASES[token] ?? token;

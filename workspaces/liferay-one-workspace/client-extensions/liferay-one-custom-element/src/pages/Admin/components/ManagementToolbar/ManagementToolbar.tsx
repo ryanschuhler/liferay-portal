@@ -12,8 +12,8 @@ import ManagementToolbarResultsBar from '~/pages/Admin/components/ManagementTool
 import ManagementToolbarSearch from '~/pages/Admin/components/ManagementToolbarSearch/ManagementToolbarSearch';
 import {
 	FilterSchemaOption,
-	filterSchema as filterSchemas,
-} from '~/types/filters';
+	filterSchemas,
+} from '~/services/fetcher/filterSchemas';
 
 export type ManagementToolbarProps = {
 	actionButton?: (

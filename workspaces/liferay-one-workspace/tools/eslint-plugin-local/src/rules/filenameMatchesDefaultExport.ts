@@ -82,7 +82,7 @@ const rule: TSESLint.RuleModule<MessageId, []> = {
 				if (
 					stem === 'index' ||
 					stem === 'types' ||
-					stem === 'utils' ||
+					/utils$/i.test(stem) ||
 					/constants$/i.test(stem) ||
 					basename.endsWith('.d.ts')
 				) {

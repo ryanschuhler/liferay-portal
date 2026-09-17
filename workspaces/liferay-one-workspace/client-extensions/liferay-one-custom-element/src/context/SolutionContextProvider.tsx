@@ -38,7 +38,7 @@ export enum BlockDirections {
 	MOVE_UP,
 }
 
-export type HeaderContentTypeEmbeded = {
+type HeaderContentTypeEmbeded = {
 	content: {
 		headerVideoDescription?: string;
 		headerVideoUrl: string;
@@ -46,7 +46,7 @@ export type HeaderContentTypeEmbeded = {
 	type: 'embed-video-url';
 };
 
-export type HeaderContentTypeImages = {
+type HeaderContentTypeImages = {
 	content: {
 		headerImages: UploadedFile[];
 	};
@@ -70,7 +70,7 @@ export type TextImageBlock = {
 	type: 'text-images-block';
 };
 
-export type StoredTextImageBlock = {
+type StoredTextImageBlock = {
 	content: {
 		description: string;
 		files: string[];
@@ -91,14 +91,9 @@ export type TextVideoBlock = {
 
 export type ContentBlock = TextBlock | TextImageBlock | TextVideoBlock;
 
-export type StoredContentBlock =
-	| StoredTextImageBlock
-	| TextBlock
-	| TextVideoBlock;
+type StoredContentBlock = StoredTextImageBlock | TextBlock | TextVideoBlock;
 
-export type HeaderContentType =
-	| HeaderContentTypeEmbeded
-	| HeaderContentTypeImages;
+type HeaderContentType = HeaderContentTypeEmbeded | HeaderContentTypeImages;
 
 export enum SolutionTypes {
 	SET_BLOCK_MOVE = 'SET_BLOCK_MOVE',
@@ -554,7 +549,7 @@ const reducer = (state: SolutionInitialState, action: AppActions) => {
 	}
 };
 
-export const SolutionContext = createContext<
+const SolutionContext = createContext<
 	[SolutionInitialState, (param: AppActions) => void]
 >([solutionInitialState, () => null]);
 

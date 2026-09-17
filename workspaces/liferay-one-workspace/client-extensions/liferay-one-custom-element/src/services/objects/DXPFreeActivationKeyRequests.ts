@@ -5,7 +5,7 @@
 
 import fetcher from '~/services/fetcher/fetcher';
 
-export type DXPFreeActivationKeyRequest = {
+type DXPFreeActivationKeyRequest = {
 	businessEmailAddress: string;
 	companyName?: string;
 	country: string;

@@ -5,7 +5,7 @@
 
 import type {RoleBrief} from '~/types/accounts';
 
-export type AccountMemberStatus = 'active' | 'invited';
+type AccountMemberStatus = 'active' | 'invited';
 
 export type AccountMemberRow = {
 	email: string;

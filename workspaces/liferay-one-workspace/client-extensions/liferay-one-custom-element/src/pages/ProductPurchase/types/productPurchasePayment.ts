@@ -7,7 +7,7 @@ import type {BillingAddress} from '~/types/orders';
 
 import type {PaymentMethodType} from './PaymentMethodType';
 
-export type ProductPurchaseInvoice = {
+type ProductPurchaseInvoice = {
 	email: string;
 	purchaseOrderNumber: string;
 };

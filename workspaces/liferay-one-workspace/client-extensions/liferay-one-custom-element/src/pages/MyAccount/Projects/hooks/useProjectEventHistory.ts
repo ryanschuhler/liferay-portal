@@ -13,12 +13,12 @@ import type {EventDataSource} from './useProjectEventUsage';
 
 export type EventHistoryGranularity = 'day' | 'month';
 
-export type EventHistoryPoint = {
+type EventHistoryPoint = {
 	date: string;
 	eventSummary?: EventDataSource[];
 };
 
-export type ProjectEventHistory = {
+type ProjectEventHistory = {
 	eventHistory: EventHistoryPoint[];
 	usageDataAvailable?: boolean;
 };

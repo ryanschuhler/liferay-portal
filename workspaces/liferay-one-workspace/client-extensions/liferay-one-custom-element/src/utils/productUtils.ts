@@ -40,7 +40,6 @@ export {
 	ProductWorkflowDisplayType,
 	ProductWorkflowStatusCode,
 	ProductWorkflowStatusLabel,
-	SolutionTypeLabels,
 	SkuOptions,
 } from '~/types/productEnums';
 
@@ -146,7 +145,7 @@ export function isTrialSKU(sku: DeliverySKU | SKU) {
 	);
 }
 
-export function getNormalizedSKUOptions(sku: DeliverySKU | SKU) {
+function getNormalizedSKUOptions(sku: DeliverySKU | SKU) {
 	return (sku.skuOptions || []).map((skuOption) => {
 		if ('skuOptionKey' in skuOption) {
 			return {
@@ -237,7 +236,7 @@ export function getAiHubTierSKU(product: DeliveryProduct, skuRef?: string) {
 	);
 }
 
-export function getAiHubTierSKUs(product: DeliveryProduct) {
+function getAiHubTierSKUs(product: DeliveryProduct) {
 	return (product.skus ?? [])
 		.filter(
 			({purchasable, skuOptions}) =>

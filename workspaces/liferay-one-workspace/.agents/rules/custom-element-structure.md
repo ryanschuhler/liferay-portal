@@ -75,7 +75,7 @@ There is one GraphQL client: `services/graphql/GraphQL.ts`. Import that client.
 
 - `services/actions/` — write orchestration. A publish operation changes a catalog, then a price list, then an asset. That sequence is an action, not a service method.
 - `services/commerce/` — commerce reads.
-- `services/fetcher/` — transport. This tier holds the fetcher, its error type, the SWR cache, and the query string builders `SearchBuilder` and `CreateFilters`. A query string builder is part of the transport, not a general helper, so it does not belong in `utils/`.
+- `services/fetcher/` — transport. This tier holds the fetcher, its error type, the SWR cache, the query string builders `SearchBuilder` and `CreateFilters`, and `filterSchemas`, which is the table those builders read. A query string builder is part of the transport, not a general helper, so it does not belong in `utils/`. The table is not a type, so it does not belong in `types/`.
 - `services/graphql/` — the GraphQL client.
 - `services/headless/` — Liferay headless reads.
 - `services/liferay/` — the `Liferay` global and its wrappers.
@@ -244,19 +244,22 @@ A rule stays a warning while its count is above zero. The counts below give the 
 
 | Rule | Open |
 | --- | --- |
-| `yarn lint:imports` dead exports | 332 |
-| `service-layer-boundary` | 63 |
+| `service-layer-boundary` | 64 |
+| `file-complexity-budget` | 33 |
+| `hooks-export-only-hooks` | 9 |
 | `yarn lint:placement` | 4 |
-| `file-complexity-budget` | 34 |
-| `hooks-export-only-hooks` | 20 |
 | `yarn lint:imports` cycles | 0 |
-| `page-folder-structure` | 0 |
-| `no-eslint-disable` | 0 |
-| `no-bare-utils-or-types-file` | 0 |
+| `yarn lint:imports` dead exports | 0 |
 | `src-folder-structure` | 0 |
+| `page-folder-structure` | 0 |
+| `no-bare-utils-or-types-file` | 0 |
 | `context-file-naming` | 0 |
+| `no-eslint-disable` | 0 |
+| `no-ambient-type-declarations` | 0 |
 | `i18n-key-placeholder` | 0 |
 | `yarn lint:deps` | 0 |
 | `yarn lint:sorted` | 0 |
+
+Each rule at zero is an error. `yarn lint:imports` reports no cycle and no dead export, so its exit code holds both at zero.
 
 Every rule applies to new code, whatever the count in this table says. The counts only decrease.

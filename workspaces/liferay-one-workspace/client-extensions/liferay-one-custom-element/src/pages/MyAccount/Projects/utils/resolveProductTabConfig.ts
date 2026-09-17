@@ -29,7 +29,7 @@ const LICENSE_KEY_ACTIVATION_PROFILES: ActivationProfile[] = [
 	'licenses',
 ];
 
-export type ProductTabConfig = {
+type ProductTabConfig = {
 	activationProfile?: ActivationProfile;
 	detailsProfile: DetailsProfile;
 	downloadProfile?: DownloadProfile;

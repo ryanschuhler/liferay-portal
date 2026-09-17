@@ -83,7 +83,7 @@ type ProductTypeVocabulary =
 
 type NextStepsBodyProps = ReturnType<typeof useGetProductByOrderId>['data'];
 
-export function NextStepsBody(props: NextStepsBodyProps) {
+function NextStepsBody(props: NextStepsBodyProps) {
 	const placedOrder = props!.placedOrder;
 	const product = props!.product;
 

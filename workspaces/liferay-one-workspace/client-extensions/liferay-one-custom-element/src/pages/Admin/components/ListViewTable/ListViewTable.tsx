@@ -16,10 +16,7 @@ import {Action, SortDirection, SortOption} from '~/utils/appConstants';
 
 import type {APIResponse} from '~/types/api';
 
-export type Column<
-	T extends Record<string, unknown>,
-	K extends keyof T = keyof T,
-> = {
+type Column<T extends Record<string, unknown>, K extends keyof T = keyof T> = {
 	clickable?: boolean;
 	id: K;
 	name: string;

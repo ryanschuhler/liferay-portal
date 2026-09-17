@@ -143,9 +143,7 @@ export type OrderType = {
 	name: {[key: string]: string};
 };
 
-export type PaymentMethodSelector = 'order' | 'pay' | 'trial' | 'free';
-
-export type PaymentStatusInfo = {
+type PaymentStatusInfo = {
 	code: number;
 	label: string;
 	label_i18n: string;

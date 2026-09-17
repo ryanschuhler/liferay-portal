@@ -31,7 +31,7 @@ import './AIHubForm.css';
 
 import '../../LiferayProduct.css';
 
-export const PURPOSE_OPTIONS = [
+const PURPOSE_OPTIONS = [
 	{
 		subtitle: 'For students or individuals upskilling.',
 		title: 'Personal Learning / Education',

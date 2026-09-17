@@ -43,7 +43,7 @@ type ProductPurchaseLayoutProps = {
 	steps: ProductPurchaseStepItem[];
 };
 
-export type ProductPurchaseLayoutContext = {
+type ProductPurchaseLayoutContext = {
 	accounts: Account[];
 	actions: {
 		nextStep: () => void;

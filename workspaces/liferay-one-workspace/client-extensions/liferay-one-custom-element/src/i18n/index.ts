@@ -10,7 +10,7 @@ import es_ES from './es_ES';
 import ja_JP from './ja_JP';
 import pt_BR from './pt_BR';
 
-export const languages = {
+const languages = {
 	en_US,
 	es_ES,
 	ja_JP,

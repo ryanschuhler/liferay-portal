@@ -20,7 +20,7 @@ import type {ActionMap} from '~/types/actionMap';
 const marketplaceStorage =
 	MarketplaceStorage.getInstance().getStorage('persisted');
 
-export type Entry = {
+type Entry = {
 	label: string;
 	name: string;
 	value: string;

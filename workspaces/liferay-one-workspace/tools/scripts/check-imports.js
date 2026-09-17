@@ -32,6 +32,16 @@ const EXPORT_PATTERN =
 
 const EXPORT_LIST_PATTERN = /^export\s*\{([^}]*)\}/gm;
 
+// `export function X` beside `export default X` is one export written twice,
+// and util-filename requires that shape. An importer takes the default, so the
+// name looks unused. Reporting it would ask for the opposite of another rule.
+
+const DEFAULT_EXPORT_NAME_PATTERNS = [
+	/^export default (?:abstract\s+)?class\s+(\w+)/m,
+	/^export default function\s+(\w+)/m,
+	/^export default (\w+)\s*[;({<]/m,
+];
+
 // A static import decides initialization order, so a ring of them is a real
 // defect. A dynamic import('...') is deferred and orders nothing, so it counts
 // for reachability but never for cycles — and every lazy loaded page and route
@@ -270,6 +280,16 @@ function main() {
 				if (exportedName) {
 					names.add(exportedName.replace(/^type\s+/, ''));
 				}
+			}
+		}
+
+		for (const pattern of DEFAULT_EXPORT_NAME_PATTERNS) {
+			const defaultExportName = source.match(pattern);
+
+			if (defaultExportName) {
+				names.delete(defaultExportName[1]);
+
+				break;
 			}
 		}
 

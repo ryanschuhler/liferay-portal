@@ -7,7 +7,7 @@ import ClayEmptyState from '@clayui/empty-state';
 import React, {ReactNode} from 'react';
 import i18n from '~/i18n';
 import {Liferay} from '~/services/liferay/liferay';
-export const States = {
+const States = {
 	BLANK: '',
 
 	EMPTY_SEARCH: `${Liferay.ThemeDisplay.getPathThemeImages()}/states/search_state.gif`,
@@ -22,7 +22,7 @@ export const States = {
 	SUCCESS: `${Liferay.ThemeDisplay.getPathThemeImages()}/states/success_state.gif`,
 };
 
-export type EmptyStateProps = {
+type EmptyStateProps = {
 	children?: ReactNode;
 	className?: string;
 	description?: ReactNode | string;

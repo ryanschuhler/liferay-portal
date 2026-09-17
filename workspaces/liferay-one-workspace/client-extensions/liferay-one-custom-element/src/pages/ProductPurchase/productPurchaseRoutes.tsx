@@ -50,7 +50,7 @@ const ProjectSelection = lazy(
 	() => import('./LiferayProduct/ProjectSelection/ProjectSelection')
 );
 
-export type ProductPurchaseStep = {
+type ProductPurchaseStep = {
 	element: ReactNode;
 	excludeForDXPFree?: boolean;
 	index?: boolean;
@@ -194,7 +194,7 @@ export function getProductPurchaseSteps({
 	);
 }
 
-export function getStepKey(step: Pick<ProductPurchaseStep, 'index' | 'path'>) {
+function getStepKey(step: Pick<ProductPurchaseStep, 'index' | 'path'>) {
 	return step.index ? '/' : `/${step.path}`;
 }
 

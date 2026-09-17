@@ -20,20 +20,13 @@ export type Account = {
 	type: string;
 };
 
-export type AccountBrief = {
+type AccountBrief = {
 	customFields?: CustomField[];
 	externalReferenceCode: string;
 	id: number;
 	logoURL?: string;
 	name: string;
 	roleBriefs: RoleBrief[];
-};
-
-export type AccountGroup = {
-	customFields: {};
-	externalReferenceCode: string;
-	id: number;
-	name: string;
 };
 
 export type AccountPostalAddresses = {

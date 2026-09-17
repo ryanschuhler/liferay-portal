@@ -20,7 +20,7 @@ export type Operators =
 	| 'ne'
 	| 'startsWith';
 
-export type SearchBuilderConstructor = {
+type SearchBuilderConstructor = {
 	useURIEncode?: boolean;
 };
 

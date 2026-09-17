@@ -23,7 +23,7 @@ type NewAppUploadAppPackagesComponentProps = {
 	};
 };
 
-export const acceptFileTypes = {
+const acceptFileTypes = {
 	[ProductType.CLIENT_EXTENSION]: ALLOWED_MIME_TYPES.ZIP,
 	[ProductType.CLOUD]: ALLOWED_MIME_TYPES.ZIP,
 	[ProductType.COMPOSITE_APP]: {

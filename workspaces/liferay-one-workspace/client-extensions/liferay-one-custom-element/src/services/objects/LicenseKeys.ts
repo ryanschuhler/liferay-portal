@@ -5,7 +5,7 @@
 
 import fetcher from '~/services/fetcher/fetcher';
 
-export type LicenseKeyEntry = {
+type LicenseKeyEntry = {
 	active?: boolean;
 	additionalInfo?: string;
 	customExpirationDate?: string;

@@ -24,22 +24,6 @@ export function getRandomID() {
 	}
 }
 
-export function removeUnnecessaryURLString(text: string) {
-	const index = text.indexOf('/o');
-
-	return text.substring(index);
-}
-
-export function sanitizeStringForURL(text: string) {
-	return text
-		.toLowerCase()
-		.trim()
-		.replace(/[^a-z0-9\s-]/g, '')
-		.replace(/\s+/g, '-')
-		.replace(/-+/g, '-')
-		.replace(/^-|-$/g, '');
-}
-
 export function toAlphanumericLowerCase(text: string) {
 	return text.replaceAll(/[^a-zA-Z0-9]/g, '').toLowerCase();
 }

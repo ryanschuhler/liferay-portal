@@ -34,7 +34,7 @@ export type DeliveryProduct = {
 	urls: {en_US: string};
 };
 
-export type DeliveryProductAttachment = {
+type DeliveryProductAttachment = {
 	customFields: CustomField[];
 	galleryEnabled: boolean;
 	id: number;
@@ -69,18 +69,10 @@ export type DeliverySKU = {
 	tierPrices?: TierPrice[];
 };
 
-export type DeliverySKUOption = {
+type DeliverySKUOption = {
 	skuOptionKey: string;
 	skuOptionValueKey: string;
 	skuOptionValueNames?: string[];
-};
-
-export type OptionCategory = {
-	description?: {[key: string]: string};
-	id?: number;
-	key?: string;
-	priority?: number;
-	title?: {[key: string]: string};
 };
 
 export type PriceEntry = {
@@ -147,7 +139,7 @@ export type Product = {
 	};
 };
 
-export type ProductAttachment = {
+type ProductAttachment = {
 	customFields?: CustomField[];
 	externalReferenceCode: string;
 	fileEntryId: number;
@@ -189,13 +181,6 @@ export type ProductOption = {
 	typeSettings: string;
 };
 
-export type ProductOptionItem = {
-	id: number;
-	key: string;
-	name: string;
-	optionId: number;
-};
-
 export type ProductSpecification = {
 	id?: number;
 	label?: {[key: string]: string};
@@ -219,14 +204,6 @@ export type SKU = {
 	skuOptions: {key: string; value: string}[];
 };
 
-export type Specification = {
-	description?: {[key: string]: string};
-	id?: number;
-	key?: string;
-	optionCategory?: OptionCategory;
-	title?: {[key: string]: string};
-};
-
 export type TierPrice = {
 	currency: string;
 	externalReferenceCode: string;
@@ -237,10 +214,6 @@ export type TierPrice = {
 	quantity: number;
 };
 
-export type LicenseType = 'perpetual' | 'subscription';
-
-export type ProductEditionOption = 'EE';
-
 export type ProductImageFallbackCategories = 'productIcon' | 'productImage';
 
 export type ProductLicense =
@@ -250,29 +223,12 @@ export type ProductLicense =
 
 export type ProductLicenseTier = 'developer' | 'standard' | 'trial';
 
-export type ProductLicenseType = 'Perpetual' | 'Subscription';
-
 export type ProductOfferingTypes =
 	| 'Liferay PaaS'
 	| 'Liferay SaaS'
 	| 'Liferay Self-Hosted';
 
 export type ProductPriceModel = 'Free' | 'Paid';
-
-export type ProductSupportSpecificationKey =
-	| 'appdocumentationurl'
-	| 'appinstallationguideurl'
-	| 'appusagetermsurl'
-	| 'publisherwebsiteurl'
-	| 'supportemailaddress'
-	| 'supportphone'
-	| 'supporturl';
-
-export type ProductTags =
-	| 'app-icon'
-	| 'solution-details'
-	| 'solution-header'
-	| 'solution-profile-app-icon';
 
 export type ProductType =
 	| 'ai-hub'
@@ -286,27 +242,4 @@ export type ProductType =
 
 export type ProductTypeVocabulary = 'app' | 'liferay-product' | 'solution';
 
-export type ProductUploadType = 'GitHub' | 'Liferay SaaS' | 'upload';
-
-export type ProductVersionOption = '7.4';
-
-export type ProductVocabulary =
-	| 'Marketplace App Category'
-	| 'Marketplace App Tags'
-	| 'Marketplace Availability'
-	| 'Marketplace Liferay Platform Offering'
-	| 'Marketplace Liferay Version'
-	| 'Marketplace Product Type'
-	| 'Marketplace Solution Category'
-	| 'Marketplace Solution Tags';
-
 export type SkuOptions = 'developer' | 'standard' | 'trial';
-
-export type SolutionTypes =
-	| 'ai-hub'
-	| 'analytics'
-	| 'cmp'
-	| 'dsr'
-	| 'dxp'
-	| 'liferay-data-platform'
-	| 'pre-built-trial';

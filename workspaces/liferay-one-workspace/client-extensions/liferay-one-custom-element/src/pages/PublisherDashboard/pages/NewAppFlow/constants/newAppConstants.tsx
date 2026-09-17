@@ -168,39 +168,6 @@ export const APP_FLOW_ITEMS: AppFlowItem[] = [
 	},
 ];
 
-export const COMPATIBLE_OFFERING_CARDS = [
-	{
-		description: i18n.translate(
-			'create-a-cloud-app-to-be-delivered-as-a-live-service'
-		),
-		icon: 'check-circle',
-		title: i18n.translate('yes'),
-		tooltip: ReactDOMServer.renderToString(
-			<span>
-				{i18n.translate(
-					'the-app-submission-is-compatible-with-liferay-experience-cloud-and'
-				)}
-				<a href={LearnLinks.CLIENT_EXTENSIONS} target="_blank">
-					{i18n.translate('client-extensions')}
-				</a>
-				.
-			</span>
-		),
-		value: true,
-	},
-	{
-		description: i18n.translate(
-			'create-a-dxp-app-to-be-delivered-as-a-download'
-		),
-		icon: 'times-circle',
-		title: i18n.translate('no'),
-		tooltip: i18n.translate(
-			'the-app-submission-is-integrates-with-liferay-dxp-version-7-4-or-later'
-		),
-		value: false,
-	},
-];
-
 export const BUILD_UPLOAD_OPTIONS = {
 	cloud: [
 		{

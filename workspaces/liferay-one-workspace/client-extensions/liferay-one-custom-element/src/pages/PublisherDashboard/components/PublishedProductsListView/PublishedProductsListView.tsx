@@ -17,8 +17,8 @@ import i18n, {Word} from '~/i18n';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import {
 	FilterSchemaOption,
-	filterSchema as filterSchemas,
-} from '~/types/filters';
+	filterSchemas,
+} from '~/services/fetcher/filterSchemas';
 import {
 	ProductSpecificationKey,
 	ProductTypeLabels,
@@ -111,17 +111,6 @@ export function renderAppType(productSpecifications: ProductSpecification[]) {
 		<span className="text-capitalize">
 			{ProductTypeLabels[type as keyof typeof ProductTypeLabels] ?? type}
 		</span>
-	);
-}
-
-export function renderLiferayVersion(
-	productSpecifications: ProductSpecification[]
-) {
-	return (
-		specificationValue(
-			productSpecifications,
-			ProductSpecificationKey.LIFERAY_VERSION
-		) ?? '-'
 	);
 }
 

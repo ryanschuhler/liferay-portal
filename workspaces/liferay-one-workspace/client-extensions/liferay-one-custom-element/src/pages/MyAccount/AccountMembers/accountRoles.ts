@@ -8,16 +8,16 @@ import HeadlessAdminUser from '~/services/headless/HeadlessAdminUser';
 import type {UserAccountModel} from '~/services/models/UserAccountModel';
 import type {RoleBrief} from '~/types/accounts';
 
-export const ACCOUNT_ADMINISTRATOR = 'Account Administrator';
-export const ACCOUNT_BUYER = 'Account Buyer';
-export const ACCOUNT_MEMBER = 'Account Member';
+const ACCOUNT_ADMINISTRATOR = 'Account Administrator';
+const ACCOUNT_BUYER = 'Account Buyer';
+const ACCOUNT_MEMBER = 'Account Member';
 export const ACCOUNT_REQUESTER = 'Account Requester';
-export const PARTNER_ACCOUNT_ADMIN = 'Partner Account Admin';
-export const PARTNER_MANAGER = 'Partner Manager';
-export const PARTNER_MARKETING_USER = 'Partner Marketing User';
-export const PARTNER_MEMBER = 'Partner Member';
-export const PARTNER_SALES_USER = 'Partner Sales User';
-export const PARTNER_TECHNICAL_USER = 'Partner Technical User';
+const PARTNER_ACCOUNT_ADMIN = 'Partner Account Admin';
+const PARTNER_MANAGER = 'Partner Manager';
+const PARTNER_MARKETING_USER = 'Partner Marketing User';
+const PARTNER_MEMBER = 'Partner Member';
+const PARTNER_SALES_USER = 'Partner Sales User';
+const PARTNER_TECHNICAL_USER = 'Partner Technical User';
 
 export const STANDARD_ACCOUNT_ROLES = [
 	ACCOUNT_ADMINISTRATOR,
@@ -100,7 +100,7 @@ export function hasAdministratorRole(roleBriefs: RoleBrief[] = []) {
 	return roleBriefs.some(({name}) => isAdministratorRole(name));
 }
 
-export function hasAnyAccountRole(userAccountModel?: UserAccountModel | null) {
+function hasAnyAccountRole(userAccountModel?: UserAccountModel | null) {
 	return MANAGEABLE_ACCOUNT_ROLES.some((roleName) =>
 		userAccountModel?.hasAccountRoleName(roleName)
 	);
@@ -112,12 +112,6 @@ export function isAccountManager(userAccountModel?: UserAccountModel | null) {
 			userAccountModel?.hasAccountRoleName(PARTNER_ACCOUNT_ADMIN) ||
 			userAccountModel?.isAdmin
 	);
-}
-
-export function canEditAccountDetails(
-	userAccountModel?: UserAccountModel | null
-) {
-	return isAccountManager(userAccountModel);
 }
 
 export function canAccessAccountMembers(

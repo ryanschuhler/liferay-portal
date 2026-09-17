@@ -24,8 +24,6 @@ export const DOCUMENT_FOLDER_PERMISSIONS = {
 	SITE_MEMBERS: 'Members',
 };
 
-export const PUBLISH_APP_UPLOAD_MAX_FILES = 10;
-
 export const PUBLISH_APP_UPLOAD_MAX_SIZE = 500_000_000;
 
 export const ACCEPT_FILE_TYPES = {
@@ -34,10 +32,3 @@ export const ACCEPT_FILE_TYPES = {
 	'image/jpg': ['.jpg'],
 	'image/png': ['.png'],
 };
-
-export enum GetAppStepTypes {
-	ACCOUNT = 'account',
-	LICENSES = 'licenses',
-	PAYMENT = 'payment',
-	PROJECT = 'project',
-}

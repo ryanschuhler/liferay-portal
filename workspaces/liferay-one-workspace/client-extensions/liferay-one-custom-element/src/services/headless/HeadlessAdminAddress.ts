@@ -8,12 +8,12 @@ import {ALL_ROWS} from '~/services/fetcher/pagination';
 
 import type {APIResponse} from '~/types/api';
 
-export type AddressCountryRegion = {
+type AddressCountryRegion = {
 	name: string;
 	regionCode: string;
 };
 
-export type AddressCountry = {
+type AddressCountry = {
 	a2: string;
 	active: boolean;
 	name: string;

@@ -19,7 +19,7 @@ const PAGE_SIZE_OPTIONS = [10, 20, 30, 50];
 
 const FILTER_SEARCH_MIN_OPTIONS = 10;
 
-export type FilterOption = {label: string; value: string};
+type FilterOption = {label: string; value: string};
 
 export type ListFilter<T> = {
 	formatValue?: (value: string) => string;

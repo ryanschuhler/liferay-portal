@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
 import {removeHTMLTags} from '~/utils/stringUtils';
 
@@ -537,7 +536,5 @@ const zodSchema = {
 		sendNotificationEmail: z.boolean(),
 	}),
 };
-
-export {z, zodResolver};
 
 export default zodSchema;

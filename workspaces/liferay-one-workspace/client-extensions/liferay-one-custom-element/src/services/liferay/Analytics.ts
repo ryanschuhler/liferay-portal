@@ -15,7 +15,7 @@ declare global {
 
 const LiferayAnalytics = window.Analytics;
 
-export const AnalyticsKeys = {
+const AnalyticsKeys = {
 	ACCCESS_CONSOLE_BUTTON: 'Access Console Button',
 	APP_PURCHASE: 'App Purchase',
 	CREATE_LICENSE_KEY: 'Create License Key',

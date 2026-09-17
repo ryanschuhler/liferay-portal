@@ -16,7 +16,7 @@ import FilterableListCard, {
 	ListFilter,
 } from '../FilterableListCard/FilterableListCard';
 
-export function matchesProductSearch(
+function matchesProductSearch(
 	product: ProjectProduct,
 	search: string
 ): boolean {

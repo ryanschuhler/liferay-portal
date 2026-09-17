@@ -7,12 +7,6 @@ import ClayButton from '@clayui/button';
 import {ReactNode} from 'react';
 import {Header} from '~/components/Header/Header';
 
-export type DashboardListItems = {
-	itemName: string;
-	itemTitle: string;
-	symbol: string;
-};
-
 type DashBoardPageProps = {
 	buttonDisabled?: boolean;
 	buttonMessage?: string | ReactNode | boolean;

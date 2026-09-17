@@ -6,8 +6,8 @@
 import type {DeliveryProductSpecification} from '~/types/product';
 
 export const PROJECT_ADMIN_ERC = 'C_PROJECT_ADMIN';
-export const PROJECT_REQUESTER_ERC = 'C_PROJECT_REQUESTER';
-export const PROJECT_USER_ERC = 'C_PROJECT_USER';
+const PROJECT_REQUESTER_ERC = 'C_PROJECT_REQUESTER';
+const PROJECT_USER_ERC = 'C_PROJECT_USER';
 
 export const PROJECT_ROLE_ERCS = [
 	PROJECT_ADMIN_ERC,
@@ -15,7 +15,7 @@ export const PROJECT_ROLE_ERCS = [
 	PROJECT_USER_ERC,
 ];
 
-export const PROJECT_ROLE_LABELS: Record<string, string> = {
+const PROJECT_ROLE_LABELS: Record<string, string> = {
 	[PROJECT_ADMIN_ERC]: 'Admin',
 	[PROJECT_REQUESTER_ERC]: 'Requester',
 	[PROJECT_USER_ERC]: 'User',

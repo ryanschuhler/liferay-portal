@@ -11,7 +11,7 @@ import './FormInput.css';
 
 import classNames from 'classnames';
 
-export type InputProps = {
+type InputProps = {
 	boldLabel?: boolean;
 	className?: string;
 	component?: 'input' | 'textarea';

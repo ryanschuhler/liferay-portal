@@ -323,5 +323,3 @@ const Header = () => {
 };
 
 export default Header;
-
-export {HEADER_CONTENT_TYPE};

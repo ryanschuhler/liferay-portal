@@ -48,7 +48,7 @@ const plugin = {
 				'local/i18n-key-placeholder': 'error',
 				'local/i18n-key-slug': 'error',
 				'local/image-filename-snake-case': 'error',
-				'local/no-ambient-type-declarations': 'warn',
+				'local/no-ambient-type-declarations': 'error',
 				'local/no-array-index-key': 'warn',
 				'local/no-bare-utils-or-types-file': 'error',
 				'local/no-comments': 'error',

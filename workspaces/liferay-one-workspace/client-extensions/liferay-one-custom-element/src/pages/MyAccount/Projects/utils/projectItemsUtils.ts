@@ -18,10 +18,7 @@ import type {DeliveryProduct} from '~/types/product';
 
 import type {ProjectItemType} from '../types/projectItemType';
 
-export type ProjectItemsByType = Record<
-	ProjectItemType,
-	Map<string, ProjectProduct>
->;
+type ProjectItemsByType = Record<ProjectItemType, Map<string, ProjectProduct>>;
 
 export function toProductsByProductId(products: DeliveryProduct[]) {
 	return new Map(products.map((product) => [product.productId, product]));

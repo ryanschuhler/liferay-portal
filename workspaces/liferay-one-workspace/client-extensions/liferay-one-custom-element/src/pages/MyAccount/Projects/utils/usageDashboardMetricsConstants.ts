@@ -11,7 +11,7 @@ export type UsageMetricConfig = {
 	totalLabel: Word;
 };
 
-export type UsageSummaryMetricConfig = {
+type UsageSummaryMetricConfig = {
 	label: Word;
 	metric: string;
 	tooltip: Word;

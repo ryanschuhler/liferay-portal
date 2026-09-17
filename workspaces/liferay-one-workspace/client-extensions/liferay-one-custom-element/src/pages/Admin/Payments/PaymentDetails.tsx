@@ -42,9 +42,7 @@ const Payouts = {
 	PUBLISHER_PAYOUT: 0.8,
 } as const;
 
-export function formatPostalAddress(
-	address: AccountPostalAddresses | undefined
-) {
+function formatPostalAddress(address: AccountPostalAddresses | undefined) {
 	if (!address || !Object.keys(address).length) {
 		return '-';
 	}

@@ -139,9 +139,11 @@ Follow these steps when a rule can detect the pattern mechanically in a TypeScri
    From the workspace root:
 
    ```bash
-   yarn build:plugin && yarn install --check-files
+   yarn build:plugin
    yarn lint 2>&1 | grep -E "local/<kebab-case-name>|<RuleName>" | head -20
    ```
+
+   ESLint loads the plugin from `node_modules/eslint-plugin-local/dist`, which is a copy of `tools/eslint-plugin-local/dist` and not a link to it. `yarn build:plugin` writes both. Never compile with `tsc` alone: the copy then stays old, ESLint keeps the old rule, and the edit appears to do nothing.
 
    The rule reports every file that matches the pattern and reports nothing on a clean file. When it reports a file it should not, tighten the condition. When it reports nothing on a known violation, widen the condition.
 

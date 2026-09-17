@@ -35,10 +35,12 @@ import ManagementToolbar, {
 import CreateFilters from '~/services/fetcher/CreateFilters';
 import FetcherError from '~/services/fetcher/FetcherError';
 import {
-	FilterSchema as FilterSchemaType,
 	FilterSchemaOption,
+	filterSchemas,
+} from '~/services/fetcher/filterSchemas';
+import {
+	FilterSchema as FilterSchemaType,
 	RendererFields,
-	filterSchema as filterSchemas,
 } from '~/types/filters';
 import {PAGINATION, SortDirection} from '~/utils/appConstants';
 import {safeJSONParse} from '~/utils/safeJSONParse';

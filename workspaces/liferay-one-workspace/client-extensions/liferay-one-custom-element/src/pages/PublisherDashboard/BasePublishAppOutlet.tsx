@@ -26,7 +26,7 @@ import type {AppFlowItem} from '~/pages/PublisherDashboard/pages/NewAppFlow/cons
 import type {Product} from '~/types/product';
 import type {ProductWorkflowStatusCode} from '~/types/productEnums';
 
-export type PublishFlowContext = {
+type PublishFlowContext = {
 	_product?: Product;
 	loading: boolean;
 	profile: {

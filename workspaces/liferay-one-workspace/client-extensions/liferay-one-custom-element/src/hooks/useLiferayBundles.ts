@@ -7,7 +7,7 @@ import {useFetch} from '~/hooks/useFetch';
 
 import type {APIResponse} from '~/types/api';
 
-export type LiferayBundle = {
+type LiferayBundle = {
 	id: string;
 	link: string;
 	name: string;

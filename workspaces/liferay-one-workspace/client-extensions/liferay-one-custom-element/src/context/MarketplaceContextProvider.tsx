@@ -69,6 +69,6 @@ const useMarketplaceContext = () => {
 	return useContext(MarketplaceContext);
 };
 
-export {useMarketplaceContext, MarketplaceContext};
+export {useMarketplaceContext};
 
 export default MarketplaceContextProvider;

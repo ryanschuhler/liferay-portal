@@ -7,7 +7,7 @@ import {downloadFile} from '~/utils/downloadFileUtils';
 
 import {OneSpringBootOAuth2} from './OAuth2Client';
 
-export type LicenseKey = {
+type LicenseKey = {
 	active: boolean;
 	customExpirationDate: string;
 	domains: string;

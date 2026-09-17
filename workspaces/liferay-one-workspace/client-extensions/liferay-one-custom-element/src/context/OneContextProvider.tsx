@@ -69,6 +69,6 @@ const useOneContext = () => {
 	return useContext(OneContext);
 };
 
-export {OneContext, useOneContext};
+export {useOneContext};
 
 export default OneContextProvider;

@@ -39,8 +39,6 @@ type ManagementToolbarFilterProps = {
 	filterSchema?: FilterSchema;
 };
 
-export type Option = {label: string; value: string};
-
 type FilterBodyProps = {
 	availableOptions?: FieldOptions;
 	filterSchema: FilterSchema | undefined;

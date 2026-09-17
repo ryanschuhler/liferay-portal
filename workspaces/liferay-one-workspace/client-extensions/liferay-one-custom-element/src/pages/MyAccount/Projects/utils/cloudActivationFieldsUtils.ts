@@ -8,7 +8,7 @@ import getKebabCase from '~/utils/getKebabCase';
 
 import type {ProjectEnvironment} from '~/hooks/useProjectEnvironments';
 
-export type CloudActivationOption = {
+type CloudActivationOption = {
 	label: string;
 	value: string;
 };
@@ -30,7 +30,7 @@ export type CloudActivationAdminFieldName =
 	| 'lastName'
 	| 'name';
 
-export type CloudActivationAdminField = {
+type CloudActivationAdminField = {
 	kind: 'email' | 'text';
 	label: Word;
 	name: CloudActivationAdminFieldName;

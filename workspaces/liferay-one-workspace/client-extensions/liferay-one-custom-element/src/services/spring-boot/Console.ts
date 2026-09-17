@@ -5,12 +5,12 @@
 
 import {OneSpringBootOAuth2} from './OAuth2Client';
 
-export type ConsoleProjectsUsage = {
+type ConsoleProjectsUsage = {
 	userEmail: string;
 	userProjects: ConsoleUserProject[];
 };
 
-export type ConsoleResourceUsage = {
+type ConsoleResourceUsage = {
 	free: number;
 	limit: number;
 	used: number;

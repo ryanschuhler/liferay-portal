@@ -9,16 +9,3 @@ export enum AccountRoleType {
 	SSA_ADMIN = 'SSA Admin',
 	SSA_USER = 'SSA User',
 }
-
-export enum AccountType {
-	MARKETPLACE_DEVELOPER = 'Marketplace Developer',
-	TECHNOLOGY_PARTNER = 'Technology Partner',
-	STRATEGIC_PARTNER = 'Strategic Partner',
-}
-
-export enum AccountTypes {
-	BUSINESS = 'business',
-	GUEST = 'guest',
-	PERSON = 'person',
-	SUPPLIER = 'supplier',
-}

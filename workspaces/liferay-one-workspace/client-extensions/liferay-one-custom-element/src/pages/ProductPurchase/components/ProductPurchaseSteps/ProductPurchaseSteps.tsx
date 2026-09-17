@@ -6,7 +6,7 @@
 import ClayIcon from '@clayui/icon';
 import classNames from 'classnames';
 
-export type ProductPurchaseStep = {
+type ProductPurchaseStep = {
 	active: boolean;
 	title: string;
 };
