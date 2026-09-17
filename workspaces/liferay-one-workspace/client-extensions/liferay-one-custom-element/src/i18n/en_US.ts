@@ -273,6 +273,8 @@ export default {
 	'by': 'by',
 	'by-checking-this-box-and-clicking-next-below-i-as-an-authorized-representative-of-x-acknowledge-that-x-accepts-the-x-terms-and-conditions-and-privacy-policy-x-these-terms-will-govern-x-s-use-of-liferay-analytics-cloud-unless-x-has-entered-into-a-separate-agreement-with-liferay-that-governs-x-s-use-of-liferay-analytics-cloud':
 		"By checking this box and clicking “Next”, below, I, as an authorized representative of {0}, acknowledge that {0} accepts the {1} Terms and Conditions and Privacy Policy. {2} These terms will govern {0}'s use of Liferay Analytics Cloud unless {0} has entered into a separate agreement with Liferay that governs {0}'s use of Liferay Analytics Cloud.",
+	'by-clicking-on-the-button-continue-below-i-confirm-that-i-have-read-and-agree-to-be-bound-by-the-x-i-also-confirm-that-i-am-of-the-legal-age-of-majority-in-the-jurisdiction-where-i-reside-at-least-18-years-of-age-in-many-countries':
+		'By clicking on the button "continue" below, I confirm that I have read and agree to be bound by the {0} I also confirm that I am of the legal age of majority in the jurisdiction where I reside (at least 18 years of age in many countries).',
 	'by-requesting-a-publisher-account-you-agree-to-the':
 		'By requesting a Publisher account, you agree to the',
 	'by-x': 'By {0}',
@@ -1147,6 +1149,8 @@ export default {
 		'Please let us know the reason you are canceling this event.',
 	'please-note-that-since-there-is-no-cloud-project-associated-with-your-instance-you-will-not-be-able-to-install-cloud-apps':
 		'Please note that since there is no cloud project associated with your instance, you will not be able to install Cloud Apps.',
+	'please-read-this-agreement-carefully-before-using-the-marketplace-to-market-or-distribute-your-developer-products-downloading-and-or-using-the-liferay-marketplace-if-you-are-entering-into-this-agreement-on-behalf-of-a-company-or-other-legal-entity-you-represent-that-you-have-the-authority-to-bind-such-entity-to-this-agreement-in-which-case-the-terms-you-or-your-shall-refer-to-such-entity-if-you-do-not-have-such-authority-or-if-you-do-not-unconditionally-agree-to-all-of-the-terms-of-this-agreement-you-will-not-have-any-right-to-use-the-marketplace-and-liferay-software-and-you-must-immediately-discontinue-participation-in-the-marketplace-program-and-use-of-the-liferay-software':
+		'PLEASE READ THIS AGREEMENT CAREFULLY BEFORE USING THE MARKETPLACE TO MARKET OR DISTRIBUTE YOUR DEVELOPER PRODUCTS, DOWNLOADING AND/OR USING THE LIFERAY MARKETPLACE. IF YOU ARE ENTERING INTO THIS AGREEMENT ON BEHALF OF A COMPANY OR OTHER LEGAL ENTITY, YOU REPRESENT THAT YOU HAVE THE AUTHORITY TO BIND SUCH ENTITY TO THIS AGREEMENT, IN WHICH CASE THE TERMS "YOU" OR "YOUR" SHALL REFER TO SUCH ENTITY. IF YOU DO NOT HAVE SUCH AUTHORITY, OR IF YOU DO NOT UNCONDITIONALLY AGREE TO ALL OF THE TERMS OF THIS AGREEMENT, YOU WILL NOT HAVE ANY RIGHT TO USE THE MARKETPLACE AND LIFERAY SOFTWARE AND YOU MUST IMMEDIATELY DISCONTINUE PARTICIPATION IN THE MARKETPLACE PROGRAM AND USE OF THE LIFERAY SOFTWARE.',
 	'please-review-before-submitting-once-sent-you-will-not-be-able-to-edit-any-information-until-this-submission-is-completely-reviewed-by-liferay':
 		'Please review before submitting. Once sent, you will not be able to edit any information until this submission is fully reviewed by Liferay.',
 	'please-review-the-order-summary-below-and-flag-the-checkbox-to-complete-your-purchase':
