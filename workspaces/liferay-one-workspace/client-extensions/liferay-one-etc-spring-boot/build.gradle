@@ -102,7 +102,11 @@ sourceSets {
 }
 
 test {
-	finalizedBy jacocoTestCoverageVerification, jacocoTestReport
+	// Only the report follows every test run. The coverage gate hangs off
+	// "check" instead, because it measures the whole bundle: a filtered run
+	// such as "test --tests SomeTest" covers a fraction of it and would always
+	// trip the rule.
+	finalizedBy jacocoTestReport
 
 	jvmArgs(
 		"--add-opens=java.base/java.lang=ALL-UNNAMED",
