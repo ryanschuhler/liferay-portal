@@ -25,6 +25,8 @@ describe('SearchBuilder', () => {
 
 		it('builds an in from mixed values', () => {
 			expect(SearchBuilder.in('id', [1, 'two'])).toBe("id in (1,'two')");
+
+			expect(SearchBuilder.in('id', [])).toBe('');
 		});
 
 		it('leaves a comparison unquoted', () => {

@@ -52,7 +52,7 @@ export default class SearchBuilder {
 	}
 
 	static in(key: Key, values: Value[]) {
-		if (values) {
+		if (values?.length) {
 			const joined = values
 				.map((value) =>
 					typeof value === 'number'

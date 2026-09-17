@@ -49,6 +49,8 @@ filter: SearchBuilder.eq('r_accountEntryToProject_accountEntryId', accountId)
 
 `SearchBuilder` escapes the value. Use `.eq`, `.contains`, `.lambda`, and `.in`. No other code builds a filter.
 
+The rule reads two shapes. The first shape is a template literal that a `filter` property holds. The second shape is a template literal that closes an OData operator with a quote, as in `` `name eq '${value}'` ``, wherever that literal appears. The second shape matters because five filters in this app were built inside a GraphQL string or inside a URL, and the first shape does not reach them.
+
 ## Pagination Is Bounded
 
 `pageSize: '-1'` requests every row. This is correct for a fixed reference set, such as the countries, the currencies, or the roles on one account.

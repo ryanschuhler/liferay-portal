@@ -8,6 +8,7 @@ import {useProject} from '~/context/ProjectContextProvider';
 import {useFetch} from '~/hooks/useFetch';
 import {Word} from '~/i18n';
 import {isUnassignedProject} from '~/pages/MyAccount/Projects/utils/isUnassignedProject';
+import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import {Liferay} from '~/services/liferay/liferay';
 
 import type {APIResponse} from '~/types/api';
@@ -164,13 +165,19 @@ export function useProjectActivationKeys(productName?: string) {
 		projectId && !isUnassignedProject(projectId) ? projectId : undefined;
 
 	const scope = projectExternalReferenceCode
-		? `r_projectToLicenseKey_c_projectERC eq '${projectExternalReferenceCode}'`
-		: `r_accountEntryToLicenseKey_accountEntryId eq '${accountId}'`;
+		? SearchBuilder.eq(
+				'r_projectToLicenseKey_c_projectERC',
+				projectExternalReferenceCode
+			)
+		: SearchBuilder.eq(
+				'r_accountEntryToLicenseKey_accountEntryId',
+				accountId ?? ''
+			);
 
 	const filters = [scope];
 
 	if (productName) {
-		filters.push(`productName eq '${productName}'`);
+		filters.push(SearchBuilder.eq('productName', productName));
 	}
 
 	const {

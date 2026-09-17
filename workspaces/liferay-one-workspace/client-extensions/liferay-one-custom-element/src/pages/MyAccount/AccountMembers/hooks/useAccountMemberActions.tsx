@@ -9,6 +9,7 @@ import useModalContext from '~/hooks/useModalContext';
 import {sub, translate} from '~/i18n';
 import EditPermissionsModal from '~/pages/MyAccount/AccountMembers/components/EditPermissionsModal/EditPermissionsModal';
 import InviteMemberModal from '~/pages/MyAccount/AccountMembers/components/InviteMemberModal/InviteMemberModal';
+import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import fetcher from '~/services/fetcher/fetcher';
 import HeadlessAdminUser from '~/services/headless/HeadlessAdminUser';
 import {Liferay} from '~/services/liferay/liferay';
@@ -120,9 +121,16 @@ export function useAccountMemberActions({
 
 		try {
 			const response = await fetcher<APIResponse<ProjectMembershipItem>>(
-				`/o/c/projectmemberships?filter=${encodeURIComponent(
-					`r_accountEntryToProjectMembership_accountEntryId eq '${accountId}' and r_userToProjectMembership_userId eq '${member.id}'`
-				)}&pageSize=200`
+				`/o/c/projectmemberships?filter=${new SearchBuilder({
+					useURIEncode: true,
+				})
+					.eq(
+						'r_accountEntryToProjectMembership_accountEntryId',
+						accountId ?? ''
+					)
+					.and()
+					.eq('r_userToProjectMembership_userId', member.id)
+					.build()}&pageSize=200`
 			);
 
 			memberships = response.items ?? [];

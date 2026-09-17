@@ -61,6 +61,10 @@ export class MarketplaceProduct extends MarketplaceDeliveryProduct {
 			)
 			.map((sku) => sku.id);
 
+		if (!productSkus.length) {
+			return prices;
+		}
+
 		for (const priceList of priceLists) {
 			const {items: priceEntries} =
 				await HeadlessCommerceAdminPricing.getPriceListEntries(

@@ -128,9 +128,10 @@ export function useProjectUsage() {
 		allowancesByDefinitionId.values()
 	).flatMap((allowance) => allowance.entitlementIds);
 
-	const eventFilter = entitlementIds
-		.map((id) => `r_entitlementToUsageEvent_c_entitlementId eq '${id}'`)
-		.join(' or ');
+	const eventFilter = SearchBuilder.in(
+		'r_entitlementToUsageEvent_c_entitlementId',
+		entitlementIds
+	);
 
 	const {data: definitionsData} = useFetch<APIResponse<UsageDefinitionNode>>(
 		allowancesByDefinitionId.size ? '/o/c/usagedefinitions' : null,

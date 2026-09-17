@@ -10,6 +10,9 @@ const FILTER_KEYS = new Set(['filter', 'filters', 'search']);
 const ODATA_OPERATOR =
 	/\b(eq|ne|gt|ge|lt|le|and|or|contains|startswith|any|all)\b/i;
 
+const ODATA_COMPARISON_BEFORE_VALUE =
+	/\b(eq|ne|gt|ge|lt|le|contains|startswith)\s+'$/i;
+
 type MessageId = 'useSearchBuilder';
 
 function usesSearchBuilder(
@@ -21,9 +24,48 @@ function usesSearchBuilder(
 	return text.includes('SearchBuilder');
 }
 
+function isFilterProperty(node: TSESTree.Property) {
+	const key =
+		node.key.type === 'Identifier'
+			? node.key.name
+			: node.key.type === 'Literal'
+				? String(node.key.value)
+				: null;
+
+	return Boolean(key && FILTER_KEYS.has(key));
+}
+
 const rule: TSESLint.RuleModule<MessageId, []> = {
 	create(context) {
 		return {
+			TemplateLiteral(node: TSESTree.TemplateLiteral) {
+				const {parent} = node;
+
+				if (
+					parent &&
+					parent.type === 'Property' &&
+					isFilterProperty(parent)
+				) {
+					return;
+				}
+
+				const quotesAValue = node.quasis.some(
+					(quasi, index) =>
+						index < node.expressions.length &&
+						ODATA_COMPARISON_BEFORE_VALUE.test(quasi.value.raw) &&
+						node.quasis[index + 1].value.raw.startsWith("'")
+				);
+
+				if (!quotesAValue || usesSearchBuilder(node, context)) {
+					return;
+				}
+
+				context.report({
+					messageId: 'useSearchBuilder',
+					node,
+				});
+			},
+
 			Property(node: TSESTree.Property) {
 				const key =
 					node.key.type === 'Identifier'
