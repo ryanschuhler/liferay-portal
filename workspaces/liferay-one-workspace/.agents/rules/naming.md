@@ -64,4 +64,6 @@ new OneSpringBootOAuth2('/common-license-keys') → CommonLicenseKeys.ts
 new OneSpringBootOAuth2('/trial')             → Trial.ts
 ```
 
-When the base path is empty and all methods share a common prefix, promote that prefix to the base path and drop it from the method paths. Do not name a file `One.ts`, `Client.ts`, or any other generic name that does not map to a URL segment.
+When the base path is empty and every method shares one prefix, move that prefix to the base path. Then remove it from each method path.
+
+Do not name a file `One.ts` or `Client.ts`. Do not use any other name that matches no URL segment.

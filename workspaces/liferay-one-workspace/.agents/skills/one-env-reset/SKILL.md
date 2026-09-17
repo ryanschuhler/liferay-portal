@@ -8,13 +8,13 @@ name: one-env-reset
 
 # Reset Liferay One Environment
 
-Run from `workspaces/liferay-one-workspace/`.
+Run the commands from `workspaces/liferay-one-workspace/`.
 
-Wipes everything and starts fresh. Use this to recover from a broken environment or after schema changes that require a clean slate.
+Data loss. This reset deletes every container and every volume, and the database records go with them. Use this reset to repair a broken environment. Use it also after a schema change that needs an empty database.
 
 ## 1. Bootstrap with Reset
 
-Run `scripts/bootstrap.sh --reset`. The `--reset` flag tears down all containers and wipes all volumes first, then builds the Docker image, tags it, starts the containers, waits for Liferay to be healthy, and deploys the client extensions.
+Run `scripts/bootstrap.sh --reset`. The `--reset` flag first deletes every container and every volume. The script then builds the Docker image. The script tags the image. The script starts the containers. The script waits until Liferay is healthy. The script then deploys the client extensions.
 
 ```bash
 scripts/bootstrap.sh --reset
@@ -24,4 +24,4 @@ Liferay is ready when it prints `Done. Liferay is running at http://localhost:80
 
 ## 2. Recreate Auth App
 
-A volume wipe destroys all OAuth2 applications. After bootstrap completes, run `/one-oauth-app` to recreate the local-dev OAuth2 app.
+The deletion of the volumes in step 1 destroys every OAuth2 application. Run `/one-oauth-app` after the bootstrap ends. That skill creates the local-dev OAuth2 application again.

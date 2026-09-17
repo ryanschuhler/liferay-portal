@@ -8,7 +8,7 @@ name: one-deploy
 
 # Deploy One Workspace Client Extensions
 
-Deploy `liferay-one-*` client extensions to the Liferay Docker Compose setup. Pure SaaS — no `ant deploy`, no portal-core changes.
+Deploy the `liferay-one-*` client extensions to the Liferay Docker Compose setup. This workspace is SaaS only. Do not run `ant deploy`. Do not change the portal core.
 
 ## 1. Pre-flight
 
@@ -16,13 +16,13 @@ Deploy `liferay-one-*` client extensions to the Liferay Docker Compose setup. Pu
 ./gradlew formatSource build
 ```
 
-Stop and report if either step fails. Do not deploy a failing build.
+Stop when either step fails. Report the failure. Do not deploy a build that fails.
 
 ## 2. Resolve Target
 
 Valid targets: `liferay-one-custom-element`, `liferay-one-etc-spring-boot`, `liferay-one-global-css`, `liferay-one-instance-settings`, `liferay-one-site-initializer`, `all`.
 
-Check `git diff --name-only` and pick every touched `client-extensions/liferay-one-*` directory. When multiple are touched, confirm with the user before proceeding.
+Run `git diff --name-only`. Pick every changed `client-extensions/liferay-one-*` directory. Ask the user to confirm the targets when the diff changes more than one directory.
 
 ## 3. Deploy
 
@@ -36,13 +36,15 @@ Check `git diff --name-only` and pick every touched `client-extensions/liferay-o
     -Ddeploy.docker.container.id=$(docker ps --filter "name=^liferay$" --quiet)
 ```
 
-`deploy` only builds each client extension's zip and copies it into the running `liferay` container. The other client extensions hot-deploy from there, but `liferay-one-etc-spring-boot` runs as its own Compose service off the `liferay-one-etc-spring-boot:latest` image — `deploy` does not rebuild that image or restart its container, so the running app keeps serving old code. When `liferay-one-etc-spring-boot` is among the deployed targets, rebuild the image and recreate the container so the running app picks up the new code:
+The `deploy` task builds the zip file for each client extension. The task copies each zip file into the running `liferay` container. The other client extensions deploy from that directory while the portal runs. The `liferay-one-etc-spring-boot` client extension runs as its own Compose service from the `liferay-one-etc-spring-boot:latest` image. The `deploy` task does not build that image again. The `deploy` task does not restart that container. The running application continues to serve the old code. Rebuild the image when `liferay-one-etc-spring-boot` is one of the deploy targets. Then create the container again. The running application then serves the new code:
 
 ```bash
 ./gradlew :client-extensions:liferay-one-etc-spring-boot:buildDockerImage
 docker compose up --detach --force-recreate liferay-one-etc-spring-boot
 ```
 
-`buildDockerImage` also regenerates `build/local.env` — every `${...}` placeholder in `application-default.properties` becomes `VAR=unused` — so the same step repairs a `build/local.env` that a prior `gradlew clean` removed. To supply real integration values or toggle a feature (for example, enabling the Salesforce object subscriber) so they survive rebuilds, set those overrides in the gitignored root `.env.local` (read after `build/local.env`, so it wins) rather than editing `build/local.env` directly, then recreate the container.
+The `buildDockerImage` task also writes `build/local.env` again. Each `${...}` placeholder in `application-default.properties` becomes `VAR=unused`. The same task therefore restores a `build/local.env` file that an earlier `gradlew clean` deleted.
 
-Report: what was deployed, Gradle result, and log evidence of pickup.
+Set the real integration values in the root `.env.local` file. Set a feature switch, such as the switch for the Salesforce object subscriber, in the same file. Git ignores `.env.local`, and the container reads it after `build/local.env`, so the values in `.env.local` replace the values in `build/local.env`. The values then survive each rebuild. Do not edit `build/local.env` directly. Create the container again after each change.
+
+Report the client extensions that you deployed. Report the Gradle result. Report the log lines that show that Liferay loaded each client extension.

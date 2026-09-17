@@ -1,19 +1,19 @@
 # Liferay One — Unified Portal Specs
 
-Source-of-truth for the `liferay-one-workspace` implementation. Each document narrows a decision to the level an engineer can build from without follow-up.
+These documents are the source of truth for the implementation of `liferay-one-workspace`. Each document makes a decision detailed enough for an engineer to build from. The engineer needs no follow-up question.
 
 Target workspace: `workspaces/liferay-one-workspace/`
 
 ## Reading order
 
-1. [`workspace.md`](./workspace.md) — shell layout, client extensions, naming conventions
+1. [`workspace.md`](./workspace.md) — the layout of the shell, the client extensions, and the naming conventions
 
-1. [`data-model.md`](./data-model.md) — full entity index, ERC + FriendlyURL registry, field mappings
+1. [`data-model.md`](./data-model.md) — the full index of entities, the registry of ERCs and FriendlyURLs, and the field mappings
 
-For the API surface, page/route map, and integration contracts, read the code
-directly — the Spring Boot controllers under
-`client-extensions/liferay-one-etc-spring-boot`, the frontend service layer and
-`src/pages/` under `client-extensions/liferay-one-custom-element`, and the
-`.agents/rules/` conventions. Earlier standalone `api.md`, `ui.md`, and
-`integrations/` specs were removed after drifting out of sync with the
-implementation.
+Read the code for the API surface, for the map of the pages and the routes,
+and for the contracts of each integration. The Spring Boot controllers are
+under `client-extensions/liferay-one-etc-spring-boot`. The service layer of the
+frontend and `src/pages/` are under
+`client-extensions/liferay-one-custom-element`. The conventions are in
+`.agents/rules/`. Three earlier specs, `api.md`, `ui.md`, and `integrations/`,
+stopped agreeing with the implementation, and we removed them.

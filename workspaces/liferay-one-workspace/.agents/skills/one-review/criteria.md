@@ -1,103 +1,134 @@
 # Review Criteria
 
-What a Liferay One review covers, in both lanes: the lenses to apply and their weighting, what does not count as a finding, and how a finding is written up. Every reviewer reads this file — the interactive `/one-review` skill and the `one-team` reviewer charter (`../one-team/roles/reviewer.md`) both work from it, so a finding from either means the same thing. Review logic belongs here and nowhere else; a new heuristic gets added to this file, not to a caller.
+This file states what a Liferay One review covers, in both lanes: the lenses to apply, their weighting, what does not count as a finding, and how to write up a finding. Every reviewer reads this file. The interactive `/one-review` skill and the `one-team` reviewer charter (`../one-team/roles/reviewer.md`) both work from it, so a finding from either one means the same thing. Review logic belongs in this file and nowhere else. Add a new heuristic here, not to a caller.
 
-Lane is either **workspace** (`liferay-one-workspace` — client extensions, objects, site content) or **scripts** (the sibling `liferay-one/scripts` checkout — `one/` ETL and migration scripts). Where a lens reads the same in both, it is untagged.
+The lane is either **workspace** (`liferay-one-workspace` — client extensions, objects, site content) or **scripts** (the sibling `liferay-one/scripts` checkout — `one/` ETL and migration scripts). A lens that reads the same in both lanes carries no tag.
 
 ## Rule Files
 
-Read the lane's rule files first — they carry the detail the lenses below deliberately do not repeat. They are not a separate review pass: a violation is reported under whichever lens caught it.
+Read the rule files for the lane first. They hold the detail that the lenses below do not repeat. They are not a separate review pass. Report a violation under whichever lens found it.
 
 | Lane | Rule files under `.agents/rules/` |
 | --- | --- |
 | Workspace | `code-style.md`, `concurrency.md`, `custom-element-safety.md`, `custom-element-structure.md`, `data-access.md`, `naming.md`, `object-naming.md`, `page-folder-structure.md`, `pr-hygiene.md`, `simplified-technical-english.md`, `spring-boot-analysis.md` |
-| Scripts | `architecture.md`, `code-quality.md`, `no-comments.md`, `script-conventions.md`, `sensitive-data.md`, plus the workspace's `data-access.md` — the scripts call the same APIs over far more records |
+| Scripts | `architecture.md`, `code-quality.md`, `no-comments.md`, `script-conventions.md`, `sensitive-data.md`, plus `data-access.md` from the workspace, because the scripts call the same APIs over far more records |
 
 ## The Lenses, in Order
 
-The order is the weighting: a concurrency defect outranks a maintainability suggestion, and effort should follow. Where a lens names a rule file, that file is the checklist — the lens adds only the weighting and the judgments the file cannot make.
+The order is the weighting. A concurrency defect outranks a maintainability suggestion, so spend the effort in that order. Where a lens names a rule file, that file is the checklist. The lens adds the weighting and the judgments the file cannot make.
 
-1. **Correctness** — logic errors, null and error paths, edge cases; silent failures above all: swallowed exceptions, empty catch blocks, a `catch` that logs and returns a default, fail-open authorization, a `?? ''` that masks a missing value. Scripts lane: idempotency is a correctness property — a script that duplicates records or double-counts on a second run is a blocker even when the first pass came back clean, and a swallowed per-item error that leaves data half-loaded is a real defect; a zero exit code proves nothing.
+1. **Correctness** — logic errors, null paths, error paths, and edge cases. Weight the silent failures highest: a swallowed exception, an empty catch block, a `catch` that logs and returns a default, an authorization check that grants access when it fails, a `?? ''` that hides a missing value. Scripts lane: idempotency is a correctness property. A script that duplicates records or counts a record twice on a second run is a blocker, even when the first run finished clean. A swallowed error on one item leaves the data half loaded, which is a real defect. An exit code of zero is not evidence that the run was correct.
 
-1. **Concurrency** — the lens local testing cannot cover, so it falls entirely to the reviewer; weight it heaviest on Java changes. `concurrency.md` is the checklist: singleton beans, the three sanctioned shapes for post-startup mutable state, formatter fields, check-then-act, React effect races. Four shapes worth naming because they read as ordinary code: a `HashMap` or `ArrayList` held as a shared field where a concurrent collection belongs; a double-checked lock whose guarded field is not `volatile`, which publishes a half-built object; `count++` on a shared field where an `AtomicLong` belongs; and a React effect or callback whose dependency array is incomplete, so it captures the first render's values forever. Anything reached from a `@Scheduled` tick, an `@Async` method, a startup warm-up, or a Pub/Sub subscriber is concurrent even when only one endpoint writes it. Scripts lane: single-threaded — reduces to unawaited promises and shared mutable module state across a paginated run.
+1. **Concurrency** — local testing does not cover this lens, so the reviewer carries all of it. Weight it heaviest on a Java change. `concurrency.md` is the checklist: singleton beans, the three sanctioned shapes for mutable state after startup, formatter fields, check-then-act, and races in a React effect. Name these four shapes, because each one reads as ordinary code.
 
-1. **Efficiency** — `data-access.md` is the checklist: service calls in loops, a page fetched to take `[0]`, per-iteration re-derivation, unbounded pagination, serial awaits. Heaviest in the scripts lane, where the same shape runs over hundreds of thousands of records.
+	- A `HashMap` or an `ArrayList` held as a shared field where a concurrent collection belongs.
+	- A double-checked lock whose guarded field is not `volatile`, which publishes an object before its constructor finishes.
+	- `count++` on a shared field where an `AtomicLong` belongs.
+	- A React effect or callback with an incomplete dependency array, which keeps the values from the first render.
 
-1. **Completeness** — every stated acceptance criterion is implemented, and tested; nothing implemented that the ticket did not ask for. In a `one-team` run the criteria are `plan.md` and the evidence is `test-report.md`. A missing test is a finding only where the surrounding code has a test pattern to follow — the scripts repo has none, so it is never a finding there.
+	A field that a `@Scheduled` tick, an `@Async` method, a startup warm-up, or a Pub/Sub subscriber reaches is concurrent, even when only one endpoint writes it. Scripts lane: the scripts are single-threaded, so this lens reduces to an unawaited promise and to shared mutable module state across a paginated run.
 
-1. **Security** — endpoints carry the right OAuth2 scopes (the extension's `client-extension.yaml`); no IDOR through an ERC or ID parameter taken from the request; permission checks before the mutation, not after; no path traversal through a user-supplied filename, no redirect to an unvalidated URL; no secrets, tokens, or personal data in code, config, or log output; nothing arriving from outside gets deserialized into a live object graph. **Injection is a blocker wherever a value is pasted into a query instead of bound to it** — an OData filter built by concatenating a request value rather than through `SearchBuilder`, or a local-store statement built by interpolating into its SQL rather than binding a `$parameter`, which is what every store under `one/scripts/local-store/` already does. Workspace lane: `dangerouslySetInnerHTML` on anything sourced from Salesforce, Jira, Koroneiki, or Marketplace is the primary XSS vector — default JSX interpolation is safe. Scripts lane, each one a blocker: a write path missing `confirmRemoteEnvironment()`, a hardcoded host or credential, a sensitive file in the diff (`sensitive-data.md` has the list).
+1. **Efficiency** — `data-access.md` is the checklist: a service call inside a loop, a page fetched to take `[0]`, a value re-derived on every iteration, unbounded pagination, serial awaits. Weight this lens heaviest in the scripts lane, where the same code runs over hundreds of thousands of records.
 
-1. **Regression risk — the blast radius, not just the diff.** The diff is where a review starts, never where it ends. The defect a diff-scoped read misses lives in a file the diff never touched, in code that still compiles and still looks correct on its own. Work this as an explicit pass, not as a thought while reading the diff.
+1. **Completeness** — the code implements every stated acceptance criterion, and a test covers each one. The code implements nothing the ticket did not ask for. In a `one-team` run, `plan.md` holds the criteria and `test-report.md` holds the evidence. A missing test is a finding only where the surrounding code holds a test pattern to follow. The scripts repository holds no such pattern, so a missing test is never a finding there.
 
-	Enumerate every symbol the diff changes, renames, or deletes — function and method signatures, exported components and hooks, service methods, REST paths and payload shapes, shared types, object and field ERCs, list-type values, config keys, environment variables, local-store columns. Find every reference to each, across `<TARGET>` and the consuming repo both, and **read each call site against the new behavior**. A symbol whose references were never read is an open finding, not a silent pass: name in the report which symbols were traced and how many references each had. This is the lens that most repays a fan-out, and the skill's blast-radius step is where that happens.
+1. **Security** — check each of the following.
 
-	What to look for at each site, hardest to catch first:
+	- Every endpoint carries the right OAuth2 scopes, which the `client-extension.yaml` of the extension declares.
+	- No insecure direct object reference (IDOR): an ERC or an ID parameter taken from the request must not reach another account's record.
+	- The permission check runs before the mutation, not after it.
+	- A filename that a user supplies cannot traverse a path, and no redirect goes to an unvalidated URL.
+	- No secret, token, or personal datum appears in the code, in the configuration, or in the log output.
+	- Nothing that arrives from outside is deserialized into a live object graph.
 
-	- **A behavior change behind an unchanged signature.** The method now returns `null` where it threw, an empty page where it returned every row, writes a second record, or narrows a filter. Nothing mechanical catches this — every call site still compiles and every existing test still passes. It is the most valuable thing this lens finds.
-	- **Parameters added or reordered while the types still line up.** The compiler stays quiet and the arguments land in the wrong parameters. `code-style.md` mandates alphabetical parameters, so any rename that re-sorts a signature reaches this routinely. Read each call site; a green build proves nothing here.
-	- **A widened or newly nullable return** that an existing caller dereferences unguarded, and a thrown exception type that a caller's `catch` no longer matches.
-	- **References no symbol-name grep will find** — ERCs and field names in batch object definitions, site-initializer JSON, FreeMarker templates, dynamic string keys, endpoint paths assembled from fragments, OAuth2 scope strings. Search the string form as well as the identifier.
-	- **A deletion whose callers outlived it**, and a shared component whose prop keeps its name while its meaning changes.
+	**Injection is a blocker wherever the code pastes a value into a query instead of binding it.** Two shapes qualify: an OData filter built by concatenating a request value rather than through `SearchBuilder`, and a statement for the local store built by interpolating into its SQL rather than binding a `$parameter`. Every store under `one/scripts/local-store/` already binds a `$parameter`.
 
-	Ordering counts as much as call sites: a change to when something runs, how often, or what it leaves behind on a second pass is a regression even when every signature holds.
+	Workspace lane: `dangerouslySetInnerHTML` on a value that comes from Salesforce, Jira, Koroneiki, or Marketplace is the primary XSS vector. Default JSX interpolation is safe.
 
-1. **Cross-repo consistency** — the product and the scripts that load its data share one contract: ERCs, field names, endpoint paths, payload shapes. Workspace lane: grep every value the diff changes against `<SCRIPTS>/one/`; a break is owed work in a companion ticket, never fixed in this diff. Scripts lane: verify every value the diff writes against the object definitions (`client-extensions/liferay-one-batch/batch/`) and the `liferay-one-etc-spring-boot` controllers — never against a spec, since nothing under `.agents/` is authoritative. An invented or stale ERC is a blocker: it silently loads orphaned data.
+	Scripts lane: each of these three is a blocker. A write path that does not call `confirmRemoteEnvironment()`. A hardcoded host or credential. A sensitive file in the diff, which `sensitive-data.md` lists.
 
-1. **Architecture and pattern conformance** — the code mirrors the patterns already there; where the surrounding code does X, introducing Y needs a stated reason. Workspace lane: objects and ERCs come from the batch definitions, service files map to the URL they call, pages follow the existing router split. `custom-element-structure.md` is the checklist for the custom element, and most of it is enforced — run `yarn lint` and `yarn lint:structure` and read the warnings on the changed files rather than re-deriving them by eye. A warning the diff introduces is a finding; one it merely inherits is not. Scripts lane: the three-layer rule and the two script patterns per `architecture.md` and `script-conventions.md` — a skipped layer is a finding. In either lane a hand-edit to generated output is a blocker: the generator overwrites it on the next run, so the change has to go to whatever the generator reads, or to the code that calls it.
+1. **Regression risk — every file the change reaches, not the diff alone.** A review starts at the diff and never ends there. The defect that a diff-scoped read misses lives in a file the diff never touched. That code still compiles and still looks correct on its own. Work this lens as an explicit pass, not as a thought while you read the diff.
 
-1. **Repo rules** — everything the lane's style rules mandate: `code-style.md` and `naming.md` in the workspace (sorted entries, log conventions, wording, casing, file naming); `no-comments.md` and `script-conventions.md` in the scripts repo (any comment in new or modified code, `console.log`, a hand-written OData filter, a Liferay call outside `liferay-headless-rest-client`). Three more the rule files do not state: the Liferay clients in `services/liferay.ts` already retry transient failures at the ky layer, so a manual retry loop wrapped around one of their calls is a finding; batch-engine `failedItems[].itemIndex` is **1-based**, so mapping it back to the submitted array reads `array[itemIndex - 1]`; and every store under `one/scripts/local-store/` builds its schema with `CREATE TABLE IF NOT EXISTS` against a `.db` file that already exists on disk, so a column added to that DDL never lands on an existing store — a new column needs an explicit `ALTER TABLE` migration, and a reviewer who sees only the DDL edit is looking at a silent no-op.
+	List every symbol the diff changes, renames, or deletes: function and method signatures, exported components and hooks, service methods, REST paths and payload shapes, shared types, object ERCs and field ERCs, list-type values, config keys, environment variables, columns in the local store. Find every reference to each symbol, across `<TARGET>` and across the consuming repository. Then **read each call site against the new behavior**. A symbol whose references nobody read is an open finding, not a pass. Name in the report which symbols you traced and how many references each one had. This lens gains the most from a fan-out, and the blast-radius step of the skill is where the fan-out happens.
 
-1. **Simplicity and maintainability** — dead code, needless abstraction, duplicated logic, narrative comments, a method doing too many things; names that say nothing (`temp`, `data`, `obj`) outside tiny scopes, or that no longer say what the thing does after a refactor. Also: a value hardcoded where a named constant or config belongs, subject to the calibration in Known False Positives below; a `switch` or `if`-chain that duplicates logic and will break quietly when the next case arrives; three or more near-duplicates asking for one abstraction; and a signature so specific that every caller has to restructure around it. Flag complexity the next reader will pay for. Suggest direction; do not write the refactor.
+	Look for these at each site, hardest to catch first:
 
-A diff that reaches outside its target repo is a blocker in both lanes, filed under whichever lens explains why it got there.
+	- **A behavior change behind an unchanged signature.** The method now returns `null` where it threw an exception. Or it returns an empty page where it returned every row, writes a second record, or narrows a filter. No mechanical check finds this: every call site still compiles and every existing test still passes. It is the most valuable defect this lens finds.
+	- **Parameters added or reordered while the types still match.** The compiler reports no error, and the arguments land in the wrong parameters. `code-style.md` requires alphabetical parameters, so any rename that re-sorts a signature causes this often. Read each call site. A build that passes is not evidence that the call sites are correct.
+	- **A return type that is now wider or nullable**, which an existing caller dereferences with no guard. Also a thrown exception type that the `catch` in a caller no longer matches.
+	- **References that a grep for the symbol name does not find** — ERCs and field names in the batch object definitions, in site-initializer JSON, and in FreeMarker templates, plus dynamic string keys, endpoint paths assembled from fragments, and OAuth2 scope strings. Search the string form as well as the identifier.
+	- **A deleted symbol whose callers remain**, and a shared component whose prop keeps its name while its meaning changes.
+
+	Order counts as much as the call sites. A change to the timing of the code, to its frequency, or to what it leaves behind on a second run is a regression. That holds even when every signature is unchanged.
+
+1. **Cross-repo consistency** — the product and the scripts that load its data share one contract: the ERCs, the field names, the endpoint paths, the payload shapes. Workspace lane: grep every value the diff changes against `<SCRIPTS>/one/`. A break in the contract becomes work in a companion ticket. Never fix it in this diff. Scripts lane: verify every value the diff writes against the object definitions (`client-extensions/liferay-one-batch/batch/`) and against the `liferay-one-etc-spring-boot` controllers. Never verify a value against a specification, because nothing under `.agents/` is authoritative. An invented or stale ERC is a blocker: it loads orphaned data and reports no error.
+
+1. **Architecture and pattern conformance** — the code follows the patterns already in place. Where the surrounding code uses one pattern, a new pattern needs a stated reason. Workspace lane: the objects and ERCs come from the batch definitions, each service file maps to the URL it calls, and each page follows the existing router split. `custom-element-structure.md` is the checklist for the custom element. The linter enforces every rule in it that a single file can prove, plus the two rules that need the whole import graph. Run `yarn lint` and `yarn lint:structure`, then read the warnings on the changed files rather than deriving them by eye. A warning the diff introduces is a finding. A warning the diff inherits is not. Scripts lane: apply the three-layer rule and the two script patterns, per `architecture.md` and `script-conventions.md`. A skipped layer is a finding. In both lanes a hand edit to generated output is a blocker. The generator overwrites the edit on the next run, so the change belongs in whatever the generator reads, or in the code that calls it.
+
+1. **Repo rules** — everything the style rules of the lane require. In the workspace, `code-style.md` and `naming.md` cover sorted entries, log conventions, wording, casing, and file naming. In the scripts repository, `no-comments.md` and `script-conventions.md` cover any comment in new or modified code, a `console.log`, a hand-written OData filter, and a Liferay call outside `liferay-headless-rest-client`. Three more rules that no rule file states:
+
+	- The Liferay clients in `services/liferay.ts` already retry a transient failure at the ky layer. A manual retry loop around one of their calls is therefore a finding.
+	- The batch engine numbers `failedItems[].itemIndex` from **1**, so a map back to the submitted array reads `array[itemIndex - 1]`.
+	- Every store under `one/scripts/local-store/` builds its schema with `CREATE TABLE IF NOT EXISTS` against a `.db` file that is already on disk. A column added to that DDL therefore never reaches an existing store. A new column needs an explicit `ALTER TABLE` migration. A reviewer who reads the DDL edit alone sees a change that does nothing.
+
+1. **Simplicity and maintainability** — dead code, needless abstraction, duplicated logic, narrative comments, a method that does too many things. Also a name that says nothing (`temp`, `data`, `obj`) outside a short scope, or a name that no longer describes the thing after a refactor. Four more shapes:
+
+	- A value hardcoded where a named constant or a config entry belongs, subject to the calibration in Known False Positives below.
+	- A `switch` or an `if` chain that duplicates logic and that returns a wrong result, with no error, when the next case arrives.
+	- Three or more near-duplicates that one abstraction would replace.
+	- A signature so specific that every caller has to restructure around it.
+
+	Report the complexity that the next reader pays for. Suggest a direction. Do not write the refactor.
+
+A diff that changes a file outside its target repository is a blocker in both lanes. File it under whichever lens explains how the file got there.
 
 ## Mechanical Sweep
 
-Prettier in the workspace covers only `liferay-one-custom-element/src/**/*.{ts,tsx,css}` and its `@vite/**/*.ts`. Everything else went through no whitespace formatter at all — batch object definitions, site initializer JSON and FreeMarker, `client-extension.yaml` files, global CSS, `.properties`, and Markdown. That gap is where this sweep pays off, so scope it to the changed files outside the Prettier paths.
+In the workspace, Prettier covers `liferay-one-custom-element/src/**/*.{ts,tsx,css}` and its `@vite/**/*.ts` only. No whitespace formatter covers the other files: the batch object definitions, the site initializer JSON and FreeMarker, the `client-extension.yaml` files, the global CSS, the `.properties` files, and the Markdown. This sweep finds the defects in that gap, so scope it to the changed files outside the Prettier paths.
 
-It is pure pattern matching, so it is the one part of a review worth handing to a `haiku` subagent:
+The sweep is pattern matching alone, so it is the one part of a review to give to a `haiku` subagent:
 
-- Trailing whitespace, spaces and tabs in one pass: `grep -nE "[[:blank:]]+$"`. Use this form rather than `grep -P`, which the BSD grep on macOS does not support and which therefore fails depending on which grep is first on `PATH`.
+- Trailing whitespace, spaces and tabs in one pass: `grep -nE "[[:blank:]]+$"`. Use this form rather than `grep -P`. The BSD grep on macOS does not support `-P`, so a command that uses it fails when that grep comes first on `PATH`.
 - More than one consecutive blank line
-- Mixed tabs and spaces against the file's own convention
-- Double spaces mid-line, outside a deliberately aligned block or a string literal
-- A blank line at the top of a file, and a missing final newline on anything but Markdown
-- Misspellings in identifiers, which outlive everything else once merged
-- Misspellings in user-visible strings, language keys, log messages, and comments
-- Identifier casing against the file's own convention — `camelCase` for variables, methods, and fields, `PascalCase` for types and classes, `UPPER_SNAKE_CASE` for constants, and the `_` prefix on private fields wherever the surrounding file already uses it
+- Tabs and spaces mixed against the convention of the file
+- Two spaces in the middle of a line, outside an aligned block or a string literal
+- A blank line at the top of a file, and a missing final newline on a file that is not Markdown
+- A misspelling in an identifier, which stays in the code longest after a merge
+- A misspelling in a user-visible string, a language key, a log message, or a comment
+- Identifier casing against the convention of the file — `camelCase` for a variable, a method, and a field, `PascalCase` for a type and a class, `UPPER_SNAKE_CASE` for a constant, and the `_` prefix on a private field wherever the surrounding file already uses it
 
-Report identifier and string typos separately from whitespace — the first two are worth fixing individually, the third is bulk.
+Report the identifier typos and the string typos apart from the whitespace. Someone fixes a typo one at a time, and fixes the whitespace in one pass.
 
-Match the file, not a general rule. Where the existing file indents with tabs, or prefixes its private fields, new code does the same; a "convention violation" that is really the file's own settled style is a false positive.
+Match the file, not a general rule. Where the existing file indents with tabs, or prefixes its private fields, the new code does the same. A reported violation that is the settled style of the file is a false positive.
 
 ## Automated Pass
 
-Workspace lane: run the `code-review` skill — the working-diff reviewer, not the plugin that comments on a GitHub PR — with its fan-out on `sonnet`, the model set explicitly on every `Agent` call. The lens work already covers bug scanning and rule adherence; what this pass adds is the history the diff cannot show — git blame on the modified lines, review comments from earlier PRs that touched the same files, guidance in surrounding code comments. Weight its output there, and drop what the lenses already found.
+Workspace lane: run the `code-review` skill. Use the reviewer that reads the working diff, not the plugin that comments on a GitHub pull request. Run its fan-out on `sonnet`, and set the model explicitly on every `Agent` call. The lens work already covers the bug scan and the rule adherence. This pass adds the history that the diff does not show: git blame on the modified lines, review comments from earlier pull requests that touched the same files, guidance in the surrounding code comments. Weight the output of the pass on that history, and drop what the lenses already found.
 
-Scripts lane: skip it — the skill is shaped for the workspace. A clean `bun run lint` is a starting point, not a substitute: it says nothing about layering, comments, idempotency, or an invented ERC.
+Scripts lane: skip the pass, because the skill fits the workspace. A clean `bun run lint` is a starting point, not a substitute. It says nothing about the layering, the comments, the idempotency, or an invented ERC.
 
 ## Evidence
 
-A check happened during this review or it did not happen. Nothing already in context counts — not a file read earlier in the session, not a grep run while the code was being written, not a conclusion reached before the review began. *I already checked that* is the signal to check it again: it is the one class of check a reviewer skips without ever noticing a gap, and it lands hardest on the values that matter most, since a contract looked up during implementation was looked up against code that has since changed.
+A check either happened during this review or it did not happen. Nothing already in context counts: not a file you read earlier in the session, not a grep you ran while the code was written, not a conclusion you reached before the review began. Treat the thought *I already checked that* as the signal to check it again. It is the one class of check a reviewer skips and never notices. It costs most on the values that matter most. A contract looked up during the implementation was looked up against code that changed after that.
 
-This binds cleared checks as much as findings. A finding cites the `file:line` it was verified at; a lens that reports nothing states in the report what it read to conclude that — a line of files and counts, not a paragraph, since a short report is bought by naming coverage tersely and never by leaving it out. Blast radius already has to distinguish "traced, nothing found" from "never traced"; the same distinction applies to every lens, and to every value the cross-repo lens clears.
+This rule binds a cleared check as much as it binds a finding. A finding cites the `file:line` where you verified it. A lens that reports nothing states what it read to reach that conclusion: one line of files and counts, not a paragraph. Keep a report short by naming the coverage briefly, never by leaving the coverage out. The blast-radius step already separates "traced, nothing found" from "never traced". The same distinction applies to every lens, and to every value the cross-repo lens clears.
 
-Where the reviewing session is not independent of the change, this rule is what the review turns on; [`SKILL.md`](./SKILL.md) defines the three states of independence and what each one owes.
+Where the reviewing session is not independent of the change, the review depends on this rule. [`SKILL.md`](./SKILL.md) defines the three states of independence and what each state owes.
 
 ## Known False Positives
 
-Do not report these. Each costs the reader more than it saves, and a wrong finding costs more than a missed one.
+Do not report these. Each one costs the reader more than it saves, and a wrong finding costs more than a missed one.
 
-- **Java method ordering.** The convention is alphabetical *within* an access-modifier group, not across the file — a `public` method appearing between two `private` ones is correct. `formatSource` enforces it anyway.
-- **Anything a formatter, linter, or compiler catches.** Import order, missing imports, type errors, indentation. The build gate covers these; if something remains, say "rerun the formatter" rather than itemizing.
-- **Hardcoding that should stay hardcoded.** A JDK or Liferay constant, a well-known enum or protocol string, a small fixed list that rarely changes, or any value where dynamism buys nothing real. Flag hardcoding only when it will plausibly cause pain: a new case is already coming, it differs per environment, or it belongs in a language key.
-- **Pre-existing defects on lines the diff never touched**, unless the change newly reaches them.
-- **Comment and documentation quality** beyond spelling. A *missing* comment is never a finding — this codebase's default is no narrative comments, and the scripts lane forbids them outright.
-- **A Markdown file with no trailing newline.** `MarkdownWhitespaceCheck` in the Liferay source formatter strips it deliberately, so its absence is the convention here, not an oversight.
+- **Java method ordering.** The convention sorts methods alphabetically *within* one access-modifier group, not across the file. A `public` method between two `private` methods is correct. `formatSource` enforces the order anyway.
+- **Anything a formatter, a linter, or a compiler finds.** Import order, a missing import, a type error, indentation. The build gate covers these. When one remains, write "rerun the formatter" rather than a list of the items.
+- **A hardcoded value that stays hardcoded.** A JDK or Liferay constant, a well-known enum or protocol string, a short fixed list that rarely changes, or any value that gains nothing from being dynamic. Report a hardcoded value for one of three reasons only: a new case is already coming, the value differs per environment, or the value belongs in a language key.
+- **A defect that already exists on a line the diff never touched**, unless the change now reaches that line.
+- **The quality of a comment or of documentation**, beyond the spelling. A *missing* comment is never a finding. This codebase writes no narrative comments by default, and the scripts lane forbids them.
+- **A Markdown file with no trailing newline.** `MarkdownWhitespaceCheck` in the Liferay source formatter removes that newline on purpose, so its absence is the convention here, not a mistake.
 
 ## Findings
 
-Tag every finding and sort most severe first:
+Tag every finding. Sort the findings with the most severe first:
 
 ```
 [blocker|major|minor|nit] <file>:<line> — <what is wrong>
@@ -105,12 +136,12 @@ Tag every finding and sort most severe first:
     fix: <concrete suggestion>
 ```
 
-Every finding cites a `file:line` and is verified against the actual code before it is written up. Automated output — from `code-review` or any subagent — is a candidate list, not findings; only what survives verification gets a tag. The `fix:` line is a direction, not a patch: name the approach and leave the implementation to whoever owns the change.
+Every finding cites a `file:line`. Verify each one against the code before you write it up. Automated output, from `code-review` or from any subagent, is a list of candidates rather than a list of findings. Tag only a candidate that survives the verification. The `fix:` line gives a direction, not a patch. Name the approach and leave the implementation to whoever owns the change.
 
-Keep the report short — most good reviews fit on a page — and never echo the diff back, since the reader already has it. State coverage even where a pass found nothing: the independence state, the blast-radius trace with the symbols traced and their reference counts, and each cleared lens's one-line read, per Evidence above. "Traced, nothing found" and "never traced" take the same space on the page and mean opposite things.
+Keep the report short. A good review usually fits on one page. Never repeat the diff, because the reader already has it. State the coverage even where a pass found nothing: the independence state, the blast-radius trace with the traced symbols and their reference counts, and the one-line read for each cleared lens, per Evidence above. "Traced, nothing found" and "never traced" take the same space on the page and mean opposite things.
 
-`CHANGES_REQUESTED` requires at least one open `blocker` or `major` — something that loads wrong data, breaks a contract, or fails once merged. Everything else is `APPROVED`, with any open `minor` and `nit` findings riding along in the report: they are for whoever owns the change to weigh, not grounds to hold the branch.
+`CHANGES_REQUESTED` requires at least one open `blocker` or `major` finding: something that loads wrong data, breaks a contract, or fails after the merge. Every other result is `APPROVED`. Carry the open `minor` and `nit` findings in that report. Whoever owns the change weighs them, and they are not grounds to hold the branch.
 
-State the counts with the verdict — `APPROVED — 0 blocker, 0 major, 3 minor, 1 nit` — so it summarizes the findings rather than replacing them. `APPROVED` with findings under it is the ordinary result of a thorough review, not a grudging one.
+State the counts with the verdict — `APPROVED — 0 blocker, 0 major, 3 minor, 1 nit` — so the verdict summarizes the findings rather than replacing them. `APPROVED` with findings below it is the normal result of a thorough review.
 
-The severity tags decide the verdict, which is what makes them worth assigning. A bar of zero-findings-of-any-severity collapses them — an invented ERC and a misspelled local read the same — and a reviewer who can approve nothing is one whose approval says nothing. Nothing here lowers what counts as a finding: every lens still runs, and every finding is still verified and written up. Only the consequence is graded.
+The severity tags decide the verdict, which is why you assign them. A rule that blocks on a finding of any severity removes the difference between the tags. An invented ERC and a misspelled local variable then carry the same weight. A reviewer who can approve nothing gives an approval that means nothing. Nothing here lowers what counts as a finding. Every lens still runs, and you still verify and write up every finding. The severity grades the consequence only.

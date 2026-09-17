@@ -9,19 +9,19 @@ name: one-mcp
 
 # Configure Liferay MCP
 
-Set up Claude Code to connect to the local Liferay instance as an MCP server. Run from `workspaces/liferay-one-workspace/`.
+Configure Claude Code to connect to the local Liferay instance as an MCP server. Run the commands from `workspaces/liferay-one-workspace/`.
 
 ## 1. Resolve Credentials
 
-Accept credentials from `${ARGUMENTS}` in the form `email:password`. If not supplied, ask the user for their local Liferay admin email and password.
+Read the credentials from `${ARGUMENTS}` in the `email:password` form. Ask the user for the local Liferay administrator email and password when `${ARGUMENTS}` holds no credentials.
 
 ## 2. Enable the Feature Flag
 
-Read `configs/local/portal-env.properties`. If `feature.flag.LPD-63311=true` is not already present, append it. This enables the `/o/mcp` endpoint on the Liferay instance.
+Read `configs/local/portal-env.properties`. Add `feature.flag.LPD-63311=true` to the end of the file when the file does not hold it. This property enables the `/o/mcp` endpoint on the Liferay instance.
 
 ## 3. Compute the Auth Token
 
-Run:
+Run this command:
 
 ```bash
 echo -n "email:password" | base64
@@ -29,7 +29,7 @@ echo -n "email:password" | base64
 
 ## 4. Update `settings.local.json`
 
-Read `.claude/settings.local.json`. Merge the `mcpServers` block below into it, preserving any existing keys. If a `liferay` entry already exists under `mcpServers`, replace it.
+Read `.claude/settings.local.json`. Merge the `mcpServers` block below into the file. Keep every other key in the file. Replace the `liferay` entry under `mcpServers` when the file holds one.
 
 ```json
 {
@@ -52,6 +52,6 @@ Read `.claude/settings.local.json`. Merge the `mcpServers` block below into it, 
 
 Tell the user:
 
-- If the feature flag was newly added: bounce Liferay (`docker compose restart liferay`) for the flag to take effect.
-- Restart Claude Code (or run `/mcp` to reload servers) to pick up the new MCP server.
-- When Liferay is running, `liferay` MCP tools will be available. When it is not running, the server will silently be unavailable — no other impact.
+- Restart Liferay with `docker compose restart liferay` when step 2 added the feature flag. The flag then takes effect.
+- Restart Claude Code, or run `/mcp`, to load the new MCP server.
+- The `liferay` MCP tools are available while Liferay runs. The server is not available while Liferay is stopped, and it reports no error. Nothing else changes.

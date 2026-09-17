@@ -1,31 +1,33 @@
 # Spring Boot Static Analysis
 
-`liferay-one-etc-spring-boot` is 378 Java files, and until now the only tool that read them was the Liferay source formatter, which checks whitespace and import order. Nothing looked at what the code did.
+`liferay-one-etc-spring-boot` holds 378 Java files. Before this change, one tool read them: the Liferay source formatter. That formatter checks the whitespace and the import order. No tool checked what the code does.
 
-SpotBugs now does. It runs as part of `check`, so `./gradlew build` includes it.
+SpotBugs checks what the code does. SpotBugs runs as part of `check`, so `./gradlew build` runs it.
 
 ```bash
 ./gradlew :client-extensions:liferay-one-etc-spring-boot:spotbugsMain
 ```
 
-The report lands at `build/reports/spotbugs/main.html`, with the XML beside it.
+SpotBugs writes the report to `build/reports/spotbugs/main.html`. It writes the XML report to the same folder.
 
 ## What It Is And Is Not
 
-SpotBugs reads bytecode, so it finds the defects that survive review: a charset that depends on the machine, a static array every caller can mutate, a null check on something that was never null.
+SpotBugs reads the bytecode. It therefore finds three kinds of defect that a reviewer does not see. The first is a charset that changes with the machine. The second is a static array that any caller can change. The third is a null check on a value that is never null.
 
-It does not find the defect class this lane is most exposed to. [`concurrency.md`](./concurrency.md) describes shared mutable state on singleton beans — a `HashMap` held as a field, a double-checked lock whose field is not `volatile`, a `SimpleDateFormat` reused across threads — and SpotBugs catches only the most literal of those. That file is still the checklist a reviewer works from, and it outranks anything here.
+SpotBugs does not find the most frequent defect in this client extension. [`concurrency.md`](./concurrency.md) describes shared mutable state on a singleton bean. Three examples are a `HashMap` in a field, a double-checked lock on a field that is not `volatile`, and one `SimpleDateFormat` that two threads use. SpotBugs reports only the most direct of these.
+
+A reviewer works from `concurrency.md`. That file has a higher priority than this one.
 
 ## Configuration
 
-`ignoreFailures` is on, so a finding reports without breaking the build. Turn it off once the count reaches zero.
+`ignoreFailures` is on. SpotBugs therefore reports a finding, and the build still succeeds. Turn `ignoreFailures` off when the count reaches zero.
 
 `spotbugs-exclude.xml` holds two exclusions:
 
-- the `liferay-release-tool-ee` sources, which are sparse-checked into this project's source set and are not ours to fix, and
-- `EI_EXPOSE_REP` and `EI_EXPOSE_REP2`, which fire on every getter returning a mutable field. In a codebase of DTOs that is noise, not signal.
+- The `liferay-release-tool-ee` sources. Git checks these files into the source set of this project. This team does not own them.
+- `EI_EXPOSE_REP` and `EI_EXPOSE_REP2`. These two rules report every getter that returns a mutable field. This project holds many DTOs, so these two rules report no defect.
 
-Everything else reports. Add an exclusion only for a rule that is wrong here, never to quiet a finding that is right.
+SpotBugs reports every other rule. Add an exclusion only when a rule is incorrect for this project. Do not add an exclusion to hide a correct finding.
 
 ## What It Found
 
@@ -33,18 +35,22 @@ Everything else reports. Add an exclusion only for a rule that is wrong here, ne
 
 | Bug | Count | Why it matters |
 | --- | --- | --- |
-| `MS_MUTABLE_ARRAY` | 23 | A `public static final` array is only final in its reference. Any caller can assign into it, and in a Spring singleton every request shares it. Return a `List.of(...)` or a copy. |
-| `CT_CONSTRUCTOR_THROW` | 14 | A constructor that throws after partially building the object leaves it reachable through a finalizer. |
-| `DM_DEFAULT_ENCODING` | 5 | The defect worth reading first. |
-| `MS_EXPOSE_REP` | 2 | A static mutable handed to a caller. |
-| `RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE` | 1 | A null check on a value that cannot be null, so the branch it guards is dead. |
-| `DM_BOXED_PRIMITIVE_FOR_PARSING` | 1 | `Integer.valueOf(s)` where `Integer.parseInt(s)` is meant. |
+| `MS_MUTABLE_ARRAY` | 23 | `final` protects the reference to an array, not the contents. Any caller can write into the array. A Spring singleton shares that array with every request. Return a `List.of(...)`, or return a copy. |
+| `CT_CONSTRUCTOR_THROW` | 14 | A constructor throws after it builds part of the object. A finalizer can then read that incomplete object. |
+| `DM_DEFAULT_ENCODING` | 5 | Read this finding first. The section below gives the reason. |
+| `MS_EXPOSE_REP` | 2 | A method returns a static mutable field to a caller. |
+| `RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE` | 1 | A null check reads a value that is never null. The code inside the check never runs. |
+| `DM_BOXED_PRIMITIVE_FOR_PARSING` | 1 | The code calls `Integer.valueOf(s)`. The correct call is `Integer.parseInt(s)`. |
 
 ### The Encoding Findings
 
-Three of the five `DM_DEFAULT_ENCODING` hits are in `getAuthorization`, `_getAuthorization`, and `_getAccessToken` — the methods that build outbound credentials. Converting a string to bytes without naming a charset uses whatever the JVM defaults to, which is UTF-8 on a developer's machine and whatever the container's locale says in production. A credential containing any non-ASCII byte encodes differently in the two places, so the call authenticates locally and fails deployed, with nothing in the stack trace pointing at the cause.
+Three of the five `DM_DEFAULT_ENCODING` findings are in `getAuthorization`, `_getAuthorization`, and `_getAccessToken`. These three methods build the credentials for an outbound request.
 
-Name the charset: `StandardCharsets.UTF_8`, always.
+A conversion from a string to bytes without a charset uses the default charset of the JVM. That default is UTF-8 on a developer machine. In production the default comes from the locale of the container.
+
+A credential that holds a non-ASCII byte therefore produces different bytes in the two places. The request authenticates on the developer machine and fails after deployment. The stack trace gives no indication of the cause.
+
+Name the charset. Write `StandardCharsets.UTF_8`.
 
 ## Ledger
 
@@ -58,4 +64,4 @@ Name the charset: `StandardCharsets.UTF_8`, always.
 | `DM_BOXED_PRIMITIVE_FOR_PARSING` | 1 |
 | `SE_COMPARATOR_SHOULD_BE_SERIALIZABLE` | 1 |
 
-New code is held to the rule regardless of the ledger. The counts only go down.
+Every rule applies to new code, whatever the count in this table says. The counts only decrease.

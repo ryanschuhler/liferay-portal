@@ -10,7 +10,11 @@ Lists, arrays, and JSON entries must always be in sorted order. This applies to:
 - `[#assign ... /]` variable blocks in FreeMarker templates (logical dependency order, then alphabetical)
 - Java `import` statements (already handled by source formatter)
 - Entries in configuration files
-- Method and constructor parameter lists — alphabetical by parameter name. Reordering a signature means reordering the arguments at every call site. Where the reordered parameters share a type, the compiler cannot catch a missed call site — the code still compiles while the arguments land in the wrong parameters — so verify each call site by reading it against the new order, not by trusting a green build. Example (same type, the dangerous case): `notify(String message, String recipient)` → `notify(String recipient, String message)`.
+- Method and constructor parameter lists, in alphabetical order by parameter name. A change to the order of a signature changes the order of the arguments at every call site.
+
+	The compiler reports a missed call site only when the types differ. When two reordered parameters share a type, the code compiles and the arguments reach the wrong parameters. Read each call site against the new order. A successful build does not prove that the call sites are correct.
+
+	This example shows the case that the compiler cannot report: `notify(String message, String recipient)` becomes `notify(String recipient, String message)`.
 
 When Brian sees items out of order, he comments `"sort"` and bounces the PR back.
 
@@ -33,7 +37,7 @@ Do not write log statements like AI-generated code. Specifically:
 
 - Error messages: use `"Unable to <verb>"` not `"Error <verb>ing"` or `"Error: <noun>"`
 - Product/object names in log strings: no hyphens — write `"business event"` not `"business-event"`, `"business events"` not `"business-events"`
-- No label-style punctuation: a log message is prose, so it carries no `:`, `-`, or `=` separators — write `"Unable to update business event " + id`, not `"Update failed: id=" + id`. A hyphen inside a URL path being echoed verbatim is the one tolerable case.
+- No punctuation that forms a label. A log message is prose. It carries no `:`, no `-`, and no `=` as a separator. Write `"Unable to update business event " + id`. Do not write `"Update failed: id=" + id`. A hyphen inside a URL path is correct when the message repeats that path.
 
 Example of what Brian corrected:
 
@@ -112,13 +116,19 @@ In FreeMarker templates (`.ftl`, `index.html`), group all `[#assign ... /]` stat
 
 ## Image URLs in Fragments
 
-Never string-replace `https://` to `http://` on an image or document URL in shipped fragment markup (`src="${imageURL?replace('https://', 'http://')}"`). This is a local-dev bandaid: on any HTTPS environment (UAT/prod) it forces the asset to `http://`, which the browser blocks as mixed content, and the image silently fails to load. Serve the asset over the current scheme instead of rewriting the protocol.
+Do not replace `https://` with `http://` in the URL of an image or a document in fragment markup. One example is `src="${imageURL?replace('https://', 'http://')}"`.
+
+This replacement works only on a local machine. On a UAT environment or a production environment, the replacement sets the asset URL to `http://`. The browser then blocks the request as mixed content, and the image does not load. The browser reports nothing to the user.
+
+Request the asset with the scheme of the current page. Do not rewrite the protocol.
 
 ## Date Input Values Are Timezone-Naive
 
 Enforced in the custom element by `local/no-timezone-naive-date` ([`custom-element-safety.md`](./custom-element-safety.md)).
 
-Never feed a `yyyy-MM-dd` value from an `<input type="date">` straight into `new Date(...).toISOString()`. A bare date string is parsed as **UTC midnight**, so in any UTC-negative timezone (all of the Americas) `.toISOString()` and any later local-time display shift the day backward by one — the saved start/expiration date is off by one from what the user picked.
+Do not pass a `yyyy-MM-dd` value from an `<input type="date">` to `new Date(...).toISOString()`.
+
+JavaScript reads a plain date string as **midnight UTC**. In a timezone behind UTC, which includes all of the Americas, `.toISOString()` moves the day back by one. A later display in local time moves it back as well. The start date or the expiration date that the code saves is then one day before the date that the user picked.
 
 ```ts
 // Wrong — 2026-03-15 selected in the US saves/renders as 2026-03-14

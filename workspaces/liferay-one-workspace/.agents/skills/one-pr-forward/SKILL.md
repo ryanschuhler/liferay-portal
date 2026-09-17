@@ -9,7 +9,7 @@ name: one-pr-forward
 
 # Forward Current Branch PR Upstream
 
-From the current branch: merge its open PR into `liferay-one/liferay-portal:master-temp`, rebase onto `liferay-one/master`, open a forwarding PR against `liferay-one/liferay-portal:master`, and trigger CI with `ci:forward`.
+Run this skill from the current branch. Merge the open pull request of the branch into `liferay-one/liferay-portal:master-temp`. Rebase the branch onto `liferay-one/master`. Open a forwarding pull request against `liferay-one/liferay-portal:master`. Start CI with `ci:forward`.
 
 ## Usage
 
@@ -17,26 +17,26 @@ From the current branch: merge its open PR into `liferay-one/liferay-portal:mast
 /one-pr-forward
 ```
 
-Run from the branch whose PR you have just reviewed and are ready to ship.
+Run this skill from the branch with a reviewed pull request that is ready to send.
 
 ## Preconditions
 
-- The working tree has no uncommitted changes. When dirty, abort and ask the user to commit or stash first.
-- Not on a protected branch (`master`, `master-temp`). When on one of these, abort and report the error.
+- The working tree has no uncommitted changes. Stop when the tree holds a change. Ask the user to commit the change, or to stash it.
+- The current branch is not a protected branch. The protected branches are `master` and `master-temp`. Stop on one of these branches, and report the error.
 
 ## Steps
 
 ### 1. Resolve Context
 
-Read the GitHub username from the `origin` remote URL (e.g., `ryanschuhler` from `git@github.com:ryanschuhler/liferay-portal.git`).
+Read the GitHub username from the `origin` remote URL, for example `ryanschuhler` from `git@github.com:ryanschuhler/liferay-portal.git`.
 
 Record the current branch name.
 
-Find the remote whose URL contains `liferay-one/liferay-portal` using `git remote -v`. Record its name (expected: `liferay-one` or `team`).
+Run `git remote -v`. Find the remote with `liferay-one/liferay-portal` in its URL. Record the name of that remote. The name is `liferay-one` or `team`.
 
 ### 2. Find the Open PR
 
-Look up the open PR for the current branch targeting `master-temp`:
+Read the open pull request for the current branch with the base `master-temp`:
 
 ```bash
 gh pr list \
@@ -47,15 +47,15 @@ gh pr list \
   --json number,title,body,url
 ```
 
-Abort if no open PR is found. Report: "No open PR found for branch `<branch-name>` targeting master-temp on liferay-one/liferay-portal."
+Stop when the command finds no open pull request. Report this message: "No open PR found for branch `<branch-name>` targeting master-temp on liferay-one/liferay-portal."
 
-Extract:
-- `number` — PR number.
-- `title` — PR title; also used to derive the Jira ticket.
-- `body` — PR description.
-- `url` — link back to this PR.
+Read these four fields:
+- `number` — the number of the pull request.
+- `title` — the title of the pull request. The Jira ticket comes from this title.
+- `body` — the description of the pull request.
+- `url` — the link to this pull request.
 
-Extract the Jira ticket ID from the title using the pattern `[A-Z]+-[0-9]+` (e.g., `LRSD-12345`).
+Read the Jira ticket ID from the title with the pattern `[A-Z]+-[0-9]+`, for example `LRSD-12345`.
 
 ### 3. Merge the PR into master-temp
 
@@ -66,11 +66,11 @@ gh pr merge <number> \
   --delete-branch=false
 ```
 
-Abort on failure and report the error message.
+Stop when the command fails. Report the error message.
 
 ### 4. Rebase onto liferay-one/master
 
-Fetch the latest master:
+Fetch the current master branch:
 
 ```bash
 git fetch <liferay-one-remote> master
@@ -82,7 +82,7 @@ Rebase the current branch onto it:
 git rebase <liferay-one-remote>/master
 ```
 
-If the rebase fails due to conflicts, run `git rebase --abort`, report the conflicting files, and stop. Do not attempt to resolve conflicts automatically.
+Run `git rebase --abort` when the rebase reports a conflict. Report the files with the conflict. Stop the skill. Do not resolve a conflict yourself.
 
 ### 5. Push to origin
 
@@ -90,11 +90,11 @@ If the rebase fails due to conflicts, run `git rebase --abort`, report the confl
 git push origin <branch-name> --force-with-lease
 ```
 
-Force-with-lease is required here because the rebase rewrote the branch history. Abort on failure and report the error.
+The rebase wrote a new history for the branch, so this push needs `--force-with-lease`. Stop when the push fails. Report the error.
 
 ### 6. Create the Forwarding PR
 
-Build the PR body:
+Build the body of the pull request:
 
 ```
 <original PR body>
@@ -105,7 +105,7 @@ Jira: https://liferay.atlassian.net/browse/<ticket-id>
 Forwarded from: <original-pr-url>
 ```
 
-Create the PR against `liferay-one/liferay-portal:master`:
+Create the pull request against `liferay-one/liferay-portal:master`:
 
 ```bash
 gh pr create \
@@ -119,7 +119,7 @@ EOF
 )"
 ```
 
-Record the new PR's number and URL from the command output.
+Record the number and the URL of the new pull request from the command output.
 
 ### 7. Trigger CI Forwarding
 
@@ -131,6 +131,6 @@ gh pr comment <new-pr-number> \
 
 ## Report
 
-Return:
-- The forwarding PR URL.
-- Confirmation that `ci:forward` was posted — CI will run tests and send to bchan automatically.
+Return these two items:
+- The URL of the forwarding pull request.
+- The confirmation that the skill posted `ci:forward`. CI then runs the tests and sends the pull request to bchan.

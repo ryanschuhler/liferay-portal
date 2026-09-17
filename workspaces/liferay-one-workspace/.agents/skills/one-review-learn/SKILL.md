@@ -8,22 +8,22 @@ name: one-review-learn
 
 # Review Learn
 
-Harvest correction patterns from a review session and encode them as durable guardrails so the same issue does not recur.
+Harvest the correction patterns from a review session. Encode them as durable guardrails, so the same issue does not recur.
 
 ## When to Run
 
 Run after any of these:
-- A GitHub reviewer leaves inline comments and you respond to them
-- `/code-review` or `/code-review --fix` applies corrections to the branch
-- You notice the same type of fix appearing across multiple files
+- A reviewer on GitHub leaves inline comments and you answer them
+- `/code-review` or `/code-review --fix` applies a correction to the branch
+- You see the same kind of fix in more than one file
 
 ## Model Tiering
 
-None of this work needs the session's model. Collection is mechanical — run it inline or on a `haiku` subagent. Analysis and guardrail writing run on `sonnet` subagents, with the model set explicitly on every `Agent` call. Only the final pick of where each pattern gets encoded stays in the session.
+No part of this work needs the model of the session. The collection is mechanical, so run it in this session or on a `haiku` subagent. Run the analysis and the guardrail writing on `sonnet` subagents, and set the model explicitly on every `Agent` call. Only the final choice of where to encode each pattern stays in the session.
 
 ## Signal Sources
 
-Collect from all available sources. Skip any that don't apply.
+Collect from every available source. Skip a source that does not apply.
 
 ### 1. GitHub PR Review Comments
 
@@ -44,7 +44,7 @@ When no PR exists for the current branch, skip this source.
 
 ### 2. Recent Post-Review Commits
 
-Look at the commit log since the branch diverged. Commits with terse messages (SF, cleanup, fixup, update, fix) that follow the initial feature work are correction signals.
+Read the commit log since the branch diverged. A commit with a short message (SF, cleanup, fixup, update, fix) that follows the first feature work is a correction signal.
 
 ```bash
 git log --oneline "$(git merge-base HEAD liferay-one/master-temp)...HEAD"
@@ -58,41 +58,41 @@ git diff HEAD         # unstaged
 git diff --cached     # staged
 ```
 
-These are the freshest corrections — direct output of the current review session.
+These are the newest corrections. The current review session produced them directly.
 
 ## Analysis
 
-Use a `sonnet` agent to read all collected signals and produce a list of correction patterns. For each pattern, capture:
+Use a `sonnet` agent to read every collected signal and to produce a list of correction patterns. Capture four things for each pattern:
 
 - **What changed** — a concrete before/after example
-- **Why it was wrong** — the rule being violated
-- **How general is it** — does it apply to the whole codebase, or just this one file?
+- **Why it was wrong** — the rule the code violates
+- **How general it is** — does it apply to the whole codebase, or to this one file?
 - **Category** — one of: `naming`, `structure`, `style`, `pr-hygiene`, `object-naming`, `logic`, `concurrency`, `data-access`, `other`
 
-Cluster related comments and diffs that point to the same root issue into a single pattern. A reviewer leaving five "sort this" comments is one pattern, not five.
+Group the related comments and diffs that point to one root issue into a single pattern. Five "sort this" comments from one reviewer are one pattern, not five.
 
 ## Guardrail Selection
 
-For each pattern, pick the highest-enforcement option that fits:
+For each pattern, pick the option with the strongest enforcement that fits:
 
 | Pattern type | Detectable in TS/TSX AST? | Where to encode |
 | --- | --- | --- |
-| Naming — file, class, function | Yes (filename, export name) | New ESLint rule in `tools/eslint-plugin-local/src/rules/` |
-| Naming — variable, prop | Sometimes | ESLint rule if automatable; else `.agents/rules/naming.md` |
-| File/folder structure | Yes (path patterns) | ESLint rule in `tools/eslint-plugin-local/src/rules/` |
-| Sort order in TS/TSX | Yes | ESLint rule |
+| Naming — file, class, function | Yes (filename, export name) | A new ESLint rule in `tools/eslint-plugin-local/src/rules/` |
+| Naming — variable, prop | Sometimes | An ESLint rule where a rule can detect it, otherwise `.agents/rules/naming.md` |
+| File/folder structure | Yes (path patterns) | An ESLint rule in `tools/eslint-plugin-local/src/rules/` |
+| Sort order in TS/TSX | Yes | An ESLint rule |
 | CSS/SCSS conventions | No | `.agents/rules/code-style.md` |
-| Import conventions | Yes | ESLint rule (prefer `@liferay/eslint-plugin` config first) |
+| Import conventions | Yes | An ESLint rule. Check the `@liferay/eslint-plugin` configuration first |
 | PR hygiene | No | `.agents/rules/pr-hygiene.md` |
 | Object ERCs / field names | No | `.agents/rules/object-naming.md` |
 | Shared mutable state, effect races | No | `.agents/rules/concurrency.md` |
 | N+1 calls, unbounded or over-wide reads | No | `.agents/rules/data-access.md` |
 | General code style | No | `.agents/rules/code-style.md` |
 | Non-obvious project context | No | Memory (`~/.claude/projects/.../memory/`) |
-| A defect class a reviewer should hunt for | No | `.agents/skills/one-review/criteria.md` — the lens it belongs under, or a false positive to rule out |
-| Workflow/procedure | No | Skill update |
+| A defect class a reviewer should hunt for | No | `.agents/skills/one-review/criteria.md`, under the lens it belongs to, or as a false positive to exclude |
+| Workflow/procedure | No | A skill update |
 
-**Before encoding anything:** check whether the pattern is already covered. Run these from the workspace root (`workspaces/liferay-one-workspace`).
+**Before you encode anything**, check whether an existing rule covers the pattern. Run these commands from the workspace root (`workspaces/liferay-one-workspace`).
 
 ```bash
 # Rules docs
@@ -105,29 +105,29 @@ grep -i "<keyword>" .agents/skills/one-review/criteria.md
 ls tools/eslint-plugin-local/src/rules/
 ```
 
-Skip patterns fully covered. Sharpen a rule if it is partially covered.
+Skip a pattern that an existing rule covers completely. Sharpen a rule that covers the pattern in part.
 
 ## Applying Guardrails
 
 ### Rule Doc Update
 
-Append to the most relevant `.agents/rules/<file>.md`. Use the same style as the existing content (table rows for naming rules, fenced code examples for before/after, prose for rationale).
+Append the pattern to the most relevant `.agents/rules/<file>.md`. Match the style of the existing content: a table row for a naming rule, a fenced code example for a before and after pair, and prose for the rationale.
 
-If no existing file fits, create a new one under `.agents/rules/`. After writing, also note in the output which file was updated so the user can review it.
+When no existing file fits, create a new file under `.agents/rules/`. Then name the updated file in the output, so the user can review it.
 
 ### Review Criteria Update
 
-The rule files and the review criteria answer different questions, and a harvested pattern often belongs in both. A rule file says what correct code looks like, for whoever is writing it. `.agents/skills/one-review/criteria.md` says how to *find* the incorrect version in a diff — which lens it falls under, what to grep for, how heavily to weight it.
+The rule files and the review criteria answer different questions, and one harvested pattern often belongs in both. A rule file states what correct code looks like, for whoever writes it. `.agents/skills/one-review/criteria.md` states how to *find* the incorrect code in a diff: which lens covers it, what to grep for, and how heavily to weight it.
 
-Add to `criteria.md` when the pattern is something a reviewer would otherwise miss, and add it under an existing lens rather than inventing one. When the harvest instead reveals that a reviewer flagged something that was never wrong, add it to that file's Known False Positives — a retracted finding is as much a signal as an accepted one. Because both `/one-review` and the `one-team` reviewer read that file, the edit lands in every review at once; never encode a review heuristic in a caller.
+Add a pattern to `criteria.md` where a reviewer would otherwise miss it, and add it under an existing lens rather than under a new one. Where the harvest instead shows that a reviewer reported something that was never wrong, add that to the Known False Positives section of the same file. A retracted finding is as much a signal as an accepted one. Both `/one-review` and the `one-team` reviewer read that file, so one edit reaches every review at once. Never encode a review heuristic in a caller.
 
 ### New ESLint Rule
 
-When a pattern is mechanically detectable in TypeScript/TSX files:
+Follow these steps when a rule can detect the pattern mechanically in a TypeScript or TSX file:
 
-1. **Read an existing rule for template.** Start with `tools/eslint-plugin-local/src/rules/filenameCamelcase.ts` (simple) or `tools/eslint-plugin-local/src/rules/pageFolderStructure.ts` (path-based) depending on what the new rule needs.
+1. **Read an existing rule as a template.** Start with `tools/eslint-plugin-local/src/rules/filenameCamelcase.ts` for a simple rule, or with `tools/eslint-plugin-local/src/rules/pageFolderStructure.ts` for a rule that reads the path.
 
-1. **Write the rule** to `tools/eslint-plugin-local/src/rules/<camelCaseName>.ts`. Use `@typescript-eslint/experimental-utils`, always export with `export =`. Include the SPDX header from the existing rules.
+1. **Write the rule** to `tools/eslint-plugin-local/src/rules/<camelCaseName>.ts`. Use `@typescript-eslint/experimental-utils`. Always export the rule with `export =`. Copy the SPDX header from the existing rules.
 
 1. **Register it** in `tools/eslint-plugin-local/src/index.ts`:
    - Add `import <camelCaseName> = require('./rules/<camelCaseName>');`
@@ -143,23 +143,23 @@ When a pattern is mechanically detectable in TypeScript/TSX files:
    yarn lint 2>&1 | grep -E "local/<kebab-case-name>|<RuleName>" | head -20
    ```
 
-   The rule should fire on files that match the pattern and be silent on clean files. If it fires unexpectedly, tighten the condition. If it never fires on known violations, widen it.
+   The rule reports every file that matches the pattern and reports nothing on a clean file. When it reports a file it should not, tighten the condition. When it reports nothing on a known violation, widen the condition.
 
-1. **Fix any existing violations** in the codebase before committing, or downgrade the rule to `'warn'` temporarily and document why in a TODO comment inside the rule file.
+1. **Fix every existing violation** in the codebase before you commit. Otherwise set the rule to `'warn'` for now, and record the reason in a TODO comment inside the rule file.
 
 ### Memory Entry
 
-When a correction reveals something non-obvious about the project that Claude should remember across sessions (a surprising constraint, a naming landmine, a workflow quirk), write a memory entry.
+Write a memory entry when a correction reveals something about the project that is not obvious and that Claude needs across sessions: an unexpected constraint, a name that causes a failure, or an unusual step in a workflow.
 
-Follow the memory system format — write a file under the session's memory directory (`~/.claude/projects/<slugified-repo-path>/memory/`) with the appropriate frontmatter (`type: feedback` or `type: project`), then add a one-line pointer to `MEMORY.md`.
+Follow the format of the memory system. Write a file under the memory directory of the session (`~/.claude/projects/<slugified-repo-path>/memory/`), with the correct frontmatter (`type: feedback` or `type: project`). Then add a one-line pointer to `MEMORY.md`.
 
 ### Skill Update
 
-When a correction exposes a gap in an existing skill's procedure (missing precondition, wrong command, omitted step), append or correct the relevant section of that skill's `SKILL.md`. Keep the change minimal — only what was missing.
+A correction can reveal a gap in the procedure of an existing skill: a missing precondition, a wrong command, or an omitted step. Append to the relevant section of the `SKILL.md` of that skill, or correct that section. Keep the change small. Add only what was missing.
 
 ## Output
 
-Report what was done, grouped by guardrail type:
+Report what you did, grouped by the type of guardrail:
 
 ```
 ## Patterns Found
@@ -178,4 +178,4 @@ Report what was done, grouped by guardrail type:
 - <Pattern>: already covered by `.agents/rules/code-style.md` line 42
 ```
 
-Keep the report concise. If no actionable patterns emerged (everything was logic/behavior-specific), say so explicitly rather than forcing a rule.
+Keep the report short. Sometimes no pattern is actionable, because every correction was specific to one piece of logic or behavior. Say so plainly. Do not write a rule that does not fit.

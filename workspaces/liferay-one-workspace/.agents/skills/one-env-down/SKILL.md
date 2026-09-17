@@ -8,9 +8,9 @@ name: one-env-down
 
 # Stop Liferay One Environment
 
-Run from `workspaces/liferay-one-workspace/`.
+Run the command from `workspaces/liferay-one-workspace/`.
 
-Stops all containers — the portal, the database, and the `liferay-one-etc-spring-boot` client extension — but preserves volumes so the next `/one-env-up` resumes where it left off.
+The command stops the three containers: the portal, the database, and the `liferay-one-etc-spring-boot` client extension. The command keeps the volumes, so the next `/one-env-up` starts from the same data.
 
 ```bash
 docker compose stop

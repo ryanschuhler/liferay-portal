@@ -58,7 +58,7 @@ public String getFirstLineSupportTeamRoleObjectId() {
 }
 ```
 
-`JiraSyncLock` (`com.liferay.one.jira.util.JiraSyncLock`) is the workspace's named-lock primitive — prefer it over a bare `synchronized` block whenever the thing being serialized has a natural key, since it lets unrelated keys proceed in parallel.
+`JiraSyncLock` is the named lock of this workspace. Its class is `com.liferay.one.jira.util.JiraSyncLock`. Use `JiraSyncLock` in place of a `synchronized` block when the work has a natural key. Two threads with different keys then run at the same time.
 
 ## Check-Then-Act Is Not Atomic
 
@@ -84,7 +84,7 @@ A field is not single-threaded just because only one REST endpoint writes it. In
 - `@Async` methods and `@EventListener(ApplicationReadyEvent.class)` startup warm-ups
 - Pub/Sub subscribers, which the Salesforce gRPC client invokes on its own executor
 
-A warm-up that populates a cache at startup while the first request reads it is a real race — that is exactly why the cached ID fields above are `volatile`.
+A warm-up method fills a cache at startup. The first request reads that cache at the same time. These two operations form a race. The cached ID fields above are `volatile` for this reason.
 
 ## Date And Number Formatters Are Locals
 
@@ -104,7 +104,9 @@ private static final DateTimeFormatter _dateTimeFormatter =
 
 ## React: Async Results Outlive Their Effect
 
-`liferay-one-custom-element` has no threads, but it has the same shape of bug: a `fetch` started by an effect can resolve after the component unmounted, or after a newer fetch for different parameters already resolved. The result is a stale render or a state update on a dead component.
+`liferay-one-custom-element` runs no threads. It holds the same kind of defect. An effect starts a `fetch`. That `fetch` can return after React unmounts the component. It can also return after a later `fetch` with different parameters already returned.
+
+The result is a render with old data, or a state update on a component that no longer exists.
 
 Every effect that starts an async call must handle its own cancellation:
 

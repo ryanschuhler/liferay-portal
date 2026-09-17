@@ -8,21 +8,21 @@ name: one-env-pull
 
 # Pull Liferay One Workspace .env from 1Password
 
-Run from `workspaces/liferay-one-workspace/`.
+Run the commands from `workspaces/liferay-one-workspace/`.
 
-The canonical workspace secrets live in a 1Password **secure note** named `.env [Liferay One Workspace]`. Its body is a verbatim `.env` file (the `LIFERAY_ONE_*` keys consumed by the `liferay-one-etc-spring-boot` client extension via `docker-compose.yaml`). This skill copies that note into the local `.env`, replacing whatever is there.
+A 1Password **secure note** named `.env [Liferay One Workspace]` holds the workspace secrets. The body of the note is an exact `.env` file, and it holds the `LIFERAY_ONE_*` keys. The `liferay-one-etc-spring-boot` client extension reads these keys through `docker-compose.yaml`. This skill copies the note into the local `.env` file, and the copy replaces the current content of that file.
 
-The local `.env` is gitignored, so it never reaches version control.
+Git ignores the local `.env` file, so the file never reaches version control.
 
 ## 1. Confirm 1Password Access
 
-The 1Password CLI must be installed and signed in to the `liferayinc.1password.com` account.
+Install the 1Password CLI. Sign in to the `liferayinc.1password.com` account.
 
 ```bash
 op account list
 ```
 
-If no account is listed or a later step reports an authentication error, sign in and retry:
+Sign in again when the command lists no account. Sign in again also when a later step reports an authentication error. Then run that step again:
 
 ```bash
 eval "$(op signin)"
@@ -30,7 +30,7 @@ eval "$(op signin)"
 
 ## 2. Fetch the Note and Update `.env`
 
-Fetch the note body into a variable first, verify it is non-empty, then back up the existing `.env` to `.env.bak` before overwriting. Never clobber `.env` with an empty or failed fetch.
+Data loss. A write of an empty value to `.env` deletes the local secrets. Fetch the body of the note into a variable. Confirm that the variable is not empty. Copy the current `.env` file to `.env.bak`. Then write the new `.env` file.
 
 ```bash
 note="$(
@@ -50,11 +50,11 @@ printf '%s\n' "${note}" > .env
 echo "Wrote $(grep -c '=' .env) entries to .env (previous copy saved to .env.bak)."
 ```
 
-If `op item get` reports more than one match, the note title is ambiguous across vaults — scope it with `--vault "<Vault Name>"`.
+More than one vault holds a note with this title when `op item get` reports more than one match. Add `--vault "<Vault Name>"` to the command.
 
 ## 3. Apply the Changes
 
-The Spring Boot container reads `.env` only at container creation. Recreate it so the new values take effect:
+The Spring Boot container reads `.env` only when Docker creates the container. Create the container again, so that it reads the new values:
 
 ```bash
 docker compose up -d liferay-one-etc-spring-boot
@@ -62,5 +62,5 @@ docker compose up -d liferay-one-etc-spring-boot
 
 ## Notes
 
-- This skill is **pull-only**. To publish local changes back, update the secure note in the 1Password app — keep the note body in exact `.env` syntax (`KEY=VALUE`, one per line, JSON values such as the GCS service account key on a single unquoted line).
-- Keys absent from the note fall back to the `=unused` defaults that `buildDockerImage` writes to `build/local.env`, which `docker-compose.yaml` loads ahead of `.env`.
+- This skill **only reads**. Edit the secure note in the 1Password app to publish a local change. Keep the body of the note in exact `.env` syntax. Write one `KEY=VALUE` pair per line. Write a JSON value, such as the key for the GCS service account, on one line and without quotation marks.
+- A key that the note does not hold takes the `=unused` default value. The `buildDockerImage` task writes these default values to `build/local.env`. The file `docker-compose.yaml` loads `build/local.env` before `.env`.

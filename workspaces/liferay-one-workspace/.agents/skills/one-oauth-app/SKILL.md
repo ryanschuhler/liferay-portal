@@ -8,7 +8,7 @@ name: one-oauth-app
 
 # Create Local Dev OAuth2 Application
 
-Creates a catch-all OAuth2 client-credentials application for local development with every available scope assigned. Use this app for manual API testing, scripts, and tooling against the local Liferay instance.
+This skill creates one OAuth2 client credentials application for local development. The application receives every available scope. Use the application for manual API tests, for scripts, and for tools against the local Liferay instance.
 
 | Field | Value |
 |-------|-------|
@@ -16,7 +16,7 @@ Creates a catch-all OAuth2 client-credentials application for local development 
 | Client ID | `local-dev` |
 | Client Secret | `local-dev-secret` |
 
-Liferay does not expose a headless REST API for OAuth2 application admin in this DXP version, so this step drives the `OAuth2AdminPortlet` ActionURLs directly via `curl`. No browser, no `chrome-devtools` MCP, no snapshots.
+This DXP version has no headless REST API for OAuth2 application administration. This step therefore calls the `OAuth2AdminPortlet` ActionURLs with `curl`. Do not open a browser. Do not use the `chrome-devtools` MCP server. Do not take a snapshot.
 
 ## Create the Application
 
@@ -194,7 +194,7 @@ echo "OAuth2 application '${APP_NAME}' (clientId=${APP_CLIENT_ID}, internal id=$
 
 ## JWT Size Warning
 
-Granting every scope means an unscoped token request produces a JWT embedding all scope aliases — typically over Tomcat's default `maxHttpHeaderSize` (8 KB). **Always request only the scopes you need:**
+The application holds every scope. A token request without a `scope` value therefore returns a JWT with every scope alias in it. That JWT is normally larger than the default `maxHttpHeaderSize` value of Tomcat, which is 8 KB. **Request only the scopes that you need:**
 
 ```bash
 TOKEN=$(curl \
@@ -207,21 +207,21 @@ TOKEN=$(curl \
 | jq -r .access_token)
 ```
 
-Omitting `scope=` gives you every granted alias in the JWT and HTTP 400 from Tomcat on the first API call.
+A request without `scope=` puts every granted alias in the JWT. Tomcat then answers the first API call with HTTP 400.
 
 ## Gotchas
 
-- **`clientAuthenticationMethod=client_secret_post`** — the UI dropdown's "Client Secret Basic or Post" maps to this value.
+- **`clientAuthenticationMethod=client_secret_post`** — the "Client Secret Basic or Post" item in the UI list has this value.
 - **`clientProfile=4`** = Headless Server. Other profile values from `ClientProfile.java`: 0=Web, 1=Native, 2=User Agent, 3=Other.
-- **Two POSTs are required** to install a predictable client secret. The first POST (with `oAuth2ApplicationId=0`) creates the app but regenerates `clientSecret` regardless of what's submitted — Headless Server is a confidential client profile and `UpdateOAuth2ApplicationMVCActionCommand` always rolls the secret on first save. The second POST, keyed by the new `oAuth2ApplicationId`, installs the predictable value.
-- **`scopeAliases` is a repeated field**, not comma-separated. One `--data-urlencode` per alias. The server splits each value on spaces, so space-separated alias groups (as scraped from the checkbox values) work fine.
-- **Scope discovery requires `navigation=assign_scopes`** in the render URL. Without it, `edit_application.jsp` defaults to the credentials view and renders no scope checkboxes.
-- **Scope filter is by description text, not alias name.** The script splits the page into `<li class="list-group-item ...">` blocks and only keeps aliases whose `<label>` contains **both** "create/update/delete data on your behalf" and "read data on your behalf". This selects the unified `.everything` scope for each resource and skips the narrower `.write`-only and `.read`-only variants (which would be redundant), plus analytics reads, personal profile reads, document downloads, and unlabeled entries (e.g. `COMMERCE_DEFAULT`).
-- **The action `p_auth` is the page's global `Liferay.authToken`, not a `p_auth=` query param.** The control-panel chrome renders many per-portlet `p_p_auth=` *render* tokens on its nav links; grepping `p_auth=` matches those and yields a token that fails CSRF validation with HTTP 403 on the action POST. Extract `authToken: '<value>'` (the `Liferay.authToken` JS var) instead. It is bound to the authenticated session — harvest once after login and reuse for every subsequent POST.
-- **Locating the new app's id requires row-scoping** because the list page contains `oAuth2ApplicationId=N` URLs for every app. The Python helper scopes to the `<tr>` containing `APP_CLIENT_ID`.
-- **First-run password reset / TOS** — on a freshly bootstrapped portal this gate is bypassed, but if a future Liferay version reintroduces it the script exits with "Login failed — no ID cookie in jar". Drive `chrome-devtools` for that one login, then re-run this script.
+- **The script sends two POST requests** to install a known client secret. The first POST request carries `oAuth2ApplicationId=0` and creates the application. That request generates a new `clientSecret` value and ignores the submitted value. Headless Server is a confidential client profile, and `UpdateOAuth2ApplicationMVCActionCommand` always generates a new secret on the first save. The second POST request carries the new `oAuth2ApplicationId` and installs the known value.
+- **The `scopeAliases` field repeats.** It is not a comma separated list. Send one `--data-urlencode` argument for each alias. The server splits each value on the space character, so a value with more than one alias in it also works. The checkbox values have this form.
+- **The scope discovery needs `navigation=assign_scopes`** in the render URL. Without that parameter, `edit_application.jsp` shows the credentials view and renders no scope checkbox.
+- **The script filters the scopes by the description text, not by the alias name.** The script splits the page into `<li class="list-group-item ...">` blocks. The script keeps an alias only when its `<label>` holds **both** "create/update/delete data on your behalf" and "read data on your behalf". This filter selects the `.everything` scope for each resource. It skips the `.write` scope and the `.read` scope, because the `.everything` scope covers them. It also skips the analytics reads, the personal profile reads, the document downloads, and the entries with no label, for example `COMMERCE_DEFAULT`.
+- **The `p_auth` value of an action URL is the global `Liferay.authToken` value of the page. It is not a `p_auth=` query parameter.** The control panel renders one `p_p_auth=` *render* token for each portlet on its navigation links. A search for `p_auth=` matches those tokens. An action POST request with such a token fails the CSRF check, and the server answers HTTP 403. Read the `authToken: '<value>'` JavaScript variable instead. That value belongs to the authenticated session. Read it one time after the login. Use the same value for every later POST request.
+- **The search for the id of the new application reads one table row.** The list page holds an `oAuth2ApplicationId=N` URL for every application. The Python function reads only the `<tr>` element that holds `APP_CLIENT_ID`.
+- **The password reset page and the terms of service page** — a new portal does not show these two pages. A later Liferay version can show them again. The script then stops with the message "Login failed — no ID cookie in jar". Use `chrome-devtools` for that one login. Then run this script again.
 
-Source paths if you need to track field names down:
+Read these three source files to confirm a field name:
 
 - `modules/apps/oauth2-provider/oauth2-provider-web/src/main/java/com/liferay/oauth2/provider/web/internal/portlet/action/UpdateOAuth2ApplicationMVCActionCommand.java`
 - `modules/apps/oauth2-provider/oauth2-provider-web/src/main/java/com/liferay/oauth2/provider/web/internal/portlet/action/AssignScopesMVCActionCommand.java`
@@ -229,7 +229,7 @@ Source paths if you need to track field names down:
 
 ## Verify
 
-Probe a full round-trip with a scoped token request:
+Test the complete flow with a scoped token request:
 
 ```bash
 TOKEN=$(curl \
@@ -251,4 +251,4 @@ curl \
 | head -c 400
 ```
 
-Healthy output: token length well under 2000 chars, `HTTP: 200`, and a JSON body with `items` / `totalCount`. If you see `HTTP: 400` with an HTML body, the JWT exceeded Tomcat's `maxHttpHeaderSize` — add `scope=` to the token request.
+A correct result has a token length below 2000 characters. It has `HTTP: 200`. It has a JSON body with an `items` field and a `totalCount` field. A result of `HTTP: 400` with an HTML body means that the JWT is larger than the `maxHttpHeaderSize` value of Tomcat. Add `scope=` to the token request.

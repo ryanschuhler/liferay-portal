@@ -8,34 +8,34 @@ name: one-dev
 
 # Live Vite Dev for One Workspace Custom Elements
 
-Run a custom element from the Vite dev server instead of its built static assets, so source edits hot-reload in the browser without a full redeploy. This mirrors `gradlew deployDev` from `liferay-customer-workspace`.
+Run a custom element from the Vite dev server in place of the built static assets. The browser then reloads each source edit, and you do not deploy the client extension again. This procedure is the same as `gradlew deployDev` in `liferay-customer-workspace`.
 
-The workspace Gradle plugin scans each `client-extension.<profile>.yaml` (regex `^client-extension\.([a-z]+)\.yaml$`) and generates a `deploy<Profile>` task. So `client-extension.dev.yaml` produces a `deployDev` task that deploys the extension with its `urls` pointed at the Vite dev server (`http://localhost:5173/...`) rather than the bundled `*.js`. The browser then loads modules — and the HMR client — straight from Vite.
+The workspace Gradle plugin reads each `client-extension.<profile>.yaml` file. The plugin matches the file name against the regular expression `^client-extension\.([a-z]+)\.yaml$`. For each match, the plugin generates a `deploy<Profile>` task. The file `client-extension.dev.yaml` therefore gives a `deployDev` task. That task sets the `urls` values to the Vite dev server (`http://localhost:5173/...`) in place of the bundled `*.js` files. The browser then loads the modules and the HMR client from Vite.
 
-Run everything from `workspaces/liferay-one-workspace/`.
+Run every command from `workspaces/liferay-one-workspace/`.
 
 ## 1. Resolve Target
 
-Valid targets are `liferay-one-*` client extensions that have a `client-extension.dev.yaml`. Today that is `liferay-one-custom-element`. Confirm the file exists:
+A valid target is a `liferay-one-*` client extension with a `client-extension.dev.yaml` file. One client extension meets this condition today: `liferay-one-custom-element`. Confirm that the file exists:
 
 ```bash
 ls client-extensions/liferay-one-custom-element/client-extension.dev.yaml
 ```
 
-Note the port the dev yaml expects (the `urls` host, e.g. `http://localhost:5173`). Vite must bind that exact port — it is baked into the deployed extension.
+Read the port in the `urls` host of the dev yaml file, for example `http://localhost:5173`. Bind Vite to that exact port. The deployed client extension holds that port value.
 
 ## 2. Pre-flight
 
-Liferay must be running. Confirm the container and HTTP port:
+Liferay must run before this step. Confirm the container and the HTTP port:
 
 ```bash
 docker ps --filter "name=^liferay$" --quiet
 curl --fail --silent --output /dev/null http://localhost:8080/c/portal/status && echo ready
 ```
 
-If either fails, start the environment first (`/one-env-up`).
+Start the environment with `/one-env-up` when either command fails.
 
-Ensure dependencies are installed (the workspace is a single yarn workspace with hoisted `node_modules`):
+Install the dependencies. The workspace is one yarn workspace, and yarn holds `node_modules` at the workspace root:
 
 ```bash
 [ -x client-extensions/liferay-one-custom-element/node_modules/.bin/vite ] || yarn install
@@ -43,23 +43,23 @@ Ensure dependencies are installed (the workspace is a single yarn workspace with
 
 ## 3. Start the Vite Dev Server
 
-Start Vite in the background, pinned to the port the dev yaml expects. `--strictPort` makes Vite fail loudly instead of silently bumping to 5174 (which would leave the deployed extension pointing at a dead port):
+Start Vite in the background, on the port that the dev yaml file names. The `--strictPort` flag makes Vite stop with an error. Without that flag, Vite moves to port 5174, and the deployed client extension then points at a port with no server:
 
 ```bash
 (cd client-extensions/liferay-one-custom-element && yarn dev --port 5173 --strictPort)
 ```
 
-Run this with `run_in_background`. Then wait until Vite answers:
+Run this command with `run_in_background`. Then wait until Vite answers:
 
 ```bash
 curl --fail --silent --output /dev/null http://localhost:5173/@vite/client && echo "vite up"
 ```
 
-Vite serves cross-origin to the Liferay page (CORS is on by default in Vite 4), and `vite.config.ts` already sets `server.origin` so the HMR websocket connects correctly.
+Vite serves the Liferay page from another origin. Vite 4 enables CORS by default. The file `vite.config.ts` sets `server.origin`, so the HMR websocket connects.
 
 ## 4. Deploy the Dev Profile
 
-Deploy the extension with the dev yaml overlay into the running container:
+Deploy the client extension with the dev yaml overlay into the running container:
 
 ```bash
 ./gradlew :client-extensions:liferay-one-custom-element:deployDev \
@@ -68,21 +68,21 @@ Deploy the extension with the dev yaml overlay into the running container:
 
 ## 5. Verify
 
-Confirm Liferay re-registered the extension, watching the container log for the LPKG/extension pickup:
+Confirm that Liferay registered the client extension again. Read the container log for the LPKG line and for the client extension line:
 
 ```bash
 docker logs --tail 50 $(docker ps --filter "name=^liferay$" --quiet) 2>&1 | grep -i "liferay-one-custom-element\|client extension"
 ```
 
-Then load a page hosting the custom element in the browser and confirm the module requests resolve to `http://localhost:5173/src/main.tsx` (DevTools → Network). Editing a file under `client-extensions/liferay-one-custom-element/src` now hot-reloads in place.
+Then open a page with the custom element in the browser. Confirm in the Network panel of DevTools that the module requests go to `http://localhost:5173/src/main.tsx`. The browser now reloads each file that you edit under `client-extensions/liferay-one-custom-element/src`.
 
 ## 6. Return to Production Assets
 
-Dev mode is sticky: the extension keeps pointing at `localhost:5173` until redeployed normally. When finished, stop the background Vite process and restore the bundled static assets with a normal deploy (`/one-deploy`):
+The client extension continues to point at `localhost:5173` until you deploy it again in the standard way. Stop the background Vite process at the end of the session. Then restore the bundled static assets with a standard deploy (`/one-deploy`):
 
 ```bash
 ./gradlew :client-extensions:liferay-one-custom-element:clean :client-extensions:liferay-one-custom-element:deploy \
     -Ddeploy.docker.container.id=$(docker ps --filter "name=^liferay$" --quiet)
 ```
 
-Report: which extension is in dev mode, the Vite URL, deploy result, and log evidence of pickup.
+Report the client extension in dev mode. Report the Vite URL. Report the deploy result. Report the log lines that show that Liferay loaded the client extension.

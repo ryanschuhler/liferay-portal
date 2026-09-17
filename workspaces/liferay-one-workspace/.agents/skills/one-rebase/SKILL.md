@@ -12,23 +12,23 @@ Rebase the current branch onto the latest `master-temp` from `liferay-one/lifera
 
 ## Preconditions
 
-- The working tree has no uncommitted changes. When dirty, abort and ask the user to commit first (suggest `/commit`); do not stash or discard their work.
+- The working tree has no uncommitted changes. Stop when the tree holds a change. Ask the user to commit the change first, and name `/commit`. Do not stash the work. Do not delete the work.
 
-- Not on a protected branch (`master`, `master-temp`). When on one of these, abort and report the error.
+- The current branch is not a protected branch. The protected branches are `master` and `master-temp`. Stop on one of these branches, and report the error.
 
 ## Steps
 
 ### 1. Locate the Upstream Remote
 
-Scan `git remote -v` for a remote whose URL contains `liferay-one/liferay-portal`. Record its name.
+Read `git remote -v`. Find the remote with `liferay-one/liferay-portal` in its URL. Record the name of that remote.
 
-When none exists, add it:
+Add the remote when it does not exist:
 
 ```bash
 git remote add liferay-one https://github.com/liferay-one/liferay-portal.git
 ```
 
-Use `liferay-one` as the remote name for subsequent steps.
+Use `liferay-one` as the remote name in the next steps.
 
 ### 2. Fetch
 
@@ -42,8 +42,8 @@ git fetch <remote> master-temp
 git rebase <remote>/master-temp
 ```
 
-When conflicts arise, stop immediately and report the conflicting files to the user. Do not attempt to resolve them automatically.
+Stop when the rebase reports a conflict. Report the files with the conflict to the user. Do not resolve a conflict yourself.
 
 ## Report
 
-On success, report the branch name and the upstream ref (`<remote>/master-temp`) it was rebased onto.
+Report the branch name after a successful rebase. Report the upstream ref `<remote>/master-temp` that the branch now sits on.

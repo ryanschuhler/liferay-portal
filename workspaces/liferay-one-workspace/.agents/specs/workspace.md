@@ -8,12 +8,12 @@
 
 | Extension | Description |
 |---|---|
-| `liferay-one-batch` | Batch import of Object definitions, list types, roles, and other headless resources |
-| `liferay-one-custom-element` | React + TypeScript — all dynamic UI for Marketplace, Support, Admin |
-| `liferay-one-etc-spring-boot` | Spring Boot REST service for provisioning, GCS, Jira, license gen, Salesforce Pub/Sub subscriber |
-| `liferay-one-global-css` | Shared color tokens + global styles |
-| `liferay-one-instance-settings` | Secrets and external credentials (not checked into repo) |
-| `liferay-one-site-initializer` | Single site initializer serving Marketplace, Support, Admin page groups |
+| `liferay-one-batch` | Imports the Object definitions, the list types, the roles, and other headless resources as a batch |
+| `liferay-one-custom-element` | React and TypeScript. Holds every dynamic screen for Marketplace, Support, and Admin |
+| `liferay-one-etc-spring-boot` | A Spring Boot REST service for provisioning, for GCS, for Jira, for the generation of licenses, and for the subscriber to Salesforce Pub/Sub |
+| `liferay-one-global-css` | The color tokens and the global styles that every page shares |
+| `liferay-one-instance-settings` | The secrets and the credentials for external systems. The repository does not hold these values |
+| `liferay-one-site-initializer` | One site initializer that serves the page groups for Marketplace, Support, and Admin |
 
 ### Site-Initializer Structure
 
@@ -50,20 +50,21 @@ liferay-one-site-initializer/
     └── site-navigation-menus.json
 ```
 
-Layouts are ordered by numeric prefix, not grouped by page group. Object
-definitions, roles, and OAuth2 applications are imported by the
-`liferay-one-batch` client extension, not the site initializer.
+A numeric prefix sets the order of the layouts. The page group does not group
+them. The `liferay-one-batch` client extension imports the Object definitions,
+the roles, and the OAuth2 applications. The site initializer does not import
+them.
 
 ### Object Names
 
-PascalCase, no prefix: `AccountFlag`, `SupportTicket`, `LicenseKey`.
+Write an object name in PascalCase. Give it no prefix: `AccountFlag`, `SupportTicket`, `LicenseKey`.
 
 ### Field Names
 
-camelCase. Booleans phrased as questions: `internal`, `clustered`, `hasDisasterDataCenterRegion`.
+Write a field name in camelCase. Phrase a boolean field as a question: `internal`, `clustered`, `hasDisasterDataCenterRegion`.
 
 ### Friendly URL Separators
 
-4 lowercase letters matching the ERC suffix. Must be unique across all Objects in the workspace.
+A separator is 4 lowercase letters. The letters match the suffix of the ERC. Each separator is unique across every Object in the workspace.
 
-**Exception — `AccountNote` uses `l`** (Liferay's default separator), which skips friendly-URL generation. Its title field `content` can contain slashes/newlines/links that would otherwise throw `MustNotHaveTrailingSlash`.
+**Exception — `AccountNote` uses `l`**, the default separator of Liferay. This separator stops the generation of a friendly URL. The title field `content` can hold a slash, a newline, or a link. Generation of a friendly URL from such a value throws `MustNotHaveTrailingSlash`.

@@ -8,9 +8,9 @@ name: one-bootstrap
 
 # Bootstrap Liferay One Workspace
 
-Manage the local Liferay Docker environment via `scripts/bootstrap.sh`. Run from `workspaces/liferay-one-workspace/`.
+Manage the local Liferay Docker environment with `scripts/bootstrap.sh`. Run the script from `workspaces/liferay-one-workspace/`.
 
-The `up` bootstrap also builds the `liferay-one-etc-spring-boot:local` image, so the `liferay-one-etc-spring-boot` client extension comes up as a Docker Compose service alongside the portal and database rather than being started separately.
+The `up` command also builds the `liferay-one-etc-spring-boot:local` image. The `liferay-one-etc-spring-boot` client extension then starts as a Docker Compose service with the portal and the database. You do not start it separately.
 
 ## Commands
 
@@ -23,6 +23,8 @@ The `up` bootstrap also builds the `liferay-one-etc-spring-boot:local` image, so
 | `clean` | `docker compose down --volumes` |
 
 ## Usage
+
+Data loss. The `clean` command deletes every volume, and the database records go with them. Run `clean` only when you want an empty database.
 
 ```bash
 # Full bootstrap (first run or after image/config changes)

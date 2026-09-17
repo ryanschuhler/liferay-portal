@@ -8,51 +8,66 @@ name: one-review
 
 # One Review
 
-Run a complete review pass: automated formatting, then the shared review criteria worked against the branch diff, then the automated code review folded in.
+Run a complete review pass. First run the automated formatter. Then apply the shared review criteria to the branch diff. Then add the results of the automated code review.
 
-What a review covers — the lenses and their weighting, the rule files behind them, the mechanical sweep, the false-positive calibration, the finding format — lives in [`criteria.md`](./criteria.md), not here. This skill is the interactive workflow around it. The `one-team` reviewer charter reads the same file, which is why a finding from either is interchangeable. **New review heuristics go in `criteria.md`.**
+[`criteria.md`](./criteria.md) defines what a review covers: the lenses and their weighting, the rule files behind them, the mechanical sweep, the calibration of false positives, and the format of a finding. This file does not repeat that content. This skill is the interactive workflow around `criteria.md`. The `one-team` reviewer charter reads the same file, so a finding from either reviewer means the same thing. **Put every new review heuristic in `criteria.md`.**
 
-**Under `--adversarial`, read [`orchestration.md`](./orchestration.md) first and follow it** — independent passes, who may read the diff, how findings combine. It replaces this session's own reading with delegated passes and governs everything below. Without the flag it is not read at all, and the steps below are worked here as written.
+**Under `--adversarial`, read [`orchestration.md`](./orchestration.md) first, then obey it.** That file defines the independent passes, who may read the diff, and how the findings combine. It replaces this session's own reading with delegated passes, and it governs every step below. Without the flag, do not read that file at all. Work the steps below in this session, as written.
 
-Two things follow from that file being separate. **A session whose own prompt names it a pass ignores `orchestration.md` entirely**, whatever flags it was given, and works Steps 1 through 5 here — that is what stops a pass spawning passes of its own. And everything a pass must obey lives in *this* file, four obligations especially, because their reasons live in the other one. A pass **always runs Step 1 in its check-only form**, whatever flags the run carries: passes share one checkout, and two mutating formatters at once corrupt the tree they are all reading. It **writes no receipt** — Record the Verdict belongs to the session combining the passes, and a pass's receipt is one `/one-pr` later reads as evidence the branch was reviewed. It **stops after Step 5**, no Step 6. And it **records no independence state**, writing no Independence, Passes, or Dropped candidates section, since those describe a combination it cannot see.
+Two results follow from that file being separate.
+
+First, **a session whose own prompt names it a pass ignores `orchestration.md` completely**, whatever flags the run carries. Such a session works Steps 1 through 5 in this file. This rule stops a pass from spawning passes of its own.
+
+Second, everything a pass must obey lives in *this* file. Four obligations matter most, because `orchestration.md` holds the reasons for them and a pass never reads that file.
+
+- A pass **always runs Step 1 in its check-only form**, whatever flags the run carries. Every pass shares one checkout, and two mutating formatters that run at the same time corrupt the tree that all of them read.
+- A pass **writes no receipt**. Record the Verdict belongs to the session that combines the passes, and `/one-pr` later reads a receipt as evidence that a reviewer reviewed the branch.
+- A pass **stops after Step 5**. It does not run Step 6.
+- A pass **records no independence state**. It writes no Independence section, no Passes section, and no Dropped candidates section. Those sections describe a combination that a pass cannot see.
 
 ## Lanes
 
-Two lanes, one review. Everything lane-specific is in this table; the rest of this file and `criteria.md`'s shared rows apply to both.
+There are two lanes and one review. This table holds everything that differs between them. The rest of this file applies to both lanes, and so do the shared rows in `criteria.md`.
 
 | | Workspace lane | Scripts lane |
 | --- | --- | --- |
 | Reviews | `<WORKSPACE>` — client extensions, objects, site content | `<SCRIPTS>` — `one/` ETL and migration scripts |
 | Base ref `<BASE>` | `liferay-one/master-temp` | `liferay-one/main` |
-| Step 1 formatter | the `one-format` skill; `one-format --check` under `--read-only` | `bunx prettier --write <touched paths>` then `bun run lint`, from `<TARGET>`; `--check` in place of `--write` under `--read-only` |
-| Step 3 criteria rows | the workspace-tagged rows | the scripts-tagged rows |
-| Step 4 blast radius | trace into `<WORKSPACE>`, then into `<SCRIPTS>/one/` for anything crossing the contract | trace into `<SCRIPTS>`, then into the workspace's batch definitions and Spring Boot controllers |
-| Step 5 automated pass | run `/code-review` | skipped — `criteria.md` explains why the skill does not fit this lane |
-| Step 6 learn | the `one-review-learn` skill | the same skill, read from `<WORKSPACE>`, encoding into `<SCRIPTS>/.agents/rules/` and its ESLint config |
+| Step 1 formatter | The `one-format` skill. Under `--read-only`, run `one-format --check` | Run `bunx prettier --write <touched paths>` from `<TARGET>`, then run `bun run lint`. Under `--read-only`, use `--check` in place of `--write` |
+| Step 3 criteria rows | The rows tagged for the workspace lane | The rows tagged for the scripts lane |
+| Step 4 blast radius | Trace into `<WORKSPACE>`. Then trace into `<SCRIPTS>/one/` for each symbol that crosses the contract | Trace into `<SCRIPTS>`. Then trace into the batch definitions and the Spring Boot controllers of the workspace |
+| Step 5 automated pass | Run `/code-review` | Skip it. `criteria.md` explains why the skill does not fit this lane |
+| Step 6 learn | Run the `one-review-learn` skill | Run the same skill. Read it from `<WORKSPACE>`. Encode the results into `<SCRIPTS>/.agents/rules/` and into the ESLint configuration of that repository |
 
-**The invoking directory is the lane.** A session rooted anywhere inside the `scripts` checkout is the scripts lane; one rooted inside `liferay-one-workspace` is the workspace lane. That is the default and needs no confirmation. `criteria.md` is read in place from `<WORKSPACE>` in both lanes, like the rule files — resolve `<WORKSPACE>` as `workspaces/liferay-one-workspace` inside a sibling `liferay-portal` checkout, conventionally `../liferay-portal/workspaces/liferay-one-workspace` from the scripts repo's root, and confirm it by finding `client-extensions/liferay-one-batch/batch/` beneath it.
+**The invoking directory selects the lane.** A session that starts anywhere inside the `scripts` checkout is the scripts lane. A session that starts inside `liferay-one-workspace` is the workspace lane. This is the default, and it needs no confirmation.
 
-A diff that reaches outside `<TARGET>` is a blocker in both lanes, per `criteria.md`.
+Both lanes read `criteria.md` in place from `<WORKSPACE>`, as they read the rule files. Resolve `<WORKSPACE>` as `workspaces/liferay-one-workspace` inside a sibling `liferay-portal` checkout. From the root of the scripts repository, the usual path is `../liferay-portal/workspaces/liferay-one-workspace`. Confirm the path when you find `client-extensions/liferay-one-batch/batch/` below it.
+
+A diff that changes a file outside `<TARGET>` is a blocker in both lanes, per `criteria.md`.
 
 ## Flags
 
-- `--read-only` — review everything, change nothing in the working tree. Formatting is still verified, through the lane's check-only command rather than by fixing it; Step 6 is skipped because it writes source; no receipt is recorded; `/code-review` runs plain. Every check still runs, so coverage is identical. Two artifacts are still written, both inside the git common dir and neither in the tree: the derived criteria file that pass prompts point at, and the `write-tree` snapshot bounding a re-review round. The tree is what this flag protects, and the git directory is not the tree — the receipts have lived there for the same reason. Use it when something else owns the formatter, or when the caller is bound by a read-only rule; the `one-team` reviewer is, and this flag is what lets it run this skill.
-- `--fix` — apply all safe corrections automatically (format + lint + code-review fixes)
-- `--comment` — post review findings as inline GitHub PR comments. In the workspace lane this passes through to `/code-review`; in the scripts lane there is no automated pass to carry it, so post the findings directly. Validate every anchor against the PR head before posting — a comment on a line the diff never touched reads as a false positive.
-- `--adversarial` — **off by default.** Replace this session's own reading of the diff with two or more independent passes that cannot see each other, combined here, per [`orchestration.md`](./orchestration.md). It exists because a session that wrote the code, or was briefed by something that watched it get built, reviews it worse than a stranger would and cannot tell from inside. It costs what it sounds like: each pass is a full review, so the run is several times a plain one. Reach for it where being wrong is expensive — a migration that writes data, a contract other code depends on, anything going out to a customer — and where the reviewing session is the one that built the thing. A plain run is the right default everywhere else, and nothing below changes without the flag.
-- `--effort <low|medium|high|xhigh|max>` — passed through to `/code-review` (default: `medium`); no effect in the scripts lane
+- `--read-only` — Review everything. Change nothing in the working tree. Verify the formatting with the check-only command of the lane instead of correcting it. Skip Step 6, because Step 6 writes source. Record no receipt. Run `/code-review` plain. Every check still runs, so the coverage is the same as a plain run. The run still writes two artifacts. Both go inside the git common directory and neither goes in the tree: the derived criteria file that the pass prompts point at, and the `write-tree` snapshot that bounds a re-review round. This flag protects the tree, and the git directory is not the tree. The receipts live there for the same reason. Use this flag when another process owns the formatter, or when a read-only rule binds the caller. Such a rule binds the `one-team` reviewer, and this flag is what lets it run this skill.
+- `--fix` — Apply every safe correction automatically: format, lint, and the fixes from the code review.
+- `--comment` — Post the review findings as inline comments on the GitHub pull request. In the workspace lane, pass this flag through to `/code-review`. The scripts lane has no automated pass to carry it, so post the findings directly. Validate every anchor against the head of the pull request before you post. A comment on a line that the diff never touched reads as a false positive.
+- `--adversarial` — **Off by default.** Replace this session's own reading of the diff with two or more independent passes that cannot see each other. Combine the passes here, per [`orchestration.md`](./orchestration.md). The flag exists for one reason. A session that wrote the code reviews it worse than a stranger does, and so does a session that a builder briefed. Neither session can detect that from inside. The cost is high. Each pass is a full review, so two passes cost about twice a plain run and three passes cost about three times. Use the flag under two conditions together. The first: a mistake is expensive, as in a migration that writes data, a contract that other code depends on, or anything that goes out to a customer. The second: the reviewing session also built the change. A plain run is the correct default everywhere else. Without the flag, nothing below changes.
+- `--effort <low|medium|high|xhigh|max>` — Pass this value through to `/code-review`. The default value is `medium`. The flag has no effect in the scripts lane.
 
-`--read-only` contradicts `--fix` and `--comment`. When they arrive together, stop and ask which was meant rather than guessing.
+`--read-only` contradicts `--fix` and `--comment`. When they arrive together, stop and ask which one the caller meant. Do not guess.
 
 ## Step 1: Format
 
-Run the lane's Step 1 command from the Lanes table.
+Run the Step 1 command for the lane from the Lanes table.
 
-Under `--read-only`, run the check-only form. It is the non-mutating counterpart of every formatter step, so compliance is fully verified and nothing is written. Each violation becomes a finding under the Repo rules lens — report them, do not fix them, and do not re-run the mutating formatter to "confirm."
+Under `--read-only`, run the check-only form. It verifies every formatter step and writes nothing. Report each violation as a finding under the Repo rules lens. Do not fix the violations. Do not run the mutating formatter again to confirm them.
 
-Otherwise run the mutating form. If formatting fails, stop and report the error — do not review on a broken formatter pass.
+Otherwise run the mutating form. When the formatter fails, stop and report the error. Do not review a diff after a failed formatter run.
 
-A lint or formatter failure the diff did not introduce is not a finding. **Only the session confirms that**, and only in a throwaway worktree — `git -C <TARGET> worktree add --detach <tmp> <BASE>`, run the command there, remove it. In the workspace lane that materializes the whole portal checkout for one formatter run, so add `--no-checkout` and sparse-checkout just the paths the command needs. Never by checking out or stashing in the shared checkout: in a `one-team` run it holds staged work with no commit behind it, so one stash discards the change under review. Under `--adversarial` there is a second reason — passes are reading that tree concurrently, and every one of them would see a different repository than it started on — and there a pass reports such a failure as unconfirmed and leaves the confirming to the session. When it does fail at `<BASE>` too, say so plainly and move on.
+A lint failure or a formatter failure that the diff did not introduce is not a finding. **Only the session confirms that**, and only in a temporary worktree. Create the worktree with `git -C <TARGET> worktree add --detach <tmp> <BASE>`, run the command there, then remove the worktree. In the workspace lane that command checks out the whole portal repository for one formatter run. Add `--no-checkout` and sparse-checkout only the paths the command needs.
+
+Never confirm such a failure through a checkout or a stash in the shared checkout. In a `one-team` run the shared checkout holds staged work with no commit behind it, so one stash there discards the change under review.
+
+Under `--adversarial` a second reason applies. The passes read that tree at the same time, and each one would then see a repository that differs from the one it started on. Under that flag a pass reports such a failure as unconfirmed and leaves the confirmation to the session. When the command fails at `<BASE>` as well, say so plainly and continue.
 
 ## Step 2: Establish the Diff
 
@@ -64,57 +79,63 @@ git -C "${T}" diff "${BASE}...HEAD" --name-only
 git -C "${T}" diff "${BASE}...HEAD"
 ```
 
-**Pin every git call to `<TARGET>` with `-C`, here and everywhere below.** A shell's working directory is not guaranteed to persist between calls — several harnesses reset it — so a bare `git diff` silently reports on whatever repository the process happens to be sitting in. This is not theoretical: it establishes a review's diff against the wrong repo and nothing downstream can detect it, because every later step trusts the diff it was handed. It matters most in exactly the setups this skill already assumes: a worktree, a sibling workspace checkout, two repos open at once.
+**Pin every git call to `<TARGET>` with `-C`, in this step and in every step below.** The working directory of a shell does not always persist between calls, because a harness can reset it. A `git diff` without `-C` then reports on whichever repository the process sits in, and it gives no warning. The result is a review whose diff comes from the wrong repository. No later step detects that, because every later step trusts the diff it receives. The risk is highest in the setups this skill already assumes: a worktree, a sibling workspace checkout, or two repositories open at the same time.
 
-Include uncommitted work when there is any — `git -C "${T}" diff HEAD` and `git -C "${T}" diff --cached`. Staged-but-uncommitted is a normal shape, not an edge case: a `one-team` run reaches review with everything staged and nothing committed, so `${BASE}...HEAD` is empty there and `git diff --cached` is the whole change. If every one of them is empty, or the base is ambiguous, stop and ask rather than guessing.
+Include the uncommitted work when the tree holds any — `git -C "${T}" diff HEAD` and `git -C "${T}" diff --cached`. A staged and uncommitted change is a normal state, not a rare one. A `one-team` run reaches the review with every change staged and no change committed. There `${BASE}...HEAD` is empty, and `git diff --cached` holds the whole change. When all three commands return nothing, or when the base is ambiguous, stop and ask. Do not guess.
 
-Reviewing one specific commit rather than a branch, `merge-base` does not apply — that commit is not an ancestor of `<BASE>`, so it returns the wrong ancestor or nothing. Use the commit and its parent directly (`<SHA>~1..<SHA>`) and say in the report that this is what the review covered.
+To review one commit rather than a branch, do not use `merge-base`. That commit is not an ancestor of `<BASE>`, so `merge-base` returns the wrong ancestor or returns nothing. Use the commit and its parent directly (`<SHA>~1..<SHA>`), and state in the report that the review covered that range.
 
-Handed two object names instead — an `--adversarial` re-review round, per `orchestration.md` — diff them directly, `git -C "${T}" diff <old> <new>`. That two-argument form is the only one valid for both commits and trees; `merge-base` and the three-dot form both reject a tree outright, so a pass that reaches for the recipe above instead of this one stops on a fatal error.
+When the prompt hands you two object names instead — a re-review round under `--adversarial`, per `orchestration.md` — diff them directly, `git -C "${T}" diff <old> <new>`. The two-argument form is the only form that accepts both commits and trees. `merge-base` rejects a tree, and so does the three-dot form. A pass that uses the recipe above on two trees stops on a fatal error.
 
-Reviewing a pull request rather than the local branch: fetch its head into a worktree and read the diff there. A review that runs against the local checkout while reasoning about a remote PR reads the base and reports fixed code as broken.
+To review a pull request rather than the local branch, fetch its head into a worktree and read the diff there. A review that runs against the local checkout while it reasons about a remote pull request reads the base and reports corrected code as broken.
 
-Read the diff in full and note what kind of change it is: feature, refactor, fix, or deletion. Then read enough surrounding context per changed file to judge it — the rest of the class, the callers, the tests. Read what the lenses need, not the whole subsystem.
+Read the whole diff. Record the kind of change: feature, refactor, fix, or deletion. Then read the context around each changed file — the rest of the class, the callers, the tests. Read what the lenses need. Do not read the whole subsystem.
 
 ## Step 3: Work the Criteria
 
-Read [`criteria.md`](./criteria.md) and work it end to end against the diff: the lane's rule files, then every lens in its order, then the mechanical sweep. Apply the rows tagged for this lane and skip the other lane's. Regression risk is the one lens Step 4 owns instead — it reaches outside the diff, so it gets its own pass rather than a paragraph of attention here.
+Read [`criteria.md`](./criteria.md) and work the whole file against the diff, in this order: the rule files for the lane, then every lens in the order that file gives, then the mechanical sweep. Apply the rows tagged for this lane and skip the rows tagged for the other lane. Step 4 owns the Regression risk lens instead. That lens reads code outside the diff, so it gets a pass of its own rather than a paragraph of attention here.
 
-Under roughly two hundred changed lines, work the lenses inline — every subagent re-reads the diff and the rule files, so a fan-out on a small diff costs more than it saves. Past that, group the lenses into a handful of `sonnet` subagents rather than one per lens — correctness with concurrency, efficiency with architecture, security on its own, rules with simplicity — and put the mechanical sweep on `haiku`. That threshold is the whole rule on a plain run. **Under `--adversarial` this step belongs to a pass instead** — see `orchestration.md` — and is worked here only on that file's `orchestrated` fallback, where the threshold drops away: every lens runs in a subagent at any size, grouped as above, with prompts carrying pointers and the acceptance criteria only, nothing this session remembers or was told. Give each subagent the diff scope, its lenses, and the rule files behind them; set the model explicitly on every `Agent` call.
+For a diff below about two hundred changed lines, work the lenses in this session. Every subagent reads the diff and the rule files again, so a fan-out on a small diff costs more than it saves.
 
-Verification and the final judgment stay in this session. Under `--adversarial` they come with one limit: a candidate may be dropped here only where its citation is factually wrong, never on a judgment that the code handles it, and judgment goes to two separately spawned adjudicators per `orchestration.md`, every drop reported with the route that made it.
+For a larger diff, group the lenses into four `sonnet` subagents rather than one subagent per lens: correctness with concurrency, efficiency with architecture, security alone, and repo rules with simplicity. Put the mechanical sweep on `haiku`.
 
-Cross-repo consistency is a lens, not an afterthought: verify every ERC, field name, endpoint path, and payload shape the diff touches against the other repo, per that lens in `criteria.md`.
+That threshold is the whole rule on a plain run. **Under `--adversarial` a pass owns this step instead** — see `orchestration.md`. Work the step here only on the `orchestrated` fallback in that file. On that fallback the threshold no longer applies: run every lens in a subagent at any diff size, in the four groups above. The prompts carry pointers and the acceptance criteria only. They carry nothing this session remembers and nothing a briefing gave it.
+
+Give each subagent the scope of the diff, its lenses, and the rule files behind them. Set the model explicitly on every `Agent` call.
+
+This session keeps the verification and the final judgment. Under `--adversarial` one limit applies. Drop a candidate here only when its citation is factually wrong. Never drop a candidate on a judgment that the code handles the case. Send every such judgment to two adjudicators that you spawn separately, per `orchestration.md`. Report every drop with the route that dropped it.
+
+Cross-repo consistency is a lens of its own. Verify every ERC, every field name, every endpoint path, and every payload shape the diff touches against the other repository, per that lens in `criteria.md`.
 
 ## Step 4: Blast Radius
 
-The diff is the trigger for this step, not its boundary. Work the Regression risk lens in `criteria.md` as its own pass — it is the one lens whose whole subject is code the diff never touched, so a review that folds it into reading the diff has already skipped it.
+The diff starts this step. The diff does not bound it. Work the Regression risk lens in `criteria.md` as a pass of its own. The subject of that lens is the code the diff never touched. A review that works the lens while it reads the diff has already skipped it.
 
-**This step runs on every review, at any diff size.** The Step 3 size heuristic governs how the *lens* work is split; it does not apply here. A one-line change to a shared method has a larger blast radius than a two-hundred-line change to a leaf file, so the diff's size predicts nothing about the size of this step.
+**Run this step on every review, at any diff size.** The size threshold in Step 3 governs how you split the *lens* work, and it does not apply here. A change of one line to a shared method reaches more call sites than a change of two hundred lines to a file nothing imports. The size of the diff therefore predicts nothing about the size of this step.
 
-1. **Build the symbol list.** Derive it from the diff text, not from what the change set out to touch. Read the added and removed lines and take every identifier they declare, rename, or delete, plus every string literal shaped like a contract — an ERC, an endpoint path, a list-type value, a config key, an environment variable, a local-store column. Signatures, exported components and hooks, service methods, payload shapes, and shared types all fall out of that pass. Then drop what is genuinely private to a single file and **name every drop and its reason in the report**. Build the list mechanically because the alternative is recalling which symbols mattered, and recall returns the symbols this diff edited rather than the ones other code references.
+1. **Build the symbol list.** Derive the list from the text of the diff, not from the stated purpose of the change. Read the added lines and the removed lines, and take every identifier they declare, rename, or delete. Take every string literal that carries a contract: an ERC, an endpoint path, a list-type value, a config key, an environment variable, a column in the local store. That one pass also yields the signatures, the exported components and hooks, the service methods, the payload shapes, and the shared types. Then drop each symbol only one file uses, and **name every drop and its reason in the report**. Build the list mechanically. The alternative is to remember which symbols mattered, and memory returns the symbols this diff edited rather than the symbols other code references.
 
-1. **Find every reference.** Grep each symbol across `<TARGET>` and across the other repo per the Lanes table — by identifier and by string form both, since ERCs, endpoint paths, and dynamic keys never appear as identifiers. This is pure search, so fan it out: one `haiku` subagent per group of symbols, issued in a single message so they run concurrently, each returning `file:line` references and nothing more. Do not ask a subagent whether a call site is broken — that judgment stays here.
+1. **Find every reference.** Grep each symbol across `<TARGET>` and across the other repository, per the Lanes table. Search the identifier form and the string form both, because ERCs, endpoint paths, and dynamic keys never appear as identifiers. This step is search alone, so fan it out. Give one `haiku` subagent each group of symbols. Send the calls in a single message, so the subagents run at the same time. Each subagent returns `file:line` references and nothing more. Do not ask a subagent whether a call site is broken. This session keeps that judgment.
 
-1. **Read the call sites and judge them.** Against the new behavior, not the old, with `criteria.md`'s hardest-first list in hand — behavior changed behind an unchanged signature, parameters reordered where the types still line up, a newly nullable return, a caller's `catch` that no longer matches. Where the references are many, group them by calling module and hand each group to a `sonnet` subagent with the old and new behavior spelled out and a bounded deliverable; verify anything it returns yourself before it becomes a finding. Under `--adversarial` this step belongs to a pass; on that file's `orchestrated` fallback, where it is worked here, the call-site reading is delegated at any reference count above zero — "that caller is fine" is the judgment contamination makes from memory of the change's intent — and an empty search is recorded as a zero rather than handed to a reader to confirm an absence.
+1. **Read the call sites and judge them.** Judge each site against the new behavior, not the old one. Keep the list in `criteria.md` at hand, which orders the cases from hardest to easiest: a behavior change behind an unchanged signature, reordered parameters whose types still match, a return value that is now nullable, a `catch` in a caller that no longer matches the thrown type. When the reference count is too high to read every site in this session, group the references by calling module. Give each group to a `sonnet` subagent, with the old behavior, the new behavior, and one bounded deliverable. Verify what the subagent returns before it becomes a finding. Under `--adversarial` a pass owns this step. On the `orchestrated` fallback in that file, where this session works the step, delegate the call-site reading whenever the reference count is above zero. A contaminated session says "that caller is fine" from its memory of what the change intended. Record an empty search as a count of zero, and do not ask a reader to confirm that nothing exists.
 
-1. **Report the coverage.** Which symbols were traced, how many references each had, and which call sites were read — even when nothing was found — plus each symbol dropped as file-private and the reason it dropped. An unstated trace is indistinguishable from one that never happened, and an unstated drop from a symbol nobody thought of.
+1. **Report the coverage.** Name the symbols you traced, the reference count for each one, and the call sites you read. Report this even when you found nothing. Also name each symbol you dropped as private to one file, and the reason you dropped it. A reader cannot tell a trace you did not report from a trace that never ran. A reader cannot tell a drop you did not report from a symbol nobody listed.
 
-Set the model explicitly on every `Agent` call. When the session cannot spawn subagents, do the tracing inline and say so; never drop the step for lack of a fan-out.
+Set the model explicitly on every `Agent` call. When the session cannot spawn subagents, trace the symbols in this session and say so. Never skip this step because a fan-out is unavailable.
 
 ## Step 5: Automated Code Review
 
-Workspace lane: run the automated pass as `criteria.md` describes, passing any `--fix`, `--comment`, and `--effort` flags through to `/code-review`. Under `--read-only` the invocation is plain apart from `--effort`.
+Workspace lane: run the automated pass as `criteria.md` describes it. Pass the `--fix`, `--comment`, and `--effort` flags through to `/code-review`. Under `--read-only`, pass `--effort` alone.
 
-Scripts lane: skip it, per the Lanes table.
+Scripts lane: skip this step, per the Lanes table.
 
 ## Output
 
-One consolidated report, using the severity tags and finding format from `criteria.md`. Omit Mechanical when it found nothing. Everything else is stated either way — Format's one-line PASS included, since it is coverage like any other. A missing section is indistinguishable from a step that never ran.
+Write one consolidated report, with the severity tags and the finding format from `criteria.md`. Omit Mechanical when the sweep found nothing. State every other section in both states, and include the one-line PASS from Format, because that line reports coverage like any other line. A reader cannot tell a missing section from a step that never ran.
 
-**Four sections belong to `--adversarial` alone** and are omitted entirely on a plain run: Independence, Passes, Dropped candidates, and Completeness pass. They report on machinery a plain run does not have.
+**Four sections belong to `--adversarial` alone**, and a plain run omits all four: Independence, Passes, Dropped candidates, and Completeness pass. They report on work a plain run does not do.
 
-Under `--adversarial` each pass produces this shape individually and what reaches the reader is the combination, per Combining the Passes in `orchestration.md`: this session adds the Independence, Passes, and Dropped candidates sections — the parts no single pass can know — and changes nothing else a pass wrote except to merge duplicates and set severity. On a plain run those three sections are omitted and this session writes the report itself.
+Under `--adversarial` each pass writes a report in this shape, and the reader receives the combination of those reports, per Combining the Passes in `orchestration.md`. This session adds the Independence, Passes, and Dropped candidates sections, because no single pass can know them. This session changes nothing else a pass wrote, except to merge duplicate findings and to set the severity. On a plain run, omit those three sections and write the report in this session.
 
 ```
 ## Independence            (--adversarial only)
@@ -165,11 +186,11 @@ Identifier typos, string typos, then whitespace grouped by type
 APPROVED | CHANGES_REQUESTED — one line of reasoning
 ```
 
-If `--fix` ran, say which fixes were applied automatically and which need a human.
+When `--fix` ran, name the fixes the run applied automatically and the fixes that need a person.
 
 ## Record the Verdict
 
-Leave a receipt, so `/one-pr` can tell whether this branch was reviewed and at which commit:
+Write a receipt, so that `/one-pr` can tell whether a reviewer reviewed this branch, and at which commit:
 
 ```bash
 T=<TARGET>
@@ -190,18 +211,18 @@ mkdir -p "${RECEIPTS}"
 } > "${RECEIPTS}/$(git -C "${T}" rev-parse HEAD)"
 ```
 
-`--path-format=absolute` is not decoration: `--git-common-dir` alone returns a path relative to the repository, so a bare `$(git rev-parse --git-common-dir)` resolves against whatever directory the shell is sitting in and writes the receipt into the wrong tree — or into no repository at all.
+The `--path-format=absolute` option is necessary. `--git-common-dir` alone returns a path relative to the repository. A bare `$(git rev-parse --git-common-dir)` therefore resolves against whichever directory the shell sits in. It writes the receipt into the wrong tree, or into no repository at all.
 
-It lives inside the git directory, so it is never tracked, never reaches a PR diff, and needs no `.gitignore` entry. Use `--git-common-dir` rather than `--git-dir`: the latter is per-worktree, so a review run in a worktree would be invisible when the pull request goes out from the main checkout. The common directory is shared by every worktree of the repo, and since receipts are keyed by commit SHA there is nothing to collide.
+The receipt lives inside the git directory. Git never tracks it, it never reaches the diff of a pull request, and it needs no `.gitignore` entry. Use `--git-common-dir` rather than `--git-dir`. `--git-dir` returns one directory per worktree. A review that ran in a worktree then stays invisible when the pull request goes out from the main checkout. Every worktree of the repository shares the common directory, and the name of each receipt is a commit SHA, so two receipts never collide.
 
-Key it to the reviewed commit: a receipt is evidence about that commit and nothing later. Record `tree: dirty` honestly when the review covered staged or uncommitted work — a review of a working tree is not a review of whatever gets committed afterward, and `/one-pr` is right to ask again.
+Name the receipt after the reviewed commit. A receipt is evidence about that commit and about no later commit. Record `tree: dirty` when the review covered staged or uncommitted work. A review of a working tree is not a review of the commit that follows it, and `/one-pr` is right to ask again.
 
-`mode` is always recorded. `independence` and `reading` are written only under `--adversarial`, and a receipt without them simply means a standard run — not a missing field. Under the flag they matter together: `independence` says whose session answered for the branch, `reading` says where the work that produced the findings actually happened, and only the pair tells a later reader anything. `SELF` with `reading: fresh` is a delegated review worth what a fresh one is worth; `SELF` with `reading: contaminated` is the weakest thing this file can carry, and the same two words would have covered both. None of them fails `/one-pr`, which surfaces them rather than blocking.
+Always record `mode`. Write `independence` and `reading` under `--adversarial` only. A receipt without those two fields means a standard run. It does not mean a missing field. Under the flag, read the two fields as a pair. `independence` names the session that answered for the branch. `reading` names where the work that produced the findings happened. Neither field tells a later reader anything on its own. `SELF` with `reading: fresh` is a delegated review, and it is worth as much as a fresh one. `SELF` with `reading: contaminated` is the weakest record this file carries, and the word `SELF` alone covers both cases. Neither field fails `/one-pr`, which shows them rather than blocking on them.
 
-Skip this under `--read-only`, which writes no receipt. The caller owns the record there; for the `one-team` reviewer that record is `review.md`.
+Skip this section under `--read-only`, which writes no receipt. The caller owns the record there. For the `one-team` reviewer that record is `review.md`.
 
 ## Step 6: Learn
 
-Skip under `--read-only` — it writes rule files and memory, and a review whose findings are not yet adjudicated has nothing settled to harvest. Whoever owns the change runs it once the dust clears.
+Skip this step under `--read-only`. The step writes rule files and memory, and a review whose findings are not yet adjudicated holds nothing settled to harvest. Whoever owns the change runs the step once the findings settle.
 
-Otherwise invoke the `one-review-learn` skill, encoding into the lane's rule files per the Lanes table. It harvests correction patterns from this session — uncommitted changes, recent commits, PR comments — and encodes them as durable guardrails so the same issues do not recur.
+Otherwise invoke the `one-review-learn` skill, and encode the results into the rule files for the lane, per the Lanes table. The skill harvests correction patterns from three sources in this session: the uncommitted changes, the recent commits, and the comments on the pull request. It encodes them as durable guardrails, so the same issues do not recur.

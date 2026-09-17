@@ -15,9 +15,9 @@
 | PK `accountEntryId` | long | |
 | `externalReferenceCode` | string | Salesforce Account.Id (18-char); unique |
 | `name` | string | |
-| `description` | string | Prefer Salesforce; fall back to Marketplace |
+| `description` | string | Prefer the Salesforce value. Use the Marketplace value when Salesforce has none |
 | `logoId` | long | |
-| `parentAccountEntryId` | long | Force NULL; child account hierarchy lives on Contract |
+| `parentAccountEntryId` | long | Force NULL. Contract holds the hierarchy of the child accounts |
 | `type` | string | `business` · `person` |
 | `userId` | long | FK to User; Person-type accounts only |
 | `status` | string | `approved` · `inactive` · `closed` |
@@ -25,8 +25,8 @@
 | `defaultBillingAddressId` | long | FK to Address |
 | `defaultShippingAddressId` | long | FK to Address |
 | `internal` | boolean | Liferay employee test accounts |
-| `maxRequestors` | int | Cap on requestor seats; null = unlimited |
-| `creditLimit` | decimal | Liferay finance-set, A/R risk control |
+| `maxRequestors` | int | The limit on the seats for requestors. Null gives no limit |
+| `creditLimit` | decimal | The finance team of Liferay sets this value to control the risk on accounts receivable |
 | `availableCredit` | decimal | |
 | `creditStatus`, `holdReason` | string | |
 
@@ -58,7 +58,7 @@
 | Field | Type | Notes |
 |---|---|---|
 | PK `accountNoteId` | long | |
-| `uuid` | string | Preserved from Koroneiki for cross-system traceability |
+| `uuid` | string | The migration keeps this value from Koroneiki to trace the record between systems |
 | `externalReferenceCode` | string | Migrated Koroneiki `accountNoteKey` |
 | FK `accountEntryId` | long | |
 | `summary` | string | |
@@ -69,11 +69,11 @@
 | `status` | picklist | |
 | `createDate` | datetime | |
 | `createdByUserId` | long | FK to User |
-| `createdByUserName` | string | Frozen at creation; do not overwrite on edit |
+| `createdByUserName` | string | The creation sets this value. Do not overwrite it on an edit |
 | `modifiedDate` | datetime | |
 | `modifiedByUserId` | long | FK to User |
 | `modifiedByUserName` | string | |
-| `koroneikiAccountKey` | string | Parent Koroneiki accountKey; migration traceability |
+| `koroneikiAccountKey` | string | The parent accountKey in Koroneiki. It traces the migration |
 | `projectId` | long | FK to Project |
 
 ---
@@ -82,17 +82,17 @@
 
 **system:** `true`
 
-Liferay system Organization, migrated from support.liferay for FLS (First Line Support) and Liferay-internal orgs only. Partner-account orgs are migrated separately by the partner-account team. Wired for JSM team sync via `onAfterAdd`/`onAfterUpdate`/`onAfterDelete` object actions.
+This is the system Organization of Liferay. The migration moves it from support.liferay. The migration moves only the organizations for First Line Support (FLS) and the organizations internal to Liferay. The team for partner accounts migrates the organizations of a partner account separately. The `onAfterAdd`, `onAfterUpdate`, and `onAfterDelete` object actions sync the organization with a JSM team.
 
 | Field | Type | Notes |
 |---|---|---|
 | PK `organizationId` | long | |
-| `name` | string | Copied from Support Organization name |
-| `accountEntryId` | long | Custom field — owning account, e.g. Accenture FLS → Accenture account. Must be a plain field, not a relationship: Liferay forbids object relationships between two system objects (`L_ACCOUNT` and `L_ORGANIZATION` are both system). |
+| `name` | string | The migration copies the name of the Support Organization |
+| `accountEntryId` | long | A custom field for the account that owns the organization. For example, Accenture FLS points to the Accenture account. Use a plain field, not a relationship. Liferay forbids an object relationship between 2 system objects, and `L_ACCOUNT` and `L_ORGANIZATION` are both system objects. |
 
 **Relationships:**
 
-- `organizationToProject` (`L_ORGANIZATION → C_PROJECT`, one-to-many, disassociate) — the FLS partner use case: which customer projects an org supports. A project is supported by at most one org. Valid because `C_PROJECT` is a custom object. Drives partner-scoped project visibility (VIEW permission + restricted-page gating are a dependent follow-up).
+- `organizationToProject` (`L_ORGANIZATION → C_PROJECT`, one-to-many, disassociate) — this relationship records the customer projects that an organization supports. It serves the use case for an FLS partner. At most 1 organization supports a project. The relationship is valid because `C_PROJECT` is a custom object. It controls which projects a partner sees. The VIEW permission and the gate on a restricted page are a dependent follow-up.
 
 ---
 
@@ -103,7 +103,7 @@ Liferay system Organization, migrated from support.liferay for FLS (First Line S
 | Field | Type | Notes |
 |---|---|---|
 | PK `bannedEmailDomainId` | long | |
-| `domain` | string | e.g. `mailinator.com`; unique |
+| `domain` | string | For example, `mailinator.com`. The value is unique |
 | `reason` | string | |
 | `addedAt` | datetime | |
 | `addedByUserId` | long | |
@@ -114,7 +114,7 @@ Liferay system Organization, migrated from support.liferay for FLS (First Line S
 
 **system:** `false`
 
-Finance/A/R-set hard hold; overrides spend limits.
+The finance team sets this hard hold for accounts receivable. The hold overrides every spend limit.
 
 | Field | Type | Notes |
 |---|---|---|
@@ -122,7 +122,7 @@ Finance/A/R-set hard hold; overrides spend limits.
 | FK `accountId` | long | |
 | `reason` | string | |
 | `startDate` | datetime | |
-| `endDate` | datetime | Null = indefinite |
+| `endDate` | datetime | Null gives no end date |
 | `setByUserId` | long | Finance user |
 | `note` | string | |
 
@@ -137,14 +137,14 @@ Finance/A/R-set hard hold; overrides spend limits.
 | Field | Type | Notes |
 |---|---|---|
 | PK `CProductId` | long | |
-| `externalReferenceCode` | string | Source-specific (`PRDCT-*` for seeded and Marketplace products). Not a lookup key; the Salesforce key lives on the SKU. Salesforce events never create products; they only update the SKU carrying the Salesforce ID |
+| `externalReferenceCode` | string | The source sets this value. A seeded product and a Marketplace product use `PRDCT-*`. This value is not a lookup key, because the SKU holds the Salesforce key. A Salesforce event never creates a product. It only updates the SKU that holds the Salesforce ID |
 | `catalog` | string | `Liferay` · `AccountEntry` |
 | `name` | string | |
 | `description` | string | |
 | `isPrimary` | boolean | Default `false` |
-| `licenseKeyProductVersion` | string | Version string in generated keys, e.g. `dxp-7.4`; null for non-key products |
-| `productFamily` | picklist | DXP · Portal · SaaS · PaaS · Commerce · Analytics · EnterpriseSearch · AIHub · CMP · DataPlatform · DSR · Partner · Support · Training · Other. Normalized from SFDC `Product2.Family` (LXC → SaaS, DXP Cloud → PaaS, Commerce/Commerce Cloud → Commerce, Enterprise Search + Cloud → EnterpriseSearch). CMP is the Content Marketing Platform; Data Platform and Digital Sales Room (DSR) are their own families. Seeded as a `family` product specification. |
-| `metricCoverage` | string | Rules from SFDC Product Catalog |
+| `licenseKeyProductVersion` | string | The version string in a generated key, for example `dxp-7.4`. A product with no license key leaves it null |
+| `productFamily` | picklist | DXP · Portal · SaaS · PaaS · Commerce · Analytics · EnterpriseSearch · AIHub · CMP · DataPlatform · DSR · Partner · Support · Training · Other. The import normalizes this value from the SFDC field `Product2.Family` (LXC → SaaS, DXP Cloud → PaaS, Commerce/Commerce Cloud → Commerce, Enterprise Search + Cloud → EnterpriseSearch). CMP is the Content Marketing Platform. Data Platform is a family of its own. Digital Sales Room (DSR) is a family of its own. The seed writes this value as a `family` product specification. |
+| `metricCoverage` | string | The rules come from the SFDC Product Catalog |
 
 **CPSpecificationOption values (Marketplace app metadata)**
 
@@ -215,17 +215,17 @@ Finance/A/R-set hard hold; overrides spend limits.
 
 **system:** `true`
 
-The sellable unit. A product has one or more SKUs; each SKU maps one to one to a Salesforce `Product2`, which is Salesforce's sellable unit (`PricebookEntry` and `OpportunityLineItem` hang off it). Marketplace products such as AI Hub have one SKU per plan; migrated Salesforce products have exactly one.
+The SKU is the unit that Liferay sells. A product has 1 or more SKUs. Each SKU maps to 1 Salesforce `Product2`, the unit that Salesforce sells. A `PricebookEntry` and an `OpportunityLineItem` each reference that `Product2`. A Marketplace product such as AI Hub has 1 SKU for each plan. A migrated Salesforce product has exactly 1 SKU.
 
 | Field | Type | Notes |
 |---|---|---|
 | PK `CPInstanceId` | long | |
 | FK `CProductId` | long | Parent product |
-| `externalReferenceCode` | string | The only cross-system key; order items, price entries, and entitlement definitions reference the SKU by this value. Salesforce `Product2.Id` (18-char) for migrated Salesforce products; `PRDCT-*` (matching the parent product) for seeded and Marketplace single-SKU products |
+| `externalReferenceCode` | string | This value is the only key between the systems. An order item, a price entry, and an entitlement definition each reference the SKU by this value. A migrated Salesforce product uses the Salesforce `Product2.Id` (18-char). A seeded product and a Marketplace product with 1 SKU use `PRDCT-*`, which matches the parent product |
 | `sku` | string | SKU code |
-| `skuOptions` | list | Plan, sizing, and license options that distinguish SKUs of one product |
+| `skuOptions` | list | The options for the plan, the sizing, and the license that separate the SKUs of one product |
 
-Liferay Commerce has no system object definition for CPInstance, so custom objects cannot hold an object relationship to a SKU. They store `skuExternalReferenceCode` as a text field instead.
+Liferay Commerce has no system object definition for CPInstance. Therefore a custom object cannot hold an object relationship to a SKU. A custom object stores `skuExternalReferenceCode` as a text field.
 
 ---
 
@@ -260,7 +260,7 @@ Liferay Commerce has no system object definition for CPInstance, so custom objec
 
 **system:** `true`
 
-Replaces `SubscriptionItem`. Each row corresponds to a Salesforce OpportunityLineItem.
+This object replaces `SubscriptionItem`. Each row matches 1 Salesforce OpportunityLineItem.
 
 | Field | Type | Notes |
 |---|---|---|
@@ -271,14 +271,14 @@ Replaces `SubscriptionItem`. Each row corresponds to a Salesforce OpportunityLin
 | FK `CPInstanceId` | long | |
 | `quantity` | decimal(30,16) | |
 | `unitPrice`, `finalPrice` | decimal(30,16) | |
-| `name` | longtext | Product name at time of purchase; denormalized |
+| `name` | longtext | The name of the product at the time of purchase. Denormalized |
 | `sku` | string | SKU at time of purchase |
 | `subscription` | boolean | |
 | `subscriptionInfo` | string | |
 | `userId` | long | |
 | `createDate`, `modifiedDate` | datetime | |
 
-**Custom fields:** `cloudRegion` (e.g. `us-central1`), `machineType` (`Standard` · `High`), `orderType` (`New Business` · `Renewal`), `sizing` (int), `startDate`, `endDate`, `effectiveEndDate` (endDate + 30-day grace period), `status` (`Approved` · `Canceled` · `On Hold`), `spendLimit` (double; per-product spend cap), `opportunitySoldBy`
+**Custom fields:** `cloudRegion` (e.g. `us-central1`), `machineType` (`Standard` · `High`), `orderType` (`New Business` · `Renewal`), `sizing` (int), `startDate`, `endDate`, `effectiveEndDate` (endDate + 30-day grace period), `status` (`Approved` · `Canceled` · `On Hold`), `spendLimit` (double; the spend limit for each product), `opportunitySoldBy`
 
 ---
 
@@ -286,7 +286,7 @@ Replaces `SubscriptionItem`. Each row corresponds to a Salesforce OpportunityLin
 
 **system:** `false`
 
-> Temporary custom object until Liferay core provides a system `Contract` object. A migration ticket will be required at that point.
+> This custom object is temporary. It stays until Liferay core provides a system `Contract` object. That release needs a migration ticket.
 
 | Field | Type | Notes |
 |---|---|---|
@@ -298,10 +298,10 @@ Replaces `SubscriptionItem`. Each row corresponds to a Salesforce OpportunityLin
 | `contractTerm` | int | Term in months, e.g. 12 |
 | `contractBillingCadence` | int | e.g. 12 (months) |
 | `overageBillingCadence` | int | e.g. 3 (months) |
-| `ownerEmailAddress` | string | Resolved from Salesforce Contract owner |
-| `status` | string | Computed from CommerceOrderItem statuses |
+| `ownerEmailAddress` | string | The import resolves this from the owner of the Salesforce Contract |
+| `status` | string | The system computes this from the statuses of the CommerceOrderItems |
 | `renewalState` | string | |
-| `spendLimit` | double | Account-level spend cap from Salesforce |
+| `spendLimit` | double | The spend limit for the account, from Salesforce |
 
 ---
 
@@ -309,24 +309,24 @@ Replaces `SubscriptionItem`. Each row corresponds to a Salesforce OpportunityLin
 
 **system:** `false`
 
-Materialized grant records derived from CommerceOrderItems via EntitlementDefinitions.
+The system builds each grant record from a CommerceOrderItem through an EntitlementDefinition.
 
 | Field | Type | Notes |
 |---|---|---|
 | PK `entitlementId` | long | |
 | FK `entitlementDefinitionId` | long | |
 | FK `orderItemId` | long | Parent CommerceOrderItem that grants this entitlement |
-| FK `contractId` | long | Denormalized for fast lookup |
-| FK `projectId` | long | Project scoping the grant (`projectToEntitlement`), from the order's `salesforceProjectId` custom field; empty for project-less orders |
+| FK `contractId` | long | Denormalized for a fast lookup |
+| FK `projectId` | long | The project that scopes the grant (`projectToEntitlement`). The custom field `salesforceProjectId` on the order supplies it. An order with no project leaves it empty |
 | FK `usageDefinitionId` | long | For metered entitlements |
 | `name` | string | e.g. `database-size` · `vcpu` · `maxServers` · `licenseGeneration` |
 | `grantType` | string | `fixed` · `rollover` · `prepaid` · `metered` |
-| `quantity` | double | Soft cap — alerts at this level; overridden by `sizing` where applicable |
-| `maxQuantity` | double | Hard cap — blocks at this level |
+| `quantity` | double | The soft limit. The system alerts at this level. The field `sizing` overrides it where `sizing` applies |
+| `maxQuantity` | double | The hard limit. The system blocks at this level |
 | `startDate` | datetime | |
 | `endDate` | datetime | |
 
-The `endDate` is the grant's effective end. After a realignment amendment it may be earlier than the granting CommerceOrderItem's frozen `endDate`, in which case it equals that item's `effectiveEndDate`. Realignment expresses supersession through dates only; no status transition occurs at processing time.
+The `endDate` is the effective end of the grant. After a realignment amendment, the `endDate` can be earlier than the frozen `endDate` of the CommerceOrderItem that grants the entitlement. In that case the `endDate` equals the `effectiveEndDate` of that item. A realignment shows through the dates alone that a new grant replaces an old grant. No status changes when the system processes a realignment.
 
 ---
 
@@ -334,23 +334,23 @@ The `endDate` is the grant's effective end. After a realignment amendment it may
 
 **system:** `false`
 
-SKU-level entitlement template. One SKU → many EntitlementDefinitions. When a CommerceOrderItem is created for a SKU, one Entitlement is auto-generated per active EntitlementDefinition for that SKU.
+This object is the template for an entitlement on a SKU. One SKU has many EntitlementDefinitions. When the system creates a CommerceOrderItem for a SKU, it generates 1 Entitlement for each active EntitlementDefinition of that SKU.
 
 | Field | Type | Notes |
 |---|---|---|
 | PK `entitlementDefinitionId` | long | |
 | `externalReferenceCode` | string | e.g. `dxp-cloud-standard-database-size` |
-| `skuExternalReferenceCode` | string | ERC of the granting SKU (Salesforce `Product2.Id`); a text field because CPInstance has no system object definition |
+| `skuExternalReferenceCode` | string | The ERC of the SKU that grants the entitlement (Salesforce `Product2.Id`). This is a text field, because CPInstance has no system object definition |
 | `name` | string | e.g. `database-size`, `vcpu`, `maxServers`, `licenseGeneration` |
 | `displayName` | string | Human-readable, e.g. `Database Storage`, `License Generation` |
 | `unit` | string | GB · vCPU · count · requests · seats · boolean |
-| `defaultQuantity` | double | Default; overridden at order item level via `sizing` |
+| `defaultQuantity` | double | The default. The `sizing` field on the order item overrides it |
 | `grantType` | string | `fixed` · `rollover` · `metered` · `prepaid` |
-| FK `usageDefinitionId` | long | Nullable; only for metered/usage-type entitlements |
-| `productOptions` | string | JSON map of SKU option key/value pairs the order item must carry for this definition to apply; empty matches any |
-| `active` | boolean | Default `true`; set `false` to deprecate without deleting |
+| FK `usageDefinitionId` | long | Nullable. Only a metered entitlement or a usage entitlement uses it |
+| `productOptions` | string | A JSON map of the option keys and the option values of a SKU. The order item must carry these pairs before this definition applies. An empty map matches every order item |
+| `active` | boolean | The default is `true`. Set it to `false` to deprecate the definition and keep the record |
 
-**License generation:** Presence of an EntitlementDefinition with `name = 'licenseGeneration'` (`grantType = fixed`, `unit = boolean`) indicates the product can generate license keys. This replaces the old boolean `licenses` flag on products.
+**License generation:** An EntitlementDefinition with `name = 'licenseGeneration'` (`grantType = fixed`, `unit = boolean`) shows that the product can generate license keys. This definition replaces the earlier boolean flag `licenses` on a product.
 
 ---
 
@@ -372,14 +372,14 @@ SKU-level entitlement template. One SKU → many EntitlementDefinitions. When a 
 
 **system:** `false`
 
-> Also referred to as `ConsumptionMetric` in some arch docs.
+> Architecture documents also call this object `ConsumptionMetric`.
 
 | Field | Type | Notes |
 |---|---|---|
 | PK `usageDefinitionId` | long | |
 | `externalReferenceCode` | string | e.g. `storage-gb`, `page-views-monthly` |
 | `unit` | string | e.g. GB, page views, vcpu, AI tokens |
-| `aggregationType` | string | count / sum. Renamed from `aggregation`: a field literally named `aggregation` collides with Liferay's reserved OData aggregation term and generates an empty DB column name, so the object fails to publish (`CREATE TABLE` syntax error). |
+| `aggregationType` | string | count / sum. This field replaces `aggregation`. The name `aggregation` matches a reserved OData term in Liferay. That match generates an empty column name in the database, and the object then fails to publish with a `CREATE TABLE` syntax error. |
 | `period` | string | Per month, day, hour |
 | `quantity` | double | Base unit quantity |
 | `overageRate` | double | |
@@ -399,7 +399,7 @@ SKU-level entitlement template. One SKU → many EntitlementDefinitions. When a 
 | FK `usageDefinitionId` | long | |
 | `eventTimestamp` | datetime | |
 | `quantity` | double | |
-| `dedupeKey` | string | Idempotent; client-assigned |
+| `dedupeKey` | string | Idempotent. The client assigns it |
 
 ---
 
@@ -407,9 +407,21 @@ SKU-level entitlement template. One SKU → many EntitlementDefinitions. When a 
 
 **system:** `false`
 
-Aggregated periodic report over UsageEvents. The report target is polymorphic — a report can roll up at any level (project, contract, order, environment), expressed via `targetType` + `targetClassName` + `targetPK`, mirroring the `Property` pattern. A `usageDefinitionToUsageReport` and a `projectToUsageReport` relationship provide the primary FK rollups: usage reports are children of the project they belong to (the dashboard is project-scoped, and `projectToContract` still reaches the contract in one hop). `commerceOrderId` is a denormalized plain field — not a relationship FK — holding the standalone overage order this report generated, as an audit trail. It is deliberately a plain field rather than a `usageReportToCommerceOrder` relationship: a navigable edge into the system CommerceOrder object puts a cycle through the object entry OData entity model, which throws `IllegalArgumentException: Name is null` and 500s every `/o/c/...` endpoint that embeds it (projects, contracts).
+This object aggregates the UsageEvents of one period into a report. The target of a report is polymorphic. A report can aggregate at the level of a project, a contract, an order, or an environment. The fields `targetType`, `targetClassName`, and `targetPK` express the target, as the `Property` object does.
 
-**Consumption-based billing workflow (E24 / LPD-88265).** On the first of every month `UsageReportService` (in `liferay-one-etc-spring-boot`, `@Scheduled` cron `liferay.one.usage.report.cron`) queries the datawarehouse — mocked for now — for the prior month's metered consumption, compares each metered entitlement's usage against its allotment, and records every overage as a UsageReport in the `readyForReview` state. `reviewStatus` is a picklist **state field** (`Ready for Review` → `Approved` · `Completed`) backed by `LT_USAGE_REPORT_REVIEW_STATUS`; a reviewer works reports in the Liferay Objects admin UI. Setting a report to `Approved` (invoice needed) fires the `UsageReportApproved` `onAfterUpdate` object action → `ObjectActionUsageReportApprovedRestController`, which creates the standalone overage commerce order (order line = `overageQuantity` × the UsageDefinition's `overageRate`), writes its id back to `commerceOrderId`, and pushes it to Salesforce as an opportunity, mirroring the AI Hub token purchasing flow. Setting a report to `Completed` (no invoice needed) is terminal and creates nothing. The controller is idempotent: it no-ops unless `reviewStatus` is `approved` and `commerceOrderId` is unset. The `accountExternalReferenceCode`, `contractExternalReferenceCode`, and `skuExternalReferenceCode` fields are denormalized onto the report so the object action can build the order without traversing relationships over headless.
+The relationships `usageDefinitionToUsageReport` and `projectToUsageReport` give the primary foreign keys for the aggregation. A usage report is a child of the project it belongs to. The dashboard has the scope of a project, and `projectToContract` reaches the contract in 1 step.
+
+The field `commerceOrderId` is a denormalized plain field, and not a foreign key of a relationship. It holds the separate overage order that this report generated, and it gives an audit trail. This field is a plain field, and not a `usageReportToCommerceOrder` relationship, for a reason. A navigable edge into the system CommerceOrder object makes a cycle in the OData entity model for object entries. The cycle throws `IllegalArgumentException: Name is null`. Every `/o/c/...` endpoint that embeds the object then returns a 500 response, for projects and for contracts.
+
+**Consumption-based billing workflow (E24 / LPD-88265).** `UsageReportService` runs on the first day of every month. The service is in `liferay-one-etc-spring-boot`, and the `@Scheduled` cron `liferay.one.usage.report.cron` starts it. The service queries the datawarehouse for the metered consumption of the previous month. The datawarehouse is a mock today. The service compares the usage of each metered entitlement against the allotment of that entitlement. The service records each overage as a UsageReport in the `readyForReview` state.
+
+`reviewStatus` is a picklist **state field** (`Ready for Review` → `Approved` · `Completed`). The list type `LT_USAGE_REPORT_REVIEW_STATUS` backs it. A reviewer works on the reports in the admin UI of Liferay Objects.
+
+A reviewer sets a report to `Approved` when the account needs an invoice. That change fires the `UsageReportApproved` `onAfterUpdate` object action, which calls `ObjectActionUsageReportApprovedRestController`. The controller creates the separate overage commerce order. The order line is `overageQuantity` × the `overageRate` of the UsageDefinition. The controller writes the id of that order back to `commerceOrderId`. The controller then pushes the order to Salesforce as an opportunity, as the flow that purchases AI Hub tokens does.
+
+A reviewer sets a report to `Completed` when the account needs no invoice. This state is terminal and creates nothing.
+
+The controller is idempotent. It does nothing unless `reviewStatus` is `approved` and `commerceOrderId` is empty. The report holds the denormalized fields `accountExternalReferenceCode`, `contractExternalReferenceCode`, and `skuExternalReferenceCode`. These fields let the object action build the order without a traverse of the relationships over headless.
 
 | Field | Type | Notes |
 |---|---|---|
@@ -417,18 +429,18 @@ Aggregated periodic report over UsageEvents. The report target is polymorphic �
 | FK `usageDefinitionId` | long | Via `usageDefinitionToUsageReport` relationship |
 | FK `projectId` | long | Via `projectToUsageReport` relationship |
 | `reviewStatus` | string | State picklist: `readyForReview` · `approved` · `completed` (`LT_USAGE_REPORT_REVIEW_STATUS`) |
-| `commerceOrderId` | long | Denormalized audit link to the generated overage order; not a relationship FK |
-| `accountExternalReferenceCode` | string | Denormalized; order-build input for the approved action |
-| `contractExternalReferenceCode` | string | Denormalized; order-build input for the approved action |
-| `skuExternalReferenceCode` | string | Denormalized; the product SKU billed on the overage order |
-| `aggregateQuantity` | double | Consumed quantity in the period |
-| `entitledQuantity` | double | Allotted quantity for the period |
+| `commerceOrderId` | long | A denormalized link to the generated overage order, for audit. It is not a foreign key of a relationship |
+| `accountExternalReferenceCode` | string | Denormalized. The approved action uses it to build the order |
+| `contractExternalReferenceCode` | string | Denormalized. The approved action uses it to build the order |
+| `skuExternalReferenceCode` | string | Denormalized. The overage order bills this product SKU |
+| `aggregateQuantity` | double | The quantity that the period consumed |
+| `entitledQuantity` | double | The quantity that the period allots |
 | `overageQuantity` | double | `aggregateQuantity − entitledQuantity` |
-| `overageAmount` | double | Billed amount: `overageQuantity` × UsageDefinition `overageRate` |
+| `overageAmount` | double | The billed amount: `overageQuantity` × the `overageRate` of the UsageDefinition |
 | `overageCurrency` | string | USD / EUR / JPY, from the UsageDefinition |
 | `targetType` | string | `project` · `contract` · `order` · `environment` |
-| `targetClassName` | string | Denormalized class name of the report target |
-| `targetPK` | long | PK of the report target instance |
+| `targetClassName` | string | The denormalized class name of the target of the report |
+| `targetPK` | long | The PK of the target instance of the report |
 | `generatorClassName` | string | |
 | `generatedAt` | datetime | |
 | `dateFrom` | datetime | |
@@ -446,18 +458,18 @@ Aggregated periodic report over UsageEvents. The report target is polymorphic �
 |---|---|---|
 | PK `environmentId` | long | |
 | FK `subscriptionId` | long | FK to Contract |
-| `name` | string | Reported by the environment on activation |
+| `name` | string | The environment reports this name at activation |
 | `offering` | string | `AI Hub` · `Analytics Cloud` · `Cloud Native` · `DSR` · `LDP` · `On-Prem` · `PaaS` · `SaaS` |
 | `type` | string | `non-production` · `production` · `uat`; cloud only |
 | `region` | string | Cloud only; blank for on-prem |
-| `disasterRecoveryRegion` | string | Cloud only; secondary region for disaster recovery, alongside `region` |
-| `ownerEmailAddress` | string | Cloud only; workspace owner collected on activation. On SaaS this is the Analytics Cloud workspace owner, mirroring Customer Portal's `lxc.analyticsCloudOwnersEmailAddress` |
+| `disasterRecoveryRegion` | string | Cloud only. The second region for disaster recovery, beside `region` |
+| `ownerEmailAddress` | string | Cloud only. The activation collects the owner of the workspace. On SaaS this value is the owner of the Analytics Cloud workspace. It matches `lxc.analyticsCloudOwnersEmailAddress` in Customer Portal |
 | `activationMode` | string | `license-key` · `offline` · `online` |
 | `status` | string | `active` · `deactivated` · `expired` |
 | `lastHeartbeatAt` | datetime | Cloud only |
-| `currentEntitlementHash` | string | Identity hash; enables change detection on heartbeat |
+| `currentEntitlementHash` | string | An identity hash. The heartbeat uses it to detect a change |
 | `hostName` | string | On-prem only |
-| `domains` | string | On-prem only; allowed domain list |
+| `domains` | string | On-prem only. The list of the domains that the environment allows |
 | `ipAddresses` | longtext | On-prem only |
 | `macAddresses` | longtext | On-prem only |
 | `serverId` | longtext | On-prem only |
@@ -477,7 +489,7 @@ Aggregated periodic report over UsageEvents. The report target is polymorphic �
 | `lastName` | string | |
 | `githubUsername` | string | PaaS only; SaaS collects no GitHub username |
 
-> One row per project admin nominated on the PaaS or SaaS activation form. The first admin is also denormalized onto Environment's `adminEmailAddress`, `adminFirstName`, `adminLastName` and `githubUsername`.
+> The activation form for PaaS or SaaS nominates the administrators of a project. This object holds 1 row for each administrator. Environment also holds the first administrator in the denormalized fields `adminEmailAddress`, `adminFirstName`, `adminLastName`, and `githubUsername`.
 
 ---
 
@@ -488,7 +500,7 @@ Aggregated periodic report over UsageEvents. The report target is polymorphic �
 | Field | Type | Notes |
 |---|---|---|
 | PK `licenseKeyId` | long | |
-| `uuid` | string | Preserved from Provisioning for cross-system traceability |
+| `uuid` | string | The migration keeps this value from Provisioning to trace the record between systems |
 | `createdByUserId` | long | FK to User |
 | `createdByUserName` | string | Denormalized |
 | `createDate` | datetime | |
@@ -496,14 +508,14 @@ Aggregated periodic report over UsageEvents. The report target is polymorphic �
 | `modifiedByUserName` | string | Denormalized |
 | `modifiedDate` | datetime | |
 | FK `accountEntryId` | long | |
-| FK `projectId` | long | Nullable; set when the key is scoped to a project, else account-only |
+| FK `projectId` | long | Nullable. The system sets it when the key has the scope of a project. Otherwise the key has the scope of an account |
 | FK `entitlementId` | long | |
 | `orderId` | long | FK to CommerceOrderItem via `assetReceiptLicenseUuid` |
-| `entitlementName` | string | Name of the attached entitlement |
+| `entitlementName` | string | The name of the attached entitlement |
 | FK `CProductId` | long | |
 | `accountEntryCode` | string | Denormalized |
 | `accountEntryName` | string | Denormalized |
-| `licenseName` | string | Hard-coded from LicenseEntry on migration |
+| `licenseName` | string | The migration copies this value from LicenseEntry |
 | `licenseType` | string | `production` · `cluster` · `developer` · `enterprise` · `oem` · `per-user` · `limited` · `virtual-cluster` · `free` · `developer-cluster` |
 | `licenseVersion` | int | |
 | `productName` | string | Denormalized from CProduct |
@@ -517,10 +529,10 @@ Aggregated periodic report over UsageEvents. The report target is polymorphic �
 | `maxUsers` | long | |
 | `maxHttpSessions` | int | |
 | `maxClusterNodes` | int | |
-| `sizing` | string | Copied from CommerceOrderItem for license generation convenience |
+| `sizing` | string | The system copies this value from CommerceOrderItem to generate the license |
 | `name` | string | |
 | `description` | string | |
-| `licenseKey` | longtext | The actual license XML/key payload |
+| `licenseKey` | longtext | The XML payload of the license key |
 | `startDate` | datetime | |
 | `customExpirationDate` | datetime | |
 | `additionalInfo` | longtext | |
@@ -540,12 +552,12 @@ Aggregated periodic report over UsageEvents. The report target is polymorphic �
 | `accountEntryId` | long | |
 | `classNameId` | long | e.g. classNameId of CommerceOrderItem, AccountEntry |
 | `className` | string | Denormalized, e.g. `CommerceOrderItem` |
-| `classPK` | long | PK of the target entity instance |
+| `classPK` | long | The PK of the target instance of the entity |
 | `name` | string | e.g. `koroneikiAccountKey`, `nonProductionSubscriptionUuid` |
 | `value` | string | e.g. `12345-abcde` |
-| `metadataJson` | text | JSON metadata blob |
+| `metadataJson` | text | The metadata as JSON |
 
-> External system references (formerly `ExternalLink`) are stored as Property rows: `name = '{domain}:{entityName}'`, `value = entityId`.
+> A Property row stores each reference to an external system. The earlier object was `ExternalLink`. The row sets `name = '{domain}:{entityName}'` and `value = entityId`.
 
 ---
 
@@ -573,4 +585,4 @@ Aggregated periodic report over UsageEvents. The report target is polymorphic �
 
 ## See Also
 
-- [`workspace.md`](./workspace.md) — workspace layout and client extensions
+- [`workspace.md`](./workspace.md) — the layout of the workspace and the client extensions

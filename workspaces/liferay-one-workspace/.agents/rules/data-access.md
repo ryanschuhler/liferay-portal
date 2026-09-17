@@ -1,6 +1,8 @@
 # Data Access
 
-Nearly every read in this workspace is a network call — a headless API request from `liferay-one-custom-element`, or a Liferay/Salesforce/Jira call from `liferay-one-etc-spring-boot`. The cost of a sloppy read is not a few wasted cycles; it is a page that takes eight seconds, or a synchronizer that issues four thousand requests where forty would do.
+Almost every read in this workspace is a network call. `liferay-one-custom-element` sends a headless API request. `liferay-one-etc-spring-boot` calls Liferay, Salesforce, or Jira.
+
+An inefficient read costs more than processor time. It produces a page that takes eight seconds to load, or a synchronizer that sends four thousand requests in place of forty.
 
 These rules are about the *shape* of a read. They apply to both lanes: the migration scripts in the sibling `scripts` checkout hit the same APIs, over far more records.
 
@@ -65,21 +67,27 @@ const {items: accounts} = await HeadlessAdminUser.getAccounts(
 const accountsById = new Map(accounts.map((account) => [account.id, account]));
 ```
 
-The two fixes, in order of preference: a filter that fetches the whole set in one call, or a batch endpoint. Only when neither exists does a loop become acceptable — and then say so, because the next reader will assume it was an oversight.
+There are two corrections. The first is a filter that reads the whole set in one call. The second is a batch endpoint. Use a loop only when the API offers neither. A loop without that explanation looks like a mistake to the next reader.
 
 This is not in tension with the one-row rule above. Fetching a page is right when you need every element of it and wrong when you need one.
 
 ## Hoist What Does Not Change
 
-Anything invariant across iterations belongs above the loop: an OAuth2 authorization header, a resolved channel or object-type ID, a compiled `RegExp`, a `DateTimeFormatter`, a constant request body. Re-deriving an auth token per item is the expensive version of this mistake — it is an extra network call per item hiding inside what looks like a local helper.
+Move every value that does not change between iterations above the loop. Five examples are an OAuth2 authorization header, a resolved channel ID or object type ID, a compiled `RegExp`, a `DateTimeFormatter`, and a constant request body.
+
+A new authorization token for each item is the most costly form of this error. A local helper that looks inexpensive sends one extra network call for each item.
 
 ## Nested Scans Become Map Lookups
 
-Two loops over the same collection is `O(n²)`. Build a `Map` or `Set` once, then look up in one pass. At forty records nobody notices; the migration scripts run this shape over hundreds of thousands.
+Two loops over one collection take `O(n²)` time. Build a `Map` or a `Set` one time, then read from it in a single pass. At forty records the difference is small. The migration scripts run this code over hundreds of thousands of records.
 
 ## Bound Every Pagination
 
-`pageSize=-1` is correct for a genuinely bounded reference set — countries, currencies, an account's roles. It is a time bomb on anything company-scoped that grows: accounts, orders, license keys, tickets. For those, paginate explicitly and cap the total, or in the scripts lane extend `PaginationRun` and let it drive the pages.
+`pageSize=-1` is correct for a fixed reference set, such as the countries, the currencies, or the roles on one account.
+
+`pageSize=-1` is incorrect for a collection with company scope that grows: the accounts, the orders, the license keys, and the tickets. That collection grows with the customer data until the request times out.
+
+For a growing collection, request one page and set a limit on the total. In the scripts repository, extend `PaginationRun` and let it request each page.
 
 Never pass a user-supplied page size straight through to an outbound request.
 
@@ -99,4 +107,4 @@ const [account, orders] = await Promise.all([
 ]);
 ```
 
-Only parallelize what is genuinely independent — and never fan out an unbounded list of writes this way, since the server will rate-limit or interleave them in an order nothing guarantees.
+Run two requests at the same time only when neither request depends on the other. Do not start a list of writes this way when the list has no limit. The server then rate-limits the requests, or it applies them in an order that no rule sets.

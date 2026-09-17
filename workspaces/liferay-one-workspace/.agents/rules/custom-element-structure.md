@@ -1,10 +1,10 @@
 # Custom Element Structure
 
-Where a file lives in `liferay-one-custom-element` is the first thing a reader learns about it, and the thing that decays fastest. These rules fix the layout so a name tells you the tier, and the tier tells you what the file is allowed to do.
+The location of a file in `liferay-one-custom-element` tells a reader what the file does. These rules set the layout. The path gives the tier, and the tier gives the operations that the file may perform.
 
-Most of them are enforced — `yarn lint` for anything a single file can prove, `yarn lint:structure` for the two questions that need the whole import graph. The enforced rules are listed in the ledger at the bottom. Everything else here is a convention a reviewer applies.
+`yarn lint` enforces each rule that one file can prove on its own. `yarn lint:structure` enforces the two rules that need the full import graph. The table at the end of this file lists every enforced rule. A reviewer applies the other conventions in this file.
 
-This file is about where things live. [`custom-element-safety.md`](./custom-element-safety.md) covers the rules whose failure reaches a user — CSRF, XSS, filter injection, timezone-naive dates.
+This file gives the location of each kind of file. [`custom-element-safety.md`](./custom-element-safety.md) gives the rules that prevent a failure the user sees. Those failures are a missing CSRF token, cross-site scripting, filter injection, and a date that saves one day early.
 
 ## The Folders Under `src`
 
@@ -30,26 +30,32 @@ Folders that used to exist, and where their contents went:
 - `schema/` → `schemas/`. Every other folder is plural.
 - `hooks/data/` → `hooks/`. Hooks are flat. A hook that reads data is still a hook.
 
-Two of those moves landed beside a file that already owned the name, so the enums kept a suffix rather than merging: `types/accountEnums.ts` and `types/productEnums.ts`. That is not the end state. `types/product.ts` declares `ProductType` as a union of string literals while `types/productEnums.ts` declares the same name as a const object over the same values, and different files import whichever one they found first. `AccountRoleType` is worse — the two declarations carry **different value sets**, so the name means two things depending on the import. Reconciling them changes behavior at every call site and needs its own ticket; merging the files before that is done would only hide it.
+Two of these moves reached a folder that already held a file with the same name. Those two enum files therefore keep a suffix: `types/accountEnums.ts` and `types/productEnums.ts`. This is not the final state.
+
+`types/product.ts` declares `ProductType` as a union of string literals. `types/productEnums.ts` declares the same name as a constant object over the same values. Each file imports the declaration that its author found first.
+
+`AccountRoleType` is a larger problem. The two declarations hold **different value sets**, so the name has two meanings. The meaning depends on the import path.
+
+A merge of these declarations changes the behavior at every call site. That work needs its own ticket. A merge of the files before that ticket is complete conceals the problem.
 
 ## Services
 
-`services/` is the only place that talks to a server. Nothing outside it imports `fetcher` — `main.tsx` is the one exception, and only to hand the fetcher to SWR.
+Only `services/` calls a server. No file outside `services/` imports `fetcher`. There is one exception: `main.tsx` imports the fetcher to give it to SWR.
 
 ### Reads Go Direct, Writes Go Through Spring Boot
 
 A read may call Liferay directly from `services/headless/`, `services/objects/`, or `services/commerce/`.
 
-A write — POST, PUT, PATCH, DELETE — goes through `services/spring-boot/`, so the mutation is server mediated and the permission check does not live in the browser.
+A write goes through `services/spring-boot/`. A write is a POST, a PUT, a PATCH, or a DELETE. The server then performs the change, and the permission check stays on the server.
 
 ```ts
-// Wrong — a write in the headless tier.
+// Wrong. This is a write in the headless tier.
 // src/services/headless/HeadlessAdminUser.ts
 static async deleteRoleAccountUser(accountId, roleId, userId) {
 	return fetcher.delete(`/o/headless-admin-user/v1.0/...`);
 }
 
-// Correct — the read stays here.
+// Correct. A read belongs in this tier.
 static async getAccount(accountId) {
 	return fetcher<Account>(`/o/headless-admin-user/v1.0/accounts/${accountId}`);
 }
@@ -59,15 +65,17 @@ The write moves to `services/spring-boot/Accounts.ts` and calls the Spring Boot 
 
 ### GraphQL Is The Default
 
-Prefer GraphQL. It returns the fields the caller asked for in one round trip, which is what most of these screens need. Reach for a REST service when GraphQL cannot express the call — a mutation, a file upload, an endpoint with no GraphQL surface.
+Use GraphQL. GraphQL returns the fields that the caller requests, in one request. This is what these screens need.
 
-There is exactly one GraphQL client: `services/graphql/GraphQL.ts`. Import that one.
+Use a REST service when GraphQL cannot express the call. Three examples are a mutation, a file upload, and an endpoint that GraphQL does not serve.
+
+There is one GraphQL client: `services/graphql/GraphQL.ts`. Import that client.
 
 ### The Service Tiers
 
-- `services/actions/` — write orchestration. A publish that touches a catalog, a price list, and an asset in sequence is an action, not a service method.
+- `services/actions/` — write orchestration. A publish operation changes a catalog, then a price list, then an asset. That sequence is an action, not a service method.
 - `services/commerce/` — commerce reads.
-- `services/fetcher/` — transport: the fetcher, its error type, the SWR cache, and the query string builders (`SearchBuilder`, `CreateFilters`). A query builder is a transport concern, not a generic helper, which is why it is not in `utils/`.
+- `services/fetcher/` — transport. This tier holds the fetcher, its error type, the SWR cache, and the query string builders `SearchBuilder` and `CreateFilters`. A query string builder is part of the transport, not a general helper, so it does not belong in `utils/`.
 - `services/graphql/` — the GraphQL client.
 - `services/headless/` — Liferay headless reads.
 - `services/liferay/` — the `Liferay` global and its wrappers.
@@ -84,11 +92,11 @@ Every top level page under `src/pages/` owns its routes:
 ```
 pages/MyAccount/
 	MyAccount.tsx           the page
-	MyAccountRouter.tsx     what main.tsx lazy loads
-	myAccountRoutes.tsx     the route table, once there is more than one route
-	components/             components only this page uses
-	hooks/                  hooks only this page calls
-	AccountDetails/         a route, in its own folder
+	MyAccountRouter.tsx     the file that main.tsx loads on demand
+	myAccountRoutes.tsx     the route table, when the page has two or more routes
+	components/             the components that only this page uses
+	hooks/                  the hooks that only this page calls
+	AccountDetails/         one route, in its own folder
 ```
 
 `main.tsx` registers one router per page, and every page now has one.
@@ -96,18 +104,18 @@ pages/MyAccount/
 A folder under `src/pages/X` is either a route or a component. A route sits directly under the page. A component goes in `components/`, however deep:
 
 ```
-# Wrong — a button is not a route
+# Wrong. A button is not a route.
 pages/MyAccount/AccountDetails/SyncToJSMButton/SyncToJSMButton.tsx
 
 # Correct
 pages/MyAccount/AccountDetails/components/SyncToJSMButton/SyncToJSMButton.tsx
 ```
 
-`AccountSelector` is a page, not a component: it has a router and `main.tsx` mounts it at the `account-selector` route.
+`AccountSelector` is a page. It is not a component. It has a router, and `main.tsx` mounts it at the `account-selector` route.
 
 ## No Index Files, No Catch-All Files
 
-`index.tsx` tells a reader nothing. Name a file after what it exports; a page is entered through its router.
+The name `index.tsx` gives a reader no information. Name a file after the thing that it exports. A page starts at its router.
 
 `utils.ts` and `types.ts` become folders, with one named file per concern:
 
@@ -120,27 +128,35 @@ pages/ProductPurchase/types/PaymentMethod.ts
 pages/ProductPurchase/types/PurchaseStep.ts
 ```
 
-A file whose name matches its folder matches its casing too — `Projects/Projects.ts`, never `Projects/projects.ts`.
+When a file name matches its folder name, the case must match as well. Write `Projects/Projects.ts`. Do not write `Projects/projects.ts`.
 
 ## One File, One Job
 
-A module is capped at 400 lines and 12 hook calls. Neither number is sacred; both are the point at which a file has stopped doing one thing. Split along the seam the file already has — a sub-component, a hook, the service call it wraps. Language files and tests are exempt: one is data, the other grows with what it covers.
+A module has a limit of 400 lines and 12 hook calls. These two numbers mark the point where a file performs more than one job. Divide the file at a boundary that already exists: a sub-component, a hook, or the service call that the file wraps.
 
-Modules must not import each other in a cycle. A cycle is not a style problem: whichever module in the ring loads first sees the others half-initialized, so a constant read at module scope is `undefined` in a way that depends on which entry point ran. `yarn lint:imports` reports the rings, and the same pass reports exports nothing imports.
+The limit does not apply to a language file or to a test. A language file is data. A test grows with the code that it covers.
 
-Only a value import can form one. `import type` is erased before the code runs, and so is a dynamic `import('...')`, which is deferred. Almost every ring this app had was a child component importing its parent's props type with a value import — `import type` is the whole fix. The exception is an enum, which is a real runtime value however type-like it reads: `RequestAccountStep` had to move out of the parent into a module both sides could import.
+Two modules must not import each other in a cycle. A cycle is not a style problem. One module in the cycle loads first, and it reads the other modules before they finish loading. A constant that the module reads at load time is then `undefined`, and the result depends on which entry point ran. `yarn lint:imports` reports each cycle. The same command reports each export that no file imports.
+
+Only a value import creates a cycle. TypeScript removes an `import type` before the code runs. A dynamic `import('...')` runs later, so it also creates no cycle.
+
+Almost every cycle in this app came from one pattern: a child component imported its parent's props type with a value import. `import type` corrects that pattern.
+
+An enum is the exception. An enum is a value at run time, even though it reads like a type. `RequestAccountStep` therefore moved out of the parent, into a module that the parent and the children both import.
 
 ## Components
 
-`src/components/` is for what more than one page shares. A component only one page reaches belongs under that page, where a reader looking at the page can see it — that is where `AppPublish` and the `AppReview*` family belong, since only `PublisherDashboard` reaches them.
+`src/components/` holds the components that two or more pages share.
 
-The reverse holds too. A component nested under one page that a second page has started importing is shared now, and belongs in `src/components/` before a third page copies it.
+A component that only one page uses belongs under that page. A reader who opens the page then sees the component. `AppPublish` and every `AppReview*` component belong under `PublisherDashboard`, because only `PublisherDashboard` uses them.
 
-Neither direction is visible in a single file, so `yarn lint:placement` walks the import graph and reports both.
+The opposite rule also applies. When a second page imports a component from under another page, that component is now shared. Move it to `src/components/` before a third page copies it.
+
+One file does not show either condition, so `yarn lint:placement` reads the import graph and reports both.
 
 ## Contexts
 
-A context lives in a `context/` folder — `src/context/` when more than one page reads it, otherwise beside the page or component that owns it. The file is named `<Name>ContextProvider.tsx`, one suffix across the app:
+A context belongs in a `context/` folder. Put it in `src/context/` when two or more pages read it. Otherwise put it beside the page or the component that owns it. Name the file `<Name>ContextProvider.tsx`. The app uses this one suffix:
 
 ```
 # Wrong
@@ -154,11 +170,15 @@ context/MarketplaceContextProvider.tsx
 
 ## Hooks
 
-A file in a `hooks/` folder exports hooks and nothing else, and each one calls a hook. A file that exports a query string builder beside its hook is two things; move the builder to `utils/` or to the service that owns the endpoint. A file that calls no hook at all is a plain function and was never a hook.
+A file in a `hooks/` folder exports only hooks, and each hook calls another hook.
+
+A file that exports a query string builder next to its hook does two jobs. Move the builder to `utils/`, or to the service that owns the endpoint.
+
+A file that calls no hook is a plain function. Move it out of the `hooks/` folder.
 
 ## Language Keys
 
-Every substitution in a key is written `x`, however many there are — never `y`, `z`, or a number:
+Write every substitution in a key as `x`. This applies to each substitution, whatever the count. Do not write `y`, `z`, or a number:
 
 ```ts
 // Wrong
@@ -170,7 +190,7 @@ Every substitution in a key is written `x`, however many there are — never `y`
 	'Includes {0} add-on buckets (+{1}) on top of the {2} base allotment per month.',
 ```
 
-A key is a lowercase kebab-case slug and carries no punctuation — the English text is the value, not the key:
+A key is a lowercase slug with hyphens between the words. A key carries no punctuation. The English text is the value, not the key:
 
 ```ts
 // Wrong
@@ -180,35 +200,45 @@ A key is a lowercase kebab-case slug and carries no punctuation — the English 
 'need-help-getting-started': 'Need help getting started?',
 ```
 
-User-facing text is never written inline. A literal in `alt`, `aria-label`, `label`, `placeholder`, or `title`, or as visible JSX text, is invisible to every locale but English — give it a key and call `translate()`.
+Do not write user-facing text in the component. A literal string in `alt`, `aria-label`, `label`, `placeholder`, or `title` reaches only an English reader. Visible JSX text reaches only an English reader. Add a key for the string and call `translate()`.
 
 ## No Comments
 
-The code says what it does. A comment restating it goes stale the moment the code moves, and the two then disagree with no way to tell which is right. `local/no-comments` is an error and auto-fixes, and it covers `//`, `/* */`, and the JSX `{/* */}` form. The only comment that survives is the SPDX licence header. Stylesheets are held to the same rule by stylelint's `comment-pattern`.
+The code states what it does. A comment that repeats the code becomes wrong when a developer changes the code, and a reader cannot tell which one is correct.
 
-What to do instead of a comment: name the thing. A condition that needed explaining becomes a named boolean, a magic value becomes a named constant, a block that needed a heading becomes a function whose name is that heading. A test says what an edge case is for better than a sentence above it does.
+`local/no-comments` is an error, and it corrects the file automatically. The rule reports the `//` form, the `/* */` form, and the JSX `{/* */}` form. The rule permits one comment: the SPDX licence header. The stylelint rule `comment-pattern` applies the same limit to a stylesheet.
 
-The exception the rule cannot see is a constraint that spans files — two copies of a stylesheet that must stay in sync, and why. Nothing in either file can express that, which is why the three CSS comments left in the tree are warnings rather than errors.
+Write a name instead of a comment. Convert a condition that needs an explanation into a named boolean. Convert a fixed value into a named constant. Convert a block that needs a heading into a function, and use the heading as the function name. A test states the purpose of an edge case more exactly than a sentence above the code.
+
+The rule cannot see one exception: a constraint that covers two files. One example is a pair of stylesheets that must hold the same rules. Neither file can state that constraint in code. The three CSS comments that remain in the repository are therefore warnings, not errors.
 
 ## Never Silence The Linter
 
-`// eslint-disable` is not a fix. Give the value a real type instead of `any`, move the file so it satisfies the structure rule, or raise the rule itself for discussion and change it for everyone.
+`// eslint-disable` does not correct a violation. Do one of three things instead. Declare the correct type for the value, in place of `any`. Move the file to the location that the structure rule requires. Or propose a change to the rule, and change it for the whole team.
 
 ## Dead Code Is Deleted, Not Moved
 
-`yarn lint:imports` reports every export nothing imports. A file that only its own dead neighbours import is dead too, however large and however plausible it looks — `utils/apiUtils.ts` was 650 lines of commerce API calls reached only from `utils/publishUtils.ts`, whose own three consumers wanted two helpers that already existed elsewhere. Neither file had a live caller. Check what imports a module before rewriting it; the answer is sometimes nothing.
+`yarn lint:imports` reports every export that no file imports. A file is dead when only other dead files import it. The size of the file does not change this result.
 
-Reachability has to count `import('...')` as well as `from '...'`, or every lazy loaded page looks dead — that form is how `main.tsx` and every routes file reach their pages. Cycles are the opposite: a dynamic import is deferred and orders nothing, so only static edges can form the ring that leaves a module half-initialized. `check-imports.js` reads both and uses each for the question it answers.
+`utils/apiUtils.ts` held 650 lines of commerce API calls. One file imported it: `utils/publishUtils.ts`. Three files imported `utils/publishUtils.ts`, and all three wanted two helpers that already existed in other modules. No live code called either file.
+
+Read the list of importers before you rewrite a module. The list is sometimes empty.
+
+A reachability check must count `import('...')` and `from '...'`. `main.tsx` and every routes file reach their pages through `import('...')`. A check that reads only `from '...'` reports every page as dead.
+
+A cycle check must do the opposite. A dynamic import runs later and sets no load order, so only a static import creates a cycle. `check-imports.js` reads both forms, and it uses each form for the question that it answers.
 
 ## Dependencies
 
-`yarn lint:deps` reconciles `package.json` against what the source imports. It reports a dependency nothing imports, and an import nothing declares — the second is the dangerous one, since it resolves today only because a transitive dependency happens to hoist it, and breaks the moment that package moves.
+`yarn lint:deps` compares `package.json` against the imports in the source. It reports a dependency that no file imports. It also reports an import that `package.json` does not declare.
 
-A package that is genuinely used without being imported — a peer range, a build plugin, a type package — goes in the script's `IMPLICITLY_USED` list with the reason.
+The second report is the more serious one. The import resolves today because another dependency installs that package. The import fails when that dependency changes its own dependencies.
+
+Some packages are in use but no file imports them. Three examples are a package that satisfies a peer range, a build plugin, and a type package. Add each one to the `IMPLICITLY_USED` list in the script, with the reason.
 
 ## Enforcement Ledger
 
-The workspace has not been cleaned up yet, so every structural rule is `warn`. The counts below are the outstanding work. Flip a rule to `error` in `tools/eslint-plugin-local/src/index.ts` as soon as its count reaches zero, so it cannot come back.
+A rule stays a warning while its count is above zero. The counts below give the remaining work. Change a rule to an error in `tools/eslint-plugin-local/src/index.ts` when its count reaches zero. The rule then prevents a new violation.
 
 | Rule | Open |
 | --- | --- |
@@ -227,4 +257,4 @@ The workspace has not been cleaned up yet, so every structural rule is `warn`. T
 | `yarn lint:deps` | 0 |
 | `yarn lint:sorted` | 0 |
 
-New code is held to the rule regardless of the ledger. The counts only go down.
+Every rule applies to new code, whatever the count in this table says. The counts only decrease.
