@@ -16,6 +16,17 @@ module.exports = {
 	plugins: require.resolve('@liferay/stylelint-plugin'),
 	rules: {
 		...rules,
+
+		// The code says what it does. The only comment a stylesheet carries is
+		// its licence header, which is what this pattern allows through.
+
+		'comment-pattern': [
+			/SPDX-(FileCopyrightText|License-Identifier)/,
+			{
+				severity: 'warning',
+			},
+		],
+
 		'liferay/no-block-comments': null,
 		'selector-type-no-unknown': [
 			true,

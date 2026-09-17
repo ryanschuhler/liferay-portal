@@ -182,6 +182,14 @@ A key is a lowercase kebab-case slug and carries no punctuation — the English 
 
 User-facing text is never written inline. A literal in `alt`, `aria-label`, `label`, `placeholder`, or `title`, or as visible JSX text, is invisible to every locale but English — give it a key and call `translate()`.
 
+## No Comments
+
+The code says what it does. A comment restating it goes stale the moment the code moves, and the two then disagree with no way to tell which is right. `local/no-comments` is an error and auto-fixes, and it covers `//`, `/* */`, and the JSX `{/* */}` form. The only comment that survives is the SPDX licence header. Stylesheets are held to the same rule by stylelint's `comment-pattern`.
+
+What to do instead of a comment: name the thing. A condition that needed explaining becomes a named boolean, a magic value becomes a named constant, a block that needed a heading becomes a function whose name is that heading. A test says what an edge case is for better than a sentence above it does.
+
+The exception the rule cannot see is a constraint that spans files — two copies of a stylesheet that must stay in sync, and why. Nothing in either file can express that, which is why the three CSS comments left in the tree are warnings rather than errors.
+
 ## Never Silence The Linter
 
 `// eslint-disable` is not a fix. Give the value a real type instead of `any`, move the file so it satisfies the structure rule, or raise the rule itself for discussion and change it for everyone.

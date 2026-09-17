@@ -51,7 +51,7 @@ const plugin = {
 				'local/no-ambient-type-declarations': 'warn',
 				'local/no-array-index-key': 'warn',
 				'local/no-bare-utils-or-types-file': 'error',
-				'local/no-comments': 'warn',
+				'local/no-comments': 'error',
 				'local/no-direct-web-storage': 'error',
 				'local/no-eslint-disable': 'warn',
 				'local/no-raw-fetch': 'error',
