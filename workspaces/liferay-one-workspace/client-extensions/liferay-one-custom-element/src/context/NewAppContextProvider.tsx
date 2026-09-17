@@ -703,7 +703,7 @@ export default function NewAppContextProvider({
 		{
 			onSuccess: (prices) =>
 				dispatch({
-					payload: {prices: prices as unknown as LicensingPrices},
+					payload: {prices},
 					type: NewAppTypes.SET_LICENSING,
 				}),
 		}

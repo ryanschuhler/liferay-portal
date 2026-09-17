@@ -9,6 +9,7 @@ import {SkuOptions} from '~/utils/productUtils';
 
 import {MarketplaceDeliveryProduct} from './MarketplaceDeliveryProduct';
 
+import type {LicensingPrices} from '~/context/NewAppContextProvider';
 import type {DeliveryProduct, Product, SKU} from '~/types/product';
 
 export class MarketplaceProduct extends MarketplaceDeliveryProduct {
@@ -45,13 +46,7 @@ export class MarketplaceProduct extends MarketplaceDeliveryProduct {
 				})
 			);
 
-		const prices = {} as {
-			[currency: string]: {
-				[sku: string]: {
-					[quantity: number]: number;
-				};
-			};
-		};
+		const prices: LicensingPrices = {};
 
 		const marketplaceProduct = new MarketplaceProduct(product);
 
