@@ -10,8 +10,8 @@ import EntitySelector, {
 } from '~/components/EntitySelector/EntitySelector';
 import {useAccounts, useCurrentAccount} from '~/hooks/useAccounts';
 import i18n from '~/i18n';
+import CommerceUI from '~/services/headless/CommerceUI';
 import {Liferay} from '~/services/liferay/liferay';
-import {setCurrentAccount} from '~/utils/setCurrentAccount';
 
 const SEARCH_DELAY = 400;
 
@@ -74,7 +74,7 @@ export default function AccountSelector() {
 			return;
 		}
 
-		await setCurrentAccount(accountId);
+		await CommerceUI.selectAccount(accountId);
 
 		const externalReferenceCode = (data?.items ?? []).find(
 			(item) => String(item.id) === accountId

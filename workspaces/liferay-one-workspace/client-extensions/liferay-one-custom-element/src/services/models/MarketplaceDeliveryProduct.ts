@@ -14,7 +14,7 @@ import {
 	ProductSpecificationKey,
 	ProductTypeLabels,
 } from '~/utils/productUtils';
-import {safeJSONParse} from '~/utils/publishUtils';
+import {safeJSONParse} from '~/utils/safeJSONParse';
 
 import type {DeliveryProduct} from '~/types/product';
 

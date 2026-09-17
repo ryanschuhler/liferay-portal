@@ -184,6 +184,10 @@ User-facing text is never written inline. A literal in `alt`, `aria-label`, `lab
 
 `// eslint-disable` is not a fix. Give the value a real type instead of `any`, move the file so it satisfies the structure rule, or raise the rule itself for discussion and change it for everyone.
 
+## Dead Code Is Deleted, Not Moved
+
+`yarn lint:imports` reports every export nothing imports. A file that only its own dead neighbours import is dead too, however large and however plausible it looks — `utils/apiUtils.ts` was 650 lines of commerce API calls reached only from `utils/publishUtils.ts`, whose own three consumers wanted two helpers that already existed elsewhere. Neither file had a live caller. Check what imports a module before rewriting it; the answer is sometimes nothing.
+
 ## Dependencies
 
 `yarn lint:deps` reconciles `package.json` against what the source imports. It reports a dependency nothing imports, and an import nothing declares — the second is the dangerous one, since it resolves today only because a transitive dependency happens to hoist it, and breaks the moment that package moves.
@@ -196,7 +200,7 @@ The workspace has not been cleaned up yet, so every structural rule is `warn`. T
 
 | Rule | Open |
 | --- | --- |
-| `yarn lint:imports` dead exports | 406 |
+| `yarn lint:imports` dead exports | 356 |
 | `service-layer-boundary` | 63 |
 | `yarn lint:placement` | 38 |
 | `file-complexity-budget` | 34 |

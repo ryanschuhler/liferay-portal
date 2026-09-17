@@ -20,7 +20,7 @@ import {
 	ProductTags,
 	ProductVocabulary,
 } from '~/utils/productUtils';
-import {safeJSONParse} from '~/utils/publishUtils';
+import {safeJSONParse} from '~/utils/safeJSONParse';
 
 import {UploadedFile} from '../components/FileList/FileList';
 

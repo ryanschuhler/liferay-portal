@@ -21,7 +21,23 @@ function changeResource(resource: RequestInfo) {
 	return `${liferayHost}/${path}`;
 }
 
-function getHeaders(options?: RequestInit): Record<string, string> {
+function isSameOrigin(resource: RequestInfo) {
+	return new URL(changeResource(resource).toString()).origin === liferayHost;
+}
+
+function parseJSON(text: string) {
+	try {
+		return JSON.parse(text);
+	}
+	catch {
+		return undefined;
+	}
+}
+
+function getHeaders(
+	resource: RequestInfo,
+	options?: RequestInit
+): Record<string, string> {
 	const defaultHeaders = options?.headers;
 
 	const normalizedHeaders = defaultHeaders
@@ -38,12 +54,15 @@ function getHeaders(options?: RequestInit): Record<string, string> {
 
 	const isFormData = options?.body instanceof FormData;
 
-	const headers: Record<string, string> = {
-		'x-csrf-token': Liferay.authToken,
-		...normalizedHeaders,
-	};
+	const sameOrigin = isSameOrigin(resource);
 
-	if (!hasContentType && !isFormData) {
+	const headers: Record<string, string> = sameOrigin
+		? {'x-csrf-token': Liferay.authToken, ...normalizedHeaders}
+		: {...normalizedHeaders};
+
+	const hasBody = options?.body !== undefined && options?.body !== null;
+
+	if (!hasContentType && !isFormData && (sameOrigin || hasBody)) {
 		headers['Content-Type'] = 'application/json';
 	}
 
@@ -54,32 +73,30 @@ const fetcher = async <T = unknown>(
 	resource: RequestInfo,
 	options?: RequestInit
 ): Promise<T> => {
-	const headers = getHeaders(options);
+	const headers = getHeaders(resource, options);
 
 	const response = await fetch(changeResource(resource), {
 		...options,
 		headers,
 	});
 
+	const text = await response.text();
+
 	if (!response.ok) {
 		const error = new FetcherError(
 			'An error occurred while fetching the data.'
 		);
 
-		error.info = await response.json();
+		error.info = parseJSON(text);
 		error.status = response.status;
 		throw error;
 	}
 
-	if (
-		options?.method === 'DELETE' ||
-		response.status === 204 ||
-		response.headers.get('Content-Length') === '0'
-	) {
+	if (options?.method === 'DELETE' || !text) {
 		return {} as T;
 	}
 
-	return response.json();
+	return JSON.parse(text) as T;
 };
 
 fetcher.delete = (resource: RequestInfo) =>

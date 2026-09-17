@@ -9,11 +9,11 @@ import ClayManagementToolbar from '@clayui/management-toolbar';
 import classNames from 'classnames';
 import {ComponentProps} from 'react';
 import i18n from '~/i18n';
+import {getAccountImage} from '~/utils/getAccountImage';
 import {
 	ProductWorkflowStatusCode,
 	ProductWorkflowStatusLabel,
 } from '~/utils/productUtils';
-import {getAccountImage} from '~/utils/publishUtils';
 
 import './AppPublishNavbar.css';
 

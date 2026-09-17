@@ -89,18 +89,18 @@ Every rule is `warn` until its count reaches zero, then it becomes `error` in `t
 | `no-array-index-key` | 68 |
 | `no-unsafe-type-cast` | 58 |
 | `jsx-a11y/*` | 82 |
-| `no-raw-fetch` | 42 |
 | `bounded-pagination` | 18 |
+| `no-raw-fetch` | 0 |
 | `i18n-key-slug` | 0 |
 | `no-direct-web-storage` | 0 |
 | `odata-filter-via-search-builder` | 0 |
 | `no-unsanitized-html` | 0 |
 | `no-timezone-naive-date` | 0 |
 
-The five at zero are errors now. The rest stay warnings until they follow.
+The six at zero are errors now. The rest stay warnings until they follow.
 
 Accessibility is enforced through `eslint-plugin-jsx-a11y`. Its recommended set ships as errors; `.eslintrc.js` maps the plugin's own rule list down to warnings so the count can be worked off, which keeps it in step with the plugin rather than pinning a list that goes stale.
 
-`no-raw-fetch` is concentrated: `utils/apiUtils.ts` is a whole undeclared service tier, raw `fetch` and hand-built headers against `/o/headless-commerce-*` and `/o/c/*`. Clearing that file clears most of the count and most of `no-unsafe-type-cast` with it.
+`utils/apiUtils.ts` held 38 of the original 42 and is gone — see the structure file's note on what it turned out to be. The four that remained were real and are now services: the commerce account switch, the ticket attachment delete, and the two calls the invitation service makes to resolve its own base URL.
 
 New code is held to the rule regardless of the ledger. The counts only go down.

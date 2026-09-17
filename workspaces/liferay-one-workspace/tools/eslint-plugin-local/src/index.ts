@@ -54,7 +54,7 @@ const plugin = {
 				'local/no-comments': 'warn',
 				'local/no-direct-web-storage': 'error',
 				'local/no-eslint-disable': 'warn',
-				'local/no-raw-fetch': 'warn',
+				'local/no-raw-fetch': 'error',
 				'local/no-timezone-naive-date': 'error',
 				'local/no-unsafe-type-cast': 'warn',
 				'local/no-unsanitized-html': 'error',

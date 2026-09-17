@@ -4,7 +4,7 @@
  */
 
 import {useCallback, useState} from 'react';
-import {Liferay} from '~/services/liferay/liferay';
+import TicketAttachments from '~/services/objects/TicketAttachments';
 
 interface IParams {
 	gcsSessionURL: string;
@@ -25,21 +25,7 @@ const useTicketAttachmentsDelete = (): IProps => {
 		const {gcsSessionURL, ticketAttachmentId} = params;
 
 		try {
-			const ticketAttachmentResponse = await fetch(
-				`${window.location.origin}/o/c/ticketattachments/${ticketAttachmentId}`,
-				{
-					headers: {
-						'x-csrf-token': Liferay.authToken,
-					},
-					method: 'DELETE',
-				}
-			);
-
-			if (!ticketAttachmentResponse.ok) {
-				throw new Error(
-					`Failed to delete ticket attachment: ${ticketAttachmentResponse.text()}`
-				);
-			}
+			await TicketAttachments.deleteTicketAttachment(ticketAttachmentId);
 
 			const gcpResponse = await fetch(gcsSessionURL, {
 				headers: {

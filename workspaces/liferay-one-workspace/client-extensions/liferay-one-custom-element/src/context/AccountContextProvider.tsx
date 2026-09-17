@@ -10,8 +10,8 @@ import Loading from '~/components/Loading/Loading';
 import {useCurrentAccount} from '~/hooks/useAccounts';
 import {useFetch} from '~/hooks/useFetch';
 import {translate} from '~/i18n';
+import CommerceUI from '~/services/headless/CommerceUI';
 import {Liferay} from '~/services/liferay/liferay';
-import {setCurrentAccount} from '~/utils/setCurrentAccount';
 
 import type {Account} from '~/types/accounts';
 
@@ -61,7 +61,7 @@ export function AccountProvider() {
 
 		setSwitching(true);
 
-		setCurrentAccount(String(requestedAccount.id))
+		CommerceUI.selectAccount(String(requestedAccount.id))
 			.then(() => window.location.reload())
 			.catch(() => setSwitching(false));
 	}, [needsSwitch, requestedAccount]);
