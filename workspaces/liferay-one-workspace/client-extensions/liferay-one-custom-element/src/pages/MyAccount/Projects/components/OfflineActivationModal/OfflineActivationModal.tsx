@@ -51,7 +51,11 @@ const OfflineActivationModal: React.FC<OfflineActivationModalProps> = ({
 			/>
 
 			{!isActivating && !!errorMessageKey && (
-				<ClayAlert className="mt-3" displayType="danger" role={null}>
+				<ClayAlert
+					className="mt-3"
+					displayType="danger"
+					role={undefined}
+				>
 					{translate(errorMessageKey)}
 				</ClayAlert>
 			)}

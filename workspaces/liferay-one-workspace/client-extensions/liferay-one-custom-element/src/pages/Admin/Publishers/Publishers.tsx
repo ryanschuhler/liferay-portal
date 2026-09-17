@@ -37,6 +37,7 @@ export default function Publishers() {
 							render: (name, {logoURL}) => (
 								<div>
 									<img
+										alt=""
 										className="mr-2 rounded"
 										draggable={false}
 										height={42}

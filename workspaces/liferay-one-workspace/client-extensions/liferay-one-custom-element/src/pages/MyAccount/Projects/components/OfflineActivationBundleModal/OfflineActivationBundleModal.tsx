@@ -48,7 +48,11 @@ const OfflineActivationBundleModal: React.FC<
 			</select>
 
 			{!isDownloading && !!errorMessageKey && (
-				<ClayAlert className="mt-3" displayType="danger" role={null}>
+				<ClayAlert
+					className="mt-3"
+					displayType="danger"
+					role={undefined}
+				>
 					{translate(errorMessageKey)}
 				</ClayAlert>
 			)}

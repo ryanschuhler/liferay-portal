@@ -31,6 +31,7 @@ const LicensePrices: React.FC<LicensePricesProps> = ({
 
 			{currency?.iconSrc ? (
 				<img
+					alt=""
 					className="currency-selector-icon ml-2"
 					src={currency.iconSrc}
 				/>

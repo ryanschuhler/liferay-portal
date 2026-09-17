@@ -8,11 +8,15 @@ name: one-team
 
 # One Team
 
-Run a four-agent team — planner, developer, tester, reviewer — that takes a Jira ticket from context gathering to reviewed, committed code on a ticket-named branch. The session that invokes this skill is the **coordinator**: it spawns the teammates, relays every handoff, enforces the phase gates, arbitrates disagreements, and keeps the team log. The coordinator never plans, writes, tests, or reviews the work itself — it orchestrates the specialists who do.
+This skill runs a team of 4 agents: a planner, a developer, a tester, and a reviewer. The team takes a Jira ticket from the first reading of the context to reviewed code, committed on a branch that the ticket names.
 
-The team delivers into **one target repo per run** — either this workspace or the Liferay One `scripts` repo — and reads every other checkout as context. The repo you invoke from is the repo the team writes in; which one that is decides a handful of commands and nothing else, since the phases, the roles, and the gates are identical.
+The session that invokes this skill is the **coordinator**. The coordinator starts each teammate, passes every handoff between them, enforces the gate at the end of each phase, settles a disagreement, and writes the team log. The coordinator does not plan, write, test, or review. The specialists do that work.
 
-Run from the target repo's root. A session rooted elsewhere may not expose `/one-team` by name — read this file directly and follow it; everything else works the same.
+The team writes into **one target repository for each run**. That repository is this workspace or the Liferay One `scripts` repository. The team reads every other checkout as context.
+
+The directory that you invoke the skill from sets the repository that the team writes in. That choice changes 6 commands. The phases, the roles, and the gates are the same in both repositories.
+
+Run the skill from the root of the target repository. A session that starts in another directory may not list `/one-team` by name. Read this file and follow it. Everything else works the same way.
 
 ## Invocation
 
@@ -20,11 +24,15 @@ Run from the target repo's root. A session rooted elsewhere may not expose `/one
 /one-team LPD-12345 [--lane workspace|scripts] [extra context, constraints, links]
 ```
 
-A ticket ID is required; when missing, ask for one before doing anything else. `--lane` is rarely needed — the working directory already decides the lane — and exists only to override it. Everything else after the ticket ID is kickoff context — pass it verbatim into the planner's briefing, minus the consumed `--lane` flag.
+The skill needs a ticket ID. Ask for one before you do anything else when the invocation gives none.
+
+The `--lane` flag overrides the lane. The working directory sets the lane, so a run rarely needs this flag.
+
+Every other word after the ticket ID is context for the start of the run. Copy those words into the briefing for the planner. Remove the `--lane` flag first.
 
 ## Lanes
 
-Two lanes, one protocol. Everything lane-specific is in this table; the rest of this file and the charters are shared.
+There are 2 lanes and 1 protocol. This table holds every difference between the lanes. The rest of this file and every charter apply to both lanes.
 
 | | Workspace lane | Scripts lane |
 | --- | --- | --- |
@@ -40,17 +48,21 @@ Two lanes, one protocol. Everything lane-specific is in this table; the rest of 
 | Scaffolding recipe | `<TARGET>/.agents/skills/` (`one-deploy`, `one-env-up`, `one-format`) | `<TARGET>/.agents/skills/one-new-script/SKILL.md` |
 | PR recipe (Phase 6 tells the user, never runs it) | `<WORKSPACE>/.agents/skills/one-pr/SKILL.md` | `<SCRIPTS>/.agents/skills/one-pr/SKILL.md` |
 
-**The invoking directory is the lane.** A session rooted anywhere inside the `scripts` checkout is the scripts lane; one rooted inside `liferay-one-workspace` is the workspace lane. That is the default and needs no confirmation — the session is already sitting in the repo the ticket is being developed in.
+**The directory of the session sets the lane.** A session inside the `scripts` checkout uses the scripts lane. A session inside `liferay-one-workspace` uses the workspace lane. This is the default, and it needs no confirmation. The session already runs in the repository that holds the work for the ticket.
 
-Two departures from it, and no others:
+There are 2 exceptions and no others:
 
-- An explicit `--lane` in the invocation wins, as a deliberate override.
+- A `--lane` flag in the invocation sets the lane. The user gives this flag to override the default.
 
-- A working directory inside neither checkout answers nothing — ask with `AskUserQuestion` rather than picking.
+- A working directory outside both checkouts sets no lane. Ask the user with `AskUserQuestion`. Do not choose a lane.
 
-The ticket never sets the lane; it only audits it. When the digest reads clearly like the other lane's work — a migration ticket in a workspace-lane run, an object-model ticket in a scripts-lane run — say so in the kickoff status and let the user redirect before Phase 1. Never switch lanes on the ticket's say-so: the directory is what the user chose, and silently retargeting the run sends the developer at the wrong repo.
+The ticket does not set the lane. The ticket only checks the lane.
 
-A ticket that genuinely needs both repos is **two runs**, not one straddling run: deliver the target repo's half, record the other repo's half as owed work in `team-log.md`, and tell the user in the Phase 6 report so they can file or schedule the companion ticket. One repo per run is a hard rule.
+Read the digest. A migration ticket in a workspace-lane run belongs to the other lane. An object-model ticket in a scripts-lane run belongs to the other lane. Report this in the status at the start of the run. The user then changes the lane before Phase 1.
+
+Do not change the lane because of the ticket. The user chose the directory. A change of target sends the developer to the wrong repository, and the user sees no message about it.
+
+A ticket that needs both repositories needs **2 runs**. Deliver the half that belongs to the target repository. Record the other half in `team-log.md` as work that the team owes. Report it to the user in Phase 6. The user then files or schedules the second ticket. One repository for each run is a rule with no exception.
 
 ## The Team
 
@@ -61,133 +73,288 @@ A ticket that genuinely needs both repos is **two runs**, not one straddling run
 | Tester | `sonnet` | `<WORKSPACE>/.agents/skills/one-team/roles/tester.md` |
 | Reviewer | `fable` | `<WORKSPACE>/.agents/skills/one-team/roles/reviewer.md` |
 
-The charters are lane-neutral and live only in the workspace; both lanes read the same four files. The reviewer's charter carries the role and the protocol but not the review substance — that lives in `<WORKSPACE>/.agents/skills/one-review/criteria.md`, shared with the interactive `/one-review` skill so the two can never drift. The reviewer reads it in place from `<WORKSPACE>` in both lanes, like the rule files. In both lanes the reviewer runs `/one-review --read-only`, whose flag keeps every check — formatting included, via the lane's check-only command — while writing nothing to the tree. That skill is lane-aware for the same reason the charters are, so the two lanes run the same review; where a scripts-lane session does not expose it by name, the reviewer reads `<WORKSPACE>/.agents/skills/one-review/SKILL.md` in place and follows it, exactly as it reads `criteria.md`.
+The 4 charters apply to both lanes. They live only in the workspace, and both lanes read the same 4 files.
 
-Spawn each teammate with the `Agent` tool using `subagent_type: "claude"`, `run_in_background: true`, `name` set to the role, and the `model` from the table. Never let a teammate default to the session model — the split is deliberate: frontier reasoning where judgment concentrates (the plan, the final review), cheaper models where the work is more mechanical. When the harness does not offer `fable`, fall back to `opus` and say so in the kickoff status.
+The charter of the reviewer holds the role and the protocol. It does not hold the substance of the review. That substance lives in `<WORKSPACE>/.agents/skills/one-review/criteria.md`. The interactive `/one-review` skill reads the same file, so the two cannot differ. The reviewer reads that file in place from `<WORKSPACE>` in both lanes, as it reads the rule files.
 
-The tiering cascades: subagents spawned by any teammate always run on `haiku` or `sonnet` — research sweeps, file inventories, log scans, isolated mechanical edits. Frontier tokens are reserved for the teammates' own reasoning. The one exception is the reviewer's independent review passes under `--adversarial`, which are not research subagents but whole reviews standing in for the reviewer's own reading, and whose tier `one-review` sets; everything those passes spawn in turn obeys the cascade. A teammate whose runtime cannot spawn subagents does that work itself rather than blocking on the missing capability.
+The reviewer runs `/one-review --read-only` in both lanes. The flag keeps every check, and the format check runs through the check-only command of the lane. The flag writes nothing to the tree. That skill knows the lane, for the same reason the charters do, so the 2 lanes run the same review. A scripts-lane session can fail to list that skill by name. The reviewer then reads `<WORKSPACE>/.agents/skills/one-review/SKILL.md` in place and follows it, exactly as it reads `criteria.md`.
 
-**Small-ticket downgrades.** Two downgrades are available when the work is genuinely small, each keyed to evidence that exists at the moment the role is spawned. When the user's kickoff context frames the ticket as small or trivial, spawn the planner on `opus`. When the drafted `plan.md` — which the coordinator reads anyway to summarize it for the user — clears the lane's small bar, spawn the developer on `sonnet`. Workspace lane: no data-model impact, no new objects or endpoints, and roughly fifty changed lines or fewer. Scripts lane: roughly fifty changed lines or fewer **and** no write path touched — a read-only export, a log or CSV change, a filter narrowed. Do not reuse the workspace bar there: "no data-model impact, no new objects or endpoints" is true of nearly every migration script, so it would downgrade the developer on work whose whole risk is writing the wrong data into the product. Should the review or the user's approval then enlarge the plan past those bounds, respawn the developer on `opus` before Phase 3 and log the swap. The reviewer stays on `fable` in every case — it is the last gate — and the tester's end-to-end pass is never trimmed. Log whichever downgrades apply.
+Spawn each teammate with the `Agent` tool. Set these 4 values:
 
-**Tester upgrade.** Spawn the tester on `opus` when Phase 4 has to **construct** its fixtures rather than exercise data that already exists — a scripts-lane run needing seeded records, an acceptance criterion whose setup spans systems, anything where the test data must be made valid before the matrix can run. The `sonnet` default rests on Phase 4 being mechanical execution, and that assumption breaks exactly here: a measured run had the tester repeat one wrong fixture assumption *after* it had been corrected, which is the signature of a model at its limit rather than a knowledge gap. The plan's Test Plan says which case this is, so the call is available when the tester is spawned in Phase 3. When it only becomes clear mid-phase, respawn on `opus` against `test-report.md` and log the swap.
+- `subagent_type: "claude"`
+- `run_in_background: true`
+- `name`, set to the role
+- `model`, taken from the table above
+
+Never let a teammate use the model of the session. The split of the models is deliberate. The plan and the final review need the strongest reasoning, because the judgment concentrates there. The other work is more mechanical, so a cheaper model does it. When the harness does not offer `fable`, use `opus` and report that change in the kickoff status.
+
+The tiers cascade. A subagent that a teammate spawns always runs on `haiku` or `sonnet`. Those subagents do the research sweeps, the file inventories, the log scans, and the isolated mechanical edits. The tokens of the strongest model stay with the reasoning of the teammates.
+
+There is 1 exception. The independent review passes of the reviewer under `--adversarial` are not research subagents. Each one is a whole review that takes the place of a reading by the reviewer. `one-review` sets the tier of those passes, and everything that those passes spawn obeys the cascade.
+
+A teammate whose runtime cannot spawn a subagent does that work itself. It does not stop for the missing capability.
+
+**Downgrades for a small ticket.** There are 2 downgrades for work that is small. The evidence for a downgrade must exist at the moment the role spawns:
+
+- Spawn the planner on `opus` when the kickoff context of the user calls the ticket small or trivial.
+- Spawn the developer on `sonnet` when the drafted `plan.md` meets the small bar of the lane. The coordinator reads `plan.md` at that point anyway, to summarize it for the user.
+
+The small bar differs between the lanes:
+
+- Workspace lane: no effect on the data model, no new object, no new endpoint, and 50 changed lines or fewer.
+- Scripts lane: 50 changed lines or fewer, **and** no change to a write path. A read-only export, a change to a log or to a CSV, and a narrowed filter each meet this bar.
+
+Do not apply the bar of the workspace lane to the scripts lane. Almost every migration script has no effect on the data model and adds no object and no endpoint. That bar would therefore downgrade the developer on work whose whole risk is to write the wrong data into the product.
+
+The review or the approval of the user can make the plan larger than these bounds. Respawn the developer on `opus` before Phase 3 and log the swap. The reviewer stays on `fable` in every case, because the reviewer is the last gate. Never trim the end-to-end pass of the tester. Log each downgrade that applies.
+
+**Upgrade for the tester.** Spawn the tester on `opus` when Phase 4 must **construct** its fixtures instead of exercising data that already exists. Three cases need that construction:
+
+- a scripts-lane run that needs seeded records
+- an acceptance criterion whose setup covers more than 1 system
+- any run in which the test data must become valid before the matrix runs
+
+The `sonnet` default rests on Phase 4 being mechanical execution. That assumption fails here. In 1 measured run the tester repeated a wrong assumption about a fixture *after* a correction. That result shows a model at its limit, not a gap in knowledge. The Test Plan in `plan.md` states which case applies, so the coordinator can make this call when it spawns the tester in Phase 3. When the case becomes clear during the phase, respawn the tester on `opus` against `test-report.md` and log the swap.
 
 ## Cost Discipline
 
-A run's token cost is `turns × resident context`, not the size of what anyone reads. Measured across past runs: cache reads are 99.7% of input tokens, average context per turn is 411–442k with a peak near 996k, and the **coordinator alone** consumed 301–681M cache-read tokens over 732–1,540 turns — more than any teammate. Every rule below attacks one of those two multipliers.
+The token cost of a run is `turns × resident context`. It is not the size of what each agent reads. Past runs give these 3 measurements:
 
-None of them trades accuracy for cost. That line was drawn deliberately: research depth, the number of gates, what a reviewer reads, and what a planner verifies for itself are all untouched, because the cheapest defect in this workflow is still far more expensive than the tokens that would have caught it.
+- Cache reads are 99.7% of the input tokens.
+- The average context for each turn is 411k to 442k tokens, and the peak is near 996k.
+- The **coordinator alone** used 301M to 681M cache-read tokens over 732 to 1,540 turns. That is more than any teammate used.
 
-- **The coordinator orchestrates and nothing else.** Its writes are confined to `<TEAMDIR>`, its own control files (`run.lock` and its registry entry under `~/.claude/one-team/portal/`), and the Phase 0 worktree bootstrap. Its `Bash` use is confined to: the Phase 0 Jira fetches and path-resolution checks, `git fetch`, `git worktree add` and `git checkout -b`, the Phase 0 bootstrap commands (the `.env` copy, the store-DB clone, `bun install`), the branch-drift check, `git cherry` and `git reflog` during the resume check, the registry and generation reads at every gate, the Phase 6 `git log` and `git diff` verification, and read-only lookups it needs to arbitrate a dispute it has been asked to settle. The bootstrap is setup, not work product — it writes no file the ticket ships, which is why it does not breach the one-writer rule. It never builds, deploys, greps the codebase for its own answers, or edits a repository file. A measured run made 389 `Bash` and 66 `Edit` calls from this seat at ~440k context each — the most expensive habit in the workflow, and a violation of the coordinator's own mandate: work done here is work no charter governed and no role reviewed.
+Every rule below reduces 1 of those 2 multipliers.
 
-- **`PROGRESS` is log-only.** Append it to `team-log.md` and fold it into the next gate report. It never earns a relay turn or a user-facing line of its own.
+No rule trades accuracy for cost. These 4 items do not change:
 
-- **Ten lines per message.** Dispatches and replies carry paths, verdicts, and decisions — never artifact content, never a restatement of `plan.md`. Measured average is ~770 tokens per message. Completeness always outranks the budget: a `FAIL`'s reproduction steps, a review objection's reasoning, and a dispatch's done-condition are written to be acted on without a follow-up question, however many lines that takes. One full message is cheaper than three partial ones.
+- the depth of the research
+- the number of the gates
+- what the reviewer reads
+- what the planner verifies for itself
 
-- **Respawn beats resume for a later phase, once the transcript is large.** A teammate's transcript never shrinks, so resuming one late in the run re-reads its entire history every turn — and an agent operating near the top of its window follows its charter *worse*, which is the real reason for this rule. Artifacts carry the state, which is exactly what makes an interrupted run resumable. So a role re-entering a **later phase** with an accumulated transcript past roughly 60–100k is spawned fresh against the artifacts; a smaller transcript, or a role continuing work **inside its current phase**, is resumed. Log each respawn with the phase it re-entered.
+A defect in this workflow costs more than the tokens that find it, even when the defect is the cheapest one.
 
-- **Log turns per phase** in every `team-log.md` gate entry, so the next run is measurable without transcript archaeology.
+- **The coordinator orchestrates and does nothing else.** The coordinator writes to these 3 places only:
+
+  - `<TEAMDIR>`
+  - its own control files, which are `run.lock` and its registry entry under `~/.claude/one-team/portal/`
+  - the worktree bootstrap in Phase 0
+
+  The coordinator uses `Bash` for these 8 purposes only:
+
+  - the Jira fetches and the checks on the paths in Phase 0
+  - `git fetch`, `git worktree add`, and `git checkout -b`
+  - the bootstrap commands in Phase 0: the copy of `.env`, the clone of the store DB, and `bun install`
+  - the check for drift on the branch
+  - `git cherry` and `git reflog` during the resume check
+  - the reads of the registry and of the generation at every gate
+  - the `git log` and `git diff` verification in Phase 6
+  - the read-only lookups that it needs to settle a dispute
+
+  The bootstrap is setup. It is not a work product. It writes no file that the ticket ships, so it does not break the rule of 1 writer. The coordinator never builds, never deploys, never greps the codebase for its own answers, and never edits a file in a repository. One measured run made 389 `Bash` calls and 66 `Edit` calls from this seat, at approximately 440k context for each call. That is the most expensive habit in the workflow. It also breaks the mandate of the coordinator, because no charter governs that work and no role reviews it.
+
+- **`PROGRESS` goes to the log only.** Append it to `team-log.md`. Include it in the next gate report. It never gets a relay turn, and it never gets its own line for the user.
+
+- **Ten lines for each message.** A dispatch and a reply carry paths, verdicts, and decisions. They never carry the content of an artifact, and they never repeat `plan.md`. The measured average is approximately 770 tokens for each message. Completeness is more important than this budget. Write these 3 items so that the reader acts on them without a second question, at whatever length that needs:
+
+  - the steps that reproduce a `FAIL`
+  - the reasoning behind an objection in a review
+  - the done-condition of a dispatch
+
+  One complete message costs less than 3 partial messages.
+
+- **Respawn a role that enters a later phase with a large transcript. Do not resume it.** The transcript of a teammate never becomes smaller, so a resume late in the run re-reads the whole history at every turn. An agent near the top of its context window also follows its charter worse, and that second effect is the main reason for this rule. The artifacts hold the state, which is what makes an interrupted run resumable. Apply the rule as follows:
+
+  - Spawn a fresh role against the artifacts when the role enters a **later phase** with a transcript above 60k to 100k tokens.
+  - Resume the role when its transcript is smaller, or when it continues work **inside its current phase**.
+
+  Log each respawn with the phase that the role entered.
+
+- **Log the number of turns for each phase** in every gate entry in `team-log.md`. The next run is then measurable, and nobody reads an old transcript to measure it.
 
 ## How Teammates Actually Work
 
-These mechanics were verified live; the protocol depends on them:
+A live test verified these mechanics. The protocol depends on them:
 
-- A background teammate is **turn-based**, not a live process. It handles the message it was given, acts, replies, and stops. `SendMessage` to it resumes it with its full context intact. Idling is free once spawned, but the spawn is not — a measured thirty to sixty thousand tokens of baseline context per agent, before any work. Spawn each role just in time, at its first real assignment.
-- Because teammates are spawned with `name` set to the role, `SendMessage` addresses them by that name and the agents panel lists them readably. Still record the role → agent ID mapping from each spawn result in the team log: a reused name belongs to the newest agent, so IDs disambiguate respawns. Never show raw agent IDs to the user — say "the planner", "the developer".
-- Teammates reply by calling `SendMessage` with `to: "main"`. Replies arrive at the coordinator automatically; there is no inbox to poll. A teammate's final text also arrives in its completion notification — the fallback when a teammate forgets to message.
-- A teammate's **background subagent** reports its completion to the coordinator, not to the teammate that spawned it — a teammate that stops to wait for its own background child stalls until nudged. The charters therefore require synchronous subagents; when a grandchild result lands on the coordinator anyway, persist it to the team directory and resume the owning teammate with the path. Synchronous is not serial: independent subagents issued in a single message run concurrently.
-- **A background command's wake-up is best-effort — never end a turn waiting for one.** This file used to call background commands safe because they re-invoke their owner. They do, usually; a measured run lost three wake-ups on plain `run_in_background` Bash and stranded the tester each time. A wake-up that never arrives is indistinguishable from a command still running, so waiting is the one thing that cannot detect it. Three shapes that do work, in order of preference: run it in the **foreground** when it fits the tool's timeout; or start it and, in the same turn, wait on a *separate* command that exits when the condition holds (`until <check>; do sleep 5; done`) — that exit is the reliable signal, not the original command's; or **verify the artifact rather than the notification** — the image exists, the log line landed, the process is gone. Silence is never success. When a wait genuinely must span turns, end the turn telling the coordinator you are waiting and what to check, so it watches you instead of you stranding.
-- A turn whose only output is `SendMessage` calls looks empty to the harness, which re-prompts the agent — and can loop it. Teammates end every turn with a short line of plain final text after their messages.
-- After dispatching work, end the turn with a one-line status for the user. The teammate's reply resumes the session.
-- Teammates share the filesystem. Handoffs carry **paths, not contents** — point at `plan.md`, list the touched files, reference the diff. Pasting file bodies into messages pays for them twice.
+- A background teammate works in turns. It is not a live process. It reads the message, acts, replies, and stops. A `SendMessage` to that teammate resumes it with its full context. An idle teammate costs nothing after the spawn. The spawn itself costs a measured 30,000 to 60,000 tokens of baseline context for each agent, before any work. Spawn each role at the moment of its first real assignment.
+- Each spawn sets `name` to the role, so `SendMessage` addresses a teammate by that name and the agents panel shows a readable list. Record the map from the role to the agent ID from each spawn result in the team log. A name that a later spawn reuses belongs to the newest agent, so the ID identifies the correct respawn. Never show a raw agent ID to the user. Write "the planner" or "the developer".
+- A teammate replies with `SendMessage` and `to: "main"`. The reply arrives at the coordinator, and the coordinator polls no inbox. The completion notification of a teammate also carries its final text. That notification is the fallback when a teammate sends no message.
+- A **background subagent** of a teammate reports its completion to the coordinator. It does not report to the teammate that spawned it. A teammate that stops to wait for its own background subagent therefore waits until the coordinator sends it a message. The charters require synchronous subagents for this reason. When the result of such a subagent arrives at the coordinator, write that result to the team directory. Then resume the teammate that owns it, and give it the path. A synchronous subagent is not a serial subagent. Independent subagents that 1 message starts run at the same time.
+- **A lost wake-up stops a teammate for the rest of the run. The wake-up from a background command is best-effort, so never end a turn to wait for one.** An earlier version of this file called a background command safe, because the command re-invokes its owner. It usually does so. One measured run lost 3 wake-ups on a plain `run_in_background` Bash call, and the tester stopped each time. A wake-up that never arrives looks the same as a command that still runs, so a wait is the 1 method that cannot detect it. Use 1 of these 3 shapes, in this order of preference:
 
-Spawn prompts follow one shape: the role name; the ticket ID; the lane; the absolute team directory path; the instruction to read the role's charter copy in `<TEAMDIR>/roles/` and then `paths.md` before anything else (absolute paths — the teammate reads them itself, so the coordinator never loads charters into its own context); the kickoff context; and the first assignment. That first assignment is always real work — never an acknowledgment. A respawned role gets the same shape plus the artifacts covering the phases it missed.
+  1. Run the command in the **foreground** when it fits inside the timeout of the tool.
+
+  1. Start the command. In the same turn, wait on a *separate* command that exits when the condition is true (`until <check>; do sleep 5; done`). The exit of that second command is the reliable signal. The exit of the first command is not.
+
+  1. **Verify the artifact instead of the notification.** Check that the image exists, that the log line arrived, or that the process ended.
+
+  Silence is never success. A wait must sometimes cross more than 1 turn. End the turn, tell the coordinator that you wait, and tell it what to check. The coordinator then watches you, and your phase does not stop without a report.
+- A turn that outputs only `SendMessage` calls looks empty to the harness. The harness then prompts the agent again, and the agent can enter a loop. Each teammate ends every turn with a short line of plain text after its messages.
+- End the turn with a status of 1 line for the user after you dispatch work. The reply of the teammate resumes the session.
+- The teammates share 1 filesystem. A handoff carries **paths, not contents**. Give the path of `plan.md`, list the files that changed, and name the diff. A message that holds the body of a file costs the tokens of that file a second time.
+
+Every spawn prompt has the same shape. It holds these 7 parts:
+
+- the name of the role
+- the ticket ID
+- the lane
+- the absolute path of the team directory
+- the instruction to read the copy of the charter for the role in `<TEAMDIR>/roles/`, and then `paths.md`, before anything else. Give absolute paths. The teammate reads these files itself, so the coordinator never loads a charter into its own context.
+- the kickoff context
+- the first assignment
+
+The first assignment is always real work. It is never an acknowledgment. A respawned role gets the same shape, plus the artifacts for the phases that it missed.
 
 ## Team Directory
 
-All run artifacts live in `<TEAMDIR>` — `~/.claude/one-team/<TICKET>/`, outside every checkout, deliberately:
+Every artifact of the run lives in `<TEAMDIR>`, which is `~/.claude/one-team/<TICKET>/`. That path sits outside every checkout, for these reasons:
 
-The team directory is the run's only irreplaceable output. The code lives in git; the plan, the handoffs, the test report and the log do not. A team directory inside the target repo is exposed to everything else that touches that repo — another run's git operations, a worktree removal that takes it along, a `git add --all` that stages it — and one of those emptied a run's directory in practice, costing every written document it held. It also has to be reachable from both lanes, from any worktree, and by a resumed session whose worktree is gone, which nothing under a repo's `.git` can be. Keeping it out of the tree is also what makes the kickoff `.git/info/exclude` append unnecessary: an artifact that was never inside the repo cannot be staged by `git add --all`.
+The team directory is the only output of the run that nobody can replace. Git holds the code. Git does not hold the plan, the handoffs, the test report, or the log.
 
-`paths.md` records the resolved absolute path. Every spawn prompt passes it, and no teammate derives it:
+A team directory inside the target repository is open to every other action on that repository. Three actions reach it:
+
+- the git operations of another run
+- a removal of the worktree, which deletes the directory with it
+- a `git add --all`, which stages the directory
+
+One of these 3 actions emptied the directory of a run in practice, and every written document in it was lost.
+
+The directory must also be reachable from both lanes, from any worktree, and from a resumed session whose worktree no longer exists. No directory under the `.git` of a repository meets that condition.
+
+A directory outside the tree also makes the append to `.git/info/exclude` at kickoff unnecessary. `git add --all` cannot stage an artifact that was never inside the repository.
+
+`paths.md` records the resolved absolute path. Every spawn prompt carries that path, and no teammate derives it:
 
 | File | Writer | Content |
 | --- | --- | --- |
-| `team-log.md` | coordinator | lane, roster, phase gate outcomes with turn counts, agreements, arbitrations, escalations, respawns |
-| `paths.md` | coordinator | the lane, `<TARGET>`, `<BASE>`, and the resolved absolute path of every context repo — the first thing every teammate reads after its charter |
-| `ticket-digest.md`, `initiative-digest.md` | coordinator | the Jira context teammates actually read — flattened ticket, one line per initiative issue |
-| `ticket.json`, `initiative.json` | coordinator | raw Jira responses, kept only for targeted `jq` lookups — never read whole |
-| `roles/` | coordinator | charter copies frozen at kickoff — what every spawn prompt points at (the ticket branch may predate the skill) |
-| `plan.md` | planner | the implementation plan (template in the planner charter) |
-| `dev-handoff.md` | developer | Phase 3 handoff: changes, per-AC verification hints for the tester, notes |
-| `test-report.md` | tester | AC matrix, regression matrix, evidence, verdict per round |
-| `review.md` | reviewer | findings with severity and verdict per round |
+| `team-log.md` | coordinator | the lane, the roster, the outcome of each phase gate with its turn count, the agreements, the arbitrations, the escalations, and the respawns |
+| `paths.md` | coordinator | the lane, `<TARGET>`, `<BASE>`, and the resolved absolute path of each context repository. Every teammate reads this file directly after its charter |
+| `ticket-digest.md`, `initiative-digest.md` | coordinator | the Jira context that the teammates read: the flattened ticket, and 1 line for each issue in the initiative |
+| `ticket.json`, `initiative.json` | coordinator | the raw Jira responses. Use them for a targeted `jq` lookup only. Never read a whole file |
+| `roles/` | coordinator | the copies of the charters, made at kickoff. Every spawn prompt gives these paths. The ticket branch can be older than the skill |
+| `plan.md` | planner | the implementation plan. The charter of the planner holds the template |
+| `dev-handoff.md` | developer | the Phase 3 handoff: the changes, 1 verification hint for the tester for each acceptance criterion, and the notes |
+| `test-report.md` | tester | the matrix of the acceptance criteria, the regression matrix, the evidence, and the verdict for each round |
+| `review.md` | reviewer | the findings with a severity, and the verdict for each round |
 
-The coordinator creates the directory and `team-log.md` at kickoff and appends a log entry at every gate. Artifacts persist across sessions — they are how an interrupted run resumes, and what a respawned teammate is briefed from. Because they sit outside the checkouts they survive a removed worktree, a branch that never landed, and any cleanup of the repo, so a resume never depends on the tree still being there.
+The coordinator creates the directory and `team-log.md` at kickoff, and it appends a log entry at every gate. The artifacts stay after a session ends. An interrupted run resumes from them, and a respawned teammate reads them for its briefing. They sit outside the checkouts, so they survive these 3 events:
 
-Two control files live beside the team directories rather than inside any one of them, because they coordinate runs against each other: `~/.claude/one-team/<TICKET>/run.lock` (this run's own claim on its ticket) and everything under `~/.claude/one-team/portal/` (the machine-wide portal registry). Both are specified in Concurrency.
+- a removal of the worktree
+- a branch that never merges
+- any cleanup of the repository
+
+A resume therefore never depends on the tree.
+
+Two control files coordinate the runs against each other, so they are not artifacts of any single run:
+
+- `~/.claude/one-team/<TICKET>/run.lock` holds the claim of this run on its ticket.
+- Every file under `~/.claude/one-team/portal/` forms the portal registry for the machine.
+
+Concurrency specifies both.
 
 ## Jira Context
 
-Read-only. Never transition tickets or post comments from this workflow.
+Jira is read-only here. Never transition a ticket from this workflow. Never post a comment from this workflow.
 
-The recipes live in `reference/jira.md` — ticket fetch and validation, the initiative pull with its pagination loop, the ticket's own issue graph, and the digest commands that make both readable. Read that file once in Phase 0 and work from the digests afterward.
+`reference/jira.md` holds the recipes. It covers these 4 items:
+
+- the fetch of the ticket, and the validation of it
+- the fetch of the initiative, with its pagination loop
+- the issue graph of the ticket
+- the digest commands that make the initiative and the graph readable
+
+Read that file once in Phase 0. Work from the digests after that.
 
 ## Resolving the Repos
 
-The coordinator resolves every checkout once, at kickoff, and writes the results to `paths.md`. Teammates use those absolute paths and never re-derive them — relative hops break the moment a subagent runs from a different directory.
+The coordinator resolves every checkout once, at kickoff, and writes the results to `paths.md`. Each teammate uses those absolute paths and derives no path again. A relative path fails as soon as a subagent runs from a different directory.
 
 | Variable | How to resolve it |
 | --- | --- |
-| `<TEAMDIR>` | this run's artifact directory — `~/.claude/one-team/<TICKET>/`, expanded absolute (no `~` in `paths.md`; a teammate's shell may not expand it) |
-| `<CHECKOUT>` | the target repo's **main** checkout — the directory the run was invoked from. In the workspace lane `<TARGET>` and `<CHECKOUT>` are the same path; in every other lane `<TARGET>` is a worktree of `<CHECKOUT>` and the two differ, which is why both are recorded |
+| `<TEAMDIR>` | the artifact directory of this run, `~/.claude/one-team/<TICKET>/`, written as an absolute path. Write no `~` in `paths.md`, because the shell of a teammate can leave it unexpanded |
+| `<CHECKOUT>` | the **main** checkout of the target repository, which is the directory that the run starts from. In the workspace lane, `<TARGET>` and `<CHECKOUT>` are the same path. In every other lane, `<TARGET>` is a worktree of `<CHECKOUT>`, so the 2 paths differ. Record both |
 | `<WORKSPACE>` | the Liferay One workspace — `<PORTAL>/workspaces/liferay-one-workspace` |
-| `<PORTAL>` | the `liferay-portal` checkout — `<WORKSPACE>/../..`, or from the scripts lane the sibling checkout that contains `workspaces/liferay-one-workspace` (conventionally `../liferay-portal`) |
-| `<SCRIPTS>` | the `liferay-one/scripts` checkout — a sibling of `<PORTAL>`, conventionally `<PORTAL>/../scripts`; confirm with `git remote -v` naming `liferay-one/scripts` |
-| `<LEGACY_OSB>` | `<PORTAL>/../liferay-portal-7.2.x/modules/dxp/apps/osb/` (the checkout sits on branch `7.2.x-temp`) |
+| `<PORTAL>` | the `liferay-portal` checkout, at `<WORKSPACE>/../..`. From the scripts lane, it is the sibling checkout that contains `workspaces/liferay-one-workspace`, usually `../liferay-portal` |
+| `<SCRIPTS>` | the `liferay-one/scripts` checkout, a sibling of `<PORTAL>`, usually `<PORTAL>/../scripts`. Confirm it with `git remote -v`, which must name `liferay-one/scripts` |
+| `<LEGACY_OSB>` | `<PORTAL>/../liferay-portal-7.2.x/modules/dxp/apps/osb/`. That checkout is on the branch `7.2.x-temp` |
 | `<LEGACY_CUSTOMER>` | `<PORTAL>/../liferay-portal-7.0.x/modules/dxp/apps/osb/osb-customer/` |
 | `<LEGACY_KORONEIKI>`, `<LEGACY_PROVISIONING>` | `<PORTAL>/../lfris-koroneiki`, `<PORTAL>/../lfris-provisioning` |
 | `<LEGACY_SUPPORT>`, `<LEGACY_MARKETPLACE>` | `<PORTAL>/workspaces/liferay-customer-workspace`, `<PORTAL>/workspaces/liferay-marketplace-workspace` |
 
-Test each path before recording it and mark the absent ones absent — a teammate that reads "absent" records the gap in its plan or report, where a teammate that reads a broken path invents history instead.
+Test each path before you record it, and mark each path that does not exist as absent. A teammate that reads "absent" records the gap in its plan or in its report. A teammate that reads a path that does not work invents the history instead.
 
-Which source answers which question, and the cross-repo contract each lane owes the other, are the planner's and reviewer's substance: the planner charter's research order and `one-review/criteria.md` are authoritative. The coordinator only resolves the paths.
+The planner and the reviewer own 2 questions: which source answers which question, and which contract each lane owes the other lane. The research order in the charter of the planner and the file `one-review/criteria.md` are the authority for them. The coordinator resolves the paths only.
 
 ## Concurrency
 
-Several runs may be in flight on this machine at once — the common shape is one workspace-lane run plus one or more runs in other repos. Files stop being the problem once each non-workspace run has its own worktree and every run's artifacts live outside the checkouts. **One local Liferay instance is what remains shared, and it cannot be duplicated per run.** So runs coordinate on the portal instead of taking turns at it: almost everything proceeds in parallel, and only the operations that genuinely disrupt other runs are serialized.
+More than 1 run can be active on this machine at the same time. The common case is 1 workspace-lane run plus 1 or more runs in other repositories. Files cause no conflict once each non-workspace run has its own worktree and every run keeps its artifacts outside the checkouts. **The 1 local Liferay instance stays shared, and no run can duplicate it.** The runs therefore coordinate on the portal instead of taking turns at it. Almost all work runs in parallel. Only the operations that disrupt another run run one at a time.
 
-Most of a run never touches the portal and never coordinates: Jira and kickoff, planning, plan review, the developer's implementation, the final review, and the commit. This section binds two stretches — **Phase 4**, and the **tester's prep** that overlaps Phase 3, since prep brings the environment up and may hit the bootstrap branch of env-up. The developer's `buildDockerImage` warm-up in Phase 3 builds an image and restarts nothing, which is why it stays uncoordinated.
+Six parts of a run touch the portal never and coordinate never:
 
-**A run that is alone on the machine pays nothing for any of this, and nothing here changes how one-team is invoked or what the user does.** `/one-team <TICKET>` is unchanged. With no other run registered, the lock is uncontended and acquires on the first attempt, the drain has nobody to wait for, quiet windows are free, and no tier distinction has any effect — the registry write is a single small file. The cost only appears when there is genuinely another run to avoid colliding with, which is the case that used to corrupt both runs silently. If following this section ever makes a solo run slower or more complicated, that is a bug in this section, not the price of concurrency.
+- Jira and kickoff
+- the planning
+- the review of the plan
+- the implementation by the developer
+- the final review
+- the commit
 
-**Coordination state lives at `~/.claude/one-team/portal/`.** Machine-global on purpose: the portal is `localhost`, shared by every lane, so its coordination state cannot live under any one repo's `.git` — a repo-local lock would let a workspace-lane run and a scripts-lane run each pass their own check and still collide.
+This section binds 2 parts of the run:
+
+- **Phase 4**
+- the **prep of the tester**, which overlaps Phase 3. The prep starts the environment, and it can reach the bootstrap branch of env-up.
+
+The `buildDockerImage` warm-up of the developer in Phase 3 builds an image and restarts no container, which is why it needs no coordination.
+
+**A run that is alone on the machine pays nothing for this section. This section changes neither the invocation of one-team nor the actions of the user.** `/one-team <TICKET>` does not change. When the registry holds no other run, these 4 statements hold:
+
+- No other run holds the lock, so the first attempt acquires it.
+- The drain waits for nobody.
+- A quiet window costs nothing.
+- No tier makes a difference, because the write to the registry is 1 small file.
+
+The cost appears only when another run exists, and that is the case which used to corrupt both runs with no report. A solo run that becomes slower or harder under this section shows a defect in this section. It is not a cost of concurrency.
+
+**The coordination state lives at `~/.claude/one-team/portal/`.** That path is global to the machine on purpose. The portal is `localhost`, and every lane shares it, so its coordination state cannot live under the `.git` of 1 repository. A lock inside 1 repository lets a workspace-lane run and a scripts-lane run each pass its own check and then collide.
 
 | Path | Owner | Contents |
 | --- | --- | --- |
-| `runs/<TICKET>.json` | coordinator | ticket, lane, session, PID, current phase, `activity` (`idle`/`active`) with a timestamp, and the run's data-scope claim. Written at kickoff, refreshed at each gate, deleted at Phase 6 or abandonment |
-| `ops.lock` | whoever holds it | a directory, created with `mkdir` so creation is atomic. Holds `ticket`, `operation`, `PID`, `acquired-at`. Held for one operation, never for a phase or a run |
-| `generation` | last disruptor | **exactly one line, containing one integer and nothing else.** Initialized to `0`. Bumped by overwriting it with the new number. Never append to this file |
-| `generation.log` | last disruptor | the append-only history, one line per disruptive operation: `<n> <ticket> <operation> <timestamp>`. Append here, never to `generation` |
+| `runs/<TICKET>.json` | coordinator | the ticket, the lane, the session, the PID, the current phase, `activity` (`idle` or `active`) with a timestamp, and the claim of the run on its data scope. The coordinator writes it at kickoff, refreshes it at each gate, and deletes it at Phase 6 or when the run stops |
+| `ops.lock` | whoever holds it | a directory. `mkdir` creates it, so the creation is atomic. It holds `ticket`, `operation`, `PID`, and `acquired-at`. Hold it for 1 operation. Never hold it for a phase or for a run |
+| `generation` | last disruptor | **exactly 1 line, which holds 1 integer and nothing else.** The initial value is `0`. To raise it, overwrite the file with the new number. Never append to this file |
+| `generation.log` | last disruptor | the history, which only grows. It holds 1 line for each disruptive operation: `<n> <ticket> <operation> <timestamp>`. Append here. Never append to `generation` |
 
 ### Three Tiers of Portal Work
 
 | Tier | What it is | Coordination |
 | --- | --- | --- |
-| **A — free** | authenticated reads and UI reads at `8080`; reading object definitions (files, not the portal); `docker compose logs` reads; migration and fixture writes scoped to the run's own records; the developer's `buildDockerImage` warm-up (it builds an image and restarts nothing); `docker compose up --detach` when containers already run; hot-deploy of `liferay-one-custom-element` or `liferay-one-global-css` | acquires nothing — but still waits out a lock another run holds |
-| **B — quiet window** | the idempotency row, the data-integrity row, and any first-run measurement or global count. The portal is fine with concurrent writes; the *verdict* is not, because these compare a before and an after | `ops.lock` for the row group, intent `quiet-verification`. No generation bump — nothing persistent changed |
-| **C — disruptive** | `docker compose up --detach --force-recreate liferay-one-etc-spring-boot` (mandatory after any Spring Boot change: restarts the container, fails every in-flight `58081` call, and serves new code afterwards); hot-deploy of `liferay-one-batch`, `liferay-one-site-initializer` or `liferay-one-instance-settings` (no restart, but changes the schema, objects or site every other run is verifying against); `/one-site-reset`; `/one-instance-reset` (tears down all records and structure with no restart at all — it looks gentle and is the second most destructive thing available); `/one-env-reset` (volume wipe, taking the `local-dev` OAuth2 app with it); `one-env-up`'s first-run bootstrap branch; re-creating the OAuth app | `ops.lock` + drain, then bump `generation` |
+| **A — free** | an authenticated read and a UI read at `8080`; a read of an object definition from the files, not from the portal; a read with `docker compose logs`; a migration write or a fixture write that stays inside the records of the run; the `buildDockerImage` warm-up of the developer, which builds an image and restarts no container; `docker compose up --detach` when the containers already run; a hot-deploy of `liferay-one-custom-element` or of `liferay-one-global-css` | It acquires nothing. It still waits for a lock that another run holds |
+| **B — quiet window** | the idempotency row, the data-integrity row, and every first-run measurement and global count. The portal accepts concurrent writes. The *verdict* does not, because each of these compares a state before an action with the state after it | Take `ops.lock` for the group of rows, with the intent `quiet-verification`. Do not raise `generation`, because nothing permanent changed |
+| **C — disruptive** | `docker compose up --detach --force-recreate liferay-one-etc-spring-boot`, which is mandatory after any change to Spring Boot: it restarts the container, it fails every `58081` call in flight, and it then serves the new code; a hot-deploy of `liferay-one-batch`, `liferay-one-site-initializer` or `liferay-one-instance-settings`, which restarts no container but changes the schema, the objects or the site that every other run verifies against; `/one-site-reset`; `/one-instance-reset`, which removes all records and all structure and restarts no container, and which is the second most destructive operation here; `/one-env-reset`, which wipes the volume and deletes the `local-dev` OAuth2 application with it; the first-run bootstrap branch of `one-env-up`; the re-creation of the OAuth application | Take `ops.lock`, drain the other runs, then raise `generation` |
 
-The rule behind the table, for anything it does not name: **restarts a container, redeploys an extension, or deletes-and-reseeds → Tier C. Depends on nobody else writing → Tier B. Otherwise A.**
+Apply this rule to any operation that the table does not name:
 
-**Two rules that are easy to read as contradicting each other, resolved.** Tier A needs no lock *of its own* — but it still **yields to a lock somebody else is holding**. "No coordination" means you never acquire, not that you may proceed through another run's hold. This matters concretely: a lock held for a Tier B quiet window exists precisely to stop other writes, so a Tier A write during it corrupts that run's idempotency or integrity verdict. In a measured exercise a compliant Tier A write landed roughly two seconds after another run's quiet window closed, and only escaped corrupting it by that margin — the agent had read the tier table's "none" as permission to write through the hold. So: acquire for B and C, yield for all three.
+- The operation restarts a container, redeploys an extension, or deletes and reseeds data → Tier C.
+- The operation needs every other run to write nothing → Tier B.
+- Every other operation → Tier A.
 
-**The bump procedure, exactly:** while holding `ops.lock`, read the integer from `generation`, overwrite `generation` with that number plus one, then append one line to `generation.log`. Both because it is a read-modify-write that collapses when unsynchronized — eight concurrent unlocked bumps were measured landing as one — and because two files keep the counter machine-readable: when three agents were left to infer the layout from a single file described as "a counter plus a log line", two appended their event into `generation` itself and one used a separate log, leaving `generation` reading `1` while three operations had actually happened. A staleness check would have reported "nothing changed" after three redeploys.
+**A Tier A write during the lock of another run corrupts the verdict of that run. Two rules read as a contradiction here, so read both.** Tier A acquires no lock of its own. Tier A still yields to a lock that another run holds. "No coordination" means that you never acquire a lock. It does not mean that you may write while another run holds one. A lock for a Tier B quiet window exists to stop every other write. A Tier A write during that window corrupts the idempotency verdict or the integrity verdict of that run. In 1 measured exercise a Tier A write that followed the table landed approximately 2 seconds after the quiet window of another run closed. That margin of 2 seconds is the only reason it did not corrupt the verdict. The agent read the word "none" in the tier table as permission to write during the hold. The rule is therefore: acquire the lock for Tier B and for Tier C, and yield to a lock in all 3 tiers.
 
-**Another run's compliant deploy supersedes yours, and nothing announces it.** When a Tier C deploy lands after yours, the portal serves *their* build, through nobody's fault. That is benign contention, not breakage, and it is never a reason to reset. It does mean "confirm pickup before testing" is per **unit** of portal work, not once per phase: re-verify your build is the one deployed immediately before each unit, and re-run your own deploy under the same lock-and-drain if it is not.
+**The exact procedure to raise the generation.** Hold `ops.lock`, then run these 3 steps in order:
+
+1. Read the integer from `generation`.
+
+1. Overwrite `generation` with that number plus 1.
+
+1. Append 1 line to `generation.log`.
+
+Two reasons make this procedure exact. First, the step reads a value, changes it, and writes it back. Without the lock it fails: a measurement of 8 concurrent raises without a lock recorded 1 raise. Second, 2 files keep the counter machine-readable. Three agents once had to infer the layout from 1 file that a description called "a counter plus a log line". Two of them appended their event into `generation` itself, and 1 used a separate log. `generation` then read `1` after 3 operations. A staleness check reports "nothing changed" after 3 redeploys in that state.
+
+**A deploy from another run that follows this protocol replaces your deploy, and no message reports it.** When a Tier C deploy lands after yours, the portal serves the build of that run. Neither run made an error. This is expected contention, not a failure, and it is never a reason to reset the environment. It does change when you confirm the deployed build: confirm it for each **unit** of portal work, not once for each phase. Verify that the portal serves your build immediately before each unit. Run your own deploy again, under the same lock and drain, when it does not.
 
 ### Acquiring, Draining, Releasing
 
-The registry must exist before anything reads or locks it. Phase 0 creates it, but never assume it: **ensure the directory first, then loop, and cap the loop.**
+The registry must exist before any read of it and before any lock on it. Phase 0 creates it. Never assume that it exists. **Create the directory first. Then loop. Then cap the loop.**
 
 ```
 P=~/.claude/one-team/portal
@@ -200,179 +367,403 @@ i=0; until mkdir "$P/ops.lock" 2>/dev/null; do
 done
 ```
 
-Both halves matter, and the reason is that `mkdir` fails **identically** whether the lock is held or its parent does not exist, while `2>/dev/null` throws away the distinction. Without `mkdir -p`, the first run to attempt any redeploy on a fresh machine waits forever on a lock nobody holds — a tested failure, not a hypothetical. Without the cap, a crashed holder's stale lock hangs the next run just as silently. Exhausting the cap is never resolved by deleting someone's lock: check the holder's PID, reclaim only if it is dead, and otherwise escalate to the user.
+Both halves of this block matter. `mkdir` fails **in the same way** when another run holds the lock and when the parent directory does not exist. `2>/dev/null` then removes that difference. Without `mkdir -p`, the first run that attempts a redeploy on a new machine waits forever on a lock that no run holds. A test produced that failure. Without the cap, a stale lock from a crashed holder stops the next run in the same silent way.
 
-For Tier C, then **drain**: wait until every other registered run reads `activity: idle`, polling the registry with the same capped shape. Cap the wait around ten minutes and escalate to the user rather than forcing it — a run that will not go idle is a run that needs a human, not a deadline. Run the operation, verify health by its own recipe's checks, append the generation line, then release by removing the lock directory.
+The loop can reach the cap. Never delete the lock of another run at that point. Read the PID of the holder. Reclaim the lock only when that process is dead. Escalate to the user in every other case.
 
-On the other side of it, every tester checks for a held `ops.lock` **before each unit of portal work** — a script run, a matrix row group — and waits rather than starting; between units it flips its `activity` flag to `idle`. Unit granularity is what keeps a pending Tier C operation draining in minutes instead of waiting out a whole matrix. Set the flag to `idle` *before* beginning to wait, never after: a run that waits on the lock while still advertising itself as `active` is waiting for a drain that its own flag is blocking, which is the one way these two rules could deadlock each other.
+For Tier C, **drain** after you take the lock. Wait until every other registered run reads `activity: idle`. Poll the registry with the same capped loop. Cap that wait at approximately 10 minutes, and escalate to the user at the cap. Never force the operation, because a run that stays active needs a person, not a deadline. Then run these 4 steps in order:
 
-A lock whose PID is dead is reclaimed by the next waiter — but the operation may have half-completed, so reclaiming means: log it, run the recipe's health checks (`http://localhost:8080/c/portal/status`, and `58081/ready` where relevant), run day-to-day env-up if unhealthy (idempotent and safe), append a `reclaimed` generation line so every run knows an operation may have partly applied, then proceed or escalate. Stale registry entries with dead PIDs are swept by any coordinator at kickoff, logged.
+1. Run the operation.
 
-**The three resets additionally need the user's approval whenever another run is registered.** Exclusivity is not enough for them: their destruction outlives the lock, so draining around them protects nobody. A tester that believes a reset is the only way forward reports `BLOCKED` with its reasoning and lets the coordinator ask.
+1. Verify the health of the environment with the checks in the recipe of that operation.
+
+1. Raise the generation with the procedure above.
+
+1. Release the lock. Remove the lock directory.
+
+Every tester checks for a held `ops.lock` **before each unit of portal work**. A unit is 1 script run or 1 group of matrix rows. The tester waits instead of starting the unit. Between 2 units the tester sets its `activity` flag to `idle`. A unit of that size lets a waiting Tier C operation drain in minutes, instead of waiting for a whole matrix.
+
+**A run that waits on the lock while its flag still reads `active` waits for a drain that its own flag blocks. That is the 1 deadlock these 2 rules can create. Set the flag to `idle` *before* you start to wait, never after.**
+
+**The operation behind a dead lock can be half complete, so a reclaim needs 5 steps.** The next waiter reclaims a lock whose PID is dead. That waiter then does this:
+
+1. Log the reclaim.
+
+1. Run the health checks of the recipe: `http://localhost:8080/c/portal/status`, and `58081/ready` where it applies.
+
+1. Run the day-to-day env-up when the environment is not healthy. That command is idempotent and safe.
+
+1. Append a `reclaimed` generation line, so every run knows that an operation can be partly applied.
+
+1. Continue, or escalate to the user.
+
+Any coordinator removes a stale registry entry with a dead PID at kickoff, and logs the removal.
+
+**The 3 resets also need the approval of the user whenever the registry holds another run.** Exclusive access is not enough for them. What they destroy stays destroyed after the lock is released, so a drain protects no other run. A tester that judges a reset to be the only way forward reports `BLOCKED` with its reasoning, and the coordinator then asks the user.
 
 ### What Sharing One Portal Costs, Stated Plainly
 
-Two things one instance can never give concurrent runs, and the protocol says so rather than pretending otherwise:
+One instance can never give concurrent runs these 2 things, and the protocol states both:
 
-- **Overlapping write scopes.** Object ERCs are unique instance-wide, so one run's upsert can repoint the very record another run is asserting against, with neither touching a shared file. Runs therefore declare a data scope at the Phase 1 gate (the planner's Data Scope line) — what the run writes, and what its assertions read. The coordinator copies it into the registry and compares it against every other live run's claim, in both directions, counting deployed extensions and called endpoints as writes. Disjoint → both Phase 4s run concurrently. Overlapping → the coordinator asks the user to sequence the two Phase 4s, or logs the overlap as an accepted risk that the Phase 6 report names. Pairs that genuinely cannot overlap: two runs writing the same object, anything asserting global counts or first-run measurements, and two workspace-lane runs.
+- **Write scopes that overlap.** An object ERC is unique across the instance. An upsert from 1 run can therefore change the record that another run asserts against, and neither run touches a shared file. Each run declares a data scope at the Phase 1 gate, in the Data Scope line of the planner. The scope states what the run writes and what its assertions read. The coordinator copies that scope into the registry. It compares the scope against the claim of every other live run, in both directions. A deployed extension counts as a write, and a called endpoint counts as a write.
 
-  **The Phase 1 comparison is not sufficient on its own, because runs do not start together.** A ticket that registers after your gate has passed produces an overlap that no Phase-1 check could have seen — measured: a run compared scopes, found the one other run disjoint, and only discovered a third run holding an identical write scope once it was already mid-matrix. So the comparison runs at three moments, not one: at your own Phase 1 gate, again each time the coordinator reads the registry for any other reason (it is already reading it at every gate and before every Tier C operation), and once more before the Phase 5 verdict is accepted. A newly-discovered overlap is handled exactly like one found at Phase 1 — sequence with the user, or log the accepted risk — and it reopens Phase 4 for any row already measured against the now-contended scope.
-- **A private log stream.** `docker compose logs liferay` is instance-wide, so with another run registered a new `ERROR` may not be yours. The tester charter's log rule degrades honestly rather than silently: errors attributable to the row's own operation still fail it; unattributable ones are recorded, with the other run named, and cross-checked instead of auto-failed. A row that needs the old strictness takes a Tier B quiet window, which buys a private log window too.
+  - The 2 scopes are disjoint → both Phase 4 runs proceed at the same time.
+  - The 2 scopes overlap → the coordinator asks the user to order the 2 Phase 4 runs, or logs the overlap as an accepted risk. The Phase 6 report then names that risk.
 
-Fixture ERCs carry the ticket ID (`<TICKET>-FIXTURE-*`) so fixtures can never collide and cleanup stays targetable.
+  Three pairs can never overlap:
 
-**Capacity, not correctness:** every run costs a coordinator plus four teammates plus their subagents, so several at once multiply exposure to the session-limit kills the Circuit Breakers already handle. Nothing structural — just expect them sooner with three runs than with one.
+  - 2 runs that write the same object
+  - any run that asserts a global count or a first-run measurement, paired with any other run
+  - 2 workspace-lane runs
+
+  **The comparison at Phase 1 is not sufficient on its own, because the runs do not start together.** A ticket that registers after your gate passes creates an overlap that no check at Phase 1 can see. One measured run compared the scopes and found the 1 other run disjoint. It then found a third run with an identical write scope during its own matrix. Run the comparison at these 3 moments:
+
+  - at your own Phase 1 gate
+  - each time the coordinator reads the registry for any other reason, which it does at every gate and before every Tier C operation
+  - once more, before the coordinator accepts the Phase 5 verdict
+
+  Handle a new overlap exactly as an overlap at Phase 1: order the runs with the user, or log the accepted risk. A new overlap also reopens Phase 4 for every row that was measured against the contended scope.
+- **A private stream of logs.** `docker compose logs liferay` covers the whole instance, so a new `ERROR` line can belong to another registered run. The log rule in the charter of the tester states that limit instead of hiding it:
+
+  - An error that belongs to the operation of the row still fails that row.
+  - An error that belongs to no identified operation is recorded, with the name of the other run, and cross-checked. It does not fail the row by itself.
+
+  A row that needs the stricter rule takes a Tier B quiet window, which also gives it a private window of logs.
+
+A fixture ERC carries the ticket ID, in the form `<TICKET>-FIXTURE-*`. Two fixtures then never collide, and the cleanup can target the fixtures of 1 run.
+
+**This is a limit of capacity, not of correctness.** Each run costs 1 coordinator, 4 teammates, and their subagents. More runs at the same time therefore meet the session limit more often. The Circuit Breakers already handle that kill. Nothing in the structure changes. Expect the kill sooner with 3 runs than with 1 run.
 
 ## Phase Protocol
 
-Seven phases. Each has an owner, an exit gate, and a `team-log.md` entry; no phase's gate can pass before the previous gate is logged — verdicts and confirmations keep their order even where work overlaps (tester prep during Phase 3 and the reviewer's early pass during Phase 4 are the two sanctioned overlaps). Gates are evidence-based, not immutable: when later evidence invalidates a logged gate — a regression surfacing after `APPROVED`, a failed retest, **another run's Tier C operation landing after this run measured its result** — the coordinator reopens the run at the earliest affected phase, logs why, and the standard loops rerun. Ship never proceeds over a known-stale gate. Concurrency makes that last case the one a run cannot feel, so it is detected rather than noticed: every Phase 4 verdict records the `generation` it was measured at, and the coordinator re-reads the counter before accepting the Phase 5 verdict and again at Phase 6. Mirror the phases on the shared task board at kickoff — one task per phase, chained with `addBlockedBy` — and advance statuses as gates pass. The coordinator owns the board; teammates report through messages.
+There are 7 phases. Each phase has an owner, an exit gate, and an entry in `team-log.md`. A gate cannot pass before the log holds the entry for the previous gate. Verdicts and confirmations keep their order even where the work overlaps. The protocol allows these 2 overlaps:
 
-Every `git` command in every phase runs in `<TARGET>` — a teammate that shells out from a subagent's default directory can land in the wrong repo, and the sibling checkouts are all git repos too. Before logging any gate and before dispatching any phase assignment, verify `git -C <TARGET> branch --show-current` prints `<TICKET>`; on a mismatch, freeze the team with HOLD messages, read the reflog to see what happened, and escalate to the user before anything else runs. A worktree lane is largely immune to this — the worktree exists for this ticket alone and git will not check its branch out elsewhere — but the check still runs, because it costs nothing and the workspace lane, which works directly in a checkout the user and other sessions can move mid-run, needs it exactly as much as before.
+- the prep of the tester during Phase 3
+- the early pass of the reviewer during Phase 4
+
+A gate rests on evidence. It is not permanent. Three kinds of later evidence cancel a logged gate:
+
+- a regression that appears after `APPROVED`
+- a retest that fails
+- a Tier C operation from another run that lands after this run measures its result
+
+The coordinator then reopens the run at the earliest affected phase, logs the reason, and runs the standard loops again. Phase 6 never proceeds over a gate that the coordinator knows to be stale.
+
+A run cannot observe the third case directly, so the protocol detects it instead. Every Phase 4 verdict records the `generation` at which the tester measured it. The coordinator reads the counter again before it accepts the Phase 5 verdict, and once more at Phase 6.
+
+Mirror the phases on the shared task board at kickoff. Create 1 task for each phase, and chain them with `addBlockedBy`. Advance the status of each task as its gate passes. The coordinator owns the board. The teammates report through messages.
+
+**A `git` command that runs in the wrong repository writes to the wrong repository, and every sibling checkout is also a git repository.** Run every `git` command in every phase in `<TARGET>`. A teammate that runs a command from the default directory of a subagent can reach another repository.
+
+Verify the branch before you log any gate and before you dispatch any phase assignment. `git -C <TARGET> branch --show-current` must print `<TICKET>`. On any other value, run these 3 steps in order:
+
+1. Stop the team with HOLD messages.
+
+1. Read the reflog to find what happened.
+
+1. Escalate to the user before anything else runs.
+
+A worktree lane rarely meets this problem. The worktree belongs to 1 ticket, and git does not check that branch out in a second place. Run the check in that lane too. It costs nothing, and the workspace lane needs it. That lane works directly in a checkout, and the user or another session can move that checkout during the run.
 
 ### Phase 0 — Kickoff (Coordinator)
 
-1. Read the lane off the working directory (see Lanes) and verify that directory is `<CHECKOUT>`'s root, then resolve every path and write `paths.md` — the lane, `<CHECKOUT>`, `<TEAMDIR>`, `<BASE>`, and each variable from Resolving the Repos marked present or absent. `<TARGET>` is recorded once it exists: the same path as `<CHECKOUT>` in the workspace lane, the worktree path below in every other lane.
+1. Read the lane from the working directory, as Lanes describes, and verify that this directory is the root of `<CHECKOUT>`. Then resolve every path and write `paths.md`. That file holds the lane, `<CHECKOUT>`, `<TEAMDIR>`, `<BASE>`, and each variable from Resolving the Repos, marked present or absent. Record `<TARGET>` once it exists. In the workspace lane it is the same path as `<CHECKOUT>`. In every other lane it is the worktree path that the fetch and branch step below creates.
 
-1. Claim the ticket before changing anything: create `<TEAMDIR>`, `mkdir -p ~/.claude/one-team/portal/runs`, initialize `generation` to `0` when absent, then write `~/.claude/one-team/<TICKET>/run.lock` with this session's ticket, PID and start time. Creating the registry here is what keeps every later lock and generation read from failing on a missing parent. A `run.lock` whose **PID is still alive** means another session is already running this ticket — stop and tell the user which, rather than putting a second coordinator on one team directory. A `run.lock` whose **PID is dead** is a crashed predecessor, not a conflict: reclaim it, note the reclaim in `team-log.md`, and continue into the resume check below, which is where its surviving artifacts get picked up.
+1. Claim the ticket before you change anything. Run these 4 steps in order:
 
-1. Resume check — before any tree-state judgment: when `<TEAMDIR>/team-log.md` exists, follow Resuming an Interrupted Run instead of continuing here; a resumed run's staged, uncommitted work is its persisted state, not a dirty tree. A branch named `<TICKET>` with no team log is a leftover, not a resume: when `git cherry <BASE> <TICKET>` shows its work already upstream (the usual case for follow-ups on completed tickets), rename it aside — `git branch -m <TICKET> <TICKET>-pre-one-team` — and continue; when it carries unique unmerged commits, stop and ask the user which base to build on.
+    1. Create `<TEAMDIR>`.
 
-1. Register the run in the portal registry and check what else is live, per Concurrency — sweeping any entry whose PID is dead, with a log line. Registered runs in other lanes are expected and fine; note them in the kickoff status so the user knows what this run shares the portal with. One case needs the user rather than a rule: another **live workspace-lane run**, because that lane works directly in the checkout and two runs would share one working tree. Do not silently refuse — report the holder and offer the two real options: wait for it to finish, or run this ticket in its own workspace worktree, which costs 1.7–3 GB and is the only way to overlap them. The user decides; log the choice.
+    1. Run `mkdir -p ~/.claude/one-team/portal/runs`.
 
-1. Fresh runs only: `git -C <CHECKOUT> status --porcelain` must be clean. Dirty tree → stop and ask the user. A worktree lane checks `<CHECKOUT>` here because the worktree does not exist yet; from Phase 3 on, the tree that matters is `<TARGET>`.
+    1. Set `generation` to `0` when that file does not exist.
 
-1. Write `team-log.md` (ticket, lane, date, phase checklist, roster placeholder) into `<TEAMDIR>`, and copy the four charter files from `<WORKSPACE>/.agents/skills/one-team/roles/` into `<TEAMDIR>/roles/` — every spawn prompt points at these copies, in every lane.
+    1. Write `~/.claude/one-team/<TICKET>/run.lock` with the ticket, the PID, and the start time of this session.
 
-1. Fetch and digest the Jira context per `reference/jira.md`, and validate it.
+    The registry must exist at this point. Every later read of a lock or of the generation then finds its parent directory. A `run.lock` whose **PID is alive** means that another session already runs this ticket. Stop, and tell the user which session holds it. Do not put a second coordinator on 1 team directory. A `run.lock` whose **PID is dead** is a crashed predecessor, not a conflict. Reclaim it, record the reclaim in `team-log.md`, and continue to the resume check below. That check reads the artifacts that the crashed run left.
 
-1. Fetch and branch, in `<CHECKOUT>`: `git fetch liferay-one master-temp` in the workspace lane or `git fetch liferay-one main` in the scripts lane. Then create the tree the run works in:
+1. Run the resume check before you judge the state of the tree. When `<TEAMDIR>/team-log.md` exists, follow Resuming an Interrupted Run instead of this section. The staged, uncommitted work of a resumed run is its saved state. It is not a dirty tree.
+
+    A branch named `<TICKET>` with no team log is a leftover, not a resume. Handle it in 1 of these 2 ways:
+
+    - `git cherry <BASE> <TICKET>` shows that the work is already upstream. This is the usual case for a follow-up on a completed ticket. Rename the branch with `git branch -m <TICKET> <TICKET>-pre-one-team`, and continue.
+    - The branch holds unique commits that are not upstream. Stop, and ask the user which base to build on.
+
+1. Register the run in the portal registry, and check which other runs are live, as Concurrency describes. Remove every entry whose PID is dead, and write 1 log line for each removal. A registered run in another lane is expected and correct. Name those runs in the kickoff status, so the user knows which runs share the portal with this one.
+
+    One case needs the user rather than a rule: another **live workspace-lane run**. That lane works directly in the checkout, so 2 runs would share 1 working tree. Report the holder to the user, and offer these 2 real options:
+
+    - Wait for the other run to finish.
+    - Run this ticket in its own workspace worktree. That worktree costs 1.7 GB to 3 GB, and it is the only way to run the 2 tickets at the same time.
+
+    The user decides. Log the choice. Never refuse without a message.
+
+1. Fresh runs only: `git -C <CHECKOUT> status --porcelain` must print nothing. Stop and ask the user when the tree is dirty. A worktree lane checks `<CHECKOUT>` here, because the worktree does not exist yet. From Phase 3 onward, the tree that matters is `<TARGET>`.
+
+1. Write `team-log.md` into `<TEAMDIR>` with the ticket, the lane, the date, the checklist of the phases, and a placeholder for the roster. Copy the 4 charter files from `<WORKSPACE>/.agents/skills/one-team/roles/` into `<TEAMDIR>/roles/`. Every spawn prompt gives the path of these copies, in every lane.
+
+1. Fetch the Jira context, as `reference/jira.md` describes. Digest it. Validate it.
+
+1. Fetch and branch, in `<CHECKOUT>`. Run `git fetch liferay-one master-temp` in the workspace lane. Run `git fetch liferay-one main` in the scripts lane. Then create the tree that the run works in:
 
     - **Workspace lane:** `git checkout -b <TICKET> <BASE>`. `<TARGET>` is `<CHECKOUT>`.
-    - **Every other lane:** `git worktree add .claude/worktrees/<TICKET> -b <TICKET> <BASE>`, and record that path as `<TARGET>` in `paths.md`. Nothing downstream changes — every teammate already runs `git -C <TARGET>` against absolute paths. Reuse the worktree when it already exists on the right branch; git refuses to check one branch out twice, which backstops a same-ticket collision the `run.lock` should already have caught.
+    - **Every other lane:** run `git worktree add .claude/worktrees/<TICKET> -b <TICKET> <BASE>`, and record that path as `<TARGET>` in `paths.md`. Nothing after this step changes, because every teammate already runs `git -C <TARGET>` with absolute paths. Reuse the worktree when it already exists on the correct branch. Git refuses to check 1 branch out twice, which catches a collision on the same ticket that `run.lock` should catch first.
 
-1. Bootstrap a fresh worktree so the tester can actually run in it — a new worktree contains none of the gitignored working state. In the scripts lane: copy `<CHECKOUT>/one/.env` to `<TARGET>/one/.env`; `mkdir -p <TARGET>/one/db <TARGET>/one/output` (both are gitignored, so a fresh worktree has neither, and `cp` into a missing directory fails); clone the local stores with `cp -c <CHECKOUT>/one/db/*.db <TARGET>/one/db/` (APFS clone-on-write, so a populated store costs no space and no wait, and the run gets a private copy that no other run can contend on); then `bun install` in `<TARGET>/one`. Skip whatever the source lacks and say so in the kickoff status — a missing `.env` is the tester's `BLOCKED`, not a value to invent. The workspace lane skips this step: it works in the checkout, which is already provisioned.
+1. Bootstrap a fresh worktree, so the tester can run in it. A new worktree holds none of the working state that `.gitignore` covers. In the scripts lane, run these 4 steps in order:
+
+    1. Copy `<CHECKOUT>/one/.env` to `<TARGET>/one/.env`.
+
+    1. Run `mkdir -p <TARGET>/one/db <TARGET>/one/output`. `.gitignore` covers both directories, so a fresh worktree has neither, and `cp` fails into a directory that does not exist.
+
+    1. Clone the local stores with `cp -c <CHECKOUT>/one/db/*.db <TARGET>/one/db/`. APFS clones on write, so a populated store costs no space and no wait. The run gets a private copy that no other run contends for.
+
+    1. Run `bun install` in `<TARGET>/one`.
+
+    Skip each step whose source file is absent, and report that skip in the kickoff status. An absent `.env` makes the tester report `BLOCKED`. Never invent a value for it. The workspace lane skips this step, because it works in the checkout, and the checkout already holds this state.
 
 1. Create the phase tasks on the task board.
 
-1. Spawn the planner, whose first assignment is Phase 1; log the roster and extend it as the other roles spawn.
+1. Spawn the planner. Its first assignment is Phase 1. Log the roster, and add each other role to the roster as it spawns.
 
 ### Phase 1 — Plan (Planner)
 
-Brief the planner with the digest paths, the user's kickoff context, and the assignment: produce `plan.md` per its charter.
+Brief the planner with the paths of the digests, the kickoff context of the user, and the assignment. The assignment is to produce `plan.md`, as its charter describes.
 
-The planner researches as deeply as the ticket needs — fanning its mechanical sweeps out to cheap subagents in a single message rather than taking a turn per sweep — and **asks instead of guessing**: `QUESTION` messages come to the coordinator, which answers from established run context or puts the question to the user via `AskUserQuestion`, then relays the answer verbatim. Batched questions cost one round-trip; a trickle costs one each.
+The planner researches the ticket to the depth that the ticket needs. It sends its mechanical sweeps to cheap subagents in 1 message, instead of taking 1 turn for each sweep. The planner **asks instead of guessing**. A `QUESTION` message arrives at the coordinator. The coordinator answers it from the established context of the run, or puts the question to the user with `AskUserQuestion`. It then relays the answer word for word. Questions in 1 batch cost 1 round trip. Questions sent one at a time cost 1 round trip each.
 
-Exit gate: `plan.md` written; planner reports `DONE`. At this gate the coordinator also copies the plan's **Data Scope** line into the run's registry entry and compares it against every other live run's claim per Concurrency — this is the earliest point the claim exists, and the last point before Phase 4 where sequencing two runs is still cheap. A conflict is raised with the user now, not discovered mid-matrix.
+Exit gate: `plan.md` exists, and the planner reports `DONE`. At this gate the coordinator also copies the **Data Scope** line of the plan into the registry entry of the run. It compares that line against the claim of every other live run, as Concurrency describes. This gate is the first point at which the claim exists. It is also the last point before Phase 4 at which ordering 2 runs is still cheap. Report a conflict to the user at this gate. Do not find it during the matrix.
 
 ### Phase 2 — Plan Review (Developer) and the Human Gate, Concurrently
 
-Dispatch both reads at once: spawn the developer with this review as its first assignment — read `plan.md` critically before any code exists — feasibility, missing steps, pattern conformance, testability, scope — and in the same breath post the compact plan summary to the user in chat (goal, approach, files, test plan, open risks), point at `plan.md`, and ask them to approve or request changes. **Phase 3 starts only when both the developer–planner agreement and the user's approval are in.**
+Dispatch both reads at the same time.
 
-Developer objections are relayed to the planner for revision; loop until **both explicitly agree**. When they still disagree after one rebuttal round each, take both positions to the user instead of forcing agreement. When a revision lands while the user is still reading, tell them what changed — an approval given on stale text is re-confirmed against a one-line delta. Log the outcome and any accepted risks.
+Spawn the developer, and make this review its first assignment. The developer reads `plan.md` critically before any code exists. It checks these 5 properties:
+
+- the feasibility
+- the missing steps
+- the conformance to the patterns
+- the testability
+- the scope
+
+In the same turn, post the compact summary of the plan to the user in the chat. That summary holds the goal, the approach, the files, the test plan, and the open risks. Give the path of `plan.md`. Ask the user to approve the plan or to request changes.
+
+**Phase 3 starts only after both the agreement between the developer and the planner and the approval of the user arrive.**
+
+Relay each objection of the developer to the planner, which revises the plan. Loop until **both roles agree in writing**. When they still disagree after 1 rebuttal round from each role, take both positions to the user. Do not force an agreement. When a revision arrives while the user still reads the summary, tell the user what changed. An approval that the user gave on the old text is re-confirmed against a delta of 1 line. Log the outcome and each accepted risk.
 
 ### Phase 3 — Implement (Developer)
 
-Dispatch two assignments the moment the plan gate closes: the developer implements `plan.md` under its charter's rules, and the tester — spawned now, prep as its first assignment — runs that prep in parallel (its charter's Prep section; nothing in it needs the diff). While this phase runs:
+Dispatch 2 assignments at the moment the plan gate closes:
 
-- The developer is the **only writer** of repository files, and only inside `<TARGET>`. Nobody else — planner, tester, reviewer, coordinator — edits them, ever, and no role writes anything in any other checkout. The `<TEAMDIR>` artifacts are the one exception: each role maintains its own, per the artifact table.
-- Deviations from the plan are flagged to the coordinator; material design changes go back to the planner for agreement before proceeding, which respawns it against the artifacts when Phase 2 is long behind. The planner stays the only writer of `plan.md`: it is the design of record, and a developer editing it is a developer grading its own deviation.
-- Done means the lane's build gate passes, unit tests exist where the target repo already has patterns for them, and everything is staged with `git add --all` — no commits.
+- The developer implements `plan.md` under the rules of its charter.
+- The tester runs its prep in parallel. Spawn the tester now, and make the prep its first assignment. The Prep section of its charter holds the procedure, and no step in it needs the diff.
 
-Exit gate: developer writes `dev-handoff.md` (touched files, change summary, per-AC verification hints mapped to the plan's test scenarios, notes) and reports `DONE` with the path.
+These 3 rules apply while the phase runs:
+
+- The developer is the **only writer** of the files of the repository, and it writes only inside `<TARGET>`. The planner, the tester, the reviewer, and the coordinator never edit those files. No role writes anything in any other checkout. The artifacts in `<TEAMDIR>` are the 1 exception, and each role maintains its own artifacts, as the artifact table states.
+- Report each deviation from the plan to the coordinator. A material change to the design goes back to the planner for agreement before the work continues. The coordinator respawns the planner against the artifacts when Phase 2 ended many turns earlier. The planner stays the only writer of `plan.md`, because that file is the design of record. A developer that edits it grades its own deviation.
+- The work is done when these 3 conditions hold:
+
+  - The build gate of the lane passes.
+  - Unit tests exist where the target repository already has a pattern for them.
+  - `git add --all` stages everything.
+
+  Make no commit.
+
+Exit gate: the developer writes `dev-handoff.md` and reports `DONE` with its path. That file holds these 4 items:
+
+- the files that changed
+- a summary of the changes
+- 1 verification hint for each acceptance criterion, mapped to a test scenario in the plan
+- the notes
 
 ### Phase 4 — Deploy and Test (Tester)
 
-The tester — already prepped, briefed with `dev-handoff.md` and the plan's Test Plan — proves the staged work through the running system per its charter, then sweeps for **regressions**: every flow or script that consumes code the developer touched gets exercised too, with logs watched for new errors throughout. The lane's proof is the Lanes table's Phase 4 row; the tester charter carries the procedure.
+The tester already ran its prep. Brief it with `dev-handoff.md` and with the Test Plan of the plan. The tester proves the staged work through the running system, as its charter describes. It then searches for **regressions**. It exercises every flow and every script that uses code that the developer changed. It watches the logs for a new error throughout that work. The Phase 4 row of the Lanes table names the proof for the lane. The charter of the tester holds the procedure.
 
-`FAIL` goes back to the developer with reproduction steps, the developer fixes under Phase 3 rules, the tester redeploys and retests the failed cases plus the fix's blast radius. Loop until the full matrix passes on the currently deployed build.
+A `FAIL` goes back to the developer with the steps that reproduce it. The developer fixes the defect under the rules of Phase 3. The tester deploys again, tests the failed cases again, and tests everything that the fix can affect. Loop until the full matrix passes on the build that the portal now serves.
 
-Exit gate: `test-report.md` complete; developer and tester both explicitly confirm the acceptance criteria are met with no regressions. Log the joint agreement, and log the `generation` the matrix was measured at — the report carries it too, per the tester charter. A verdict with no generation recorded cannot be checked for staleness later, which makes it unshippable under Phase 6 step 4.
+Exit gate: `test-report.md` is complete, and the developer and the tester both confirm in writing that the work meets the acceptance criteria with no regression. Log that joint agreement. Log the `generation` at which the tester measured the matrix. The report carries that number too, as the charter of the tester requires. A verdict with no recorded generation cannot be checked for staleness later, and step 4 of Phase 6 therefore blocks it.
 
 ### Phase 5 — Final Review (Reviewer)
 
-Spawn the reviewer — unless the early pass below already did — and brief it with the plan, test report, and diff scope (`git diff <BASE>` — the work is staged, so this shows everything, new files included).
+Spawn the reviewer, unless the early pass below already spawned it. Brief it with the plan, the test report, and the scope of the diff. That scope is `git diff <BASE>`. The work is staged, so this command shows every change, and it includes the new files.
 
-**Decide here whether this ticket is `--adversarial`-eligible**, and tell the reviewer which it is. Two triggers earn it and nothing else does:
+**Decide at this point whether this ticket qualifies for `--adversarial`**, and tell the reviewer the decision. Exactly 2 triggers qualify, and nothing else does:
 
-- the diff touches a **write path in the scripts lane** — a migration that loads or mutates data, where `criteria.md` already makes an idempotency defect a blocker and a bad run is expensive to undo;
-- the diff changes a **contract another repo consumes** — an ERC, a field name, an endpoint path, a payload shape.
+- The diff changes a **write path in the scripts lane**, which covers a migration that loads or changes data. `criteria.md` already makes a defect in idempotency a blocker, and a run that writes the wrong data costs a lot to undo.
+- The diff changes a **contract that another repository consumes**. That covers an ERC, the name of a field, the path of an endpoint, and the shape of a payload.
 
-Neither present, every round runs standard. Either present, the reviewer still runs standard rounds and escalates only on the round it would otherwise approve — see its charter. Running the flag on every round multiplies its cost by the number of rounds and spends the most where it buys the least: a round ending in `CHANGES_REQUESTED` is catching things the next round would catch anyway, while the round that produces `APPROVED` is the one where a miss actually ships.
+With neither trigger present, every round is a standard round. With either trigger present, the reviewer still runs standard rounds, and it escalates only on the round that it would otherwise approve. Its charter describes that escalation. The flag on every round costs its price once for each round, and it buys the least on the rounds that end in `CHANGES_REQUESTED`. Those rounds catch defects that the next round also catches. The round that produces `APPROVED` is the round on which a missed defect ships.
 
-Log the call in `team-log.md`. On an escalated round, brief with `git diff <BASE> --name-only` scope rather than content: under the flag the reviewer reads no diff itself, and a coordinator that hands over the content has spent its fresh eyes before a pass exists. Those artifacts and nothing more: no account of how the developer arrived at the change, no summary of what has already been checked, no reassurance that a shape was deliberate. The coordinator watched this get built, and every sentence of that history it forwards is a judgment the reviewer no longer derives for itself. The reviewer works read-only per its charter.
+Log the decision in `team-log.md`. On an escalated round, brief the reviewer with the scope from `git diff <BASE> --name-only`, not with the content of the diff. Under the flag the reviewer reads no diff itself, and a coordinator that hands over the content removes the independent reading before any pass exists. Send those artifacts and nothing more. Never send these 3 items:
 
-For small diffs (roughly under two hundred changed lines), the coordinator may start the reviewer's passes during Phase 4, with the verdict held until the tester's `PASS` lands — a `FAIL` that changes the diff voids them. Findings are only ever issued against the tested, final diff.
+- an account of how the developer reached the change
+- a summary of what somebody already checked
+- a statement that a shape of the code is deliberate
 
-Where `--adversarial` was asked for and the reviewer reports it could not spawn subagents — so worked the lenses inline rather than through fresh readers — that is a degraded review, not a failed one. `APPROVED` still passes the gate; log the degradation in `team-log.md` as an accepted risk and name it in the Phase 6 report, so the user decides whether a separate fresh review runs before `/one-pr`. An independence shortfall that nobody surfaces is the one this protocol would ship silently.
+The coordinator watched the work as it was built. Every sentence of that history that it forwards is a judgment that the reviewer no longer derives for itself. The reviewer works read-only, as its charter requires.
 
-`CHANGES_REQUESTED` → developer fixes (Phase 3 rules) → **tester retests the fixes and their blast radius** (Phase 4 rules — a `PASS` on those rows suffices in these rounds; the full joint confirmation is not re-taken) → reviewer re-reviews the delta only. Every finding ends adjudicated: fixed, or explicitly rejected with a reason the reviewer accepts. Loop until `APPROVED`.
+The coordinator may start the passes of the reviewer during Phase 4 for a small diff, which is a diff under 200 changed lines. Hold the verdict until the `PASS` from the tester arrives. A `FAIL` that changes the diff cancels those passes. The reviewer issues a finding only against the final diff that the tester passed.
 
-Exit gate: reviewer's `APPROVED` logged, and the generation check passes. Before accepting the verdict the coordinator re-reads `~/.claude/one-team/portal/generation` and diffs it against the one Phase 4 recorded. Unchanged, or changed only by events irrelevant to this run, passes with a log line. **Relevant** means: a Spring Boot recreate when this run's work reaches that extension (the tester charter's `SPRING_BOOT_URL` test draws the same line), a batch or site-initializer deploy touching an object inside this run's data scope, or any reset — resets are relevant to everyone. A relevant event after a logged `PASS` reopens Phase 4 for the affected rows.
+The coordinator can ask for `--adversarial`, and the reviewer can then report that it could not spawn subagents. It worked the lenses inline instead of through fresh readers. That review is degraded, not failed. An `APPROVED` from it still passes the gate. Log the degradation in `team-log.md` as an accepted risk. Name it in the Phase 6 report, so the user decides whether a separate fresh review runs before `/one-pr`. A loss of independence that nobody reports is the 1 defect that this protocol ships with no warning.
+
+A `CHANGES_REQUESTED` starts this loop:
+
+1. The developer fixes the findings under the rules of Phase 3.
+
+1. The **tester tests the fixes again, and tests everything that the fixes can affect**, under the rules of Phase 4. A `PASS` on those rows is enough in these rounds, and the run does not repeat the full joint confirmation.
+
+1. The reviewer reviews the delta only.
+
+Every finding ends with a decision: the developer fixes it, or the developer rejects it with a reason that the reviewer accepts. Loop until the reviewer reports `APPROVED`.
+
+Exit gate: the log holds the `APPROVED` of the reviewer, and the generation check passes. Before it accepts the verdict, the coordinator reads `~/.claude/one-team/portal/generation` again and compares that number with the number that Phase 4 recorded. An unchanged number passes with a log line. A number that changed only through events that do not affect this run also passes with a log line. An event is **relevant** when it is 1 of these 3:
+
+- a recreate of Spring Boot, when the work of this run reaches that extension. The `SPRING_BOOT_URL` test in the charter of the tester draws the same line.
+- a deploy of batch or of the site initializer that changes an object inside the data scope of this run
+- any reset. A reset is relevant to every run.
+
+A relevant event after a logged `PASS` reopens Phase 4 for the affected rows.
 
 ### Phase 6 — Ship (Developer Commits, Everyone Signs)
 
-1. The developer runs the lane's build gate one final time. The pass must produce no diff — when it changes anything, re-stage and return to Phase 5 for a delta re-review before continuing.
+1. The developer runs the build gate of the lane a final time. That run must produce no diff. When it changes a file, stage the change again and return to Phase 5 for a delta re-review before the run continues.
 
-1. The developer composes the commits: minimal and organized — one commit is the default; split only when the history is genuinely clearer for the human reviewer (for example, regenerated output apart from hand-written code). Every message reads `<TICKET> <concise summary>` — sentence case, no trailing period, under 72 characters. Plain `git commit` under the user's git identity: **never** add Claude as author or co-author, no `Co-Authored-By` trailer, no tool attribution anywhere.
+1. The developer composes the commits. Keep them few and organized. One commit is the default. Split the work into more commits only when that makes the history clearer for the person who reviews it. One example is regenerated output, which goes in a commit apart from the hand-written code.
 
-1. The coordinator verifies the mechanical properties: `git log <BASE>..HEAD --format='%an %s'` shows the user as author and the ticket prefix on every commit; `git diff <BASE> --name-only` shows only files in this ticket's scope, all of them inside `<TARGET>`; the working tree is clean.
+    Every message reads `<TICKET> <concise summary>`. Use sentence case. Write no period at the end. Keep the line under 72 characters.
 
-1. The coordinator runs the generation check one last time, exactly as in Phase 5. **Ship never proceeds over a generation the gate has not seen** — a relevant event that landed since the review reopens Phase 4 for the affected rows, however late it arrives. This is the last point where a concurrent run's redeploy or reset can be caught before the work is presented as verified.
+    Run plain `git commit` under the git identity of the user. **Never** add Claude as an author or as a co-author. Write no `Co-Authored-By` trailer. Write no attribution to a tool anywhere.
 
-1. The reviewer takes one last look at the commit structure — message quality, sensible organization, nothing stray. Author and prefix are mechanical and already checked; whether a message describes the outcome rather than the code is a judgment, which is why it stays with the reviewer. A problem named here follows the usual adjudication loop: the developer amends the commits (soft-reset and recommit when structure or messages are wrong), the coordinator re-runs its step 3 checks, the reviewer looks again.
+1. The coordinator verifies these 3 mechanical properties:
 
-1. Release what this run was holding: delete `runs/<TICKET>.json` from the registry and remove `run.lock`, so a later session on this ticket is a clean resume rather than a blocked one. `<TEAMDIR>` stays — it is the record. **The worktree stays too.** A worktree is only ever removed once its ticket has shipped or been abandoned: the run's staged, uncommitted work is its resume state, and removing the worktree destroys that while leaving the branch ref behind to look intact. Tell the user the worktree path in the report and let them decide when it goes.
+    - `git log <BASE>..HEAD --format='%an %s'` shows the user as the author and the ticket prefix on every commit.
+    - `git diff <BASE> --name-only` shows only files inside the scope of this ticket, and every one of them is inside `<TARGET>`.
+    - The working tree is clean.
 
-1. **Do not push. Do not open a PR** (unless the user has explicitly ordered it — log the override). Report to the user: the lane and target repo, what was built, where the plan/test/review artifacts live, the commit list, the branch name, the worktree path when the lane used one, any cross-repo work the run recorded as owed, and that the lane's `/one-pr` is the next step once they are satisfied. In the workspace lane, warn them that `liferay-one/master-temp` force-rewrites frequently — a branch that sits unmerged shows PR "conflicts" even when its files are untouched; re-rebasing onto the current tip and force-pushing with lease fixes it in seconds, and prompt merging avoids it entirely.
+1. The coordinator runs the generation check one last time, exactly as in Phase 5. **Ship never proceeds over a generation that the gate has not read.** A relevant event that landed after the review reopens Phase 4 for the affected rows, however late it arrives. This step is the last point at which the run catches a redeploy or a reset from a concurrent run. After this step, the run presents the work as verified.
+
+1. The reviewer takes one last look at the structure of the commits. It checks the quality of each message, the organization of the commits, and the absence of a stray file. The author and the prefix are mechanical, and step 3 already checked them. Whether a message describes the outcome rather than the code is a judgment, which is why it stays with the reviewer. A problem that the reviewer names here follows the usual adjudication loop:
+
+    1. The developer amends the commits. It runs a soft reset and commits again when the structure or the messages are wrong.
+
+    1. The coordinator runs its step 3 checks again.
+
+    1. The reviewer looks again.
+
+1. Release what this run holds. Delete `runs/<TICKET>.json` from the registry, and remove `run.lock`. A later session on this ticket then makes a clean resume instead of a blocked one. `<TEAMDIR>` stays, because it is the record.
+
+    **A removal of the worktree destroys the staged, uncommitted work of the run and leaves the branch reference, which still looks intact. That work is the resume state of the run, so the worktree stays too.** Remove a worktree only after its ticket ships or the user abandons it. Give the user the path of the worktree in the report, and let the user decide when it goes.
+
+1. **Do not push. Do not open a PR.** The user can order either one directly, and you then log that order as an override. Report these 8 items to the user:
+
+    - the lane and the target repository
+    - what the run built
+    - where the plan, the test report, and the review live
+    - the list of the commits
+    - the name of the branch
+    - the path of the worktree, when the lane uses one
+    - any work in the other repository that the run recorded as owed
+    - that `/one-pr` for this lane is the next step, once the user is satisfied
+
+    In the workspace lane, warn the user that `liferay-one/master-temp` rewrites its history often. A branch that stays unmerged then shows "conflicts" on its PR, even when nothing changed its files. A rebase onto the current tip and a force-push with a lease fix that in seconds. A merge soon after the review prevents it.
 
 ## Communication Rules
 
-- Hub and spoke for everything that matters: handoffs, verdicts, gates, escalations, and disagreements go through the coordinator and into `team-log.md` as they happen, not retroactively. Pure clarification questions between teammates go directly — address the role name (a verified mechanic) — with the exchange reflected in the asker's next report to main; anything touching scope, design, verdicts, or gates returns to the spoke.
-- Every teammate reply starts with a status word — `DONE`, `PASS`, `FAIL`, `BLOCKED`, `PROGRESS`, `QUESTION`, `APPROVED`, `CHANGES_REQUESTED` — followed by the payload. Each charter names the subset its role uses. `PROGRESS` is non-terminal and log-only: a milestone heartbeat the coordinator records without a relay turn or a reply.
-- The user outranks the protocol: a mid-run user instruction that overrides a rule — ship before review, push, skip a phase — is followed and logged as a user override, never resisted and never silently absorbed. Work it displaces (a deferred final review, for example) is recorded in the log as still owed.
-- Every dispatch names the phase, the assignment, the artifact paths, and what done looks like — complete, in one message. Each extra round-trip re-processes that teammate's whole transcript, so one full dispatch costs less than three partial ones. Dispatches routinely run past the ten-line budget for exactly this reason and should: the budget binds hardest on replies and relays, where length is usually restatement.
-- **A silent teammate is watched, not waited on.** Probe frugality applies to a teammate that is working, never to one that might be stuck. Any teammate known to be waiting on a long command, or silent past the point its work should have finished, gets checked — and checked by looking (is the process alive, did the artifact appear, what do the logs say) rather than by waiting for a notification that may never arrive. A probe costs one round-trip; a stranded phase costs the run.
-- Disagreements get one rebuttal round per side. Execution-level disputes (fix approach, finding severity, retest scope) are then decided by the coordinator, reasoning logged. Disputes over the plan's content, the ticket's scope or meaning, or anything that would overturn a user-approved plan go to the user with both positions summarized.
-- Nothing ships unexamined: the plan is reviewed by the developer, the code by the tester and the reviewer, the test report by the reviewer, every review finding by the developer (adjudication), and the commits by the coordinator and the reviewer. At least one other teammate has analyzed every artifact — that invariant is not negotiable.
+- These 5 kinds of message go through the coordinator and into `team-log.md` at the moment they happen:
+
+  - a handoff
+  - a verdict
+  - a gate
+  - an escalation
+  - a disagreement
+
+  Never write them into the log later. A question between 2 teammates that only asks for clarification goes directly to the other role. Address that role by its name, which is a verified mechanic. The teammate that asked includes the exchange in its next report to the coordinator. Any message about the scope, the design, a verdict, or a gate goes back to the coordinator.
+- Every reply from a teammate starts with 1 status word, and the payload follows it. The 8 status words are `DONE`, `PASS`, `FAIL`, `BLOCKED`, `PROGRESS`, `QUESTION`, `APPROVED`, and `CHANGES_REQUESTED`. Each charter names the words that its role uses. `PROGRESS` does not end a phase, and it goes to the log only. It reports a milestone, and the coordinator records it with no relay turn and no reply.
+- The user has more authority than this protocol. An instruction from the user during the run can override a rule. Three examples are to ship before the review, to push, and to skip a phase. Follow that instruction, and log it as an override by the user. Never resist it, and never apply it without a log entry. Record the work that it displaces, such as a deferred final review, in the log as still owed.
+- Every dispatch names the phase, the assignment, the paths of the artifacts, and the done-condition. Send all of that in 1 complete message. Each extra round trip processes the whole transcript of that teammate again, so 1 complete dispatch costs less than 3 partial dispatches. A dispatch often passes the budget of 10 lines for this reason, and that is correct. The budget applies most strictly to a reply and to a relay, where extra length usually repeats something.
+- **Watch a silent teammate. Do not wait for it.** Probe a teammate that is working rarely. Probe a teammate that may be stuck at once. Check any teammate that waits on a long command, and any teammate that is silent after the time its work needs. Check it by looking at the system:
+
+  - Is the process alive?
+  - Did the artifact appear?
+  - What do the logs report?
+
+  Do not wait for a notification, because the notification may never arrive. A probe costs 1 round trip. A phase that stops costs the run.
+- Each side of a disagreement gets 1 rebuttal round. The coordinator then decides a dispute about the execution, and it logs its reasoning. The approach of a fix, the severity of a finding, and the scope of a retest are 3 disputes of that kind. These 3 disputes go to the user instead, with a summary of both positions:
+
+  - a dispute about the content of the plan
+  - a dispute about the scope or the meaning of the ticket
+  - any dispute that would overturn a plan that the user approved
+- Nothing ships without an examination:
+
+  - The developer reviews the plan.
+  - The tester and the reviewer review the code.
+  - The reviewer reads the test report.
+  - The developer adjudicates every finding of the review.
+  - The coordinator and the reviewer check the commits.
+
+  At least 1 other teammate analyzes every artifact. This rule has no exception.
 
 ## Circuit Breakers
 
-- Three dev–test rounds without the failure count shrinking, or six rounds total regardless of progress → stop, summarize both positions with evidence, escalate to the user.
+- Three rounds between the developer and the tester with no drop in the number of failures, or 6 rounds in total at any rate of progress → stop. Summarize both positions with the evidence, and escalate to the user.
 - Three review rounds without `APPROVED` → same.
-- Any `BLOCKED` reply the coordinator cannot clear itself, or three failed attempts at a single gate (a build that will not go green, an environment that will not start, missing credentials) → same.
-- Round tallies and per-phase turn counts go into the `team-log.md` gate entries as they happen, so a resumed run inherits its breaker counts instead of resetting them.
-- A teammate reported it is waiting on a long command → **watch it from the start**, do not wait for its next message. Check the thing itself on a cadence matched to how long the command should take — the process, the artifact, the log — because wake-ups get lost and the loss is silent. The moment the command has plainly finished and the owner has not reported, probe it. Do not wait "several minutes" past that point: the earlier version of this rule required observing the finish before probing, which is precisely what a coordinator that is waiting rather than looking never does.
-- A teammate stops replying or its replies degrade → probe it once. Teammates killed by transient API or session-limit errors resume from their transcript with full context once capacity returns — prefer that resume when the teammate is mid-phase. Otherwise spawn a fresh teammate on the same charter and point it at the artifacts; note the swap in the log.
-- A teammate-initiated remote write — push, force-push, branch deletion — → refuse. Fetches are routine, and a user-ordered push is executed by the coordinator as a logged override.
+- Any `BLOCKED` reply that the coordinator cannot clear itself, or 3 failed attempts at 1 gate → same. Three examples of a failed gate are a build that never passes, an environment that never starts, and absent credentials.
+- Write the count of the rounds and the count of the turns for each phase into the gate entries in `team-log.md` as they happen. A resumed run then inherits the counts of its breakers instead of starting them at 0.
+- A teammate reported that it waits on a long command → **watch it from the start.** Do not wait for its next message. Check the system itself at an interval that matches the duration of the command. Check the process, the artifact, and the log. A wake-up can be lost, and nothing reports that loss. Probe the teammate at the moment the command has plainly finished and the teammate has sent no report. Do not wait after that point. An earlier version of this rule made the coordinator observe the finish before it probed. A coordinator that waits rather than looks never observes that finish.
+- A teammate stops replying, or the quality of its replies drops → probe it once. A transient API error or a session-limit error kills a teammate, and that teammate resumes from its transcript with full context once the capacity returns. Prefer that resume when the teammate is inside a phase. In every other case, spawn a fresh teammate on the same charter and give it the paths of the artifacts. Note the swap in the log.
+- A remote write that a teammate starts, such as a push, a force-push, or a deletion of a branch → refuse it. A fetch is routine. The coordinator runs a push that the user orders, and logs it as an override.
 
 ## Resuming an Interrupted Run
 
-Artifacts and the branch carry the state; teammate transcripts do not survive a session restart. When `/one-team <TICKET>` finds `<TEAMDIR>/team-log.md`: take `run.lock` first, exactly as a fresh run does, and re-register the run in the portal registry — a resumed run shares the portal like any other, and its old registry entry may have been swept as stale. Then take the lane and the resolved paths from `paths.md` rather than re-deriving them — re-verify each path still exists, and rewrite the file when a checkout moved. Restore the tree: check out the existing branch, or in a worktree lane re-add the worktree from the surviving branch (`git worktree add .claude/worktrees/<TICKET> <TICKET>`) and re-run the Phase 0 bootstrap, or create the branch per Phase 0 when only the team directory survived. Then read the log, find the last recorded gate, and carry on from there — spawning fresh teammates just in time as the remaining phases need them, briefed from the artifacts. Do not redo passed gates; trust the log over memory. A branch with no team log is not a resume — handle it per Phase 0 step 3.
+The artifacts and the branch hold the state. The transcript of a teammate does not survive a restart of the session. Run these 5 steps when `/one-team <TICKET>` finds `<TEAMDIR>/team-log.md`:
 
-One caveat the log cannot record for you: a worktree that was removed took the staged, uncommitted diff with it, even though the branch ref survived and looks complete. When the log's last gate implies staged work and the restored tree has none, the run resumes at the start of the phase that produced it rather than after it — say so in the log and in the next status, because silently continuing would present unwritten work as done. Any Phase 4 verdict in the log is also re-checked against the current `generation` before it is trusted, per Concurrency: an interrupted run is exactly the case where other runs kept working.
+1. Take `run.lock` first, exactly as a fresh run does.
+
+1. Register the run in the portal registry again. A resumed run shares the portal like every other run, and a coordinator may have swept its old registry entry as stale.
+
+1. Read the lane and the resolved paths from `paths.md`. Do not derive them again. Verify that each path still exists, and rewrite the file when a checkout moved.
+
+1. Restore the tree in 1 of these 3 ways:
+
+    - Check out the existing branch.
+    - In a worktree lane, add the worktree again from the branch that survived, with `git worktree add .claude/worktrees/<TICKET> <TICKET>`. Then run the Phase 0 bootstrap again.
+    - Create the branch as Phase 0 describes, when only the team directory survived.
+
+1. Read the log, find the last recorded gate, and carry on from there. Spawn a fresh teammate at the moment each remaining phase needs it, and brief it from the artifacts.
+
+Do not redo a gate that already passed. Trust the log over your memory. A branch with no team log is not a resume. Handle it per Phase 0 step 3.
+
+**A removed worktree took the staged, uncommitted diff with it, and the log cannot record that for you. The branch reference survives and looks complete.** The last gate in the log can imply staged work while the restored tree holds none. The run then resumes at the start of the phase that produced that work, not after it. Write that fact in the log and in the next status. A run that continues with no such note presents unwritten work as done.
+
+Check every Phase 4 verdict in the log against the current `generation` before you trust it, as Concurrency describes. An interrupted run is exactly the case in which other runs kept working.
 
 ## Hard Rules
 
-- The coordinator orchestrates; it never produces the work products itself, and its tool use stays inside the Cost Discipline bounds.
-- One repo per run: the whole team writes only inside `<TARGET>`. Every other checkout — the workspace from the scripts lane, the scripts repo from the workspace lane, all legacy sources — is read-only context. Work the other repo needs is recorded as owed, never done here.
-- One writer: only the developer edits repository files, and only in Phases 3–6; every other role writes only inside `<TEAMDIR>` — its own artifacts, plus relayed results the coordinator persists there. The coordinator's Phase 0 worktree bootstrap (gitignored working state only, never a file the ticket ships), and the tester's repointing of the gitignored `<TARGET>/one/.env` at the local environment, are the only exceptions.
-- A run touches nothing belonging to another run: not its team directory, not its worktree, not its registry entry, and not a lease it does not hold. The one shared resource is the portal, and the only sanctioned way to affect it while others are live is the Concurrency procedure.
-- Planner and reviewer run on `fable`, the developer on `opus`, the tester on `sonnet`, except for the two evidence-keyed downgrades the small-ticket lane allows; every teammate subagent runs on `haiku` or `sonnet`, apart from the reviewer's `--adversarial` review passes, whose tier `one-review` sets.
-- No commits before Phase 6; no pushes except on an explicit user order, logged as an override; no Claude authorship ever.
-- No phase advances without its gate logged in `team-log.md`.
+- The coordinator orchestrates. It never produces a work product itself, and its tool use stays inside the bounds in Cost Discipline.
+- One repository for each run: the whole team writes only inside `<TARGET>`. Every other checkout is read-only context, which covers the workspace from the scripts lane, the scripts repository from the workspace lane, and every legacy source. Record the work that the other repository needs as owed. Never do that work here.
+- One writer: only the developer edits a file of the repository, and only in Phases 3 to 6. Every other role writes only inside `<TEAMDIR>` — its own artifacts, plus the relayed results that the coordinator persists there. There are exactly 2 exceptions:
+
+  - the worktree bootstrap of the coordinator in Phase 0, which writes only working state that `.gitignore` covers, and never a file that the ticket ships
+  - the change that the tester makes to `<TARGET>/one/.env`, which `.gitignore` covers, to point it at the local environment
+
+- A run touches nothing that belongs to another run. It touches neither the team directory, nor the worktree, nor the registry entry, nor a lock that it does not hold. The portal is the 1 shared resource, and the procedure in Concurrency is the only approved way to affect it while other runs are live.
+- The planner and the reviewer run on `fable`. The developer runs on `opus`. The tester runs on `sonnet`. The 2 downgrades that the small-ticket rule allows are the only exceptions, and each one needs its evidence. Every subagent of a teammate runs on `haiku` or on `sonnet`. The `--adversarial` review passes of the reviewer are the only exception there, and `one-review` sets their tier.
+- Make no commit before Phase 6. Make no push, unless the user orders one directly, and log that order as an override. Never record Claude as an author.
+- No phase advances until `team-log.md` holds its gate.
 - Jira is read-only.
-- Never write to a production system and never test with production credentials — every write lands in the local environment, with local or dev integration values. A migration's extraction sources are the one read-only exception, and even a read against a production source needs the user's explicit approval, logged as an override and bounded.
-- Never commit `.env`, credentials, or exported data — including the extract files and local stores a scripts-lane run produces (`<SCRIPTS>/.agents/rules/sensitive-data.md`).
-- Raw agent IDs never appear in user-facing text.
+- Never write to a production system. Never test with a production credential. Every write lands in the local environment, with a local or a dev value for each integration. The extraction sources of a migration are the 1 read-only exception. A read against a production source still needs the direct approval of the user. Log that approval as an override, and bound the read.
+- Never commit `.env`, a credential, or exported data. This includes the extract files and the local stores that a scripts-lane run produces. See `<SCRIPTS>/.agents/rules/sensitive-data.md`.
+- A raw agent ID never appears in text for the user.
 
 ## Quick Reference
 
 | Phase | Owner | Exit gate | Artifact |
 | --- | --- | --- | --- |
-| 0 Kickoff | coordinator | `run.lock` held, run registered, lane, paths, tree (worktree bootstrapped where the lane uses one), context, roster ready | `team-log.md`, `paths.md` |
-| 1 Plan | planner | plan written; data scope claimed and compared against live runs | `plan.md` |
-| 2 Plan review | developer + user, concurrent | planner and developer agree, user approves | log entry |
-| 3 Implement | developer | build green, staged, handoff written | staged diff + `dev-handoff.md` |
-| 4 Deploy and test | tester | full matrix passes at a recorded `generation`, developer and tester agree | `test-report.md` |
-| 5 Final review | reviewer | `APPROVED`, all findings adjudicated | `review.md` |
-| 6 Ship | developer | commits verified, tree clean, user briefed | commits on `<TICKET>` |
+| 0 Kickoff | coordinator | the run holds `run.lock`; the registry holds the run; the lane, the paths, the tree, the context and the roster are ready; the worktree is bootstrapped where the lane uses one | `team-log.md`, `paths.md` |
+| 1 Plan | planner | the plan exists; the run claims its data scope and compares it against every live run | `plan.md` |
+| 2 Plan review | developer + user, concurrent | the planner and the developer agree, and the user approves | log entry |
+| 3 Implement | developer | the build passes, the work is staged, the handoff exists | staged diff + `dev-handoff.md` |
+| 4 Deploy and test | tester | the full matrix passes at a recorded `generation`, and the developer and the tester agree | `test-report.md` |
+| 5 Final review | reviewer | `APPROVED`, and every finding is adjudicated | `review.md` |
+| 6 Ship | developer | the commits are verified, the tree is clean, the user is briefed | commits on `<TICKET>` |

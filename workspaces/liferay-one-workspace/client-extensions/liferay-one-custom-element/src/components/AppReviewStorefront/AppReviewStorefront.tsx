@@ -33,7 +33,11 @@ const AppReviewStorefront = ({
 						)
 						.map((image) => (
 							<div className="d-flex mt-3" key={image.fileName}>
-								<img draggable={false} src={image.preview} />
+								<img
+									alt={image.imageDescription}
+									draggable={false}
+									src={image.preview}
+								/>
 
 								<div className="d-flex flex-column ml-4">
 									<ClayIcon

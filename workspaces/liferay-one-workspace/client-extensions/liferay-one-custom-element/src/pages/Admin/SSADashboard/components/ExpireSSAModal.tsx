@@ -31,7 +31,7 @@ const ExpireSSAModal: React.FC<ExpireSSAModalProps> = ({
 
 	return (
 		<div>
-			<ClayAlert displayType="warning" role={null}>
+			<ClayAlert displayType="warning" role={undefined}>
 				{i18n.translate('this-action-cannot-be-undone')}
 			</ClayAlert>
 

@@ -343,6 +343,7 @@ function AppDetailContent({product}: {product: Product}) {
 							{storefrontImages.map((image) => (
 								<div className="d-flex mt-3" key={image.src}>
 									<img
+										alt={image.title?.en_US ?? ''}
 										draggable={false}
 										src={image.src}
 										style={{maxWidth: '12rem'}}

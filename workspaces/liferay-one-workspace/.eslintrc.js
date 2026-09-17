@@ -7,12 +7,18 @@ const path = require('path');
 
 const jsxA11y = require('eslint-plugin-jsx-a11y');
 
-// The accessibility defects are real but predate the rule, so they are warnings
-// until the count reaches zero. Mapping the plugin's own recommended set keeps
-// this in step with the plugin instead of pinning a list that goes stale.
+// The accessibility defects are real, and they predate the rule, so each one is
+// a warning until the count reaches zero. Reading the plugin's own recommended
+// set keeps this list correct when the plugin adds a rule.
+//
+// A rule that the recommended set turns off stays off. The set disables a
+// deprecated rule this way, and a map of every key to a warning would turn the
+// deprecated rule back on.
 
 const accessibilityRules = Object.fromEntries(
-	Object.keys(jsxA11y.configs.recommended.rules).map((rule) => [rule, 'warn'])
+	Object.entries(jsxA11y.configs.recommended.rules)
+		.filter(([, severity]) => severity !== 'off' && severity !== 0)
+		.map(([rule]) => [rule, 'warn'])
 );
 
 const config = {

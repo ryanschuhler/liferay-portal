@@ -56,7 +56,12 @@ const ButtonBase = (
 					)}
 				>
 					{isImagePrependIcon ? (
-						<img className="mr-2" src={prependIcon} width="16" />
+						<img
+							alt=""
+							className="mr-2"
+							src={prependIcon}
+							width="16"
+						/>
 					) : (
 						<ClayIcon symbol={prependIcon} />
 					)}

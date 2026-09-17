@@ -606,7 +606,11 @@ export default function CloudActivationForm({
 			)}
 
 			{!!rootErrorMessageKey && (
-				<ClayAlert className="mt-3" displayType="danger" role={null}>
+				<ClayAlert
+					className="mt-3"
+					displayType="danger"
+					role={undefined}
+				>
 					{translate(rootErrorMessageKey)}
 				</ClayAlert>
 			)}

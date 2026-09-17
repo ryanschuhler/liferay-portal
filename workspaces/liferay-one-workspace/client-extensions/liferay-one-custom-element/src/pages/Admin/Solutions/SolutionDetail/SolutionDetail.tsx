@@ -58,6 +58,7 @@ function ImageInfo({icon, image}: {icon: string; image: SolutionImage}) {
 	return (
 		<div className="d-flex mt-3">
 			<img
+				alt={image.description ?? ''}
 				className="mr-3"
 				src={image.preview}
 				style={{maxWidth: '12rem'}}

@@ -92,7 +92,7 @@ export function ImageFileItem({
 				) : (
 					<div className="d-flex">
 						<img
-							alt="image"
+							alt={uploadedFile?.imageDescription ?? ''}
 							className="image-file-item-uploaded-preview"
 							src={uploadedFile?.preview}
 						/>
