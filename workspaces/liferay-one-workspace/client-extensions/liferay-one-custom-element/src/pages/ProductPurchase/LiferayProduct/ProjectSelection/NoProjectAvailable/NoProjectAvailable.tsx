@@ -5,7 +5,7 @@
 
 import AlertBox from '~/components/AlertBox/AlertBox';
 import ProductPurchase from '~/components/ProductPurchase/ProductPurchase';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {useProductPurchaseLayoutContext} from '~/pages/ProductPurchase/components/ProductPurchaseLayout/ProductPurchaseLayout';
 
 const NoProjectAvailable = () => {
@@ -36,9 +36,9 @@ const NoProjectAvailable = () => {
 				</h2>
 
 				<p className="px-2">
-					It looks like this account does not have any projects yet.
-					Please check back later or contact your administrator to get
-					access to projects.
+					{translate(
+						'it-looks-like-this-account-does-not-have-any-projects-yet-please-check-back-later-or-contact-your-administrator-to-get-access-to-projects'
+					)}
 					<p className="d-flex justify-content-center my-4 next-step-page-text-bold">
 						Need help?&nbsp;{' '}
 						<a href="mailto:support@liferay.com">

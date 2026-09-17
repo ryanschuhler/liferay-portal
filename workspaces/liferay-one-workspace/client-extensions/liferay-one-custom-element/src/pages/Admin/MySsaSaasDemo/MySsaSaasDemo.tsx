@@ -5,6 +5,7 @@
 
 import ClayButton from '@clayui/button';
 import {useModal} from '@clayui/modal';
+import DOMPurify from 'dompurify';
 import EmptyState from '~/components/EmptyState/EmptyState';
 import Page from '~/components/Page/Page';
 import {useOneContext} from '~/context/OneContextProvider';
@@ -70,10 +71,16 @@ export default function MySsaSaasDemo() {
 			) : (
 				<EmptyState
 					description={
-						<p>
-							Reach out to the <strong>#help-ssa</strong> channel
-							on slack for permission to continue
-						</p>
+						<p
+							dangerouslySetInnerHTML={{
+								__html: DOMPurify.sanitize(
+									i18n.sub(
+										'reach-out-to-the-x-channel-on-slack-for-permission-to-continue',
+										['<strong>#help-ssa</strong>']
+									)
+								),
+							}}
+						/>
 					}
 					title={i18n.translate('access-required')}
 					type="NO_ACCESS"

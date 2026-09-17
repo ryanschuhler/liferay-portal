@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import DOMPurify from 'dompurify';
 import {
 	ReactNode,
 	createContext,
@@ -13,6 +14,7 @@ import {
 import {useParams} from 'react-router-dom';
 import Loading from '~/components/Loading/Loading';
 import {useGetVocabulariesAndCategories} from '~/hooks/useGetVocabulariesAndCategories';
+import i18n from '~/i18n';
 import HeadlessCommerceAdminCatalog from '~/services/headless/HeadlessCommerceAdminCatalog';
 import {getTaxonomyCategoryLabel} from '~/utils/getTaxonomyCategoryLabel';
 import {
@@ -598,8 +600,19 @@ export default function SolutionContextProvider({
 		>
 			{state.loading && (
 				<Loading.FullScreen>
-					Hang tight, the submission of <b>{state.profile.name}</b> is
-					being sent to <b>Liferay</b>
+					<span
+						dangerouslySetInnerHTML={{
+							__html: DOMPurify.sanitize(
+								i18n.sub(
+									'hang-tight-the-submission-of-x-is-being-sent-to-x',
+									[
+										`<b>${state.profile.name}</b>`,
+										'<b>Liferay</b>',
+									]
+								)
+							),
+						}}
+					/>
 				</Loading.FullScreen>
 			)}
 

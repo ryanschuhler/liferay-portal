@@ -681,6 +681,8 @@ export default {
 	'got-it': 'Got it',
 	'government': 'Government',
 	'hamina-finland': 'Hamina, Finland',
+	'hang-tight-the-submission-of-x-is-being-sent-to-x':
+		'Hang tight, the submission of {0} is being sent to {1}',
 	'hang-tight-your-purchase-is-being-processed':
 		'Hang tight, your purchase is being processed.',
 	'header': 'Header',
@@ -779,6 +781,8 @@ export default {
 	'iot': 'IoT',
 	'iowa-usa': 'Iowa, USA',
 	'ip-addresses': 'IP Addresses',
+	'it-looks-like-this-account-does-not-have-any-projects-yet-please-check-back-later-or-contact-your-administrator-to-get-access-to-projects':
+		'It looks like this account does not have any projects yet. Please check back later or contact your administrator to get access to projects.',
 	'it-looks-like-this-project-does-not-have-any-contracts-yet-please-contact-your-administrator-or-liferay-sales-to-set-one-up-before-purchasing':
 		'It looks like this project does not have any contracts yet. Please contact your administrator or Liferay sales to set one up before purchasing.',
 	'job-title': 'Job Title',
@@ -1282,6 +1286,8 @@ export default {
 	'ram-in-gbs': 'RAM in GBs',
 	'rapid-development': 'Rapid Development',
 	'rate-from-1-poor-to-5-excellent': 'Rate from 1 (poor) to 5 (excellent)',
+	'reach-out-to-the-x-channel-on-slack-for-permission-to-continue':
+		'Reach out to the {0} channel on slack for permission to continue',
 	'reactivate': 'Reactivate',
 	'reactivate-activation-key': 'Reactivate Activation Key',
 	'reactivate-activation-key-confirmation':
