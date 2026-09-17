@@ -45,8 +45,8 @@ export default function UsageDonut({
 							outerRadius="100%"
 							startAngle={90}
 						>
-							{data.map((_, index) => (
-								<Cell fill={COLORS[index]} key={index} />
+							{data.map((entry, index) => (
+								<Cell fill={COLORS[index]} key={entry.name} />
 							))}
 						</Pie>
 

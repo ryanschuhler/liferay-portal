@@ -168,7 +168,7 @@ const BillingAddress = ({
 
 	return (
 		<Section label={sectionName} required>
-			{addresses.map((address, index) => {
+			{addresses.map((address) => {
 				const {description, title} =
 					getPostalAddressDescription(address);
 
@@ -176,7 +176,7 @@ const BillingAddress = ({
 					<RadioCard
 						className="mb-3"
 						description={description}
-						key={index}
+						key={getAddressKey(address)}
 						onChange={() => onSelectAddress(address)}
 						onRemove={
 							hideNewAddressButton

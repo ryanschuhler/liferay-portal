@@ -75,12 +75,12 @@ const Table: React.FC<TableProps> = ({
 			>
 				<ClayTable.Head>
 					<ClayTable.Row className="border-bottom header-row">
-						{columns.map((column, index) => (
+						{columns.map((column) => (
 							<ClayTable.Cell
 								align={column.align}
 								className="bg-transparent font-weight-bold"
 								headingCell
-								key={index}
+								key={String(column.title)}
 								noWrap={column.noWrap}
 								style={{width: column.width}}
 							>

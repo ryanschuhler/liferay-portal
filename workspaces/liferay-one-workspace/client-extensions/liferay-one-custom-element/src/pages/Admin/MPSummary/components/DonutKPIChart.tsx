@@ -98,8 +98,11 @@ const DonutKPIChart: React.FC<DonutKPIChartProps> = ({
 								paddingAngle={0}
 								startAngle={90}
 							>
-								{data.map((_: unknown, index: number) => (
-									<Cell fill={colors[index]} key={index} />
+								{data.map((entry, index: number) => (
+									<Cell
+										fill={colors[index]}
+										key={entry.name}
+									/>
 								))}
 							</Pie>
 

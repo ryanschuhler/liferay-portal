@@ -55,7 +55,7 @@ const LicenseTier = ({sku}: LicenseTierProps) => {
 			{tierPrices.map((tierPrice, index) => (
 				<span
 					className="product-purchase-license-tier-text"
-					key={index}
+					key={tierPrice.externalReferenceCode}
 				>
 					{getTierPriceText(tierPrices, tierPrice, index)}
 				</span>
