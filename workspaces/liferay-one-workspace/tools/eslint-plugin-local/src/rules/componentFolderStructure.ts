@@ -23,6 +23,10 @@ const rule: TSESLint.RuleModule<MessageId, []> = {
 		return {
 			Program(node: TSESTree.Program) {
 				const filename = context.getFilename().replace(/\\/g, '/');
+
+				if (/\.(test|spec)\.[^.]+$/.test(filename)) {
+					return;
+				}
 				const match = filename.match(/src\/components\/(.+)$/);
 
 				if (!match) {

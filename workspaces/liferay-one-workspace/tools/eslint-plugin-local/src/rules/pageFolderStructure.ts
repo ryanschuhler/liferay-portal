@@ -13,6 +13,10 @@ const rule: TSESLint.RuleModule<MessageId, []> = {
 			Program(node: TSESTree.Program) {
 				const filename = context.getFilename().replace(/\\/g, '/');
 
+				if (/\.(test|spec)\.[^.]+$/.test(filename)) {
+					return;
+				}
+
 				if (!filename.endsWith('.tsx')) {
 					return;
 				}

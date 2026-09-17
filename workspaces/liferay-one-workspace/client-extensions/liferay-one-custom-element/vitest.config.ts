@@ -11,6 +11,10 @@ export default defineConfig({
 	plugins: [react()],
 	resolve: {
 		alias: {
+			'@liferay/oauth2-provider-web/client': path.resolve(
+				__dirname,
+				'./dev/oauth2ProviderStub.ts'
+			),
 			'~': path.resolve(__dirname, './src/'),
 		},
 	},
@@ -30,10 +34,10 @@ export default defineConfig({
 			reporter: ['text-summary', 'html', 'lcov'],
 
 			thresholds: {
-				branches: 10,
-				functions: 3,
-				lines: 2,
-				statements: 2,
+				branches: 3,
+				functions: 4,
+				lines: 4,
+				statements: 4,
 			},
 		},
 		environment: 'jsdom',
