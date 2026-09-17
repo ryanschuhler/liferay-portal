@@ -26,7 +26,7 @@ import {Liferay} from '~/services/liferay/liferay';
 
 import './ProjectMembers.css';
 
-import type {ProjectMembersRow} from '~/pages/MyAccount/ProjectMembers/types';
+import type {ProjectMembersRow} from '~/pages/MyAccount/ProjectMembers/types/projectMembersRow';
 import type {Account} from '~/types/accounts';
 
 const VISIBLE_MEMBERS = 3;

@@ -14,7 +14,7 @@ import HeadlessAdminUser from '~/services/headless/HeadlessAdminUser';
 import {Liferay} from '~/services/liferay/liferay';
 import Accounts from '~/services/spring-boot/Accounts';
 
-import type {AccountMemberRow} from '~/pages/MyAccount/AccountMembers/types';
+import type {AccountMemberRow} from '~/pages/MyAccount/AccountMembers/types/accountMemberRow';
 import type {APIResponse} from '~/types/api';
 
 type ProjectMembershipItem = {

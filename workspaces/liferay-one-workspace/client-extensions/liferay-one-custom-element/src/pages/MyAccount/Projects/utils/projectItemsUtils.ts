@@ -16,7 +16,7 @@ import {resolveProjectItemType} from './resolveProjectItemType';
 import type {PlacedOrder} from '~/types/orders';
 import type {DeliveryProduct} from '~/types/product';
 
-import type {ProjectItemType} from '../types';
+import type {ProjectItemType} from '../types/projectItemType';
 
 export type ProjectItemsByType = Record<
 	ProjectItemType,

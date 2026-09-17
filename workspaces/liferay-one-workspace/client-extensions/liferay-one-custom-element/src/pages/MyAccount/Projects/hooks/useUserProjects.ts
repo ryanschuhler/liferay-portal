@@ -10,7 +10,7 @@ import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import {queryGraphQL, toGraphQLString} from '~/services/graphql/GraphQL';
 import {Liferay} from '~/services/liferay/liferay';
 
-import type {UserProject} from '~/pages/MyAccount/Projects/types';
+import type {UserProject} from '~/pages/MyAccount/Projects/types/userProject';
 import type {APIResponse, DataQuery} from '~/types/api';
 
 type ProjectAPIItem = {

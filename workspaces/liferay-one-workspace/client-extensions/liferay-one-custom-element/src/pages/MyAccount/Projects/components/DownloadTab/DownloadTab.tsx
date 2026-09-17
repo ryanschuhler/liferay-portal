@@ -11,7 +11,7 @@ import DownloadListCard, {
 
 import type {VirtualItem} from '~/types/orders';
 
-import type {ProjectItemType} from '../../types';
+import type {ProjectItemType} from '../../types/projectItemType';
 
 type DownloadTabProps = {
 	itemType: ProjectItemType;

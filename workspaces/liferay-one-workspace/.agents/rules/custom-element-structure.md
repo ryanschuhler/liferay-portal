@@ -204,15 +204,15 @@ The workspace has not been cleaned up yet, so every structural rule is `warn`. T
 
 | Rule | Open |
 | --- | --- |
-| `yarn lint:imports` dead exports | 344 |
+| `yarn lint:imports` dead exports | 332 |
 | `service-layer-boundary` | 63 |
 | `yarn lint:placement` | 38 |
 | `file-complexity-budget` | 34 |
 | `hooks-export-only-hooks` | 20 |
-| `no-bare-utils-or-types-file` | 11 |
 | `no-eslint-disable` | 4 |
 | `yarn lint:imports` cycles | 0 |
 | `page-folder-structure` | 0 |
+| `no-bare-utils-or-types-file` | 0 |
 | `src-folder-structure` | 0 |
 | `context-file-naming` | 0 |
 | `i18n-key-placeholder` | 0 |

@@ -35,7 +35,8 @@ import ProjectDetailTabs, {
 	DetailTab,
 } from '~/pages/MyAccount/Projects/components/ProjectDetailTabs/ProjectDetailTabs';
 import UtilizationTab from '~/pages/MyAccount/Projects/components/UtilizationTab/UtilizationTab';
-import {ProjectItemType, ProjectTabKey} from '~/pages/MyAccount/Projects/types';
+import {ProjectItemType} from '~/pages/MyAccount/Projects/types/projectItemType';
+import {ProjectTabKey} from '~/pages/MyAccount/Projects/types/projectTabKey';
 import {PROJECT_TAB_LABELS} from '~/pages/MyAccount/Projects/utils/constants';
 import {getLogoColor} from '~/pages/MyAccount/Projects/utils/getLogoColor';
 import {getProductIcon} from '~/pages/MyAccount/Projects/utils/getProductIcon';

@@ -17,7 +17,8 @@ import {Liferay} from '~/services/liferay/liferay';
 import phones from '~/utils/phones';
 import {getSiteURL} from '~/utils/siteUtils';
 
-import {PUBLISHER_TYPE_TOOLTIPS, getPublisherTypeEntries} from '../../utils';
+import getPublisherTypeEntries from '../../utils/getPublisherTypeEntries';
+import {PUBLISHER_TYPE_TOOLTIPS} from '../../utils/publisherTypeConstants';
 import {PublisherForm, RequestAccountStep} from '../types/requestAccount';
 
 import type {ListTypeDefinition} from '~/types/listTypeDefinition';

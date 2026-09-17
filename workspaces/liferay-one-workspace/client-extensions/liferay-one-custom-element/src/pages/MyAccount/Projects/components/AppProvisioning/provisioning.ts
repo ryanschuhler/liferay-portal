@@ -8,7 +8,7 @@ import {safeJSONParse} from '~/utils/safeJSONParse';
 
 import type {PlacedOrder} from '~/types/orders';
 
-import type {Deployment, Provisioning} from './types';
+import type {Deployment, Provisioning} from './types/provisioning';
 
 export function getCloudProvisioning(order?: PlacedOrder): Provisioning[] {
 	const value =

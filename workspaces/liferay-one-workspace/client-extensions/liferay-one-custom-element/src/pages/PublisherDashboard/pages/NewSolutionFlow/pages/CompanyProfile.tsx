@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {MAX_DESCRIPTION_LENGTH} from '~/components/Blocks/constants';
 import Form from '~/components/MarketplaceForm/MarketplaceForm';
 import RichText from '~/components/RichText/RichText';
 import {
@@ -11,6 +10,7 @@ import {
 	useSolutionContext,
 } from '~/context/SolutionContextProvider';
 import i18n from '~/i18n';
+import {MAX_DESCRIPTION_LENGTH} from '~/utils/blockConstants';
 
 const CompanyProfile = () => {
 	const [

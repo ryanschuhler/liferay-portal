@@ -18,7 +18,7 @@ import {EMAIL_PATTERN} from '~/utils/formValidationUtils';
 
 import '~/pages/MyAccount/ProjectMembers/ProjectMembers.css';
 
-import type {ProjectMembersRow} from '~/pages/MyAccount/ProjectMembers/types';
+import type {ProjectMembersRow} from '~/pages/MyAccount/ProjectMembers/types/projectMembersRow';
 
 type InviteProjectMemberModalProps = {
 	accountExternalReferenceCode: string;

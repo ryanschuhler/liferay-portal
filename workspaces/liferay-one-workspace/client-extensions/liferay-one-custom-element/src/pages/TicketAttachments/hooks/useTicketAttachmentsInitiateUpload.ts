@@ -5,8 +5,8 @@
 
 import * as OAuth2 from '@liferay/oauth2-provider-web/client';
 import {useCallback, useRef, useState} from 'react';
+import {IUpload} from '~/pages/TicketAttachments/types/upload';
 import MarketplaceStorage from '~/services/liferay/MarketplaceStorage';
-import {IUpload} from '~/utils/types';
 
 interface IParams {
 	fileMd5: string;

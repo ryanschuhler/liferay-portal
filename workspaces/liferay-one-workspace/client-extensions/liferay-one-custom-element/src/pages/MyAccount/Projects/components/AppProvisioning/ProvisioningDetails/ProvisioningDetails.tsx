@@ -10,7 +10,7 @@ import ButtonWithIcon from '~/components/ButtonWithIcon/ButtonWithIcon';
 import i18n from '~/i18n';
 import {Liferay} from '~/services/liferay/liferay';
 
-import {InstallStatus} from '../types';
+import {InstallStatus} from '../types/InstallStatus';
 
 import './ProvisioningDetails.css';
 

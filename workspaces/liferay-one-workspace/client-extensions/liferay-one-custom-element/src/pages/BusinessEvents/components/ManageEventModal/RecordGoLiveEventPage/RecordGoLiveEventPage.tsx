@@ -15,7 +15,7 @@ import {translate} from '~/i18n';
 import BusinessEventsModal from '~/pages/BusinessEvents/components/BusinessEventsModal/BusinessEventsModal';
 import Select, {IOption} from '~/pages/BusinessEvents/components/Select/Select';
 import useGetUTCTimeZonesList from '~/pages/BusinessEvents/hooks/useGetUTCTimeZonesList';
-import {IBusinessEvent} from '~/pages/BusinessEvents/types';
+import {IBusinessEvent} from '~/pages/BusinessEvents/types/businessEvent';
 import {getFormattedEventDateTime} from '~/pages/BusinessEvents/utils/getFormattedEventDateUtils';
 import {Liferay} from '~/services/liferay/liferay';
 import {updateBusinessEvent} from '~/services/spring-boot/Jira';

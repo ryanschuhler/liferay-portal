@@ -20,10 +20,3 @@ export interface IBusinessEvent {
 	plannedEventTime?: ITimeInput | string;
 	timeZone?: {key: string; name: string};
 }
-
-export interface IBusinessEventVersion {
-	author?: string;
-	change?: {name: string};
-	comment?: string;
-	createdDate?: string;
-}

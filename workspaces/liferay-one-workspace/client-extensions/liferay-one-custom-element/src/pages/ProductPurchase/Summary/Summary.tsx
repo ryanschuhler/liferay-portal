@@ -11,7 +11,7 @@ import i18n from '~/i18n';
 import LicenseTermsCheckbox from '~/pages/ProductPurchase/components/LicenseTermsCheckbox/LicenseTermsCheckbox';
 import {useProductPurchaseLayoutContext} from '~/pages/ProductPurchase/components/ProductPurchaseLayout/ProductPurchaseLayout';
 import ProductPurchaseShell from '~/pages/ProductPurchase/components/ProductPurchaseShell/ProductPurchaseShell';
-import {PaymentMethodType} from '~/pages/ProductPurchase/types';
+import {PaymentMethodType} from '~/pages/ProductPurchase/types/PaymentMethodType';
 import {Liferay} from '~/services/liferay/liferay';
 import {formatCurrency} from '~/utils/formatCurrency';
 import {getProductPriceModel} from '~/utils/productUtils';

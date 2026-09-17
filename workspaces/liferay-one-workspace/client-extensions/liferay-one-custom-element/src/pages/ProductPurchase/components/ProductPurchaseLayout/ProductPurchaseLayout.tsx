@@ -29,7 +29,8 @@ import {useAppPurchaseContext} from '../../context/AppPurchaseContextProvider';
 import useAccounts from '../../hooks/useAccounts';
 import useProductPurchaseCart from '../../hooks/useProductPurchaseCart';
 import {ProductPurchaseStepItem} from '../../productPurchaseRoutes';
-import {PaymentMethodType, ProductPurchasePayment} from '../../types';
+import {PaymentMethodType} from '../../types/PaymentMethodType';
+import {ProductPurchasePayment} from '../../types/productPurchasePayment';
 import ProductPurchaseHeader from '../ProductPurchaseHeader/ProductPurchaseHeader';
 import ProductPurchaseSteps from '../ProductPurchaseSteps/ProductPurchaseSteps';
 

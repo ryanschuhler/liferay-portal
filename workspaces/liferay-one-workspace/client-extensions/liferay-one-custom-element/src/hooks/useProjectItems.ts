@@ -19,7 +19,7 @@ import {
 } from '~/pages/MyAccount/Projects/utils/projectItemsUtils';
 
 import type {ProjectProduct} from '~/hooks/useProjectCommerce';
-import type {ProjectItemType} from '~/pages/MyAccount/Projects/types';
+import type {ProjectItemType} from '~/pages/MyAccount/Projects/types/projectItemType';
 import type {PlacedOrder} from '~/types/orders';
 import type {DeliveryProduct} from '~/types/product';
 

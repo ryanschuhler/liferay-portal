@@ -13,7 +13,7 @@ import publishingSchemas from '~/schemas/publishingSchemas';
 import fetcher from '~/services/fetcher/fetcher';
 import {Liferay} from '~/services/liferay/liferay';
 
-import {getPublisherTypeNames} from '../utils';
+import {getPublisherTypeNames} from '../utils/getPublisherTypeNames';
 import PublisherRequestedCard from './components/PublisherRequestedCard';
 import PublisherSummaryContent from './components/PublisherSummaryContent';
 import RequestAccountForm from './components/RequestAccountForm';

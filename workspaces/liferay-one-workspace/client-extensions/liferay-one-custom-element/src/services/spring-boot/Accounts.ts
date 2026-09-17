@@ -5,7 +5,7 @@
 
 import {OneSpringBootOAuth2} from './OAuth2Client';
 
-import type {AccountInvitation} from './types';
+import type {AccountInvitation} from './types/accountInvitation';
 
 type InvitationBody = {
 	emailAddress: string;

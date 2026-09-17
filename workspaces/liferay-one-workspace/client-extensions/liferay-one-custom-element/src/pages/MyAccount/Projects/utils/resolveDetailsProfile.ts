@@ -10,7 +10,7 @@ import {
 
 import type {DeliveryProduct} from '~/types/product';
 
-import type {ProjectItemType} from '../types';
+import type {ProjectItemType} from '../types/projectItemType';
 
 export type DetailsProfile =
 	| 'analytics'

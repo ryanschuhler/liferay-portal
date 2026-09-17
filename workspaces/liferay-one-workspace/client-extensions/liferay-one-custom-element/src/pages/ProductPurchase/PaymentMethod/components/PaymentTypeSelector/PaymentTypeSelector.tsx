@@ -9,7 +9,7 @@ import Section from '~/components/Section/Section';
 import {useOneContext} from '~/context/OneContextProvider';
 import i18n from '~/i18n';
 import {useProductPurchaseLayoutContext} from '~/pages/ProductPurchase/components/ProductPurchaseLayout/ProductPurchaseLayout';
-import {PaymentMethodType} from '~/pages/ProductPurchase/types';
+import {PaymentMethodType} from '~/pages/ProductPurchase/types/PaymentMethodType';
 
 interface IPaymentTypeSelectorProps {
 	allowedPaymentMethodTypes?: PaymentMethodType[];

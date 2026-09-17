@@ -14,7 +14,7 @@ import InvalidTicketNumber from '~/pages/TicketAttachments/components/TicketAtta
 import TicketIsClosed from '~/pages/TicketAttachments/components/TicketAttachmentsMessages/TicketIsClosed';
 import UnexpectedError from '~/pages/TicketAttachments/components/TicketAttachmentsMessages/UnexpectedError';
 import useCheckAttachmentAccess from '~/pages/TicketAttachments/hooks/useCheckAttachmentAccess';
-import {IUpload} from '~/utils/types';
+import {IUpload} from '~/pages/TicketAttachments/types/upload';
 
 import TicketAttachmentsUploader from './TicketAttachmentsUploader';
 

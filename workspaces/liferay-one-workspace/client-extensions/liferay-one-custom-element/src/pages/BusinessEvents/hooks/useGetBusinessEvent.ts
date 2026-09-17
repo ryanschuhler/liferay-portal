@@ -6,7 +6,7 @@
 import {useCallback, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {translate} from '~/i18n';
-import {IBusinessEvent} from '~/pages/BusinessEvents/types';
+import {IBusinessEvent} from '~/pages/BusinessEvents/types/businessEvent';
 import {Liferay} from '~/services/liferay/liferay';
 import {getBusinessEventById} from '~/services/spring-boot/Jira';
 

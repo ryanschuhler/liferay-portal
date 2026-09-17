@@ -4,7 +4,7 @@
  */
 
 import i18n from '~/i18n';
-import {ConsoleUserProject} from '~/services/spring-boot/types';
+import {ConsoleUserProject} from '~/services/spring-boot/Console';
 import {ProductType, ProductVocabulary} from '~/types/productEnums';
 import {
 	ProductLicense,

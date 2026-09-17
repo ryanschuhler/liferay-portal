@@ -9,7 +9,7 @@ import {useState} from 'react';
 import Badge from '~/components/Badge/Badge';
 import {translate} from '~/i18n';
 import BusinessEventsModal from '~/pages/BusinessEvents/components/BusinessEventsModal/BusinessEventsModal';
-import {IBusinessEvent} from '~/pages/BusinessEvents/types';
+import {IBusinessEvent} from '~/pages/BusinessEvents/types/businessEvent';
 import {Liferay} from '~/services/liferay/liferay';
 import {updateBusinessEvent} from '~/services/spring-boot/Jira';
 

@@ -6,7 +6,7 @@
 import ClayIcon from '@clayui/icon';
 import classNames from 'classnames';
 
-import {InstallStatus} from '../types';
+import {InstallStatus} from '../types/InstallStatus';
 
 type InstallationStatusProps = {
 	children?: string;

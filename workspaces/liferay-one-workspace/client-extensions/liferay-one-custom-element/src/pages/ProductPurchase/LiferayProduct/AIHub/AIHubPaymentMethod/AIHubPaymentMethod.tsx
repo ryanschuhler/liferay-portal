@@ -13,7 +13,7 @@ import {useProductPurchaseLayoutContext as useProductPurchaseOutletContext} from
 import {useAppPurchaseContext} from '~/pages/ProductPurchase/context/AppPurchaseContextProvider';
 import {useCartContext} from '~/pages/ProductPurchase/context/CartContextProvider';
 import useAccountAddresses from '~/pages/ProductPurchase/hooks/useAccountAddresses';
-import {PaymentMethodType} from '~/pages/ProductPurchase/types';
+import {PaymentMethodType} from '~/pages/ProductPurchase/types/PaymentMethodType';
 import {commerceSchemas as commerceZodSchema} from '~/schemas/commerceSchemas';
 import ProductPurchaseApp from '~/services/commerce/ProductPurchaseApp';
 import HeadlessAdminUser from '~/services/headless/HeadlessAdminUser';

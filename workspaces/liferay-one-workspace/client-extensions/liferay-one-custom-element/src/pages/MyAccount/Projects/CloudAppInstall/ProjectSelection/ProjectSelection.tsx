@@ -10,7 +10,7 @@ import i18n from '~/i18n';
 
 import ContactSupport from '../ContactSupport/ContactSupport';
 import WizardFooter from '../WizardFooter/WizardFooter';
-import {getResourceSummary} from '../utils';
+import {getResourceSummary} from '../utils/getResourceSummary';
 
 import type {UseFormReturn} from 'react-hook-form';
 

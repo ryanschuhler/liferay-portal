@@ -16,10 +16,8 @@ import Projects from '~/services/spring-boot/Projects';
 
 import '../../ProjectMembers.css';
 
-import type {
-	AccountMemberOption,
-	ProjectMembersRow,
-} from '~/pages/MyAccount/ProjectMembers/types';
+import type {AccountMemberOption} from '~/pages/MyAccount/ProjectMembers/types/accountMemberOption';
+import type {ProjectMembersRow} from '~/pages/MyAccount/ProjectMembers/types/projectMembersRow';
 
 type MemberDropDownProps = {
 	filteredOptions: AccountMemberOption[];

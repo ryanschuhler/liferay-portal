@@ -6,7 +6,7 @@
 import {Observer} from '@clayui/modal/lib/types';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {FormProvider, useForm} from 'react-hook-form';
-import {IBusinessEvent} from '~/pages/BusinessEvents/types';
+import {IBusinessEvent} from '~/pages/BusinessEvents/types/businessEvent';
 import adminSchemas from '~/schemas/adminSchemas';
 
 import CancelEventPage from './CancelEventPage/CancelEventPage';

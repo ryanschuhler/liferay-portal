@@ -28,7 +28,7 @@ import useFilters from './hooks/useFilters';
 import useGetBusinessEvents from './hooks/useGetBusinessEvents';
 import useHasAllEventsPermissions from './hooks/useHasAllEventsPermissions';
 import useIsSaasOnly from './hooks/useIsSaasOnly';
-import {IBusinessEvent} from './types';
+import {IBusinessEvent} from './types/businessEvent';
 import {getFormattedDate} from './utils/getFormattedDate';
 import {getFormattedTime} from './utils/getFormattedTime';
 import parseAssociatedTickets from './utils/parseAssociatedTickets';

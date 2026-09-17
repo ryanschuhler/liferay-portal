@@ -5,9 +5,9 @@
 
 import {createContext, useContext, useMemo, useReducer} from 'react';
 
-import {PaymentMethodType} from '../types';
+import {PaymentMethodType} from '../types/PaymentMethodType';
 
-import type {ConsoleUserProject} from '~/services/spring-boot/types';
+import type {ConsoleUserProject} from '~/services/spring-boot/Console';
 import type {BillingAddress} from '~/types/orders';
 import type {SalesforceContract} from '~/types/salesforceContract';
 import type {SalesforceProject} from '~/types/salesforceProject';

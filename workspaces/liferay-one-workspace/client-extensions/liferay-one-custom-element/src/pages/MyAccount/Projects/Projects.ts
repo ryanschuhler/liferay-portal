@@ -6,7 +6,9 @@
 export {useHasProject} from './hooks/useHasProject';
 export {useSelectedProject} from './hooks/useSelectedProject';
 export {useUserProjects} from './hooks/useUserProjects';
-export type {ProjectItemType, ProjectTabKey, UserProject} from './types';
+export type {ProjectItemType} from './types/projectItemType';
+export type {ProjectTabKey} from './types/projectTabKey';
+export type {UserProject} from './types/userProject';
 export {
 	LAST_PROJECT_STORAGE_KEY,
 	ONE_TIME_PURCHASES,

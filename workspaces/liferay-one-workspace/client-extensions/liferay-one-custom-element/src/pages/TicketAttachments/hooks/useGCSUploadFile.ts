@@ -4,8 +4,8 @@
  */
 
 import {useCallback, useState} from 'react';
+import {IUpload} from '~/pages/TicketAttachments/types/upload';
 import MarketplaceStorage from '~/services/liferay/MarketplaceStorage';
-import {IUpload} from '~/utils/types';
 
 import useGCSGetUploadOffset from './useGCSGetUploadOffset';
 import useTicketAttachmentsCompleteUpload from './useTicketAttachmentsCompleteUpload';

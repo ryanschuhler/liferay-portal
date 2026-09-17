@@ -14,7 +14,8 @@ import {resolveUtilizationProfile} from './resolveUtilizationProfile';
 
 import type {DeliveryProduct} from '~/types/product';
 
-import type {ProjectItemType, ProjectTabKey} from '../types';
+import type {ProjectItemType} from '../types/projectItemType';
+import type {ProjectTabKey} from '../types/projectTabKey';
 import type {ActivationProfile} from './resolveActivationProfile';
 import type {DetailsProfile} from './resolveDetailsProfile';
 import type {DownloadProfile} from './resolveDownloadProfile';

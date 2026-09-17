@@ -4,8 +4,8 @@
  */
 
 import {useCallback, useRef, useState} from 'react';
+import {IUpload} from '~/pages/TicketAttachments/types/upload';
 import {generateFileMd5} from '~/pages/TicketAttachments/utils/generateFileMd5';
-import {IUpload} from '~/utils/types';
 
 interface IParams {
 	file: File;

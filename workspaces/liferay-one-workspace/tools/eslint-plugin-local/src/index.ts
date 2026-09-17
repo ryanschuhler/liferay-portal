@@ -50,7 +50,7 @@ const plugin = {
 				'local/image-filename-snake-case': 'error',
 				'local/no-ambient-type-declarations': 'warn',
 				'local/no-array-index-key': 'warn',
-				'local/no-bare-utils-or-types-file': 'warn',
+				'local/no-bare-utils-or-types-file': 'error',
 				'local/no-comments': 'warn',
 				'local/no-direct-web-storage': 'error',
 				'local/no-eslint-disable': 'warn',

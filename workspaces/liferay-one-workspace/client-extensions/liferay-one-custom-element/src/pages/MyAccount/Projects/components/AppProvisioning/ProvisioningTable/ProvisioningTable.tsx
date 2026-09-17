@@ -13,7 +13,7 @@ import InstallAlertModal from '../InstallAlertModal/InstallAlertModal';
 import InstallationStatus from '../InstallationStatus/InstallationStatus';
 import UninstallModal from '../UninstallModal/UninstallModal';
 import useProvisioningActions from '../hooks/useProvisioningActions';
-import {InstallStatus} from '../types';
+import {InstallStatus} from '../types/InstallStatus';
 
 import type {Account} from '~/types/accounts';
 

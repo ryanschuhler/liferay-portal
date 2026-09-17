@@ -5,23 +5,23 @@
 
 import ClayModal, {useModal} from '@clayui/modal';
 import {filesize} from 'filesize';
-import {
-	MAX_DESCRIPTION_LENGTH,
-	MAX_IMAGE_QUANTITY,
-	MAX_SIZE_5MBS,
-	MAX_TITLE_LENGTH,
-} from '~/components/Blocks/constants';
 import {DropzoneUpload} from '~/components/DropzoneUpload/DropzoneUpload';
 import {FileList, UploadedFile} from '~/components/FileList/FileList';
 import Form from '~/components/MarketplaceForm/MarketplaceForm';
 import RichText from '~/components/RichText/RichText';
 import i18n from '~/i18n';
 import {ACCEPT_FILE_TYPES} from '~/types/file';
+import {
+	MAX_DESCRIPTION_LENGTH,
+	MAX_IMAGE_QUANTITY,
+	MAX_SIZE_5MBS,
+	MAX_TITLE_LENGTH,
+} from '~/utils/blockConstants';
 import {getRandomID} from '~/utils/stringUtils';
 import {swapElements} from '~/utils/swapElements';
 
-import type {BlockTypeProps} from '~/components/Blocks/types';
 import type {TextImageBlock} from '~/context/SolutionContextProvider';
+import type {BlockTypeProps} from '~/types/blockTypeProps';
 
 const TextAndImages = ({
 	block: {content},

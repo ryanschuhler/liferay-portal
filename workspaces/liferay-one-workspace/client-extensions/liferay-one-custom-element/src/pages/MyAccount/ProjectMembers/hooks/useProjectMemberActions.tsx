@@ -9,10 +9,8 @@ import {translate} from '~/i18n';
 import EditProjectPermissionsModal from '~/pages/MyAccount/ProjectMembers/components/EditProjectPermissionsModal/EditProjectPermissionsModal';
 import InviteProjectMemberModal from '~/pages/MyAccount/ProjectMembers/components/InviteProjectMemberModal/InviteProjectMemberModal';
 
-import type {
-	AccountMemberOption,
-	ProjectMembersRow,
-} from '~/pages/MyAccount/ProjectMembers/types';
+import type {AccountMemberOption} from '~/pages/MyAccount/ProjectMembers/types/accountMemberOption';
+import type {ProjectMembersRow} from '~/pages/MyAccount/ProjectMembers/types/projectMembersRow';
 
 type UseProjectMemberActionsProps = {
 	accountExternalReferenceCode: string;

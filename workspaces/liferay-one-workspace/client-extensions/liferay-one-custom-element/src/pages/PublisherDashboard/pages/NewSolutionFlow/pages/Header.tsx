@@ -6,11 +6,6 @@
 import {ClayRadio, ClayRadioGroup} from '@clayui/form';
 import ClayModal, {useModal} from '@clayui/modal';
 import {filesize} from 'filesize';
-import {
-	MAX_DESCRIPTION_LENGTH,
-	MAX_IMAGE_QUANTITY,
-	MAX_SIZE_5MBS,
-} from '~/components/Blocks/constants';
 import {DropzoneUpload} from '~/components/DropzoneUpload/DropzoneUpload';
 import {FileList, UploadedFile} from '~/components/FileList/FileList';
 import Form from '~/components/MarketplaceForm/MarketplaceForm';
@@ -22,6 +17,11 @@ import {
 } from '~/context/SolutionContextProvider';
 import i18n from '~/i18n';
 import {ACCEPT_FILE_TYPES} from '~/types/file';
+import {
+	MAX_DESCRIPTION_LENGTH,
+	MAX_IMAGE_QUANTITY,
+	MAX_SIZE_5MBS,
+} from '~/utils/blockConstants';
 import {getRandomID} from '~/utils/stringUtils';
 import {swapElements} from '~/utils/swapElements';
 

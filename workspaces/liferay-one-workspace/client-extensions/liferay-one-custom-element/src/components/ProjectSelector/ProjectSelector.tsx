@@ -10,7 +10,7 @@ import EntitySelector, {
 } from '~/components/EntitySelector/EntitySelector';
 import {translate} from '~/i18n';
 
-import type {UserProject} from '~/pages/MyAccount/Projects/types';
+import type {UserProject} from '~/pages/MyAccount/Projects/types/userProject';
 
 type ProjectSelectorProps = {
 	emptyLabel?: string;

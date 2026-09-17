@@ -21,7 +21,7 @@ import useGCSUploadFile from '~/pages/TicketAttachments/hooks/useGCSUploadFile';
 import useGenerateFileMd5 from '~/pages/TicketAttachments/hooks/useGenerateFileMd5';
 import useTicketAttachmentsDelete from '~/pages/TicketAttachments/hooks/useTicketAttachmentsDelete';
 import useTicketAttachmentsInitiateUpload from '~/pages/TicketAttachments/hooks/useTicketAttachmentsInitiateUpload';
-import {IUpload} from '~/utils/types';
+import {IUpload} from '~/pages/TicketAttachments/types/upload';
 
 import './TicketAttachmentsUploader.css';
 

@@ -20,9 +20,3 @@ export type ProjectMembersRow = {
 	members: ProjectMember[];
 	name: string;
 };
-
-export type AccountMemberOption = {
-	email: string;
-	name: string;
-	userId: number;
-};

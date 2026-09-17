@@ -10,7 +10,7 @@ import {resolveProfile} from './resolveProfile';
 
 import type {DeliveryProduct} from '~/types/product';
 
-import type {ProjectItemType} from '../types';
+import type {ProjectItemType} from '../types/projectItemType';
 import type {AppType} from './getAppType';
 
 export type DownloadProfile = 'app' | 'bundle' | 'none';

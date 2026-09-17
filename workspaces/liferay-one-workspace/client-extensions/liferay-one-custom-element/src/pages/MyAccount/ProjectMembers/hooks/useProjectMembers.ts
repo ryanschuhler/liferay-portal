@@ -14,10 +14,8 @@ import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import {ALL_ROWS} from '~/services/fetcher/pagination';
 import {Liferay} from '~/services/liferay/liferay';
 
-import type {
-	AccountMemberOption,
-	ProjectMembersRow,
-} from '~/pages/MyAccount/ProjectMembers/types';
+import type {AccountMemberOption} from '~/pages/MyAccount/ProjectMembers/types/accountMemberOption';
+import type {ProjectMembersRow} from '~/pages/MyAccount/ProjectMembers/types/projectMembersRow';
 import type {AccountRole, UserAccount} from '~/types/accounts';
 import type {APIResponse} from '~/types/api';
 

@@ -20,12 +20,12 @@ import {
 	getDeploymentsByOrderItemId,
 	hasDeploymentInProgress,
 } from '../provisioning';
-import {InstallStatus} from '../types';
+import {InstallStatus} from '../types/InstallStatus';
 
 import type {PlacedOrder} from '~/types/orders';
 import type {DeliveryProduct} from '~/types/product';
 
-import type {Deployment} from '../types';
+import type {Deployment} from '../types/provisioning';
 
 export type ProvisioningData = ReturnType<typeof useProvisioningData>;
 

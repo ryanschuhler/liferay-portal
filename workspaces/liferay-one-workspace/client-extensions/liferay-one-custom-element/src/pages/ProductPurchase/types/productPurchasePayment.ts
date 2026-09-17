@@ -5,13 +5,7 @@
 
 import type {BillingAddress} from '~/types/orders';
 
-export const PaymentMethodType = {
-	INVOICE: 0,
-	PAY_NOW: 1,
-} as const;
-
-export type PaymentMethodType =
-	(typeof PaymentMethodType)[keyof typeof PaymentMethodType];
+import type {PaymentMethodType} from './PaymentMethodType';
 
 export type ProductPurchaseInvoice = {
 	email: string;

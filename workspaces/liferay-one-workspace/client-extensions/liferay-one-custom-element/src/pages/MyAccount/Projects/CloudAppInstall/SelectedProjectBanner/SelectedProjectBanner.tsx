@@ -5,7 +5,7 @@
 
 import i18n from '~/i18n';
 
-import {getResourceSummary} from '../utils';
+import {getResourceSummary} from '../utils/getResourceSummary';
 
 import type {ConsoleUserProject} from '~/services/spring-boot/Console';
 

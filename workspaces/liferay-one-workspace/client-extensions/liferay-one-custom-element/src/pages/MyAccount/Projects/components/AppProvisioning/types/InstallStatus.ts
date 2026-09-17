@@ -11,20 +11,3 @@ export const InstallStatus = {
 } as const;
 
 export type InstallStatus = (typeof InstallStatus)[keyof typeof InstallStatus];
-
-export type Deployment = {
-	appId: string;
-	createdAt: number;
-	id: string;
-	loading?: boolean;
-	orderId: number;
-	projectId: string;
-};
-
-export type Provisioning = {
-	deployments: Deployment[];
-	orderItemId: number;
-	quantity: number;
-	shippedQuantity: number;
-	sku: string;
-};

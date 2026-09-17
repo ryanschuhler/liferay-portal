@@ -4,7 +4,7 @@
  */
 
 import {useCallback, useEffect, useState} from 'react';
-import {IBusinessEvent} from '~/pages/BusinessEvents/types';
+import {IBusinessEvent} from '~/pages/BusinessEvents/types/businessEvent';
 import {getBusinessEvents} from '~/services/spring-boot/Jira';
 
 export default function useGetBusinessEvents(projectERC: string): {

@@ -4,7 +4,7 @@
  */
 
 import {useCallback, useEffect, useState} from 'react';
-import {IBusinessEvent} from '~/pages/BusinessEvents/types';
+import {IBusinessEvent} from '~/pages/BusinessEvents/types/businessEvent';
 import parseAssociatedTickets from '~/pages/BusinessEvents/utils/parseAssociatedTickets';
 import {getProjectTickets} from '~/services/spring-boot/Jira';
 import {ITicket} from '~/types/ticket';

@@ -3,10 +3,6 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-export const PROJECT_ITEM_TYPES = ['application', 'product'] as const;
-
-export type ProjectItemType = (typeof PROJECT_ITEM_TYPES)[number];
-
 export const PROJECT_TAB_KEYS = [
 	'details',
 	'utilization',
@@ -18,11 +14,3 @@ export const PROJECT_TAB_KEYS = [
 ] as const;
 
 export type ProjectTabKey = (typeof PROJECT_TAB_KEYS)[number];
-
-export type UserProject = {
-	externalReferenceCode: string;
-	id: number;
-	liferayVersion?: string;
-	name: string;
-	unassigned?: boolean;
-};

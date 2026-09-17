@@ -5,7 +5,7 @@
 
 import resolveProjectId from './resolveProjectId';
 
-import type {UserProject} from '~/pages/MyAccount/Projects/types';
+import type {UserProject} from '~/pages/MyAccount/Projects/types/userProject';
 
 export function resolveDefaultProject(
 	projects: UserProject[]

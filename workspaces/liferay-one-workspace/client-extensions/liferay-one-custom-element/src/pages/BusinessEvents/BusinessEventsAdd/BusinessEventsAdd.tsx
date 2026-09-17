@@ -28,7 +28,7 @@ import useGetUTCTimeZonesList from '~/pages/BusinessEvents/hooks/useGetUTCTimeZo
 import useHasAllEventsPermissions from '~/pages/BusinessEvents/hooks/useHasAllEventsPermissions';
 import useIsSaasOnly from '~/pages/BusinessEvents/hooks/useIsSaasOnly';
 import useProjectTickets from '~/pages/BusinessEvents/hooks/useProjectTickets';
-import {IBusinessEvent} from '~/pages/BusinessEvents/types';
+import {IBusinessEvent} from '~/pages/BusinessEvents/types/businessEvent';
 import {containsOption} from '~/pages/BusinessEvents/utils/containsOption';
 import {getFormattedEventDateTime} from '~/pages/BusinessEvents/utils/getFormattedEventDateUtils';
 import getInitialEvent from '~/pages/BusinessEvents/utils/getInitialEvent';

@@ -9,7 +9,7 @@ import {getAppType} from './getAppType';
 
 import type {DeliveryProduct} from '~/types/product';
 
-import type {ProjectItemType} from '../types';
+import type {ProjectItemType} from '../types/projectItemType';
 import type {AppType} from './getAppType';
 
 export type ActivationProfile =

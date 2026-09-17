@@ -17,3 +17,5 @@ export function getResourceSummary(project: ConsoleUserProject) {
 		),
 	]);
 }
+
+export default getResourceSummary;

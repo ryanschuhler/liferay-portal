@@ -14,7 +14,7 @@ import {
 } from '~/pages/MyAccount/Projects/utils/projectCookieUtils';
 import {resolveProjectERC} from '~/pages/MyAccount/Projects/utils/resolveProjectERC';
 
-import type {UserProject} from '~/pages/MyAccount/Projects/types';
+import type {UserProject} from '~/pages/MyAccount/Projects/types/userProject';
 
 export function useSelectedProject(loading: boolean, projects: UserProject[]) {
 	const [projectERC, setProjectERC] = useState('');

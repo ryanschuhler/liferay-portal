@@ -14,7 +14,7 @@ import {Liferay} from '~/services/liferay/liferay';
 import Console from '~/services/spring-boot/Console';
 
 import ProvisioningDetails from '../ProvisioningDetails/ProvisioningDetails';
-import {InstallStatus} from '../types';
+import {InstallStatus} from '../types/InstallStatus';
 
 import type {Account} from '~/types/accounts';
 import type {PlacedOrder} from '~/types/orders';

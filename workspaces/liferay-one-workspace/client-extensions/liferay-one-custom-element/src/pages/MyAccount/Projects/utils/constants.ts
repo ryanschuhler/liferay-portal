@@ -5,9 +5,9 @@
 
 import {Word} from '~/i18n';
 
-import {PROJECT_TAB_KEYS} from '../types';
+import {PROJECT_TAB_KEYS} from '../types/projectTabKey';
 
-import type {ProjectTabKey} from '../types';
+import type {ProjectTabKey} from '../types/projectTabKey';
 
 export const LAST_PROJECT_STORAGE_KEY = 'liferay-one:last-project';
 
