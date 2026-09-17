@@ -79,6 +79,7 @@ export default {
 		'Add one IP address per line. IPv6 addresses are not supported.',
 	'add-one-mac-address-per-line': 'Add one MAC address per line.',
 	'add-packages': 'Add Package(s)',
+	'add-price-tier': 'Add Price Tier',
 	'add-up-to-x-images': 'Add up to {0} images',
 	'additional-admin': 'Additional Admin',
 	'additional-apps-requested': 'Additional Apps Requested',
@@ -155,6 +156,7 @@ export default {
 	'app-documentation-url': 'App Documentation URL',
 	'app-icon': 'App Icon',
 	'app-image': 'App Image',
+	'app-info': 'App Info',
 	'app-installation-and-uninstallation-guide':
 		'App Installation and Uninstallation Guide',
 	'app-installation-and-uninstallation-guide-url':
@@ -398,6 +400,7 @@ export default {
 		'Create new licenses and they will show up here.',
 	'create-new-ticket': 'Create New Ticket',
 	'create-template': 'Create Template',
+	'create-trial': 'Create Trial',
 	'created-at': 'Created At',
 	'created-by': 'Created By',
 	'critical-incident-contacts': 'Critical Incident Contacts',
@@ -469,6 +472,7 @@ export default {
 	'developer-licenses-are-limited-to-5-unique-addresses-and-should-not-be-used-for-full-scale-production-deployments':
 		'Developer licenses are limited to 5 unique addresses and should not be used for full-scale production deployments.',
 	'development-framework': 'Development Framework',
+	'didn-t-receive-the-email': "Didn't receive the email?",
 	'digital-workplace': 'Digital Workplace',
 	'disaster-recovery-data-center-location':
 		'Disaster Recovery Data Center Location',
@@ -765,6 +769,7 @@ export default {
 	'invite-manage-roles-designate-incident-contacts':
 		'Invite, manage roles, designate incident contacts.',
 	'invite-member': 'Invite Member',
+	'invite-members': 'Invite Members',
 	'invite-project-member': 'Invite Project Member',
 	'invited': 'Invited',
 	'invited-members-receive-an-email-and-join-the-account-after-accepting-the-invitation':
@@ -819,6 +824,8 @@ export default {
 	'liferay-dxp-version': 'Liferay DXP Version',
 	'liferay-end-user-agreement': 'Liferay End User Agreement',
 	'liferay-learn': 'Liferay Learn',
+	'liferay-marketplace-developer-agreement':
+		'LIFERAY MARKETPLACE DEVELOPER AGREEMENT',
 	'liferay-paas': 'Liferay PaaS',
 	'liferay-paas-activation': 'Liferay PaaS Activation',
 	'liferay-publisher-license-agreement':
@@ -1000,6 +1007,7 @@ export default {
 	'no-role': 'No Role',
 	'no-support-tickets-were-found': 'No support tickets were found.',
 	'no-ticket-attachments-were-found': 'No ticket attachments were found.',
+	'no-tokens-available': 'No tokens available',
 	'no-trials-yet': 'No Trials Yet',
 	'no-usage-data-yet': 'No Usage Data Yet',
 	'no-versions-yet': 'No Versions Yet',
@@ -1164,6 +1172,7 @@ export default {
 	'primary-region': 'Primary Region',
 	'privacy-breach-contacts': 'Privacy Breach Contacts',
 	'privacy-policy': 'Privacy Policy',
+	'private-beta': 'Private Beta',
 	'private-information': 'Private Information',
 	'pro-code': 'Pro-code',
 	'processing': 'Processing',

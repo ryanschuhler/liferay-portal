@@ -138,7 +138,7 @@ const LicensePriceCard: React.FC<LicensePriceCardProps> = ({
 			onClick={() => onAdd(currency)}
 			symbol="plus"
 		>
-			Add Price Tier
+			{translate('add-price-tier')}
 		</ButtonWithIcon>
 	</ClayForm.Group>
 );

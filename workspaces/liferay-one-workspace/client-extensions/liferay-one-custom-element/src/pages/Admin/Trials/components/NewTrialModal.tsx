@@ -189,7 +189,7 @@ const NewTrialModal: React.FC<NewTrialModalProps> = ({onClose, revalidate}) => {
 			>
 				<div className="d-flex flex-column">
 					<label htmlFor="allowed-email-domains">
-						Invite Members
+						{translate('invite-members')}
 					</label>
 
 					<small>
@@ -235,7 +235,7 @@ const NewTrialModal: React.FC<NewTrialModalProps> = ({onClose, revalidate}) => {
 					disabled={!isValid}
 					onClick={handleSubmit(onSubmit)}
 				>
-					Create Trial
+					{translate('create-trial')}
 				</ClayButton>
 			</div>
 		</div>

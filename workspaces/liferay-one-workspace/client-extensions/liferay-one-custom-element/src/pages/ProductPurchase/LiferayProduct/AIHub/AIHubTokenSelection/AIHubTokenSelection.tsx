@@ -9,7 +9,7 @@ import ProductPurchase from '~/components/ProductPurchase/ProductPurchase';
 import RadioCardList, {
 	RadioOption,
 } from '~/components/RadioCardList/RadioCardList';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {useProductPurchaseLayoutContext as useProductPurchaseOutletContext} from '~/pages/ProductPurchase/components/ProductPurchaseLayout/ProductPurchaseLayout';
 import {useAppPurchaseContext} from '~/pages/ProductPurchase/context/AppPurchaseContextProvider';
 import {useCartContext} from '~/pages/ProductPurchase/context/CartContextProvider';
@@ -255,7 +255,9 @@ const AIHubTokenSelection = () => {
 						showImage
 					/>
 				) : (
-					<p className="font-weight-bold my-5">No tokens available</p>
+					<p className="font-weight-bold my-5">
+						{translate('no-tokens-available')}
+					</p>
 				)}
 
 				<ClayIcon

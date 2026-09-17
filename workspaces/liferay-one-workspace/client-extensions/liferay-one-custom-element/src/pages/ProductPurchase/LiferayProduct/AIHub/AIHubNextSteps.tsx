@@ -54,7 +54,7 @@ const AIHubNextSteps: React.FC<AIHubNextStepsProps> = ({
 							<div className="align-items-center d-flex">
 								{productName}{' '}
 								<label className="beta-badge-label ml-2 mt-1">
-									Private Beta
+									{translate('private-beta')}
 								</label>{' '}
 							</div>
 						}

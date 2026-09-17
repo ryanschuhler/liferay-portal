@@ -5,7 +5,7 @@
 
 import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
-import i18n from '~/i18n';
+import i18n, {translate} from '~/i18n';
 import {getSiteName} from '~/utils/siteUtils';
 
 import './LicenseAgreement.css';
@@ -24,7 +24,9 @@ const LicenseAgreement = () => {
 							<ClayIcon symbol="document-text" />
 						</div>
 
-						<h3>Liferay Publisher License Agreement</h3>
+						<h3>
+							{translate('liferay-publisher-license-agreement')}
+						</h3>
 					</div>
 
 					<ClayButton
@@ -43,7 +45,7 @@ const LicenseAgreement = () => {
 
 				<div className="p-5 text-agreement">
 					<strong className="text-agreement-text-primary">
-						LIFERAY MARKETPLACE DEVELOPER AGREEMENT
+						{translate('liferay-marketplace-developer-agreement')}
 					</strong>
 
 					<div className="mt-4 text-agreement-text-secondary">

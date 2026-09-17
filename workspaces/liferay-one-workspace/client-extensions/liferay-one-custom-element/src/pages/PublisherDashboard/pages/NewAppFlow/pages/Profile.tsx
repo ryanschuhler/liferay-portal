@@ -132,7 +132,7 @@ const Profile = () => {
 
 	return (
 		<div className="new-app-form-profile">
-			<h5>App Info</h5>
+			<h5>{translate('app-info')}</h5>
 			<hr />
 			<div className="align-items-center d-flex mt-5">
 				<UploadLogo
