@@ -5,7 +5,7 @@
 
 /* eslint-disable no-console -- CLI script; console output is its user interface */
 
-import {parsePlan, validatePlan} from './lib/plan.ts';
+import {findDanglingReferences, parsePlan, validatePlan} from './lib/plan.ts';
 import {ENUMERABLE_PREFIXES, enumerateSurface} from './lib/surface.ts';
 import {findOrphanTags} from './lib/testsIndex.ts';
 
@@ -99,9 +99,22 @@ function main(): number {
 		}
 	}
 
+	const dangling = findDanglingReferences(items);
+
+	if (dangling.length) {
+		console.log('');
+
+		for (const reference of dangling) {
+			console.log(
+				`  ✗ DANGLING reference (no such plan item): ${reference.id} ` +
+					`in ${reference.file}:${reference.line}`
+			);
+		}
+	}
+
 	console.log('');
 
-	if (gapCount || staleCount || orphans.length) {
+	if (gapCount || staleCount || orphans.length || dangling.length) {
 		const reasons = [];
 
 		if (gapCount) {
@@ -116,10 +129,14 @@ function main(): number {
 			reasons.push(`${orphans.length} orphan tag(s)`);
 		}
 
+		if (dangling.length) {
+			reasons.push(`${dangling.length} dangling reference(s)`);
+		}
+
 		console.log(
 			`FAIL — ${reasons.join(', ')}. ` +
 				`Run \`node scripts/scaffoldPlan.ts\` to reconcile gaps/stale rows; ` +
-				`fix orphan tags to match a plan ID.`
+				`fix orphan tags and dangling references to match a plan ID.`
 		);
 
 		return 1;
@@ -133,7 +150,7 @@ function main(): number {
 	console.log(
 		`OK — plan covers all ${enumerableInPlan} enumerable surface items` +
 			` (+${specInPlan} spec-derived flow/cross-cutting items tracked); ` +
-			`all test tags resolve.`
+			`all test tags and plan references resolve.`
 	);
 
 	return 0;

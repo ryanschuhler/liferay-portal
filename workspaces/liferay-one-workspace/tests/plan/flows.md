@@ -24,7 +24,7 @@ initiative.
 > Requirement text where a row belongs to a distinct feature area.
 
 Most journeys are implemented in code but cannot run end to end against a local
-environment yet. Two structural blockers dominate:
+environment yet. Three structural blockers dominate:
 
 - **No `/o/one/v1` proxy locally.** The Spring Boot endpoints enforce OAuth2
   scopes through a proxy path the local portal does not expose, so the
@@ -32,23 +32,42 @@ environment yet. Two structural blockers dominate:
   negative path and `/ready` are reachable directly at `:58081`.
 - **External systems and seeded data.** The journeys read from or write to Jira,
   Google Cloud Storage, Salesforce Pub/Sub, Okta, and the provisioning/console
-  backends, or need seeded commerce data, or need a user provisioned with an
-  entitlement the seed admin lacks (the gated page groups render the Restricted
-  Page for `test@liferay.com`).
+  backends, or need seeded commerce data.
+- **The seeding gap: no entitled non-admin user.** `scripts/seed/` provisions
+  nobody who can walk a gated journey as the persona it belongs to, so the gated
+  page groups render the Restricted Page for `test@liferay.com` and ten journeys
+  below stop at the door. It is one fix, not ten, and the same one that leaves
+  the LPD-95398 permission matrix dormant. Concretely, what the seed is missing:
+  no user holds `C_ACCOUNT_BUYER`, `L_ACCOUNT_MEMBER`, or
+  `C_PARTNER_ACCOUNT_ADMIN`; no membership in
+  `08-project-membership.batch-engine-data.json` uses `C_PROJECT_REQUESTER`, only
+  `C_PROJECT_ADMIN` and `C_PROJECT_USER`; `member@customer.com` is role-less but
+  belongs to both ACCNT-001 projects, so it cannot serve the "no project
+  membership" case; and ACCNT-001 carries only two projects, so there is no third
+  to stand in for `ONE_UNASSIGNED_PROJECT_ERC`. Journeys blocked on it say
+  "Deferred on the seeding gap" so the shared root cause reads as one line of
+  work.
 
 Such journeys are marked `deferred` with the precise blocker, so they stay
 tracked without dragging down the go-live denominator. Requirements that are
-provable locally today are `planned` and carry a real test.
+provable locally today are `planned`, and are expected to carry a real test.
 
 Journeys marked **spec-not-staged** are documented here (step 1: every coded
 flow is at least captured) but do not yet have an authored integration/e2e spec
 in `integration/specs` or `e2e/specs`; they were added when the code surface for
-trials, projects, organizations, Okta identity sync, license keys, tax, and AI
-Hub landed. Staging their specs is tracked follow-up work. Every other deferred
-journey below is **already authored** as a full integration or e2e spec, wrapped
-in `test.describe.fixme` so it is collected and skipped rather than run. Each
-authored spec's header documents the exact blocker and the environment variables
-to set; the spec name is listed in the journey's Requirement.
+trials, projects, organizations, Okta identity sync, license keys, tax, AI Hub,
+SEO Studio, the Digital Sales Room, and app license keys landed. Staging their
+specs is tracked follow-up work. Every other deferred journey below is **already
+authored** as a full integration or e2e spec, wrapped in `test.describe.fixme` so
+it is collected and skipped rather than run. Each authored spec's header
+documents the exact blocker and the environment variables to set; the spec name
+is listed in the journey's Requirement.
+
+Journeys marked **No test yet** are the inverse: nothing blocks them, the harness
+that would prove them already runs, and nobody has written the test. They are
+`planned`, carry no pending stub, and so read as uncovered in `plan:coverage` —
+which is the point, since the number should show owed work rather than hide it
+behind a stub.
 
 Unblocking is not purely environmental: several deferred specs lean on
 positional or broad-regex selectors (`getByRole('button').last()`,
@@ -84,19 +103,23 @@ The LPD-95398 permissions matrix — what each account-level and project-level r
 
 | ID | Requirement | Type | Priority | Status | Source |
 | --- | --- | --- | --- | --- | --- |
-| FLOW-ROLE-ACCOUNT-PERMISSIONS | Deferred — needs users provisioned with each account role (Account Admin, Partner Account Admin, Account Buyer, Account Member, null) on a shared account; the seed admin sees the Restricted Page. Enforces the account-level matrix (LPD-95398): Account Details edit gated to admins, Account Members hidden from a Buyer-only user, Orders denied to a null role, Projects denied to Buyer/null. Staged: `e2e/specs/rolePermissionsMatrix.spec.ts` (E15, LPD-88258) | e2e | P1 | deferred | spec:flow#role-account-permissions |
-| FLOW-ROLE-PROJECT-PERMISSIONS | Deferred — needs users provisioned with each project role (Project Admin, Project Requester, Project User) plus an Account Admin, all assigned to a shared project. Enforces the project-level matrix (LPD-95398): project details view for all, member management gated to Admins, Business Events / Ticket Attachments / support-ticket submission full for Requester and view-only for Project User. Staged: `e2e/specs/rolePermissionsMatrix.spec.ts` (E09/E10, LPD-88261/LPD-88252) | e2e | P1 | deferred | spec:flow#role-project-permissions |
-| FLOW-ROLE-NULL-PROJECT-ACCESS | Deferred — needs a null-role user with no project membership and a second null-role user assigned to one project. Enforces the null-role project-access rules (LPD-95398): account-level pages only when unassigned, account-level plus the assigned project when assigned, and an unassigned project is not displayed in navigation. Staged: `e2e/specs/rolePermissionsMatrix.spec.ts` (LPD-92707) | e2e | P1 | deferred | spec:flow#role-null-project-access |
+| FLOW-ROLE-ACCOUNT-PERMISSIONS | Deferred on the seeding gap — one user per account role (Account Admin, Partner Account Admin, Account Buyer, Account Member, null) on a shared account, none of which the seed provisions. Enforces the account-level matrix (LPD-95398): Account Details edit gated to admins, Account Members hidden from a Buyer-only user, Orders denied to a null role, Projects denied to Buyer/null. Staged: `e2e/specs/rolePermissionsMatrix.spec.ts` (E15, LPD-88258) | e2e | P1 | deferred | spec:flow#role-account-permissions |
+| FLOW-ROLE-PROJECT-PERMISSIONS | Deferred on the seeding gap — one user per project role (Project Admin, Project Requester, Project User) plus an Account Admin on a shared project; the seed grants no Project Requester. Enforces the project-level matrix (LPD-95398): project details view for all, member management gated to Admins, Business Events / Ticket Attachments / support-ticket submission full for Requester and view-only for Project User. Staged: `e2e/specs/rolePermissionsMatrix.spec.ts` (E09/E10, LPD-88261/LPD-88252) | e2e | P1 | deferred | spec:flow#role-project-permissions |
+| FLOW-ROLE-NULL-PROJECT-ACCESS | Deferred on the seeding gap — a null-role user with no project membership and a second null-role user assigned to exactly one project; the seed's only role-less user belongs to every project on its account. Enforces the null-role project-access rules (LPD-95398): account-level pages only when unassigned, account-level plus the assigned project when assigned, and an unassigned project is not displayed in navigation. Staged: `e2e/specs/rolePermissionsMatrix.spec.ts` (LPD-92707) | e2e | P1 | deferred | spec:flow#role-null-project-access |
 
 ## Commerce: Purchase, Checkout & Entitlements
 
 | ID | Requirement | Type | Priority | Status | Source |
 | --- | --- | --- | --- | --- | --- |
-| FLOW-PRODUCT-PURCHASE-ENTRY | Deferred — needs an entitled user with a purchasable product; the seed admin sees the Restricted Page. Drives the ProductPurchase wizard (`ROUTE-PRODUCT-PURCHASE-*`) from account selection through summary; the wizard branches per product type (DXP, LDP, CMP, DSR, AI Hub), so it also exercises the GA purchase/provisioning epics. Staged: `e2e/specs/productPurchase.spec.ts` (E18, LPD-88250; GA products: DSR LPD-79893, CMP LPD-82399, LDP LPD-95794) | e2e | P0 | deferred | spec:flow#product-purchase-entry |
-| FLOW-CHECKOUT-FREE | Deferred — needs an entitled user and commerce completion. Free-app checkout completes a CommerceOrder and triggers entitlement generation (`REST-POST-ENTITLEMENTS-GENERATE`). Staged: `e2e/specs/productPurchase.spec.ts` (E18, LPD-88250; GA products: DSR LPD-79893, CMP LPD-82399, LDP LPD-95794) | e2e | P0 | deferred | spec:flow#checkout-free |
-| FLOW-CHECKOUT-PAID | Deferred — needs an entitled user and a payment-provider stub. Paid-app checkout adds the license and payment-method steps and reaches payment before completing the order. Staged: `e2e/specs/productPurchase.spec.ts` (E18, LPD-88250; tokens via Stripe MIT, LPD-93643; GA products: DSR LPD-79893, CMP LPD-82399, LDP LPD-95794) | e2e | P0 | deferred | spec:flow#checkout-paid |
+| FLOW-PRODUCT-PURCHASE-ENTRY | Deferred on the seeding gap — an entitled buyer with a purchasable product. Drives the ProductPurchase wizard (`ROUTE-PRODUCT-PURCHASE-*`) from account selection through summary; the wizard branches per product type (DXP, LDP, CMP, DSR, AI Hub), so it also exercises the GA purchase/provisioning epics. Staged: `e2e/specs/productPurchase.spec.ts` (E18, LPD-88250; GA products: DSR LPD-79893, CMP LPD-82399, LDP LPD-95794) | e2e | P0 | deferred | spec:flow#product-purchase-entry |
+| FLOW-PRODUCT-PURCHASE-CONTRACT | Spec-not-staged — the contract step (`ROUTE-PRODUCT-PURCHASE-CONTRACT`) lists the selected project's contracts newest first, holds the buyer on the step until one is chosen, renders the no-contract invitation when the project has none, and carries the chosen contract onto the resulting order so the purchase is attributed to it. The step is emitted only in the ai-hub-open-beta flow, so the journey needs a seeded project with contracts and one without, on top of the seeding gap (E18, LPD-88250) | e2e | P1 | deferred | spec:flow#product-purchase-contract |
+| FLOW-CHECKOUT-FREE | Deferred on the seeding gap, plus commerce completion. Free-app checkout completes a CommerceOrder and triggers entitlement generation (`REST-POST-ENTITLEMENTS-GENERATE`). Staged: `e2e/specs/productPurchase.spec.ts` (E18, LPD-88250; GA products: DSR LPD-79893, CMP LPD-82399, LDP LPD-95794) | e2e | P0 | deferred | spec:flow#checkout-free |
+| FLOW-CHECKOUT-PAID | Deferred on the seeding gap, plus a payment-provider stub. Paid-app checkout adds the license and payment-method steps and reaches payment before completing the order. Staged: `e2e/specs/productPurchase.spec.ts` (E18, LPD-88250; tokens via Stripe MIT, LPD-93643; GA products: DSR LPD-79893, CMP LPD-82399, LDP LPD-95794) | e2e | P0 | deferred | spec:flow#checkout-paid |
 | FLOW-TAX-CALCULATION | Spec-not-staged — `REST-POST-COMMERCE-ORDERS-COMMERCEORDERID-CALCULATE-TAX` applies the tax-applicability rules (`SVC-COMMERCEORDERSERVICE`: business account taxed only when billed to Ireland; person account across the European country set; untaxed otherwise) to a CommerceOrder; the rule branches are unit-covered, the in-action path needs a seeded order behind the proxy (E25, LPD-88264) | integration | P1 | deferred | spec:flow#tax-calculation |
 | FLOW-AI-HUB-PURCHASE | Spec-not-staged — AI Hub purchase wizard (`ROUTE-PRODUCT-PURCHASE-AI-HUB-FORM`, `…-AI-HUB-OPEN-BETA-FORM`) completes an order, the `ai/hub/tokens` object action grants tokens, and `AIHubService` provisions the tenant; needs an entitled user + AI Hub backend stub (LPD-90605) | e2e | P0 | deferred | spec:flow#ai-hub-purchase |
+| FLOW-SEO-STUDIO-SIGNUP | No test yet — SEO Studio Beta is sold only to accounts that already hold an AI Hub order and nothing proves that gate at any tier, which makes it the revenue rule most worth covering: the account step must open the requirements modal instead of advancing, and the signup form must refuse the submit with the not-eligible view, when the account's placed AI Hub order lookup comes back empty, and both must let an eligible account through. Both branches read that lookup through a service call, so Vitest proves them today against a stubbed response with no environment at all; the rest of the signup (project selection, the form on `ROUTE-PRODUCT-PURCHASE-SEO-STUDIO-FORM`, and the SEO_STUDIO order it places) is e2e and waits on the seeding gap (E18, LPD-102451) | unit | P0 | planned | spec:flow#seo-studio-signup |
+| FLOW-DIGITAL-SALES-ROOM-SIGNUP | Spec-not-staged — a dsr product sends the buyer from account selection straight to the Digital Sales Room form (`ROUTE-PRODUCT-PURCHASE-DSR-FORM`), which records the workspace and activation-key details on a DSR order and keeps a DSR Request linked to it for the sales team, then `REST-POST-DIGITAL-SALES-ROOM-PROVISIONING-ORDERID` turns the order's settings into an Analytics Cloud project keyed by the account external reference code — reusing the workspace an account already holds, never minting a second one on a redelivered request, and cancelling the order with the error when Analytics Cloud refuses. The controller branches are unit-covered; the in-action path needs an Analytics Cloud stub on top of the seeding gap (E18, LPD-102451) | integration | P0 | deferred | spec:flow#digital-sales-room-signup |
+| FLOW-CMP-CONTACT-SALES | No test yet — Content Marketing Platform is sold through the sales team at GA, so a cmp product must never offer self-service checkout: the product display page renders Contact Sales in place of Get App, a buyer who reaches the purchase flow by its URL lands on that same invitation rather than account selection, and the invitation lists the developer, trial, and production tiers resolved from the SKU license usage type options. All three are Vitest targets today; the remaining half — a CMP GA order delivering the module package from the Download tab instead of the Liferay bundle list — needs a seeded GA order and is e2e (E18, LPD-102451) | unit | P1 | planned | spec:flow#cmp-contact-sales |
 | FLOW-ENTITLEMENT-GENERATION | Deferred — needs seeded commerce order items (the controller branch is unit-covered). Generates one Entitlement per EntitlementDefinition, idempotently, via `REST-POST-ENTITLEMENTS-GENERATE` and the commerce-order-item object action. Staged: `integration/specs/entitlementGeneration.spec.ts` (LPD-89424, LPD-89274) | integration | P0 | deferred | spec:flow#entitlement-generation |
 | FLOW-SALESFORCE-ORDER-SYNC | Deferred — inbound Salesforce Pub/Sub upsert; needs a broker/stub. `SalesforceObjectPubsubSubscriber` upserts Commerce price entries, products, and SKUs idempotently and dedupes duplicates; `SalesforceOpportunityPubsubSubscriber` upserts the order/contract from an opportunity event; both handlers are unit-covered. Staged: `integration/specs/salesforceOrderSync.spec.ts` (E11, LPD-88254) | integration | P0 | deferred | spec:flow#salesforce-order-sync |
 
@@ -104,8 +127,8 @@ The LPD-95398 permissions matrix — what each account-level and project-level r
 
 | ID | Requirement | Type | Priority | Status | Source |
 | --- | --- | --- | --- | --- | --- |
-| FLOW-MY-ACCOUNT-OVERVIEW | Deferred — projects, orders, and billing render for an entitled member; the seed admin sees the Restricted Page. Drives the MyAccount route group (`ROUTE-MY-ACCOUNT-*`). Staged: `e2e/specs/myAccount.spec.ts` (E15, LPD-88258; E10, LPD-88252) | e2e | P1 | deferred | spec:flow#my-account-overview |
-| FLOW-ACCOUNT-TEAM-MEMBERS | Deferred — needs an invite flow and member data. Account team invite, assign-role, and remove on `ROUTE-MY-ACCOUNT-ACCOUNT-MEMBERS`, with role enforcement, via the `accounts/{erc}/user-accounts*` endpoints. Staged: `e2e/specs/myAccount.spec.ts` (E15, LPD-88258) | e2e | P1 | deferred | spec:flow#account-team-members |
+| FLOW-MY-ACCOUNT-OVERVIEW | Deferred on the seeding gap — projects, orders, and billing render for an entitled member. Drives the MyAccount route group (`ROUTE-MY-ACCOUNT-*`). Staged: `e2e/specs/myAccount.spec.ts` (E15, LPD-88258; E10, LPD-88252) | e2e | P1 | deferred | spec:flow#my-account-overview |
+| FLOW-ACCOUNT-TEAM-MEMBERS | Deferred on the seeding gap — the members to invite, re-role, and remove are exactly the users the seed does not provision. Account team invite, assign-role, and remove on `ROUTE-MY-ACCOUNT-ACCOUNT-MEMBERS`, with role enforcement, via the `accounts/{erc}/user-accounts*` endpoints. Staged: `e2e/specs/myAccount.spec.ts` (E15, LPD-88258) | e2e | P1 | deferred | spec:flow#account-team-members |
 | FLOW-ACCOUNT-PROVISIONING | Spec-not-staged — the account object actions (`REST-POST-OBJECT-ACTION-ACCOUNT-CREATE`/`-UPDATE`/`-DELETE`) provision, mutate, and tear down an account and its downstream records (contacts, addresses, JSM sync) idempotently; needs the proxy + seeded objects (E15, LPD-88258) | integration | P0 | deferred | spec:flow#account-provisioning |
 | FLOW-ORGANIZATION-SYNC | Spec-not-staged — organization object actions and the `organizations/*` endpoints create/update/delete an organization, assign account and organization-role memberships, and mirror to JSM (`…/sync-to-jsm`) and Okta (`…/sync-from-okta`); needs the proxy + JSM/Okta stubs (E15, LPD-88258, LPD-89425) | integration | P1 | deferred | spec:flow#organization-sync |
 | FLOW-OKTA-IDENTITY-SYNC | Spec-not-staged — inbound Okta Pub/Sub (`SUB-OKTAUSERSPUBSUBSUBSCRIBER`, `SUB-OKTAAPPCREATEDPUBSUBSUBSCRIBER`) and the `user-accounts/{userId}/sync-with-okta` endpoint upsert Liferay users and org-role associations idempotently; the handlers are unit-covered, the in-action path needs a Pub/Sub broker + Okta stub (E15, LPD-88258, LPD-89425) | integration | P1 | deferred | spec:flow#okta-identity-sync |
@@ -123,6 +146,7 @@ The LPD-95398 permissions matrix — what each account-level and project-level r
 | --- | --- | --- | --- | --- | --- |
 | FLOW-LICENSE-GENERATION | Deferred — needs subscription data and the signer. Generates a signed license key tied to a subscription (`CommonLicenseKeyService`, ported KeyGeneratorImpl/LicenseKeyExporter). Staged: `integration/specs/licenseLifecycle.spec.ts` (LPD-89421/LPD-89422/LPD-89423) | integration | P0 | deferred | spec:flow#license-generation |
 | FLOW-LICENSE-FREE-KEY | Spec-not-staged — free license issuance: `REST-POST-LICENSE-KEYS-TYPE-FREE` mints a free key after `…-TYPE-FREE-DOMAINS-CHECK` validates the domain, and `GET /license-keys/{licenseKeyId}/download` streams it; needs subscription/domain seed data (LPD-89423, LPD-89429) | integration | P0 | deferred | spec:flow#license-free-key |
+| FLOW-APP-LICENSE-KEY-LIFECYCLE | Spec-not-staged — the endpoint group LPD-103395 added runs as one lifecycle: `REST-POST-APP-LICENSE-KEYS` mints a key against an entitlement, `REST-GET-APP-LICENSE-KEYS-APPLICENSEKEYID` and `…-DOWNLOAD` read it back and stream its XML, and `REST-PUT-APP-LICENSE-KEYS-ACTIVATE` / `…-DEACTIVATE` flip it, every one gated by the administrator role and scoped to app keys — create refuses the portal product id, and activation resolves and checks every identifier before it writes any of them, so one rejected id leaves the batch untouched rather than half applied. The handler branches are unit-covered; proving the role gate and the scope in action needs the `/o/one/v1` proxy, an administrator token, and a seeded entitlement (LPD-103395) | integration | P0 | deferred | spec:flow#app-license-key-lifecycle |
 | FLOW-SUBSCRIPTION-LICENSE-SYNC | Spec-not-staged — the `license-keys/subscriptions` GET/POST/PUT/DELETE endpoints and `common-license-keys` create keep SubscriptionEntry and CommonLicenseKey in sync with provisioning; needs the proxy + migrated subscription data (LPD-89420/LPD-89427/LPD-89428) | integration | P1 | deferred | spec:flow#subscription-license-sync |
 | FLOW-LICENSE-EXPIRATION-EMAIL | Deferred — the expiry cron (`CRON-SCHEDULEDSENDEXPIRINGLICENSEKEYEMAILS`) queues 30/14/0-day templated emails per subscribed user; the cron body is unit-covered in `SubscriptionEntryServiceTest`. Staged: `integration/specs/licenseLifecycle.spec.ts` (LPD-89428) | integration | P1 | deferred | spec:flow#license-expiration-email |
 | FLOW-LICENSE-REVOCATION | Spec-only — no license-key revocation endpoint or action is implemented yet. Staged: `integration/specs/licenseLifecycle.spec.ts` (LPD-89428) | integration | P1 | deferred | spec:flow#license-revocation |
@@ -140,15 +164,15 @@ The LPD-95398 permissions matrix — what each account-level and project-level r
 
 | ID | Requirement | Type | Priority | Status | Source |
 | --- | --- | --- | --- | --- | --- |
-| FLOW-PUBLISHER-ONBOARDING | Deferred — needs an entitled publisher user and a GCS stub for logo/asset upload. Publisher edits the profile and uploads a logo, then views published apps, published solutions, and the sales summary across `ROUTE-PUBLISHER-DASHBOARD-*`. Staged: `e2e/specs/publisherDashboard.spec.ts` (E18, LPD-88250) | e2e | P1 | deferred | spec:flow#publisher-onboarding |
+| FLOW-PUBLISHER-ONBOARDING | Deferred on the seeding gap (here an entitled publisher), plus a GCS stub for logo/asset upload. Publisher edits the profile and uploads a logo, then views published apps, published solutions, and the sales summary across `ROUTE-PUBLISHER-DASHBOARD-*`. Staged: `e2e/specs/publisherDashboard.spec.ts` (E18, LPD-88250) | e2e | P1 | deferred | spec:flow#publisher-onboarding |
 
 ## Admin, Trials & Provisioning (E07/E16/E20)
 
 | ID | Requirement | Type | Priority | Status | Source |
 | --- | --- | --- | --- | --- | --- |
-| FLOW-ADMIN-DASHBOARD | Deferred — the Marketplace admin dashboard renders for entitled staff; the seed admin is not entitled and sees the Restricted Page. Drives the Admin route group (`ROUTE-ADMIN-*`): tables paginate/sort/filter, inline edit, and non-admin rejection. Staged: `e2e/specs/adminDashboard.spec.ts` (E16, LPD-88257) | e2e | P1 | deferred | spec:flow#admin-dashboard |
-| FLOW-TRIAL-PROVISIONING | Deferred — trial provisioning is now implemented (`REST-POST-TRIALPROVISIONING-ORDERID`, `…-TRIALPROVISIONING`, `CRON-SCHEDULEDPROCESSTRIALS`, `Provisioning*Service`). Availability and domain checks (`REST-GET-TRIALAVAILABILITY`, `…-TRIALDOMAIN-AVAILABILITY-PROJECTPREFIX`) gate the start; provisioning creates the tenant. Needs the provisioning/console backend stub. Staged: `integration/specs/trialProvisioning.spec.ts` (E07, LPD-88259; LPD-97677 Phase 1 provisioning) | integration | P0 | deferred | spec:flow#trial-provisioning |
-| FLOW-TRIAL-EXPIRY | Deferred — trial expiry/extension is now implemented (`REST-POST-TRIALEXPIRE-ORDERID`, `…-TRIALEXTEND-ID`, `DELETE /trial{orderId}`, and the expiry/notify branches of `CRON-SCHEDULEDPROCESSTRIALS`). Needs the provisioning backend stub + seeded trials. Staged: `integration/specs/trialProvisioning.spec.ts` (E07, LPD-88259) | integration | P1 | deferred | spec:flow#trial-expiry |
+| FLOW-ADMIN-DASHBOARD | Deferred on the seeding gap — the Marketplace admin dashboard renders for entitled staff, which the seed admin is not. Drives the Admin route group (`ROUTE-ADMIN-*`): tables paginate/sort/filter, inline edit, and non-admin rejection. Staged: `e2e/specs/adminDashboard.spec.ts` (E16, LPD-88257) | e2e | P1 | deferred | spec:flow#admin-dashboard |
+| FLOW-TRIAL-PROVISIONING | Deferred — trial provisioning is now implemented (`REST-POST-TRIAL-PROVISIONING-ORDERID`, `CRON-SCHEDULEDPROCESSTRIALS`, `Provisioning*Service`). Availability and domain checks (`REST-GET-TRIAL-AVAILABILITY`, `REST-GET-TRIAL-DOMAIN-AVAILABILITY-PROJECTPREFIX`) gate the start; provisioning creates the tenant. Needs the provisioning/console backend stub. Staged: `integration/specs/trialProvisioning.spec.ts` (E07, LPD-88259; LPD-97677 Phase 1 provisioning) | integration | P0 | deferred | spec:flow#trial-provisioning |
+| FLOW-TRIAL-EXPIRY | Deferred — trial expiry/extension is now implemented (`REST-POST-TRIAL-EXPIRE-ORDERID`, `REST-POST-TRIAL-EXTEND-ID`, `REST-DELETE-TRIAL-ORDERID`, and the expiry/notify branches of `CRON-SCHEDULEDPROCESSTRIALS`). Needs the provisioning backend stub + seeded trials. Staged: `integration/specs/trialProvisioning.spec.ts` (E07, LPD-88259) | integration | P1 | deferred | spec:flow#trial-expiry |
 
 ## Utilization, Console & Publisher Analytics (E07/E18/E20)
 
@@ -193,11 +217,16 @@ status; every surface here already has unit coverage in its per-surface file.
 | Every protected endpoint — unauthenticated 401 | `AUTH-UNAUTHENTICATED` | ✅ covered | none |
 | Every protected endpoint — scoped 403 / 200 | `AUTH-OAUTH2-SCOPES` + the per-journey rows | ⊘ deferred | `/o/one/v1` proxy + scoped OAuth2 token |
 | Gated page groups mount + gate | `FLOW-RESTRICTED-PAGE` | ✅ covered | none |
-| `ROUTE-ADMIN-*` | `FLOW-ADMIN-DASHBOARD` | ⊘ deferred | entitled staff user |
-| `ROUTE-MY-ACCOUNT-*` | `FLOW-MY-ACCOUNT-OVERVIEW`, `FLOW-ACCOUNT-TEAM-MEMBERS` | ⊘ deferred | entitled member + member data |
-| `ROUTE-MY-ACCOUNT-PROJECT*`, `…-PROJECT-MEMBERS` | `FLOW-PROJECT-LIFECYCLE`, `FLOW-PROJECT-MEMBERSHIP` | ⊘ deferred | entitled member + seeded project |
-| `ROUTE-PRODUCT-PURCHASE-*` (+ AccountSelector) | `FLOW-PRODUCT-PURCHASE-ENTRY`, `FLOW-CHECKOUT-FREE`, `FLOW-CHECKOUT-PAID`, `FLOW-AI-HUB-PURCHASE` | ⊘ deferred | entitled user + commerce/payment/AI Hub stub |
-| `ROUTE-PUBLISHER-DASHBOARD-*` | `FLOW-PUBLISHER-ONBOARDING` | ⊘ deferred | entitled publisher + GCS stub |
+| `ROUTE-ADMIN-*` | `FLOW-ADMIN-DASHBOARD` | ⊘ deferred | seeding gap |
+| `ROUTE-MY-ACCOUNT-*` | `FLOW-MY-ACCOUNT-OVERVIEW`, `FLOW-ACCOUNT-TEAM-MEMBERS` | ⊘ deferred | seeding gap |
+| `ROUTE-MY-ACCOUNT-PROJECT*`, `…-PROJECT-MEMBERS` | `FLOW-PROJECT-LIFECYCLE`, `FLOW-PROJECT-MEMBERSHIP` | ⊘ deferred | seeding gap + seeded project |
+| `ROUTE-PRODUCT-PURCHASE-*` (+ AccountSelector) | `FLOW-PRODUCT-PURCHASE-ENTRY`, `FLOW-CHECKOUT-FREE`, `FLOW-CHECKOUT-PAID`, `FLOW-AI-HUB-PURCHASE` | ⊘ deferred | seeding gap + commerce/payment/AI Hub stub |
+| `ROUTE-PRODUCT-PURCHASE-CONTRACT` | `FLOW-PRODUCT-PURCHASE-CONTRACT` | ⊘ deferred | seeding gap + seeded contracts |
+| `ROUTE-PRODUCT-PURCHASE-SEO-STUDIO-FORM` (+ the AI Hub prerequisite gate) | `FLOW-SEO-STUDIO-SIGNUP` | ⊘ uncovered | none for the gate; seeding gap for the journey |
+| `ROUTE-PRODUCT-PURCHASE-DSR-FORM` + `REST-POST-DIGITAL-SALES-ROOM-PROVISIONING-ORDERID` | `FLOW-DIGITAL-SALES-ROOM-SIGNUP` | ⊘ deferred | Analytics Cloud stub |
+| CMP contact-sales substitution + license tiers + Download tab package | `FLOW-CMP-CONTACT-SALES` | ⊘ uncovered | none for the substitution; seeded GA order for the Download tab |
+| `REST-*-APP-LICENSE-KEYS-*` (create, read, download, activate, deactivate) | `FLOW-APP-LICENSE-KEY-LIFECYCLE` | ⊘ deferred | proxy + administrator token + seeded entitlement |
+| `ROUTE-PUBLISHER-DASHBOARD-*` | `FLOW-PUBLISHER-ONBOARDING` | ⊘ deferred | seeding gap + GCS stub |
 | `ROUTE-TICKET-ATTACHMENTS-*` | `FLOW-TICKET-UPLOAD`, `FLOW-TICKET-DOWNLOAD` | ⊘ deferred | Jira + GCS stubs |
 | `ROUTE-BUSINESS-EVENTS-*` | `FLOW-BUSINESS-EVENT-LIFECYCLE` | ⊘ deferred | Jira stub |
 | Jira business-events CRUD (project-scoped), versions, field options, object-key | `FLOW-BUSINESS-EVENT-LIFECYCLE` | ⊘ deferred | Jira stub |
@@ -223,7 +252,7 @@ status; every surface here already has unit coverage in its per-surface file.
 Two surfaces have no in-action journey by design — a Spring cache eviction and an
 internal user-delete cascade are pure mechanics with no user-facing flow, so unit
 coverage is sufficient. Everything else is exercised by a journey above and is
-unblocked by the same environment work: a provisioning fixture that grants the
-test user the gating entitlement/role, an OAuth2 app for scoped tokens behind a
+unblocked by the same environment work: closing the seeding gap with users that
+hold the gating entitlement and role, an OAuth2 app for scoped tokens behind a
 local `/o/one/v1` proxy, and external-system stubs (Jira, GCS, Salesforce
-Pub/Sub, Okta, provisioning/console) or seeded commerce data.
+Pub/Sub, Okta, Analytics Cloud, provisioning/console) or seeded commerce data.

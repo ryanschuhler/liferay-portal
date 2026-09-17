@@ -45,15 +45,19 @@ function isSeparator(cells: string[]): boolean {
 	return cells.every((cell) => /^:?-+:?$/.test(cell));
 }
 
-export function parsePlan(): PlanItem[] {
+function planFiles(): string[] {
 	if (!fs.existsSync(PLAN_DIR)) {
 		return [];
 	}
 
-	const files = fs
+	return fs
 		.readdirSync(PLAN_DIR)
 		.filter((file) => file.endsWith('.md') && file !== 'README.md')
 		.sort();
+}
+
+export function parsePlan(): PlanItem[] {
+	const files = planFiles();
 
 	const items: PlanItem[] = [];
 
@@ -152,4 +156,69 @@ export function validatePlan(items: PlanItem[]): PlanValidation {
 	}
 
 	return {errors};
+}
+
+export interface PlanReference {
+	file: string;
+	id: string;
+	line: number;
+}
+
+const QUOTED_PATTERN = /`([^`]+)`/g;
+
+const WHOLE_ID_PATTERN = /^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+$/;
+
+/**
+ * Finds backtick-quoted plan IDs in the plan's own prose that resolve to no
+ * row. A renamed ID leaves every description citing it pointing at nothing, and
+ * nothing else catches that, because the prose is not a test tag.
+ *
+ * The match is deliberately narrow, so the report stays worth reading: a token
+ * only counts when it is spelled like a complete ID and carries a prefix a real
+ * ID uses. That leaves a wildcard (`ROUTE-ADMIN-*`), an elided abbreviation
+ * (`…-COMPLETE-UPLOAD`), a path, and a prose fragment alone, and a token that
+ * is the leading part of a real ID is read as an abbreviation of it rather than
+ * as rot.
+ */
+export function findDanglingReferences(items: PlanItem[]): PlanReference[] {
+	const idList = items.map((item) => item.id);
+
+	const ids = new Set(idList);
+	const prefixes = new Set(idList.map((id) => id.split('-')[0]));
+
+	const references: PlanReference[] = [];
+	const seen = new Set<string>();
+
+	for (const file of planFiles()) {
+		const lines = fs
+			.readFileSync(path.join(PLAN_DIR, file), 'utf8')
+			.split('\n');
+
+		for (let index = 0; index < lines.length; index++) {
+			for (const match of lines[index].matchAll(QUOTED_PATTERN)) {
+				const id = match[1];
+
+				if (
+					!WHOLE_ID_PATTERN.test(id) ||
+					!prefixes.has(id.split('-')[0]) ||
+					ids.has(id) ||
+					idList.some((known) => known.startsWith(`${id}-`))
+				) {
+					continue;
+				}
+
+				const key = `${file}::${id}`;
+
+				if (seen.has(key)) {
+					continue;
+				}
+
+				seen.add(key);
+
+				references.push({file, id, line: index + 1});
+			}
+		}
+	}
+
+	return references;
 }

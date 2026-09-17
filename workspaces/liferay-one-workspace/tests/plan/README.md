@@ -84,7 +84,7 @@ separates **real** tests from **pending** stubs, so it answers "how close are we
 *really*?". It prints a per-surface breakdown and writes a full per-item
 traceability report to `tests/test-results/plan-report.md`.
 
-`checkPlan` reports three kinds of problem:
+`checkPlan` reports four kinds of problem:
 
 - **GAP** — new code shipped without a plan row: run `yarn plan:scaffold` to add
   it, then curate the new row.
@@ -95,6 +95,12 @@ traceability report to `tests/test-results/plan-report.md`.
   the tag to match a real plan ID (or remove it). Only tags whose prefix matches
   a real plan prefix (`ROUTE-`, `REST-`) are flagged, so unrelated hyphenated tokens
   are ignored.
+- **DANGLING** — a plan row's own prose cites a backtick-quoted plan ID that
+  matches no row, usually left behind when that ID was renamed. Nothing else
+  catches it, because the prose is not a test tag. Rename it to the current ID.
+  The same narrow matching applies as for orphan tags, and a wildcard
+  (`ROUTE-ADMIN-*`), an elision (`…-COMPLETE-UPLOAD`), or the leading part of a
+  real ID is read as an abbreviation rather than reported.
 
 `checkCoverage` accepts `--list` (show every uncovered item) and `--min <pct>`
 (fail under a threshold — wire this into CI as the go-live bar rises).
