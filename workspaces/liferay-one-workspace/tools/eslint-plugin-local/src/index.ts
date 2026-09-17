@@ -60,7 +60,7 @@ const plugin = {
 				'local/no-unsanitized-html': 'error',
 				'local/no-untranslated-text': 'warn',
 				'local/odata-filter-via-search-builder': 'error',
-				'local/page-folder-structure': 'warn',
+				'local/page-folder-structure': 'error',
 				'local/service-class-matches-url': 'error',
 				'local/service-layer-boundary': 'warn',
 				'local/src-folder-structure': 'error',

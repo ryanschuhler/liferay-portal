@@ -4,7 +4,7 @@
  */
 
 import {ReactNode, createContext, useContext} from 'react';
-import {PublishMode} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants';
+import {PublishMode} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants/newAppConstants';
 
 const PublishModeContext = createContext<PublishMode>(PublishMode.CREATE);
 

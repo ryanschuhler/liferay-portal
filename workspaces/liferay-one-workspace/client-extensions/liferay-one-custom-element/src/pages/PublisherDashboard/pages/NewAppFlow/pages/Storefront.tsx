@@ -17,7 +17,7 @@ import {ProductTags} from '~/utils/productUtils';
 import {getRandomID} from '~/utils/stringUtils';
 import {swapElements} from '~/utils/swapElements';
 
-import {MAX_IMAGE_QUANTITY, MAX_SIZE_5MBS} from '../constants';
+import {MAX_IMAGE_QUANTITY, MAX_SIZE_5MBS} from '../constants/newAppConstants';
 
 import type {UploadedFile} from '~/components/FileList/FileList';
 

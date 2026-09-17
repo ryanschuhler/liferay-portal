@@ -17,8 +17,11 @@ import usePublishNavigation from '~/pages/PublisherDashboard/hooks/usePublishNav
 import {ProductWorkflowStatusCode} from '~/utils/productUtils';
 
 import BasePublishAppOutlet from '../../BasePublishAppOutlet';
-import {PublishMode} from '../NewAppFlow/constants';
-import {SOLUTIONS_EXIT_LINK, SOLUTION_FLOW_ITEMS} from './constants';
+import {PublishMode} from '../NewAppFlow/constants/newAppConstants';
+import {
+	SOLUTIONS_EXIT_LINK,
+	SOLUTION_FLOW_ITEMS,
+} from './constants/newSolutionConstants';
 
 import type {SolutionInitialState} from '~/context/SolutionContextProvider';
 

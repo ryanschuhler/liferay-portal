@@ -19,7 +19,7 @@ import usePublishNavigation from '~/pages/PublisherDashboard/hooks/usePublishNav
 import {ProductWorkflowStatusCode} from '~/utils/productUtils';
 
 import BasePublishAppOutlet from '../../BasePublishAppOutlet';
-import {APP_FLOW_ITEMS, PublishMode} from './constants';
+import {APP_FLOW_ITEMS, PublishMode} from './constants/newAppConstants';
 
 type Context = ReturnType<typeof useNewAppContext>[0];
 

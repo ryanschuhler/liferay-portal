@@ -5,4 +5,6 @@
 
 import AccountInvitation from './AccountInvitation';
 
-export default AccountInvitation;
+export default function AccountInvitationRouter() {
+	return <AccountInvitation />;
+}

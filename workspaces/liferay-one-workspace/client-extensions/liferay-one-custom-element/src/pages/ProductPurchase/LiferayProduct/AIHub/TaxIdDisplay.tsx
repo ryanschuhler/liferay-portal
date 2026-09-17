@@ -7,7 +7,7 @@ import {Input} from '~/components/Input/Input';
 import Section from '~/components/Section/Section';
 import i18n from '~/i18n';
 import {useProductPurchaseLayoutContext as useProductPurchaseOutletContext} from '~/pages/ProductPurchase/components/ProductPurchaseLayout/ProductPurchaseLayout';
-import {useAppPurchaseContext} from '~/pages/ProductPurchase/context';
+import {useAppPurchaseContext} from '~/pages/ProductPurchase/context/AppPurchaseContextProvider';
 
 const TaxIdDisplay = () => {
 	const {selectedAccount} = useProductPurchaseOutletContext();

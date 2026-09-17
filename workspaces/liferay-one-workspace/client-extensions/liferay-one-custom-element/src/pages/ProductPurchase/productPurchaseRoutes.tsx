@@ -43,8 +43,10 @@ const AIHubTokenSelection = lazy(
 	() =>
 		import('./LiferayProduct/AIHub/AIHubTokenSelection/AIHubTokenSelection')
 );
-const ContractSelection = lazy(() => import('./LiferayProduct/Contract'));
-const ProjectSelection = lazy(() => import('./LiferayProduct/Project'));
+const ContractSelection = lazy(
+	() => import('./LiferayProduct/ContractSelection/ContractSelection')
+);
+const ProjectSelection = lazy(() => import('./LiferayProduct/ProjectSelection/ProjectSelection'));
 
 export type ProductPurchaseStep = {
 	element: ReactNode;

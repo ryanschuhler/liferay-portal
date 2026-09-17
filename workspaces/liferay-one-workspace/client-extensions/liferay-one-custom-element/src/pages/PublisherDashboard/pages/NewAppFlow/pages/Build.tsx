@@ -18,7 +18,7 @@ import {ProductTypeOptions} from '~/pages/PublisherDashboard/pages/NewAppFlow/co
 import {ProductType} from '~/types/productEnums';
 import {ProductWorkflowStatusCode} from '~/utils/productUtils';
 
-import {BUILD_UPLOAD_OPTIONS} from '../constants';
+import {BUILD_UPLOAD_OPTIONS} from '../constants/newAppConstants';
 
 import '../ProvideAppBuildPage.css';
 

@@ -12,7 +12,7 @@ import {
 	NewAppTypes,
 } from '~/context/NewAppContextProvider';
 import i18n from '~/i18n';
-import {PublishMode} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants';
+import {PublishMode} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants/newAppConstants';
 import AppPublish, {ProductConfig} from '~/services/actions/AppPublish';
 import {Liferay} from '~/services/liferay/liferay';
 import {ProductWorkflowStatusCode} from '~/utils/productUtils';

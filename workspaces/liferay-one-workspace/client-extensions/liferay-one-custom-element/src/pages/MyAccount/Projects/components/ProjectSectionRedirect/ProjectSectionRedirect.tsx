@@ -13,7 +13,7 @@ import {
 import {
 	ONE_TIME_PURCHASES,
 	isUnassignedProject,
-} from '~/pages/MyAccount/Projects/projects';
+} from '~/pages/MyAccount/Projects/Projects';
 
 export default function ProjectSectionRedirect() {
 	const {accountERC} = useParams();

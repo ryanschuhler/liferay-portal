@@ -14,7 +14,7 @@ import Loading from '~/components/Loading/Loading';
 import {usePublishMode} from '~/context/PublishModeContextProvider';
 import {useAccount} from '~/hooks/useAccounts';
 import i18n from '~/i18n';
-import {PublishMode} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants';
+import {PublishMode} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants/newAppConstants';
 
 import usePublishHeader from './hooks/usePublishHeader';
 import usePublishNavigation from './hooks/usePublishNavigation';
@@ -22,7 +22,7 @@ import usePublishNavigation from './hooks/usePublishNavigation';
 import './BasePublishAppOutlet.css';
 
 import type {UploadedFile} from '~/components/FileList/FileList';
-import type {AppFlowItem} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants';
+import type {AppFlowItem} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants/newAppConstants';
 import type {Product} from '~/types/product';
 import type {ProductWorkflowStatusCode} from '~/types/productEnums';
 

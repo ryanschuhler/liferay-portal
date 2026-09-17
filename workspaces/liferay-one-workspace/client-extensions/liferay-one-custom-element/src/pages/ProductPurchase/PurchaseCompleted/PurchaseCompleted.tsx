@@ -15,7 +15,7 @@ import EmptyState from '~/components/EmptyState/EmptyState';
 import Loading from '~/components/Loading/Loading';
 import {usePlacedOrder} from '~/hooks/usePlacedOrder';
 import i18n from '~/i18n';
-import {ONE_TIME_PURCHASES} from '~/pages/MyAccount/Projects/projects';
+import {ONE_TIME_PURCHASES} from '~/pages/MyAccount/Projects/Projects';
 import ProductPurchaseHeaderCards from '~/pages/ProductPurchase/components/ProductPurchaseHeaderCards/ProductPurchaseHeaderCards';
 import HeadlessAdminUser from '~/services/headless/HeadlessAdminUser';
 import {Liferay} from '~/services/liferay/liferay';

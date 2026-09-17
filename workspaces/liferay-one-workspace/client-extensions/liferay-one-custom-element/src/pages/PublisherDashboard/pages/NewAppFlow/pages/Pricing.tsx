@@ -9,7 +9,7 @@ import {NewAppTypes, useNewAppContext} from '~/context/NewAppContextProvider';
 import i18n from '~/i18n';
 import {ProductWorkflowStatusCode} from '~/utils/productUtils';
 
-import {PRICING_OPTIONS} from '../constants';
+import {PRICING_OPTIONS} from '../constants/newAppConstants';
 
 const Pricing = () => {
 	const [

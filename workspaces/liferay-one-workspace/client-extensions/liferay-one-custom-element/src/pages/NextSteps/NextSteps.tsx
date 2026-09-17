@@ -7,7 +7,6 @@ import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
 import DOMPurify from 'dompurify';
 import {ReactElement, useEffect} from 'react';
-import {HashRouter} from 'react-router-dom';
 import useSWR from 'swr';
 import checkCircleIcon from '~/assets/icons/check_circle_icon.svg';
 import paymentPendingIcon from '~/assets/icons/payment_pending_icon.svg';
@@ -18,7 +17,7 @@ import Loading from '~/components/Loading/Loading';
 import {PageRenderer} from '~/components/Page/Page';
 import useGetProductByOrderId from '~/hooks/useGetProductByOrderId';
 import i18n from '~/i18n';
-import {ONE_TIME_PURCHASES} from '~/pages/MyAccount/Projects/projects';
+import {ONE_TIME_PURCHASES} from '~/pages/MyAccount/Projects/Projects';
 import HeadlessAdminUser from '~/services/headless/HeadlessAdminUser';
 import {Liferay} from '~/services/liferay/liferay';
 import CommerceOrders from '~/services/spring-boot/CommerceOrders';
@@ -306,7 +305,7 @@ export function NextStepsBody(props: NextStepsBodyProps) {
 	);
 }
 
-function NextStepsPage() {
+export default function NextSteps() {
 	const urlParams = new URLSearchParams(window.location.search);
 	const orderId = urlParams.get('orderId');
 
@@ -376,13 +375,5 @@ function NextStepsPage() {
 				<NextStepsBody {...data!} />
 			</div>
 		</PageRenderer>
-	);
-}
-
-export default function NextSteps() {
-	return (
-		<HashRouter>
-			<NextStepsPage />
-		</HashRouter>
 	);
 }

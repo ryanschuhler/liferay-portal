@@ -8,7 +8,7 @@ import useModalContext from '~/hooks/useModalContext';
 import {ProjectActivationKey} from '~/hooks/useProjectActivationKeys';
 import {ProjectProduct} from '~/hooks/useProjectCommerce';
 import {translate} from '~/i18n';
-import {isUnassignedProject} from '~/pages/MyAccount/Projects/projects';
+import {isUnassignedProject} from '~/pages/MyAccount/Projects/Projects';
 import {Liferay} from '~/services/liferay/liferay';
 import LicenseKeyObject from '~/services/objects/LicenseKeys';
 import LicenseKeysService from '~/services/spring-boot/LicenseKeys';

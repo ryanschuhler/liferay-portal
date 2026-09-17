@@ -6,7 +6,7 @@
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {scrollToTop} from '~/utils/browserUtils';
 
-import type {AppFlowItem} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants';
+import type {AppFlowItem} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants/newAppConstants';
 
 const usePublishNavigation = <TContext>({
 	exitLink,

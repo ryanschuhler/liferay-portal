@@ -12,7 +12,7 @@ import ButtonWithIcon from '~/components/ButtonWithIcon/ButtonWithIcon';
 import {NewAppTypes, useNewAppContext} from '~/context/NewAppContextProvider';
 import useListTypeDefinition from '~/hooks/useListTypeDefinition';
 import i18n from '~/i18n';
-import {LIFERAY_VERSION_PICKLIST} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants';
+import {LIFERAY_VERSION_PICKLIST} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants/newAppConstants';
 import {getRandomID} from '~/utils/stringUtils';
 
 import './NewAppPackagesModal.css';

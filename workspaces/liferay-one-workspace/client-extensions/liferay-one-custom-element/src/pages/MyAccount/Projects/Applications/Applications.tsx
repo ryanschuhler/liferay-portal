@@ -14,6 +14,10 @@ import {
 } from '~/hooks/useProjectItems';
 import {translate} from '~/i18n';
 import {
+	ONE_TIME_PURCHASES,
+	isUnassignedProject,
+} from '~/pages/MyAccount/Projects/Projects';
+import {
 	ListColumn,
 	ListFilter,
 } from '~/pages/MyAccount/Projects/components/FilterableListCard/FilterableListCard';
@@ -21,10 +25,6 @@ import ProductListPage, {
 	statusColumn,
 	statusFilter,
 } from '~/pages/MyAccount/Projects/components/ProductListPage/ProductListPage';
-import {
-	ONE_TIME_PURCHASES,
-	isUnassignedProject,
-} from '~/pages/MyAccount/Projects/projects';
 import {getLogoColor} from '~/pages/MyAccount/Projects/utils/getLogoColor';
 import DeliveryOrderModel from '~/services/models/DeliveryOrderModel';
 

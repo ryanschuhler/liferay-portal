@@ -11,7 +11,7 @@ import {
 	isUnassignedProject,
 	resolveDefaultProject,
 	useUserProjects,
-} from '~/pages/MyAccount/Projects/projects';
+} from '~/pages/MyAccount/Projects/Projects';
 import {Liferay} from '~/services/liferay/liferay';
 
 export default function ProjectRedirect() {

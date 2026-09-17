@@ -20,7 +20,7 @@ import {translate} from '~/i18n';
 import {
 	useSelectedProject,
 	useUserProjects,
-} from '~/pages/MyAccount/Projects/projects';
+} from '~/pages/MyAccount/Projects/Projects';
 import useDeleteTicketAttachment from '~/pages/TicketAttachments/hooks/useDeleteTicketAttachment';
 import formatFileSize from '~/pages/TicketAttachments/utils/formatFileSize';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';

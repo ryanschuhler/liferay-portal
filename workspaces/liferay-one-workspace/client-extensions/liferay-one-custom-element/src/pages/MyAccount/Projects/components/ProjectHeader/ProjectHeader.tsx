@@ -14,7 +14,7 @@ import {
 	useProjectCommerce,
 } from '~/hooks/useProjectCommerce';
 import i18n from '~/i18n';
-import {ONE_TIME_PURCHASES} from '~/pages/MyAccount/Projects/projects';
+import {ONE_TIME_PURCHASES} from '~/pages/MyAccount/Projects/Projects';
 import {formatTermRange} from '~/utils/dateUtils';
 
 export default function ProjectHeader() {

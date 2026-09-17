@@ -10,7 +10,7 @@ import SolutionContextProvider from '~/context/SolutionContextProvider';
 import usePublisherCatalog from '~/hooks/usePublisherCatalog';
 import {AppRoute} from '~/utils/routeUtils';
 
-import {PublishMode} from './pages/NewAppFlow/constants';
+import {PublishMode} from './pages/NewAppFlow/constants/newAppConstants';
 
 const AppSummary = lazy(() => import('./AppSummary/AppSummary'));
 const PublishedApps = lazy(() => import('./PublishedApps/PublishedApps'));
@@ -33,7 +33,9 @@ const Build = lazy(() => import('./pages/NewAppFlow/pages/Build'));
 const Storefront = lazy(() => import('./pages/NewAppFlow/pages/Storefront'));
 const Version = lazy(() => import('./pages/NewAppFlow/pages/Version'));
 const Pricing = lazy(() => import('./pages/NewAppFlow/pages/Pricing'));
-const Licensing = lazy(() => import('./pages/NewAppFlow/pages/Licensing'));
+const Licensing = lazy(
+	() => import('./pages/NewAppFlow/pages/Licensing/Licensing')
+);
 const LicensePrices = lazy(
 	() => import('./pages/NewAppFlow/pages/Licensing/LicensePrices')
 );

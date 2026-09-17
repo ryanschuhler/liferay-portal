@@ -15,7 +15,7 @@ import Section from '~/components/Section/Section';
 import i18n from '~/i18n';
 import BillingAddress from '~/pages/ProductPurchase/PaymentMethod/components/BillingAddress/BillingAddress';
 import {useProductPurchaseLayoutContext as useProductPurchaseOutletContext} from '~/pages/ProductPurchase/components/ProductPurchaseLayout/ProductPurchaseLayout';
-import {useAppPurchaseContext} from '~/pages/ProductPurchase/context';
+import {useAppPurchaseContext} from '~/pages/ProductPurchase/context/AppPurchaseContextProvider';
 import useAccountAddresses from '~/pages/ProductPurchase/hooks/useAccountAddresses';
 import {adminSchemas as zodSchema} from '~/schemas/adminSchemas';
 import {commerceSchemas as commerceZodSchema} from '~/schemas/commerceSchemas';

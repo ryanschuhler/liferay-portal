@@ -17,7 +17,7 @@ import ProductPurchase from '~/components/ProductPurchase/ProductPurchase';
 import Select from '~/components/Select/Select';
 import i18n from '~/i18n';
 import {useProductPurchaseLayoutContext as useProductPurchaseOutletContext} from '~/pages/ProductPurchase/components/ProductPurchaseLayout/ProductPurchaseLayout';
-import {useAppPurchaseContext} from '~/pages/ProductPurchase/context';
+import {useAppPurchaseContext} from '~/pages/ProductPurchase/context/AppPurchaseContextProvider';
 import useCommerceRegions from '~/pages/ProductPurchase/hooks/useCommerceRegions';
 import {adminSchemas as zodSchema} from '~/schemas/adminSchemas';
 import {Liferay} from '~/services/liferay/liferay';

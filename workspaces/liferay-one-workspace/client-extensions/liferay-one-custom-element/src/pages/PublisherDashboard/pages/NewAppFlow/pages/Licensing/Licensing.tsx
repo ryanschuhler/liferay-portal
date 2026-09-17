@@ -10,7 +10,7 @@ import {NewAppTypes, useNewAppContext} from '~/context/NewAppContextProvider';
 import {
 	LICENSING_30_DAYS_TRIAL_OPTIONS,
 	LICENSING_OPTIONS,
-} from '../../constants';
+} from '../../constants/newAppConstants';
 
 import type {ProductPriceModel} from '~/types/product';
 

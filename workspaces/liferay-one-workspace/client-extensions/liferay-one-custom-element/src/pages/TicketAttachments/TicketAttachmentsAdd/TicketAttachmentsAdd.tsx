@@ -14,7 +14,7 @@ import {translate} from '~/i18n';
 import {
 	useSelectedProject,
 	useUserProjects,
-} from '~/pages/MyAccount/Projects/projects';
+} from '~/pages/MyAccount/Projects/Projects';
 import {getProjectTickets} from '~/services/spring-boot/Jira';
 import {ITicket} from '~/types/ticket';
 

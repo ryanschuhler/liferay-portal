@@ -8,7 +8,7 @@ import {
 	LicensingPrices,
 	NewAppInitialState,
 } from '~/context/NewAppContextProvider';
-import {LICENSING_OPTIONS} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants';
+import {LICENSING_OPTIONS} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants/newAppConstants';
 import {currenciesCode, formatCurrency} from '~/utils/currencyUtils';
 import {ProductPriceModel} from '~/utils/productUtils';
 

@@ -12,7 +12,7 @@ import {
 	SolutionTypes,
 } from '~/context/SolutionContextProvider';
 import i18n from '~/i18n';
-import {SOLUTIONS_EXIT_LINK} from '~/pages/PublisherDashboard/pages/NewSolutionFlow/constants';
+import {SOLUTIONS_EXIT_LINK} from '~/pages/PublisherDashboard/pages/NewSolutionFlow/constants/newSolutionConstants';
 import SolutionPublish, {
 	SolutionConfig,
 } from '~/services/actions/SolutionPublish';

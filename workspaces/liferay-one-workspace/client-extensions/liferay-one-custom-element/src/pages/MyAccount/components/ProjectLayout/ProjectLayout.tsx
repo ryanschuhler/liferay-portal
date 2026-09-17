@@ -12,8 +12,8 @@ import {useProject} from '~/context/ProjectContextProvider';
 import i18n from '~/i18n';
 import {buildNavItems} from '~/utils/routeUtils';
 
+import {isUnassignedProject} from '../../Projects/Projects';
 import ProjectHeader from '../../Projects/components/ProjectHeader/ProjectHeader';
-import {isUnassignedProject} from '../../Projects/projects';
 import {projectDetailRoutes} from '../../myAccountRoutes';
 
 export default function ProjectLayout() {

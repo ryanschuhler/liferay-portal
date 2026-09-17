@@ -25,7 +25,7 @@ import {
 	UserProject,
 	resolveDefaultProject,
 	useUserProjects,
-} from '~/pages/MyAccount/Projects/projects';
+} from '~/pages/MyAccount/Projects/Projects';
 import {
 	toProductsByProductId,
 	toProjectItemsByType,

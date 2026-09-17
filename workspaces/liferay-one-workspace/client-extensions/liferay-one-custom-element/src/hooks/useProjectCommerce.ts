@@ -8,11 +8,11 @@ import useSWR from 'swr';
 import {useDataQuery} from '~/hooks/useDataQuery';
 import i18n from '~/i18n';
 import {getProductContactRoleExternalReferenceCodes} from '~/pages/MyAccount/ProjectMembers/projectRoles';
-import {useUserProjects} from '~/pages/MyAccount/Projects/hooks/useUserProjects';
 import {
 	ONE_TIME_PURCHASES,
 	isUnassignedProject,
-} from '~/pages/MyAccount/Projects/projects';
+} from '~/pages/MyAccount/Projects/Projects';
+import {useUserProjects} from '~/pages/MyAccount/Projects/hooks/useUserProjects';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import fetcher from '~/services/fetcher/fetcher';
 import {queryGraphQL, toGraphQLString} from '~/services/graphql/GraphQL';

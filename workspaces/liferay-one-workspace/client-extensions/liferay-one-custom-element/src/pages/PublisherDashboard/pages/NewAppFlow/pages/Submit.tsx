@@ -12,7 +12,7 @@ import {usePublishMode} from '~/context/PublishModeContextProvider';
 import i18n from '~/i18n';
 import {ProductWorkflowStatusCode} from '~/utils/productUtils';
 
-import {PublishMode} from '../constants';
+import {PublishMode} from '../constants/newAppConstants';
 
 import '../../../PublisherDashboard.css';
 

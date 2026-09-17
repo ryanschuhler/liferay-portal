@@ -15,7 +15,7 @@ import {
 	resolveProjectERC,
 	setLastViewedProjectCookie,
 	useUserProjects,
-} from '~/pages/MyAccount/Projects/projects';
+} from '~/pages/MyAccount/Projects/Projects';
 
 const BusinessEventsRedirect = () => {
 	const navigate = useNavigate();

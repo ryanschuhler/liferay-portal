@@ -11,7 +11,7 @@ import VideoThumbnail from '~/components/VideoThumbnail/VideoThumbnail';
 import {useSolutionContext} from '~/context/SolutionContextProvider';
 import i18n from '~/i18n';
 
-import {BLOCK_TYPES} from '../constants';
+import {BLOCK_TYPES} from '../constants/newSolutionConstants';
 
 import '../../../PublisherDashboard.css';
 

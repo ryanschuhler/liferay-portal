@@ -19,7 +19,7 @@ import {currenciesCode} from '~/utils/currencyUtils';
 import {ProductTypeLicenseOptions} from '~/utils/productUtils';
 
 import {CurrencyFlag} from '../pages/Licensing/components/CurrencyModal';
-import LicensePriceCard from './LicensePriceCard';
+import LicensePriceCard from './LicensePriceCard/LicensePriceCard';
 
 const licensePrices = [
 	{

@@ -91,7 +91,7 @@ pages/MyAccount/
 	AccountDetails/         a route, in its own folder
 ```
 
-`main.tsx` registers one router per page. A page with no `<Name>Router.tsx` is missing its entry point — that is what `AccountInvitation` and `NextSteps` are missing, and why they are reached through an `index.tsx` instead.
+`main.tsx` registers one router per page, and every page now has one.
 
 A folder under `src/pages/X` is either a route or a component. A route sits directly under the page. A component goes in `components/`, however deep:
 
@@ -202,9 +202,9 @@ The workspace has not been cleaned up yet, so every structural rule is `warn`. T
 | `file-complexity-budget` | 34 |
 | `hooks-export-only-hooks` | 20 |
 | `yarn lint:imports` cycles | 18 |
-| `page-folder-structure` | 12 |
 | `no-bare-utils-or-types-file` | 11 |
 | `no-eslint-disable` | 4 |
+| `page-folder-structure` | 0 |
 | `src-folder-structure` | 0 |
 | `context-file-naming` | 0 |
 | `i18n-key-placeholder` | 0 |

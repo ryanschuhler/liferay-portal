@@ -11,7 +11,7 @@ import '~/components/SideNav/SideNav.css';
 
 import './AppPublishSidebar.css';
 
-import type {AppFlowItem} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants';
+import type {AppFlowItem} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants/newAppConstants';
 
 type AppPublishSidebar = {
 	activeIndex: number;

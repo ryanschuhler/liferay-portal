@@ -7,9 +7,9 @@ import {SolutionInitialState} from '~/context/SolutionContextProvider';
 import i18n from '~/i18n';
 import zodSchema from '~/schemas/zodSchema';
 
-import {PublishMode} from '../../NewAppFlow/constants';
+import {PublishMode} from '../../NewAppFlow/constants/newAppConstants';
 
-import type {AppFlowItem} from '../../NewAppFlow/constants';
+import type {AppFlowItem} from '../../NewAppFlow/constants/newAppConstants';
 
 export const SOLUTIONS_EXIT_LINK = '/published-solutions';
 
