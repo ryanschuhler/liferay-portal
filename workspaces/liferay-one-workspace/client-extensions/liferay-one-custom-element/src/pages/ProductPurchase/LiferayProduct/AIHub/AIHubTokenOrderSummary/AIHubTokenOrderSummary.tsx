@@ -214,7 +214,8 @@ const AIHubTokenOrderSummary = () => {
 							{i18n.translate('pay-with-card')}
 						</div>
 						<p className="font-weight-normal mb-0 sub-text text-black-50">
-							Online payments with <b>PayPal</b>
+							{i18n.translate('online-payments-with')}{' '}
+							<b>PayPal</b>
 						</p>
 					</div>
 				</div>

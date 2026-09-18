@@ -135,6 +135,8 @@ export default {
 	'analytics-cloud-activation': 'Analytics Cloud Activation',
 	'analytics-group-id': 'Analytics Group ID',
 	'and': 'and',
+	'and-acknowledge-that-i-have-read-and-you-understand-the-terms-if-i-am-an-individual-acting-on-behalf-of-an-entity-i-represent-that-i-have-the-authority-to-enter-into-this-agreement-on-behalf-of-that-entity':
+		'and acknowledge that I have read and you understand the terms. If I am an individual acting on behalf of an entity, I represent that I have the authority to enter into this agreement on behalf of that entity.',
 	'and-the': 'and the',
 	'annual': 'Annual',
 	'annual-target': 'Annual Target',
@@ -224,6 +226,7 @@ export default {
 	'attachment': 'Attachment',
 	'attachment-already-exists': 'Attachment Already Exists',
 	'attachment-deleted-successfully': 'Attachment deleted successfully.',
+	'attention-this-cannot-be-undone': 'Attention: this cannot be undone.',
 	'attributes': 'Attributes',
 	'authenticated-logins-malus': 'Authenticated Logins (MALUs)',
 	'automation': 'Automation',
@@ -285,6 +288,8 @@ export default {
 	'canceled': 'Canceled',
 	'cannot-edit-canceled-or-completed-events':
 		'Cannot edit canceled or completed events.',
+	'carefully-before-accessing-or-in-any-way-using-the-ai-hub-private-beta-experience':
+		'carefully before accessing or in any way using the AI Hub Private Beta experience.',
 	'cash': 'Cash',
 	'categories': 'Categories',
 	'category': 'Category',
@@ -689,6 +694,7 @@ export default {
 		'Hang tight, the submission of {0} is being sent to {1}',
 	'hang-tight-your-purchase-is-being-processed':
 		'Hang tight, your purchase is being processed.',
+	'has-been-approved': 'has been approved.',
 	'header': 'Header',
 	'healthcare': 'Healthcare',
 	'help-and-support': 'Help & Support',
@@ -705,6 +711,8 @@ export default {
 		'How useful is the product for your workflow?',
 	'i-agree-to-the-processing-of-my-personal-data-for-the-purpose-of-evaluating-my-beta-access-request-in-accordance-with':
 		'I agree to the processing of my personal data for the purpose of evaluating my beta access request in accordance with',
+	'i-am-aware-i-cannot-edit-any-data-or-information-regarding-this-app-submission-until-liferay-completes-its-review-process-and-i-agree-with-the-liferay-marketplace':
+		'I am aware I cannot edit any data or information regarding this app submission until Liferay completes its review process and I agree with the Liferay Marketplace',
 	'i-certify-that-the-instances-activated-with-the-selected-activation-keys-have-been-shut-down-and-that-there-is-no-liferay-software-installed-deployed-used-or-executed-that-is-activated-with-the-selected-activation-key':
 		'I certify that the instances activated with the selected activation keys have been shut down and that there is no Liferay software installed, deployed, used or executed that is activated with the selected activation key.',
 	'i-have-read-and-agree-to-the': 'I have read and agree to the',
@@ -712,6 +720,8 @@ export default {
 		'I have read and agree to the Liferay End User Agreement',
 	'i-have-read-and-agree-to-the-terms-and-conditions-above':
 		'I have read and agree to the terms and conditions above',
+	'i-signify-my-assent-to-and-acceptance-of':
+		'I signify my assent to and acceptance of',
 	'id': 'ID',
 	'identity': 'Identity',
 	'identity-management-and-governance': 'Identity Management and Governance',
@@ -823,6 +833,7 @@ export default {
 	'licenses-summary': 'Licenses Summary',
 	'licensing': 'Licensing',
 	'life-sciences': 'Life Sciences',
+	'liferay-ai-hub-private-beta': 'Liferay AI Hub Private Beta',
 	'liferay-dsr-eula-disclaimer-prefix':
 		'This release of the Digital Sales Room (DSR) is a Beta. You acknowledge that Liferay is not obligated to provide support services while in Beta. For clarity, the Subscription benefits of any active Subscriptions you may have for Liferay Software shall not extend to cover the Beta release of the DSR and participation in the Beta does not grant access to any future GA version of the product. Use of DSR is subject to the Liferay Enterprise Services Agreement (ESA), applicable Appendix, and the Liferay Data Processing Addendum, each as available at',
 	'liferay-dsr-eula-disclaimer-suffix':
@@ -1056,6 +1067,7 @@ export default {
 	'one-or-more-add-ons-are-not-available-for-the-selected-dxp-version':
 		'One or more add-ons are not available for the selected DXP version.',
 	'one-time-purchases': 'One-Time Purchases',
+	'online-payments-with': 'Online payments with',
 	'online-payments-with-paypal': 'Online payments with PayPal',
 	'only-gif-jpg-jpeg-png-are-allowed-max-file-size-is-5mb':
 		'Only GIF, JPG, JPEG, and PNG are allowed. Max file size is 5MB.',
@@ -1157,6 +1169,7 @@ export default {
 		'Please let us know the reason you are canceling this event.',
 	'please-note-that-since-there-is-no-cloud-project-associated-with-your-instance-you-will-not-be-able-to-install-cloud-apps':
 		'Please note that since there is no cloud project associated with your instance, you will not be able to install Cloud Apps.',
+	'please-read': 'Please read',
 	'please-read-this-agreement-carefully-before-using-the-marketplace-to-market-or-distribute-your-developer-products-downloading-and-or-using-the-liferay-marketplace-if-you-are-entering-into-this-agreement-on-behalf-of-a-company-or-other-legal-entity-you-represent-that-you-have-the-authority-to-bind-such-entity-to-this-agreement-in-which-case-the-terms-you-or-your-shall-refer-to-such-entity-if-you-do-not-have-such-authority-or-if-you-do-not-unconditionally-agree-to-all-of-the-terms-of-this-agreement-you-will-not-have-any-right-to-use-the-marketplace-and-liferay-software-and-you-must-immediately-discontinue-participation-in-the-marketplace-program-and-use-of-the-liferay-software':
 		'PLEASE READ THIS AGREEMENT CAREFULLY BEFORE USING THE MARKETPLACE TO MARKET OR DISTRIBUTE YOUR DEVELOPER PRODUCTS, DOWNLOADING AND/OR USING THE LIFERAY MARKETPLACE. IF YOU ARE ENTERING INTO THIS AGREEMENT ON BEHALF OF A COMPANY OR OTHER LEGAL ENTITY, YOU REPRESENT THAT YOU HAVE THE AUTHORITY TO BIND SUCH ENTITY TO THIS AGREEMENT, IN WHICH CASE THE TERMS "YOU" OR "YOUR" SHALL REFER TO SUCH ENTITY. IF YOU DO NOT HAVE SUCH AUTHORITY, OR IF YOU DO NOT UNCONDITIONALLY AGREE TO ALL OF THE TERMS OF THIS AGREEMENT, YOU WILL NOT HAVE ANY RIGHT TO USE THE MARKETPLACE AND LIFERAY SOFTWARE AND YOU MUST IMMEDIATELY DISCONTINUE PARTICIPATION IN THE MARKETPLACE PROGRAM AND USE OF THE LIFERAY SOFTWARE.',
 	'please-review-before-submitting-once-sent-you-will-not-be-able-to-edit-any-information-until-this-submission-is-completely-reviewed-by-liferay':
@@ -1182,8 +1195,10 @@ export default {
 	'primary-contact': 'Primary Contact',
 	'primary-data-center-region': 'Primary Data Center Region',
 	'primary-region': 'Primary Region',
+	'privacy': 'Privacy',
 	'privacy-breach-contacts': 'Privacy Breach Contacts',
 	'privacy-policy': 'Privacy Policy',
+	'privacy-policy-for-details': 'privacy policy for details.',
 	'private-beta': 'Private Beta',
 	'private-information': 'Private Information',
 	'pro-code': 'Pro-code',
@@ -1377,6 +1392,7 @@ export default {
 	'section-that-shows-the-payments': 'Section that shows the payments.',
 	'security': 'Security',
 	'security-breach-contacts': 'Security Breach Contacts',
+	'see': 'See',
 	'select-a-dxp-version': 'Select a DXP Version',
 	'select-a-file': 'Select a File',
 	'select-a-local-file-to-upload': 'Select a Local File to Upload',
@@ -1591,6 +1607,8 @@ export default {
 		'The monthly view supports a date range of up to ten years.',
 	'the-order-must-be-completed-before-licensing-this-app':
 		'The order must be completed before licensing this app.',
+	'the-per-token-price-is-locked-when-you-purchase-future-rate-changes-wont-affect-tokens-youve-already-bought':
+		"The per-token price is locked when you purchase. Future rate changes won't affect tokens you've already bought.",
 	'the-published-version-is-x': 'The published version is {0}.',
 	'the-requested-activation-key-is-not-yet-available':
 		'The requested activation key is not yet available.',
@@ -1610,6 +1628,7 @@ export default {
 	'there-was-an-unexpected-error-while-attempting-to-deactivate-the-key-please-try-again-in-a-few-moments':
 		'There was an unexpected error while attempting to deactivate the key. Please try again in a few moments.',
 	'this-action-cannot-be-undone': 'This action cannot be undone.',
+	'this-agreement': 'this agreement',
 	'this-app-is-already-installed-in-this-environment':
 		'This app is already installed in this environment.',
 	'this-email-address-is-duplicated': 'This email address is duplicated.',
@@ -1828,12 +1847,15 @@ export default {
 	'we-were-unable-to-process-the-payment-for-your-liferay-tokens-please-review-your-payment-details-and-try-again':
 		'We were unable to process the payment for your Liferay Tokens. Please review your payment details and try again.',
 	'website': 'Website',
+	'weve-received-your-submission-and-will-review-it-youll-receive-an-email-confirming':
+		"We've received your submission and will review it. You'll receive an email confirming",
 	'weve-sent-the-order-form-to-your-email-via-docusign-please-review-sign-and-return-it-to-confirm-your-subscription-once-received-well-provision-your-ai-hub-and-notify-you-by-email':
 		'We’ve sent the order form to your email via DocuSign. Please review, sign, and return it to confirm your subscription — once received, we’ll provision your AI Hub and notify you by email.',
 	'what-features-would-you-like-in-the-final-release':
 		'What features would you like in the final release?',
 	'when-adding-app-versions-you-can-use-your-own-numbering-system-but-be-sure-it-is-consistent-and-understandable-by-the-customer':
 		'When adding app versions, you can use your own numbering system, but be sure it is consistent and understandable by the customer.',
+	'whether-your-access-to-the': 'whether your access to the',
 	'workflow-action': 'Workflow Action',
 	'workspace': 'Workspace',
 	'workspace-friendly-url': 'Workspace Friendly URL',
@@ -1888,6 +1910,8 @@ export default {
 		'You can paste links directly from YouTube.',
 	'you-can-put-anything-you-want-here-but-a-good-guideline-is-no-more-than-4-5-paragraphs-this-field-does-not-allow-any-markup-tags-its-just-text-please-do-not-use-misleading-names-information-or-icons-descriptions-should-be-as-concise-as-possible-ensure-your-icons-images-descriptions-and-tags-are-free-of-profanity-or-other-offensive-material':
 		'You can put anything you want here, but a good guideline is no more than 4-5 paragraphs. This field does not allow any markup tags - it’s just text Please do not use misleading names, information, or icons. Descriptions should be as concise as possible. Ensure your icons, images, descriptions, and tags are free of profanity or other offensive material.',
+	'you-can-stop-receiving-marketing-emails-by-clicking-the-unsubscribe-link-in-each-email-or-withdraw-your-consent-at-any-time-by-either-using-opt-out-functionality-accessible-through-the-messages-you-receive-or-via-email-to':
+		'You can stop receiving marketing emails by clicking the unsubscribe link in each email or withdraw your consent at any time by either using opt-out functionality accessible through the messages you receive or via email to',
 	'you-can-upload-one-or-many-zip-files-max-total-size-is-500-mb':
 		'You can upload one or many ZIP files. Max total size is 500MB.',
 	'you-can-view-your-app-in-cloud-console-or-go-back-to-my-apps':

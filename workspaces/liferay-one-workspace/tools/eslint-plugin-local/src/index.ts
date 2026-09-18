@@ -58,7 +58,7 @@ const plugin = {
 				'local/no-timezone-naive-date': 'error',
 				'local/no-unsafe-type-cast': 'error',
 				'local/no-unsanitized-html': 'error',
-				'local/no-untranslated-text': 'warn',
+				'local/no-untranslated-text': 'error',
 				'local/odata-filter-via-search-builder': 'error',
 				'local/page-folder-structure': 'error',
 				'local/service-class-matches-url': 'error',

@@ -266,8 +266,9 @@ const AIHubTokenSelection = () => {
 				/>
 
 				<span className="liferay-ai-hub-form-info text-black-50">
-					The per-token price is locked when you purchase. Future rate
-					changes won&apos;t affect tokens you&apos;ve already bought.
+					{i18n.translate(
+						'the-per-token-price-is-locked-when-you-purchase-future-rate-changes-wont-affect-tokens-youve-already-bought'
+					)}
 				</span>
 			</div>
 		</ProductPurchase.Shell>

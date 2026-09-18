@@ -82,16 +82,20 @@ const AIHubNextSteps: React.FC<AIHubNextStepsProps> = ({
 							description={
 								<span className="text-center">
 									<p className="mb-1">
-										We&apos;ve received your submission and
-										will review it. You&apos;ll receive an
-										email confirming
+										{i18n.translate(
+											'weve-received-your-submission-and-will-review-it-youll-receive-an-email-confirming'
+										)}
 									</p>
 									<p className="mb-5">
-										whether your access to the{' '}
+										{i18n.translate(
+											'whether-your-access-to-the'
+										)}{' '}
 										<strong>
-											Liferay AI Hub Private Beta
+											{i18n.translate(
+												'liferay-ai-hub-private-beta'
+											)}
 										</strong>{' '}
-										has been approved.
+										{i18n.translate('has-been-approved')}
 									</p>
 								</span>
 							}

@@ -382,11 +382,12 @@ const AIHubForm = () => {
 				</ClayInput.Group>
 
 				<p className="liferay-ai-hub-form-aggreements-text">
-					<span>Please read</span>
+					<span>{i18n.translate('please-read')}</span>
 
 					<span className="ml-1">
-						carefully before accessing or in any way using the AI
-						Hub Private Beta experience.
+						{i18n.translate(
+							'carefully-before-accessing-or-in-any-way-using-the-ai-hub-private-beta-experience'
+						)}
 					</span>
 				</p>
 
@@ -411,18 +412,19 @@ const AIHubForm = () => {
 						})}
 						htmlFor="terms-and-conditions"
 					>
-						I signify my assent to and acceptance of
+						{i18n.translate(
+							'i-signify-my-assent-to-and-acceptance-of'
+						)}
 						<a
 							className="mx-1"
 							href={productAgreements.links.aiHub.agreement}
 							target="_blank"
 						>
-							this agreement
+							{i18n.translate('this-agreement')}
 						</a>
-						and acknowledge that I have read and you understand the
-						terms. If I am an individual acting on behalf of an
-						entity, I represent that I have the authority to enter
-						into this agreement on behalf of that entity.
+						{i18n.translate(
+							'and-acknowledge-that-i-have-read-and-you-understand-the-terms-if-i-am-an-individual-acting-on-behalf-of-an-entity-i-represent-that-i-have-the-authority-to-enter-into-this-agreement-on-behalf-of-that-entity'
+						)}
 						<RequiredMask />
 					</label>
 				</div>
@@ -466,30 +468,24 @@ const AIHubForm = () => {
 
 			<p className="liferay-ai-hub-form-aggreements-text text-justify">
 				<span>
-					You can stop receiving marketing emails by clicking the
-					unsubscribe link in each email or withdraw your consent at
-					any time by either using opt-out functionality accessible
-					through the messages you receive or via email to
+					{i18n.translate(
+						'you-can-stop-receiving-marketing-emails-by-clicking-the-unsubscribe-link-in-each-email-or-withdraw-your-consent-at-any-time-by-either-using-opt-out-functionality-accessible-through-the-messages-you-receive-or-via-email-to'
+					)}
 				</span>
 
 				<a className="ml-1" href="mailto:dataprotection@liferay.com">
 					dataprotection@liferay.com
 				</a>
 
-				<span className="ml-1">See</span>
+				<span className="ml-1">{i18n.translate('see')}</span>
 
 				<a
 					className="ml-1"
 					href={productAgreements.links.privacyPolicy}
 					target="_blank"
 				>
-					privacy policy for details.
+					{i18n.translate('privacy-policy-for-details')}
 				</a>
-
-				<span className="ml-1">
-					carefully before accessing or in any way using the AI Hub
-					Private Beta experience.
-				</span>
 			</p>
 
 			<ClayButton

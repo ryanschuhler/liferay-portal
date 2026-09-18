@@ -307,27 +307,26 @@ const AIHubOrderSummary = () => {
 
 			<p className="liferay-ai-hub-form-aggreements-text mt-2 text-justify">
 				<span>
-					You can stop receiving marketing emails by clicking the
-					unsubscribe link in each email or withdraw your consent at
-					any time by either using opt-out functionality accessible
-					through the messages you receive or via email to
+					{i18n.translate(
+						'you-can-stop-receiving-marketing-emails-by-clicking-the-unsubscribe-link-in-each-email-or-withdraw-your-consent-at-any-time-by-either-using-opt-out-functionality-accessible-through-the-messages-you-receive-or-via-email-to'
+					)}
 				</span>
 
 				<a className="ml-1" href="mailto:dataprotection@liferay.com">
 					dataprotection@liferay.com
 				</a>
 
-				<span className="ml-1">See</span>
+				<span className="ml-1">{i18n.translate('see')}</span>
 
 				<a
 					className="ml-1"
 					href={productAgreements.links.privacyPolicy}
 					target="_blank"
 				>
-					privacy policy
+					{i18n.translate('privacy-policy')}
 				</a>
 
-				<span className="ml-1">for details.</span>
+				<span className="ml-1">{i18n.translate('for-details')}</span>
 			</p>
 
 			<div className="d-flex flex-column mt-4 w-100">

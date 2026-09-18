@@ -115,8 +115,8 @@ Each rule is a warning until its count is zero. Then change the rule to an error
 
 | Rule | Open |
 | --- | --- |
-| `no-untranslated-text` | 18 |
 | `bounded-pagination` | 5 |
+| `no-untranslated-text` | 0 |
 | `jsx-a11y/*` | 0 |
 | `no-array-index-key` | 0 |
 | `no-raw-fetch` | 0 |
