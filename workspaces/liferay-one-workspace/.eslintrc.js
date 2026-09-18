@@ -7,18 +7,35 @@ const path = require('path');
 
 const jsxA11y = require('eslint-plugin-jsx-a11y');
 
-// The accessibility defects are real, and they predate the rule, so each one is
-// a warning until the count reaches zero. Reading the plugin's own recommended
-// set keeps this list correct when the plugin adds a rule.
+// The count reached zero, so each accessibility rule is an error. Reading the
+// plugin's own recommended set keeps this list correct when the plugin adds a
+// rule. A rule that the plugin adds arrives as an error, which is what the
+// count of zero earns.
 //
 // A rule that the recommended set turns off stays off. The set disables a
 // deprecated rule this way, and a map of every key to a warning would turn the
 // deprecated rule back on.
+//
+// The set writes a rule as a bare severity, or as an array of a severity and
+// its options. Read the severity out of the array, and keep the options. A
+// rule that loses its options reports the elements that those options exclude.
+
+function toSeverity(value) {
+	return Array.isArray(value) ? value[0] : value;
+}
+
+function toOptions(value) {
+	return Array.isArray(value) ? value.slice(1) : [];
+}
 
 const accessibilityRules = Object.fromEntries(
 	Object.entries(jsxA11y.configs.recommended.rules)
-		.filter(([, severity]) => severity !== 'off' && severity !== 0)
-		.map(([rule]) => [rule, 'warn'])
+		.filter(([, value]) => {
+			const severity = toSeverity(value);
+
+			return severity !== 'off' && severity !== 0;
+		})
+		.map(([rule, value]) => [rule, ['error', ...toOptions(value)]])
 );
 
 const config = {

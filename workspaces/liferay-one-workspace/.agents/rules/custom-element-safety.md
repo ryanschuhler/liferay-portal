@@ -107,8 +107,8 @@ Each rule is a warning until its count is zero. Then change the rule to an error
 | --- | --- |
 | `no-untranslated-text` | 26 |
 | `bounded-pagination` | 5 |
-| `jsx-a11y/*` | 8 |
 | `no-unsafe-type-cast` | 6 |
+| `jsx-a11y/*` | 0 |
 | `no-array-index-key` | 0 |
 | `no-raw-fetch` | 0 |
 | `i18n-key-slug` | 0 |
@@ -119,7 +119,9 @@ Each rule is a warning until its count is zero. Then change the rule to an error
 
 Each rule at zero is an error. Each other rule stays a warning until its count is zero.
 
-`eslint-plugin-jsx-a11y` enforces accessibility. The plugin ships its recommended rules as errors. `.eslintrc.js` reads the plugin's own rule list and sets each rule to a warning, so that the team can reduce the count. This method stays correct when the plugin adds a rule.
+`eslint-plugin-jsx-a11y` enforces accessibility. `.eslintrc.js` reads the plugin's own recommended list, so a rule that the plugin adds arrives with it.
+
+The plugin writes a rule in that list as a bare severity, or as an array of a severity and its options. Read the severity out of the array, and keep the options. The first version of this code compared the array to the string `off`, which is never equal, so it turned on the three rules that the plugin ships off and dropped the options of each one. `control-has-associated-label` was one of the three, and its options exclude `input`, `textarea`, and `tr`. It then reported seven elements that the plugin excludes, and each of the seven already had a label.
 
 `utils/apiUtils.ts` held 38 of the original 42 violations. That file is deleted. Read the note in `custom-element-structure.md` for the reason. The other 4 violations were correct reports. Each one is now a service. The four are the commerce account switch, the ticket attachment delete, and the two calls that the invitation service makes to find its own base URL.
 

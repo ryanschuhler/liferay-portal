@@ -16,6 +16,7 @@ interface ILabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
 }
 
 export function MarketplaceFormLabel({
+	children,
 	className,
 	info,
 	required,
@@ -28,7 +29,9 @@ export function MarketplaceFormLabel({
 				className
 			)}
 		>
-			<label {...props} className="mb-0 w-auto" />
+			<label {...props} className="mb-0 w-auto">
+				{children}
+			</label>
 
 			{required && (
 				<ClayIcon
