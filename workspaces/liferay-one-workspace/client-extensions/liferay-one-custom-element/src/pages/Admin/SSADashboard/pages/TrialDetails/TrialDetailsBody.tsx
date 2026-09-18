@@ -205,8 +205,9 @@ const TrialDetailsBody: React.FC<TrialDetailsBodyProps> = ({
 								title: i18n.translate('trial-error'),
 								value: (
 									<div className="mb-3">
-										Something went wrong during the Trial
-										Provisioning
+										{i18n.translate(
+											'something-went-wrong-during-the-trial-provisioning'
+										)}
 									</div>
 								),
 								visible: orderModel.isCancelled,

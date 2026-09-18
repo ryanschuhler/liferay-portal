@@ -191,8 +191,9 @@ const NewTrialModal: React.FC<NewTrialModalProps> = ({onClose, revalidate}) => {
 					</label>
 
 					<small>
-						Everyone with an email address at these list will be
-						invited to the Cloud Environment.
+						{translate(
+							'everyone-with-an-email-address-at-these-list-will-be-invited-to-the-cloud-environment'
+						)}
 					</small>
 				</div>
 

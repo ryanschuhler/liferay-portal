@@ -583,6 +583,8 @@ export default {
 	'events-per-month': 'Events / Month',
 	'events-successfully-ingested-by-ldp-this-month-resets-monthly-add-on-buckets-raise-the-included-volume':
 		'Events successfully ingested by LDP this month. Resets monthly; add-on buckets raise the included volume.',
+	'everyone-with-an-email-address-at-these-list-will-be-invited-to-the-cloud-environment':
+		'Everyone with an email address at these list will be invited to the Cloud Environment.',
 	'exact-match': 'Exact Match',
 	'exclude': 'Exclude',
 	'excluding-vat': 'Excluding VAT',
@@ -1458,6 +1460,8 @@ export default {
 		'Solutions built on Liferay, requires existing Liferay Partnership',
 	'solutions-info': 'Solutions Info',
 	'something-went-wrong': 'Something went wrong.',
+	'something-went-wrong-during-the-trial-provisioning':
+		'Something went wrong during the Trial Provisioning',
 	'sorry-there-are-no-results-found': 'Sorry, there are no results found.',
 	'specify-your-apps-version-this-will-help-the-user-understand-the-latest-version-of-your-app-offered-on-the-marketplace':
 		'Specify your app’s version. This will help the user understand the latest version of your app offered on the Marketplace.',
