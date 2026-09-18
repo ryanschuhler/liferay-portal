@@ -13,6 +13,7 @@ import {
 } from '~/pages/MyAccount/AccountMembers/accountRoles';
 import {getProjectRoleLabel} from '~/pages/MyAccount/ProjectMembers/projectRoles';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
+import {ALL_ROWS} from '~/services/fetcher/pagination';
 import {Liferay} from '~/services/liferay/liferay';
 import Accounts from '~/services/spring-boot/Accounts';
 
@@ -67,7 +68,7 @@ export function useAccountMembers() {
 		accountId ?? ''
 			? `/o/headless-admin-user/v1.0/accounts/${accountId}/user-accounts`
 			: null,
-		{params: {pageSize: -1, sort: 'givenName:asc'}}
+		{params: {pageSize: ALL_ROWS, sort: 'givenName:asc'}}
 	);
 
 	const {
@@ -92,7 +93,7 @@ export function useAccountMembers() {
 					'r_accountEntryToProject_accountEntryId',
 					accountId ?? ''
 				),
-				pageSize: -1,
+				pageSize: ALL_ROWS,
 			},
 		}
 	);

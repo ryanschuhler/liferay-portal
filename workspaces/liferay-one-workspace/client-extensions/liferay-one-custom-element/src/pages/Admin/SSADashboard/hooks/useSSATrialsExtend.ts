@@ -5,6 +5,7 @@
 
 import useSWR from 'swr';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
+import {ALL_ROWS} from '~/services/fetcher/pagination';
 import TrialExtensionRequests from '~/services/objects/TrialExtensionRequests';
 
 import type {Account} from '~/types/accounts';
@@ -18,7 +19,7 @@ const useSSATrialsExtend = (account: Account) =>
 					account.id
 				),
 				page: '1',
-				pageSize: '-1',
+				pageSize: ALL_ROWS,
 				sort: 'dateCreated:desc',
 			})
 		)

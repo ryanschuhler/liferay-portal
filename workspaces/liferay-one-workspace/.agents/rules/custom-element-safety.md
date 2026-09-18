@@ -59,6 +59,12 @@ This is incorrect for a collection with company scope. That collection grows wit
 
 Request one page and set a limit on the total. If the set is fixed, import `ALL_ROWS` from `services/fetcher/pagination`. The import states that the set is fixed, and a reviewer can check the statement.
 
+Six reads in this app are scoped to one account by a filter: the members of the account, the projects of the account, the memberships of the account, and the trial extension requests of the account. Each set grows with one customer, not with the customer data of the company, so each one states the claim with `ALL_ROWS`.
+
+The five reads that remain are company scoped, and a limit alone does not correct them. `useOrderMetrics` reads every completed order in the company to add `totalAmount` in the browser. A limit on that read returns a total that is too low, and the dashboard shows a revenue figure that is wrong with no error. The four reads in `useKPI` count the distinct catalogs across every published app, which a limit also makes wrong.
+
+Each of these five needs the server to return the sum or the count. That is an endpoint in `liferay-one-etc-spring-boot`, so these five and the open count for `service-layer-boundary` are blocked on the same work.
+
 ## Dates From A Picker Are Timezone Naive
 
 JavaScript reads a plain `yyyy-MM-dd` string as **midnight UTC**. `new Date(value).toISOString()` therefore moves the day back by one in every timezone behind UTC, which includes all of the Americas. The user picks the 15th. The code saves the 14th.
@@ -95,7 +101,7 @@ Each rule is a warning until its count is zero. Then change the rule to an error
 | --- | --- |
 | `no-untranslated-text` | 26 |
 | `no-array-index-key` | 15 |
-| `bounded-pagination` | 11 |
+| `bounded-pagination` | 5 |
 | `jsx-a11y/*` | 8 |
 | `no-unsafe-type-cast` | 6 |
 | `no-raw-fetch` | 0 |

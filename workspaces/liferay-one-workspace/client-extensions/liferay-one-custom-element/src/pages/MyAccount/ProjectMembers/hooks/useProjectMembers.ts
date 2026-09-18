@@ -50,7 +50,7 @@ export function useProjectMembers() {
 				'r_accountEntryToProject_accountEntryId',
 				accountId ?? ''
 			),
-			pageSize: -1,
+			pageSize: ALL_ROWS,
 			sort: 'name:asc',
 		},
 	});
@@ -68,7 +68,7 @@ export function useProjectMembers() {
 					'r_accountEntryToProjectMembership_accountEntryId',
 					accountId ?? ''
 				),
-				pageSize: -1,
+				pageSize: ALL_ROWS,
 			},
 		}
 	);
@@ -81,7 +81,7 @@ export function useProjectMembers() {
 		accountId
 			? `/o/headless-admin-user/v1.0/accounts/${accountId}/user-accounts`
 			: null,
-		{params: {pageSize: -1, sort: 'givenName:asc'}}
+		{params: {pageSize: ALL_ROWS, sort: 'givenName:asc'}}
 	);
 
 	const {
