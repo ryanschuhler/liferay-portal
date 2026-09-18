@@ -61,9 +61,11 @@ Request one page and set a limit on the total. If the set is fixed, import `ALL_
 
 Six reads in this app are scoped to one account by a filter: the members of the account, the projects of the account, the memberships of the account, and the trial extension requests of the account. Each set grows with one customer, not with the customer data of the company, so each one states the claim with `ALL_ROWS`.
 
-The five reads that remain are company scoped, and a limit alone does not correct them. `useOrderMetrics` reads every completed order in the company to add `totalAmount` in the browser. A limit on that read returns a total that is too low, and the dashboard shows a revenue figure that is wrong with no error. The four reads in `useKPI` count the distinct catalogs across every published app, which a limit also makes wrong.
+Three reads in `useKPI` read the inventory of Liferay, not the data of a customer. Two read the apps that Liferay approved for four quarterly releases, and one reads the catalogs, one for each publisher, to turn an external reference code into a name. A person reviews every app and every publisher, so each of the three states the claim with `ALL_ROWS`.
 
-Each of these five needs the server to return the sum or the count. That is an endpoint in `liferay-one-etc-spring-boot`, so these five and the open count for `service-layer-boundary` are blocked on the same work.
+One read in `useKPI` counts the projects that use a Marketplace app, and that set grows with the customers. `GraphQL.metrics` returns `totalCount` for every query it sends, so the card now reads the count from `totalCount` and the request asks for one page. The filter reads `startsWith` in place of `contains`, so every row that the server returns is a row that the card counts, and the two numbers agree. The list in the modal shows the first page.
+
+One read remains. `useOrderMetrics` reads every completed order in the company to add `totalAmount` in the browser. A sum needs every row, and a limit returns a total that is too low, so the dashboard would show a revenue figure that is wrong with no error. The correction is an endpoint that returns the sum. `liferay-one-etc-spring-boot` serves no such endpoint today, so this read and the open count for `service-layer-boundary` are blocked on the same work.
 
 ## Dates From A Picker Are Timezone Naive
 
@@ -115,7 +117,7 @@ Each rule is a warning until its count is zero. Then change the rule to an error
 
 | Rule | Open |
 | --- | --- |
-| `bounded-pagination` | 5 |
+| `bounded-pagination` | 1 |
 | `no-untranslated-text` | 0 |
 | `jsx-a11y/*` | 0 |
 | `no-array-index-key` | 0 |

@@ -83,7 +83,9 @@ export const APP_FLOW_ITEMS: AppFlowItem[] = [
 		label: 'Storefront',
 		modes: [PublishMode.CREATE, PublishMode.EDIT],
 		parseSchema: (context: NewAppInitialState) =>
-			publishingSchemas.appPublishing.storefront.safeParse(context.storefront),
+			publishingSchemas.appPublishing.storefront.safeParse(
+				context.storefront
+			),
 		path: 'storefront',
 		saveAsDraftRequired: false,
 		title: (isEditing = false) =>

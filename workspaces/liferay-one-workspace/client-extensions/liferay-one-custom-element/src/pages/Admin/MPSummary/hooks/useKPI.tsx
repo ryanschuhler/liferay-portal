@@ -12,6 +12,7 @@ import useModalContext from '~/hooks/useModalContext';
 import i18n from '~/i18n';
 import ProjectsUsingMarketplaceModalBody from '~/pages/Admin/MPSummary/components/ProjectsUsingMarketplace';
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
+import {ALL_ROWS} from '~/services/fetcher/pagination';
 import GraphQL from '~/services/headless/GraphQL';
 import HeadlessCommerceAdminCatalog from '~/services/headless/HeadlessCommerceAdminCatalog';
 import {ProductWorkflowStatusCode} from '~/utils/productUtils';
@@ -91,6 +92,14 @@ const getAnnualTargetValues = (kpiTarget: string, value: number) => {
 	};
 };
 
+const KORONEIKI_PROJECT_PREFIX = 'KORONEIKI-PROJECT-';
+
+const KORONEIKI_PROJECTS_PAGE_SIZE = '200';
+
+const KORONEIKI_PROJECT_ERC_PATTERN = new RegExp(
+	`^${KORONEIKI_PROJECT_PREFIX}(.+)$`
+);
+
 const queries = [
 	HeadlessCommerceAdminCatalog.getProductsDashboardKPI(
 		{
@@ -109,18 +118,18 @@ const queries = [
 		{
 			appsAndConnectorSupportingQRelease: {
 				body: ` items { catalogExternalReferenceCode, id, name, thumbnail } `,
-				pageSize: -1,
+				pageSize: ALL_ROWS,
 			},
 			lastYearAppsAndConnectorSupportingQRelease: {
 				body: ` items { catalogExternalReferenceCode, id } `,
-				pageSize: -1,
+				pageSize: ALL_ROWS,
 			},
 		}
 	),
 	HeadlessCommerceAdminCatalog.getCatalogs(
 		new URLSearchParams({
 			fields: 'externalReferenceCode,name',
-			pageSize: '-1',
+			pageSize: ALL_ROWS,
 		})
 	),
 	GraphQL.metrics<{
@@ -133,14 +142,14 @@ const queries = [
 			name: 'reports',
 			options: {
 				body: `items { externalReferenceCode, name, value }`,
-				pageSize: '-1',
+				pageSize: KORONEIKI_PROJECTS_PAGE_SIZE,
 				sort: 'dateCreated:desc',
 			},
 		},
 		{
-			koroneikiProjects: SearchBuilder.contains(
+			koroneikiProjects: SearchBuilder.startsWith(
 				'externalReferenceCode',
-				'KORONEIKI-PROJECT-'
+				KORONEIKI_PROJECT_PREFIX
 			),
 		}
 	),
@@ -204,8 +213,12 @@ const useKPI = () => {
 
 		const lastYearLabel = `${lastYear}`;
 
-		const koroneikiReports =
-			projectsKPI?.data?.metrics?.koroneikiProjects?.items ?? [];
+		const koroneikiProjects = projectsKPI?.data?.metrics?.koroneikiProjects;
+
+		const koroneikiReports = koroneikiProjects?.items ?? [];
+
+		const projectsUsingMarketplaceAppsCount =
+			koroneikiProjects?.totalCount ?? 0;
 
 		const projectsByKorKey: Record<
 			string,
@@ -214,7 +227,7 @@ const useKPI = () => {
 
 		for (const report of koroneikiReports) {
 			const match = report.externalReferenceCode?.match(
-				/^KORONEIKI-PROJECT-(.+)$/
+				KORONEIKI_PROJECT_ERC_PATTERN
 			);
 
 			if (!match) {
@@ -254,14 +267,14 @@ const useKPI = () => {
 				{
 					...getAnnualTargetValues(
 						kpiProjectUsingMarketplaceApps,
-						projectsUsingMarkeplaceApps.length
+						projectsUsingMarketplaceAppsCount
 					),
 					colors: ['#9CE269', '#D4F3BE'],
 					lastYearCount: lastYearProjectsUsingMarketplaceAppsCount
 						? Number(lastYearProjectsUsingMarketplaceAppsCount)
 						: undefined,
 					lastYearLabel,
-					onClick: projectsUsingMarkeplaceApps.length
+					onClick: projectsUsingMarketplaceAppsCount
 						? () =>
 								modal.onOpenModal({
 									body: (
