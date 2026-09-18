@@ -47,20 +47,16 @@ const UploadLogo: React.FC<UploadLogoProps> = ({
 					data-tooltip-align="top"
 					title={ReactDOMServer.renderToString(
 						<span>
-							The icon is a small image representation of the app.
-							Icons must be a PNG, JPG, or GIF format and cannot
-							exceed 5MB. Animated images are prohibited. The use
-							of the Liferay logo, including any permitted
-							alternate versions of the Liferay logo, is permitted
-							only with Liferay&apos;s express permission. Please
-							refer to our{' '}
+							{translate(
+								'the-icon-is-a-small-image-representation-of-the-app-icons-must-be-a-png-jpg-or-gif-format-and-cannot-exceed-5mb-animated-images-are-prohibited-the-use-of-the-liferay-logo-including-any-permitted-alternate-versions-of-the-liferay-logo-is-permitted-only-with-liferays-express-permission-please-refer-to-our'
+							)}{' '}
 							<a
 								href="https://www.liferay.com/trademark"
 								target="_blank"
 							>
-								trademark policy
+								{translate('trademark-policy')}
 							</a>{' '}
-							for details.
+							{translate('for-details')}
 						</span>
 					)}
 				>

@@ -8,6 +8,7 @@ import {
 	LicensingPrices,
 	NewAppInitialState,
 } from '~/context/NewAppContextProvider';
+import i18n from '~/i18n';
 import {LICENSING_OPTIONS} from '~/pages/PublisherDashboard/pages/NewAppFlow/constants/newAppConstants';
 import {currenciesCode, formatCurrency} from '~/utils/currencyUtils';
 import {ProductPriceModel} from '~/utils/productUtils';
@@ -49,12 +50,13 @@ const LicensePrices: React.FC<LicensePricesProps> = ({
 			{Object.entries(prices[currencyCode]).map(([priceType, values]) => (
 				<div key={priceType}>
 					<h5 className="licesing-price-type pt-2">
-						{priceType} License price
+						{i18n.sub('x-license-price', [priceType])}
 					</h5>
 
 					{Object.entries(values).map(([unit, price]) => (
 						<div className="licensing-unit-price" key={unit}>
-							Quantity: <b>{unit}</b> - Unit Price:{' '}
+							{i18n.translate('quantity')}: <b>{unit}</b> -{' '}
+							{i18n.translate('unit-price')}:{' '}
 							<b>
 								{formatCurrency(Number(price), currencyCode)}{' '}
 							</b>

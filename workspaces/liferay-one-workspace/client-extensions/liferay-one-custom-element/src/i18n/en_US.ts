@@ -636,6 +636,7 @@ export default {
 		'For businesses with a VAT/Tax number; this account type support multiple users.',
 	'for-businesses-with-a-vat-tax-number-this-account-type-support-multiple-users-it-also-possible-to-join-an-already-existing-business-account':
 		'For businesses with a VAT/Tax number; this account type support multiple users. It also possible to join an already existing business account',
+	'for-details': 'for details.',
 	'for-individuals-without-a-vat-tax-number-this-account-support-single-user-only':
 		'For individuals without a VAT/Tax number; this account support single user only.',
 	'for-instructions-on-how-to-setup-your-liferay-enterprise-search-software-please-read-the':
@@ -1572,6 +1573,8 @@ export default {
 	'the-file-is-downloading-automatically-if-you-encounter-any-issues-click-the-download-button-below-to-start-the-download-manually':
 		'The file is downloading automatically. If you encounter any issues, click the button below to start the download manually.',
 	'the-file-may-have-been-deleted': 'The file may have been deleted.',
+	'the-icon-is-a-small-image-representation-of-the-app-icons-must-be-a-png-jpg-or-gif-format-and-cannot-exceed-5mb-animated-images-are-prohibited-the-use-of-the-liferay-logo-including-any-permitted-alternate-versions-of-the-liferay-logo-is-permitted-only-with-liferays-express-permission-please-refer-to-our':
+		"The icon is a small image representation of the app. Icons must be a PNG, JPG, or GIF format and cannot exceed 5MB. Animated images are prohibited. The use of the Liferay logo, including any permitted alternate versions of the Liferay logo, is permitted only with Liferay's express permission. Please refer to our",
 	'the-installation-process-is-ongoing-and-may-take-some-time-navigating-to-other-sections-will-not-cancel-the-process':
 		'The installation process is ongoing and may take some time... Navigating to other sections will not cancel the process.',
 	'the-installation-process-is-underway-and-should-be-completed-shortly':
@@ -1678,6 +1681,7 @@ export default {
 	'total-storage': 'Total Storage',
 	'total-vcpu': 'Total vCPU',
 	'total-volume': 'Total Volume',
+	'trademark-policy': 'trademark policy',
 	'traffic-networking': 'Traffic / Networking',
 	'training': 'Training',
 	'transaction-details': 'Transaction Details',
@@ -1848,6 +1852,7 @@ export default {
 		'{0} is already a member of this account.',
 	'x-is-required': '{0} is required',
 	'x-items': '{0} Items',
+	'x-license-price': '{0} License Price',
 	'x-me': '{0} (me)',
 	'x-more': '+{0} more',
 	'x-of-x-available': '{0} of {1} available',

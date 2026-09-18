@@ -40,7 +40,7 @@ const NoProjectAvailable = () => {
 						'it-looks-like-this-account-does-not-have-any-projects-yet-please-check-back-later-or-contact-your-administrator-to-get-access-to-projects'
 					)}
 					<p className="d-flex justify-content-center my-4 next-step-page-text-bold">
-						Need help?&nbsp;{' '}
+						{translate('need-help')}&nbsp;{' '}
 						<a href="mailto:support@liferay.com">
 							support@liferay.com
 						</a>
