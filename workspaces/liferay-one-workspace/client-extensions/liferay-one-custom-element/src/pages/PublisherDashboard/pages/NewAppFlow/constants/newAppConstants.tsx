@@ -6,7 +6,7 @@
 import ReactDOMServer from 'react-dom/server';
 import {NewAppInitialState} from '~/context/NewAppContextProvider';
 import i18n from '~/i18n';
-import zodSchema from '~/schemas/zodSchema';
+import publishingSchemas from '~/schemas/publishingSchemas';
 import {LearnLinks} from '~/types/learn';
 import {ProductUploadType} from '~/utils/productUtils';
 
@@ -58,7 +58,7 @@ export const APP_FLOW_ITEMS: AppFlowItem[] = [
 		label: i18n.translate('profile'),
 		modes: [PublishMode.CREATE, PublishMode.EDIT],
 		parseSchema: (context: NewAppInitialState) =>
-			zodSchema.appPublishing.profile.safeParse(context.profile),
+			publishingSchemas.appPublishing.profile.safeParse(context.profile),
 		path: 'profile',
 		saveAsDraftRequired: true,
 		title: (isEditing = false) =>
@@ -71,7 +71,7 @@ export const APP_FLOW_ITEMS: AppFlowItem[] = [
 		label: 'Build',
 		modes: [PublishMode.CREATE, PublishMode.NEW_VERSION],
 		parseSchema: (context: NewAppInitialState) =>
-			zodSchema.appPublishing.build.safeParse(context.build),
+			publishingSchemas.appPublishing.build.safeParse(context.build),
 		path: 'build',
 		saveAsDraftRequired: true,
 		title: () => 'Provide app build',
@@ -83,7 +83,7 @@ export const APP_FLOW_ITEMS: AppFlowItem[] = [
 		label: 'Storefront',
 		modes: [PublishMode.CREATE, PublishMode.EDIT],
 		parseSchema: (context: NewAppInitialState) =>
-			zodSchema.appPublishing.storefront.safeParse(context.storefront),
+			publishingSchemas.appPublishing.storefront.safeParse(context.storefront),
 		path: 'storefront',
 		saveAsDraftRequired: false,
 		title: (isEditing = false) =>
@@ -96,7 +96,7 @@ export const APP_FLOW_ITEMS: AppFlowItem[] = [
 		label: 'Version',
 		modes: [PublishMode.CREATE, PublishMode.NEW_VERSION],
 		parseSchema: (context: NewAppInitialState) =>
-			zodSchema.appPublishing.version.safeParse(context.version),
+			publishingSchemas.appPublishing.version.safeParse(context.version),
 		path: 'version',
 		saveAsDraftRequired: false,
 		title: () => 'Provide version details',
@@ -145,8 +145,8 @@ export const APP_FLOW_ITEMS: AppFlowItem[] = [
 		parseSchema: (context: NewAppInitialState) => {
 			const schema =
 				context.pricing.priceModel === 'Paid'
-					? zodSchema.appPublishing.support.supportForPaidApp
-					: zodSchema.appPublishing.support.supportForFreeApp;
+					? publishingSchemas.appPublishing.support.supportForPaidApp
+					: publishingSchemas.appPublishing.support.supportForFreeApp;
 
 			return schema.safeParse(context.support);
 		},

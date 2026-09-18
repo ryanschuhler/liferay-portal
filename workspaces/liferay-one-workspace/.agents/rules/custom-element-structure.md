@@ -246,7 +246,7 @@ A rule stays a warning while its count is above zero. The counts below give the 
 | Rule | Open |
 | --- | --- |
 | `service-layer-boundary` | 63 |
-| `file-complexity-budget` | 33 |
+| `file-complexity-budget` | 32 |
 | `yarn lint:placement` | 4 |
 | `hooks-export-only-hooks` | 0 |
 | `yarn lint:imports` cycles | 0 |

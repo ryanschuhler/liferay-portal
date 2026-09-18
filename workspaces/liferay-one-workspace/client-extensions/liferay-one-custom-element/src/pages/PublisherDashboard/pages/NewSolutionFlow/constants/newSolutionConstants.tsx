@@ -5,7 +5,7 @@
 
 import {SolutionInitialState} from '~/context/SolutionContextProvider';
 import i18n from '~/i18n';
-import zodSchema from '~/schemas/zodSchema';
+import publishingSchemas from '~/schemas/publishingSchemas';
 
 import {PublishMode} from '../../NewAppFlow/constants/newAppConstants';
 
@@ -36,7 +36,7 @@ export const SOLUTION_FLOW_ITEMS: AppFlowItem<SolutionInitialState>[] = [
 		label: i18n.translate('profile'),
 		modes: [PublishMode.CREATE, PublishMode.EDIT],
 		parseSchema: (context: SolutionInitialState) =>
-			zodSchema.solutionPublishing.profile.safeParse(context.profile),
+			publishingSchemas.solutionPublishing.profile.safeParse(context.profile),
 		path: 'profile',
 		saveAsDraftRequired: true,
 		title: (isEditing = false) =>
@@ -49,7 +49,7 @@ export const SOLUTION_FLOW_ITEMS: AppFlowItem<SolutionInitialState>[] = [
 		label: 'Solution Header',
 		modes: [PublishMode.CREATE, PublishMode.EDIT],
 		parseSchema: (context: SolutionInitialState) =>
-			zodSchema.solutionPublishing.header.safeParse(context.header),
+			publishingSchemas.solutionPublishing.header.safeParse(context.header),
 		path: 'header',
 		saveAsDraftRequired: false,
 		title: (isEditing = false) =>
@@ -62,7 +62,7 @@ export const SOLUTION_FLOW_ITEMS: AppFlowItem<SolutionInitialState>[] = [
 		label: 'Solution Details',
 		modes: [PublishMode.CREATE, PublishMode.EDIT],
 		parseSchema: (context: SolutionInitialState) =>
-			zodSchema.solutionPublishing.details.safeParse(context.details),
+			publishingSchemas.solutionPublishing.details.safeParse(context.details),
 		path: 'details',
 		saveAsDraftRequired: false,
 		title: (isEditing = false) =>
@@ -75,7 +75,7 @@ export const SOLUTION_FLOW_ITEMS: AppFlowItem<SolutionInitialState>[] = [
 		label: 'Company Profile',
 		modes: [PublishMode.CREATE, PublishMode.EDIT],
 		parseSchema: (context: SolutionInitialState) =>
-			zodSchema.solutionPublishing.company.safeParse(context.company),
+			publishingSchemas.solutionPublishing.company.safeParse(context.company),
 		path: 'company',
 		saveAsDraftRequired: false,
 		title: (isEditing = false) =>
@@ -88,7 +88,7 @@ export const SOLUTION_FLOW_ITEMS: AppFlowItem<SolutionInitialState>[] = [
 		label: 'Contact Us',
 		modes: [PublishMode.CREATE, PublishMode.EDIT],
 		parseSchema: (context: SolutionInitialState) =>
-			zodSchema.solutionPublishing.contactUs.safeParse(context.contactUs),
+			publishingSchemas.solutionPublishing.contactUs.safeParse(context.contactUs),
 		path: 'contact',
 		saveAsDraftRequired: false,
 		title: (isEditing = false) =>
