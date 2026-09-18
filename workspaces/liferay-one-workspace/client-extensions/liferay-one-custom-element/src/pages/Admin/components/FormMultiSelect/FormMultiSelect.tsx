@@ -12,8 +12,9 @@ type Option = {label: string; value: string};
 type MultiSelectProps = {
 	isLoading: boolean;
 	label?: string;
+	onChange?: (event: {target: {name: string; value: unknown}}) => void;
 	options: Option[];
-} & InputHTMLAttributes<HTMLSelectElement>;
+} & Omit<InputHTMLAttributes<HTMLSelectElement>, 'onChange'>;
 
 const FormMultiSelect: React.FC<MultiSelectProps> = ({
 	disabled,
@@ -49,13 +50,7 @@ const FormMultiSelect: React.FC<MultiSelectProps> = ({
 				menuShouldBlockScroll
 				name={name}
 				onBlur={() => setVisible(false)}
-				onChange={(value) => {
-					if (onChange) {
-						onChange({
-							target: {name, value},
-						} as unknown as React.ChangeEvent<HTMLSelectElement>);
-					}
-				}}
+				onChange={(value) => onChange?.({target: {name, value}})}
 				onFocus={() => !visible && setVisible(true)}
 				onKeyDown={(event) => {
 					if (event.key === 'Escape' && visible === true) {

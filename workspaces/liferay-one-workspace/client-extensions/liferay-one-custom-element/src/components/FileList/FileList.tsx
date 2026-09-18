@@ -35,9 +35,9 @@ type UploadedImage = {
 };
 
 export type UploadedFile = {
-	changed: boolean;
+	changed?: boolean;
 	error: boolean | {message: string};
-	file: File;
+	file?: File;
 	fileName: string;
 	id: string;
 	imageDescription?: string;
@@ -53,6 +53,7 @@ export type UploadedFile = {
 				unit: string;
 				value: number;
 		  };
+	src?: string;
 	tags?: string[];
 	uploaded: boolean;
 	uploadedImage?: UploadedImage;

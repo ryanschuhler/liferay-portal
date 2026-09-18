@@ -30,8 +30,9 @@ import adminSchemas from '~/schemas/adminSchemas';
 import ProductPurchaseSSATrial from '~/services/commerce/ProductPurchaseSSATrial';
 import {Liferay} from '~/services/liferay/liferay';
 import trialOAuth2 from '~/services/spring-boot/Trial';
-import {OrderCustomFields, OrderWorkflowStatusCode} from '~/utils/orderUtils';
+import {OrderCustomFields} from '~/utils/orderUtils';
 
+import type {KeyedMutator} from 'swr';
 import type {APIResponse} from '~/types/api';
 import type {PlacedOrder} from '~/types/orders';
 
@@ -48,10 +49,7 @@ type CreateTrialModalFormProps = {
 		onClose: () => void;
 		open: boolean;
 	};
-	mutate: (
-		fn: (data: APIResponse<PlacedOrder>) => unknown,
-		options?: {revalidate: boolean}
-	) => Promise<unknown>;
+	mutate: KeyedMutator<APIResponse<PlacedOrder>>;
 };
 
 type FormFields = z.infer<typeof adminSchemas.ssaTrialForm>;
@@ -153,33 +151,13 @@ const CreateTrialModalForm: React.FC<CreateTrialModalFormProps> = ({
 					},
 				});
 
-				mutate(
-					(orders: APIResponse<PlacedOrder>) => ({
-						...orders,
-						items: [
-							{
-								...order,
-								orderStatusInfo: {
-									code: OrderWorkflowStatusCode.PROCESSING,
-									label: 'processing',
-									label_i18n: 'processing',
-								},
-							},
-							...orders.items,
-						],
-					}),
-					{revalidate: false}
-				);
-
 				if (!order) {
 					return;
 				}
 
 				await trialOAuth2.provisioningTrial(order.id);
 
-				mutate((response: APIResponse<PlacedOrder>) => response, {
-					revalidate: true,
-				});
+				mutate();
 
 				Liferay.Util.openToast({
 					message: 'Trial successfully provisioned.',

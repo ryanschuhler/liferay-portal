@@ -5,34 +5,37 @@
 
 import SearchBuilder from '~/services/fetcher/SearchBuilder';
 import HeadlessCommerceAdminPricing from '~/services/headless/HeadlessCommerceAdminPricing';
-import {SkuOptions} from '~/utils/productUtils';
-
-import {MarketplaceDeliveryProduct} from './MarketplaceDeliveryProduct';
+import {ProductType} from '~/types/productEnums';
+import {
+	ProductLicense,
+	ProductSpecificationKey,
+	SkuOptions,
+} from '~/utils/productUtils';
 
 import type {LicensingPrices} from '~/context/NewAppContextProvider';
-import type {DeliveryProduct, Product, SKU} from '~/types/product';
+import type {Product} from '~/types/product';
 
-export class MarketplaceProduct extends MarketplaceDeliveryProduct {
-	constructor(product: Product) {
-		super(product as unknown as DeliveryProduct);
+const PRODUCT_OPTION_KEYS = {
+	[ProductType.CLOUD]: ProductLicense.CLOUD,
+	[ProductType.DXP]: ProductLicense.DXP,
+};
+
+export class MarketplaceProduct {
+	constructor(private product: Product) {}
+
+	public getProductOptionKey() {
+		const appType = this.getSpecificationValue(
+			ProductSpecificationKey.APP_TYPE
+		);
+
+		return (
+			PRODUCT_OPTION_KEYS[appType as keyof typeof PRODUCT_OPTION_KEYS] ||
+			ProductLicense.BASE
+		);
 	}
 
-	override get specificationValues() {
-		const specificationValues = super.specificationValues;
-
-		for (const key of Object.keys(
-			specificationValues
-		) as (keyof typeof specificationValues)[]) {
-			specificationValues[key] = (
-				specificationValues[key] as unknown as {en_US: string}
-			).en_US;
-		}
-
-		return specificationValues;
-	}
-
-	async getProductPrices() {
-		const product = this.product as unknown as Product;
+	public async getProductPrices() {
+		const {product} = this;
 
 		const {items: priceLists} =
 			await HeadlessCommerceAdminPricing.getPriceLists(
@@ -48,14 +51,13 @@ export class MarketplaceProduct extends MarketplaceDeliveryProduct {
 
 		const prices: LicensingPrices = {};
 
-		const marketplaceProduct = new MarketplaceProduct(product);
+		const productOptionKey = this.getProductOptionKey();
 
-		const productSkus = product!.skus
+		const productSkus = product.skus
 			.filter((sku) =>
 				sku.skuOptions.some(
 					(skuOption) =>
-						skuOption.key ===
-							marketplaceProduct.getProductOptionKey() &&
+						skuOption.key === productOptionKey &&
 						skuOption.value !== SkuOptions.TRIAL
 				)
 			)
@@ -86,9 +88,13 @@ export class MarketplaceProduct extends MarketplaceDeliveryProduct {
 			for (const [index, priceEntry] of priceEntries.entries()) {
 				const tierPrices = tierPricesItems[index];
 
-				const sku = product!.skus.find(
-					(sku) => sku.id === priceEntry.skuId
-				) as SKU;
+				const sku = product.skus.find(
+					(productSku) => productSku.id === priceEntry.skuId
+				);
+
+				if (!sku) {
+					continue;
+				}
 
 				const skuName = sku.sku.toLowerCase();
 
@@ -115,5 +121,14 @@ export class MarketplaceProduct extends MarketplaceDeliveryProduct {
 		}
 
 		return prices;
+	}
+
+	private getSpecificationValue(specificationKey: string) {
+		const specification = this.product.productSpecifications.find(
+			(productSpecification) =>
+				productSpecification.specificationKey === specificationKey
+		);
+
+		return specification?.value?.en_US ?? '';
 	}
 }

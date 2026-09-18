@@ -102,6 +102,12 @@ export default class PublisherAsset {
 		appFolderId: number,
 		file: UploadedFile
 	): Promise<number> {
+		if (!file.file) {
+			throw new Error(
+				`Unable to upload ${file.fileName} because the browser holds no file for it`
+			);
+		}
+
 		const formData = new FormData();
 		formData.append('file', file.file, file.fileName);
 

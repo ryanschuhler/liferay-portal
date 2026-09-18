@@ -99,6 +99,16 @@ The double cast stops the compiler from checking that the two types are related.
 
 Correct the type instead. Make the DTO wider, add a type guard, or declare the difference that the cast conceals.
 
+The last six casts each concealed a defect, and the compiler reported each defect as soon as the cast went away.
+
+`MarketplaceProduct` held a `Product` and extended a class that holds a `DeliveryProduct`, so it cast the product in and cast it out again. One caller uses the class, and that caller calls one method. The class now holds a `Product` and needs no parent. A `find` call in it carried `as SKU`, which turns an absent SKU into a value that throws on the next line.
+
+`CreateTrialModalForm` declared its own shape for the SWR `mutate` function. The real type is `KeyedMutator`, which passes `undefined` when the cache is empty. The callback read `orders.items` with no guard. The same callback also inserted a `Cart` into a list of `PlacedOrder`, which is a different record, and it ran before the check that the order exists. The form now revalidates after the server provisions the trial, which is what the list needs and what the progress modal already covers.
+
+`FormMultiSelect` built an object that looks like a change event. Its caller declares the shape it wants, so the component declares that same shape.
+
+`UploadedFile` described a file that the browser holds. A package that the server already stores has no `File`, so the type now marks that field optional. Three upload paths then reported that they pass that field to an upload, and each one now guards it.
+
 ## Enforcement Ledger
 
 Each rule is a warning until its count is zero. Then change the rule to an error in `tools/eslint-plugin-local/src/index.ts`.
@@ -107,10 +117,10 @@ Each rule is a warning until its count is zero. Then change the rule to an error
 | --- | --- |
 | `no-untranslated-text` | 26 |
 | `bounded-pagination` | 5 |
-| `no-unsafe-type-cast` | 6 |
 | `jsx-a11y/*` | 0 |
 | `no-array-index-key` | 0 |
 | `no-raw-fetch` | 0 |
+| `no-unsafe-type-cast` | 0 |
 | `i18n-key-slug` | 0 |
 | `no-direct-web-storage` | 0 |
 | `odata-filter-via-search-builder` | 0 |

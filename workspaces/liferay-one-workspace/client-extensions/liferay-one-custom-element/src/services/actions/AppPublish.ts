@@ -243,7 +243,7 @@ export default class AppPublish extends BaseAppPublish {
 			.map(normalizeCategory);
 
 		if (_product) {
-			if (file && (!file?.uploaded || file?.changed)) {
+			if (file?.file && (!file.uploaded || file.changed)) {
 				await HeadlessCommerceAdminCatalogImpl.addOrUpdateProductImageByExternalReferenceCode(
 					_product.externalReferenceCode,
 					{

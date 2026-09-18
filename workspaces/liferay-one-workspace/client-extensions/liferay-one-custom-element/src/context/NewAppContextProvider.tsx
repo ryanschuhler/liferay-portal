@@ -735,18 +735,20 @@ export default function NewAppContextProvider({
 									return {
 										error: false,
 										fileName: file.sourceCode.name,
-										id: file.sourceCode.id,
+										id: String(file.sourceCode.id),
+										progress: 100,
 										readableSize: filesize(
 											sourceFileDocument.sizeInBytes
 										),
 										src: file.sourceCode.link.href,
+										uploaded: true,
 									};
 								}
 							)
 						);
 
 						return {
-							file: packageFiles as unknown as UploadedFile[],
+							file: packageFiles,
 							id: String(publisherAsset.id),
 							uploaded: true,
 							versions: publisherAsset.version.split(','),

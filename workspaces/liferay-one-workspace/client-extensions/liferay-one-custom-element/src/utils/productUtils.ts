@@ -25,8 +25,6 @@ import type {
 
 export {
 	ProductLicense,
-	ProductLicenseFriendlyName,
-	ProductLicenseType,
 	ProductOfferingTypes,
 	ProductPriceModel,
 	ProductSpecificationKey,

@@ -51,7 +51,7 @@ export default class BaseAppPublish {
 				priority,
 				tags: tag ? [tag] : [],
 				title: {
-					en_US: image.imageDescription || image.file.name,
+					en_US: image.imageDescription || image.file?.name,
 				},
 			};
 

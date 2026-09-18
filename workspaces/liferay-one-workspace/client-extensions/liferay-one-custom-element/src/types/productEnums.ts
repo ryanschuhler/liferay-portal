@@ -47,12 +47,6 @@ export const ProductLicenseType = {
 export type ProductLicenseType =
 	(typeof ProductLicenseType)[keyof typeof ProductLicenseType];
 
-export const ProductLicenseFriendlyName = {
-	[ProductLicenseType.MONTHLY]: 'Monthly',
-	[ProductLicenseType.PERPETUAL]: 'One-Time',
-	[ProductLicenseType.SUBSCRIPTION]: 'Yearly',
-};
-
 export const ProductOfferingTypes = {
 	LIFERAY_PAAS: 'Liferay PaaS',
 	LIFERAY_SAAS: 'Liferay SaaS',

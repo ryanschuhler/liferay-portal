@@ -56,7 +56,7 @@ const plugin = {
 				'local/no-eslint-disable': 'error',
 				'local/no-raw-fetch': 'error',
 				'local/no-timezone-naive-date': 'error',
-				'local/no-unsafe-type-cast': 'warn',
+				'local/no-unsafe-type-cast': 'error',
 				'local/no-unsanitized-html': 'error',
 				'local/no-untranslated-text': 'warn',
 				'local/odata-filter-via-search-builder': 'error',

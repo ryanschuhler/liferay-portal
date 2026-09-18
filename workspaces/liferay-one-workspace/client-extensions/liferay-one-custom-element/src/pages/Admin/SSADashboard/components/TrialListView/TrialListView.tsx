@@ -22,7 +22,6 @@ import {formatDate, formatDateTime} from '~/utils/dateUtils';
 import {OrderCustomFields} from '~/utils/orderUtils';
 import {safeJSONParse} from '~/utils/safeJSONParse';
 
-import type {APIResponse} from '~/types/api';
 import type {PlacedOrder} from '~/types/orders';
 import type {TrialExtend} from '~/types/trial';
 
@@ -232,12 +231,7 @@ export default function TrialListView({
 				{(_, {mutate}) => (
 					<CreateTrialModalForm
 						modal={createTrialFormModal}
-						mutate={
-							mutate as unknown as (
-								fn: (data: APIResponse<PlacedOrder>) => unknown,
-								options?: {revalidate: boolean}
-							) => Promise<unknown>
-						}
+						mutate={mutate}
 					/>
 				)}
 			</ListView>
