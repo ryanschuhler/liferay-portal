@@ -15,6 +15,7 @@ interface IColumn {
 
 interface IRow {
 	link?: string;
+	rowKey: string;
 	[key: string]: string | number | JSX.Element | undefined;
 }
 
@@ -65,10 +66,10 @@ const BusinessEventsTable = ({
 			</ClayTable.Head>
 
 			<ClayTable.Body align="left">
-				{rows.map((row, index) => (
+				{rows.map((row) => (
 					<ClayTable.Row
 						className={`${className}-row`}
-						key={index}
+						key={row.rowKey}
 						onClick={() => onRowClick && onRowClick(row)}
 					>
 						{columns.map((column) => (

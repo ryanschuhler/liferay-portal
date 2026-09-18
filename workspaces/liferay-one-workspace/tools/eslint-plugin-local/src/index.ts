@@ -49,7 +49,7 @@ const plugin = {
 				'local/i18n-key-slug': 'error',
 				'local/image-filename-snake-case': 'error',
 				'local/no-ambient-type-declarations': 'error',
-				'local/no-array-index-key': 'warn',
+				'local/no-array-index-key': 'error',
 				'local/no-bare-utils-or-types-file': 'error',
 				'local/no-comments': 'error',
 				'local/no-direct-web-storage': 'error',

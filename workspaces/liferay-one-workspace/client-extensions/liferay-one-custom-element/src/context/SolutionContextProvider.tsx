@@ -23,6 +23,7 @@ import {
 	ProductVocabulary,
 } from '~/utils/productUtils';
 import {safeJSONParse} from '~/utils/safeJSONParse';
+import {getRandomID} from '~/utils/stringUtils';
 
 import {UploadedFile} from '../components/FileList/FileList';
 
@@ -89,9 +90,15 @@ export type TextVideoBlock = {
 	type: 'text-video-block';
 };
 
-export type ContentBlock = TextBlock | TextImageBlock | TextVideoBlock;
+export type SolutionBlock = TextBlock | TextImageBlock | TextVideoBlock;
 
-type StoredContentBlock = StoredTextImageBlock | TextBlock | TextVideoBlock;
+export type ContentBlock = SolutionBlock & {id: string};
+
+type StoredContentBlock = (
+	| StoredTextImageBlock
+	| TextBlock
+	| TextVideoBlock
+) & {id?: string};
 
 type HeaderContentType = HeaderContentTypeEmbeded | HeaderContentTypeImages;
 
@@ -370,6 +377,8 @@ const reducer = (state: SolutionInitialState, action: AppActions) => {
 				) as StoredContentBlock[];
 
 				const newBlocks = blocks.map((block) => {
+					const id = block.id ?? getRandomID();
+
 					if (block.type === 'text-images-block') {
 						return {
 							...block,
@@ -396,10 +405,11 @@ const reducer = (state: SolutionInitialState, action: AppActions) => {
 									return newFile as UploadedFile;
 								}),
 							},
+							id,
 						};
 					}
 
-					return block;
+					return {...block, id};
 				});
 
 				solutionDetailsImages;

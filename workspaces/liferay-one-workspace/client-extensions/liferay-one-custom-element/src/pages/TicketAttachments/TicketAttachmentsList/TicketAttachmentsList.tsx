@@ -242,6 +242,7 @@ const TicketAttachmentsList = () => {
 		) : (
 			''
 		),
+		rowKey: String(attachment.id),
 	}));
 
 	return (

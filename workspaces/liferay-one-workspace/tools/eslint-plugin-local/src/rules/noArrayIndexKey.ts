@@ -5,7 +5,10 @@
 
 import type {TSESLint, TSESTree} from '@typescript-eslint/experimental-utils';
 
-const INDEX_NAMES = new Set(['i', 'idx', 'index', 'key']);
+const INDEX_NAMES = new Set(['i', 'idx', 'index']);
+
+// A variable named "key" holds an identity, not a position. It comes from
+// Object.keys, from Object.entries, or from a field that carries its own key.
 
 type MessageId = 'noArrayIndexKey';
 

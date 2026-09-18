@@ -382,8 +382,11 @@ function AppDetailContent({product}: {product: Product}) {
 					isLastSection
 					title={i18n.translate('support-and-help')}
 				>
-					{supportItems.map((supportItem, index) => (
-						<SupportContent key={index} {...supportItem} />
+					{supportItems.map((supportItem) => (
+						<SupportContent
+							key={supportItem.symbol}
+							{...supportItem}
+						/>
 					))}
 				</DetailSection>
 			</div>

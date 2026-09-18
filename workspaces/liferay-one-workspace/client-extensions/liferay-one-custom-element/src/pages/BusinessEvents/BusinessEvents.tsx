@@ -368,6 +368,7 @@ const BusinessEvents = () => {
 							</div>
 						</div>
 					),
+					rowKey: String(businessEvent.id),
 					status: (
 						<div className="align-items-center d-flex">
 							<div

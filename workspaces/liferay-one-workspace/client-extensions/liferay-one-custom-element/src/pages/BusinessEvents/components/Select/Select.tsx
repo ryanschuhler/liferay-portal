@@ -73,10 +73,10 @@ const Select: React.FC<IProps> = ({
 						onChange={handleChange}
 						value={value}
 					>
-						{options.map(({disabled, label, value}, index) => (
+						{options.map(({disabled, label, value}) => (
 							<ClaySelect.Option
 								disabled={disabled}
-								key={`${value}-${index}`}
+								key={value}
 								label={label}
 								value={value}
 							/>

@@ -78,6 +78,11 @@ const BusinessEventsActivityHistory = () => {
 							</div>
 						</div>
 					),
+					rowKey: [
+						businessEventVersion?.createdDate,
+						businessEventVersion?.author,
+						businessEventVersion?.change?.name,
+					].join('|'),
 					user: (
 						<div className="align-items-center d-flex">
 							<div className="font-weight-semi-bold m-0 mr-1 text-neutral-10 text-truncate">

@@ -87,8 +87,8 @@ export default function MPSummary() {
 					className="d-flex flex-wrap info-container"
 					style={{marginBottom: '3.5rem'}}
 				>
-					{infoCards.map((infoCard, index) => (
-						<InfoCard {...infoCard} key={index} />
+					{infoCards.map((infoCard) => (
+						<InfoCard {...infoCard} key={infoCard.symbol} />
 					))}
 				</div>
 

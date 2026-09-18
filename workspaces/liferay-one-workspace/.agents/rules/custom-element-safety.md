@@ -87,6 +87,12 @@ Read and write `localStorage` and `sessionStorage` through `MarketplaceStorage` 
 
 Use an `id`, an `externalReferenceCode`, or another value that is unique in the list.
 
+A variable named `key` is an identity, not a position. It comes from `Object.keys`, from `Object.entries`, or from a field that carries its own key, so the rule does not report it.
+
+Two lists in this app carry no identity of their own. The narrow weekday names repeat, because Sunday and Saturday both read `S`, so that list keys on the number of the day. A business event version carries no id, because the endpoint returns the author, the change, the comment, and the date and nothing else, so that list keys on those three fields together.
+
+The solution detail blocks are the list where the defect reaches a user. A publisher moves a block up, moves it down, or deletes it, and each block holds a form. With the position as the key, React keeps the text of one block on the block that moves into that position. Each block now carries an `id`. The id is written with the block, and a block saved before this change receives an id when the browser reads it, so no stored record needs a change.
+
 ## No `as unknown as`
 
 The double cast stops the compiler from checking that the two types are related. The next change to a field name compiles, and then fails when the code runs.
@@ -100,10 +106,10 @@ Each rule is a warning until its count is zero. Then change the rule to an error
 | Rule | Open |
 | --- | --- |
 | `no-untranslated-text` | 26 |
-| `no-array-index-key` | 15 |
 | `bounded-pagination` | 5 |
 | `jsx-a11y/*` | 8 |
 | `no-unsafe-type-cast` | 6 |
+| `no-array-index-key` | 0 |
 | `no-raw-fetch` | 0 |
 | `i18n-key-slug` | 0 |
 | `no-direct-web-storage` | 0 |

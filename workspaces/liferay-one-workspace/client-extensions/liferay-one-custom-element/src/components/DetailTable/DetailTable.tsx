@@ -17,7 +17,7 @@ type DetailTableItem = {
 	className?: HTMLAttributes<HTMLTableRowElement>['className'];
 	divider?: boolean;
 	flexHeading?: boolean;
-	title: string | ReactNode;
+	title: string;
 	value: string | ReactNode;
 	visible?: boolean;
 };
@@ -41,8 +41,8 @@ const DetailTable: React.FC<DetailTableProps> = ({
 		>
 			{items
 				.filter(({visible = true}) => visible)
-				.map((item, index) => (
-					<React.Fragment key={index}>
+				.map((item) => (
+					<React.Fragment key={item.title}>
 						<tr
 							className={classNames(item.className, {
 								'd-flex flex-column':

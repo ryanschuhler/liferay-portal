@@ -24,6 +24,8 @@ import {BLOCK_TYPES} from '../constants/newSolutionConstants';
 
 import '../NewSolutionFlow.css';
 
+import {getRandomID} from '~/utils/stringUtils';
+
 import type {ContentBlock} from '~/context/SolutionContextProvider';
 
 const MINIMUM_BLOCKS = 2;
@@ -138,7 +140,7 @@ const Details = () => {
 					<Form.SectionWithControllers
 						dropdownItems={dropdownItems}
 						index={index}
-						key={index}
+						key={block.id}
 						name={
 							BLOCK_OPTIONS.find(
 								({value}) => value === block.type
@@ -230,6 +232,7 @@ const Details = () => {
 									dispatch({
 										payload: {
 											content: {},
+											id: getRandomID(),
 											type: selectedBlock,
 										} as ContentBlock,
 										type: SolutionTypes.SET_NEW_BLOCK,

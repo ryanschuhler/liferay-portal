@@ -166,8 +166,8 @@ const Submit = () => {
 						required
 						title={i18n.translate('solution-details')}
 					>
-						{details.map((block, index) => (
-							<div className="mb-4" key={index}>
+						{details.map((block) => (
+							<div className="mb-4" key={block.id}>
 								<p className="font-weight-semi-bold mb-1">
 									{BLOCK_LABELS[block.type]}
 								</p>

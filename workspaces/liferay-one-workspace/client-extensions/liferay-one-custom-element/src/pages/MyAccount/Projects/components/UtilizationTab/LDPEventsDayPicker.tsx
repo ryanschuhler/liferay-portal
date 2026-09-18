@@ -25,6 +25,8 @@ type LDPEventsDayPickerProps = {
 
 const CALENDAR_CELLS = 42;
 
+const DAYS_IN_WEEK = 7;
+
 const FIRST_DAY_OF_WEEK = 1;
 
 export default function LDPEventsDayPicker({
@@ -88,16 +90,20 @@ export default function LDPEventsDayPicker({
 		>
 			{(close) => (
 				<div className="ldp-events-day-grid">
-					{getUTCWeekdayNarrowNames(FIRST_DAY_OF_WEEK).map(
-						(weekday, index) => (
+					{getUTCWeekdayNarrowNames(FIRST_DAY_OF_WEEK)
+						.map((weekdayName, offset) => ({
+							name: weekdayName,
+							weekday:
+								(FIRST_DAY_OF_WEEK + offset) % DAYS_IN_WEEK,
+						}))
+						.map(({name, weekday}) => (
 							<span
 								className="ldp-events-day-weekday"
-								key={index}
+								key={weekday}
 							>
-								{weekday}
+								{name}
 							</span>
-						)
-					)}
+						))}
 
 					{cells.map((cell) => (
 						<button

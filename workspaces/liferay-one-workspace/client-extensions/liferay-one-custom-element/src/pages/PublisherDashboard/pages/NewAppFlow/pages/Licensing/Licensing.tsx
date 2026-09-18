@@ -65,7 +65,7 @@ const Licensing = () => {
 			>
 				<div className="informing-licensing-terms-page-day-trial-container">
 					{LICENSING_30_DAYS_TRIAL_OPTIONS.map(
-						({value, ...licensingOption}, index) => {
+						({value, ...licensingOption}) => {
 							const disabled = licensingOption.disabled(
 								priceModel as ProductPriceModel
 							);
@@ -74,7 +74,7 @@ const Licensing = () => {
 								<RadioCard
 									{...licensingOption}
 									disabled={disabled}
-									key={index}
+									key={String(value)}
 									onChange={() => {
 										dispatch({
 											payload: {

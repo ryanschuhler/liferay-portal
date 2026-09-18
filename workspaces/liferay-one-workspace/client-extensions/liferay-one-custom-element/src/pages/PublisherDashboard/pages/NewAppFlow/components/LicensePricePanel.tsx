@@ -135,10 +135,7 @@ const LicensePricePanel: React.FC<LicensePricePanelProps> = ({
 		>
 			<Panel.Body>
 				{licensePrices.map(
-					(
-						{description, label, required, type: licenseType},
-						index
-					) => {
+					({description, label, required, type: licenseType}) => {
 						const showSection =
 							ProductTypeLicenseOptions[appType!]?.includes(
 								licenseType
@@ -153,7 +150,7 @@ const LicensePricePanel: React.FC<LicensePricePanelProps> = ({
 						return (
 							<Section
 								className="mb-6"
-								key={index}
+								key={licenseType}
 								label={label}
 								required={required}
 								tooltip={description}
