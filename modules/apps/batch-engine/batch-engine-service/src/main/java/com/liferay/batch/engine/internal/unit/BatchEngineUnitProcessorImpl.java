@@ -66,6 +66,7 @@ import java.util.zip.ZipOutputStream;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Filter;
+import org.osgi.framework.ServiceObjects;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -275,11 +276,16 @@ public class BatchEngineUnitProcessorImpl implements BatchEngineUnitProcessor {
 
 					boolean imported = false;
 
+					ServiceObjects<Object> serviceObjects = null;
+					Object service = null;
+
 					try {
 						_markProcessed(batchEngineUnit);
 
-						Object service = _bundleContext.getService(
+						serviceObjects = _bundleContext.getServiceObjects(
 							serviceReference);
+
+						service = serviceObjects.getService();
 
 						if (service == null) {
 							throw new IllegalStateException(
@@ -302,7 +308,9 @@ public class BatchEngineUnitProcessorImpl implements BatchEngineUnitProcessor {
 					}
 
 					try {
-						_bundleContext.ungetService(serviceReference);
+						if (service != null) {
+							serviceObjects.ungetService(service);
+						}
 					}
 					catch (Exception exception) {
 						if (_log.isWarnEnabled()) {

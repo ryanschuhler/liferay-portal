@@ -33,13 +33,18 @@ public class StrategyResourceImpl extends BaseStrategyResourceImpl {
 			String internalClassNameKey)
 		throws Exception {
 
-		List<Strategy> strategies = new ArrayList<>();
-
-		BatchEngineTaskItemDelegate<?> batchEngineTaskItemDelegate =
-			_batchEngineTaskItemDelegateRegistry.getBatchEngineTaskItemDelegate(
+		return _batchEngineTaskItemDelegateRegistry.
+			withBatchEngineTaskItemDelegate(
 				contextCompany.getCompanyId(),
 				TaskItemUtil.getInternalClassName(internalClassNameKey),
-				TaskItemUtil.getTaskItemDelegateName(internalClassNameKey));
+				TaskItemUtil.getTaskItemDelegateName(internalClassNameKey),
+				this::_getStrategiesPage);
+	}
+
+	private Page<Strategy> _getStrategiesPage(
+		BatchEngineTaskItemDelegate<?> batchEngineTaskItemDelegate) {
+
+		List<Strategy> strategies = new ArrayList<>();
 
 		strategies.addAll(
 			transform(

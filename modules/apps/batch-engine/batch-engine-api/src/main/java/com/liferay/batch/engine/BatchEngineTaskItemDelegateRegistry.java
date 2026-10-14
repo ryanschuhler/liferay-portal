@@ -5,6 +5,8 @@
 
 package com.liferay.batch.engine;
 
+import com.liferay.petra.function.UnsafeFunction;
+
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -13,7 +15,18 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface BatchEngineTaskItemDelegateRegistry {
 
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link
+	 *             #withBatchEngineTaskItemDelegate(long, String, String,
+	 *             UnsafeFunction)}
+	 */
+	@Deprecated
 	public BatchEngineTaskItemDelegate<?> getBatchEngineTaskItemDelegate(
 		long companyId, String itemClassName, String taskItemDelegateName);
+
+	public <R, E extends Throwable> R withBatchEngineTaskItemDelegate(
+			long companyId, String itemClassName, String taskItemDelegateName,
+			UnsafeFunction<BatchEngineTaskItemDelegate<?>, R, E> unsafeFunction)
+		throws E;
 
 }

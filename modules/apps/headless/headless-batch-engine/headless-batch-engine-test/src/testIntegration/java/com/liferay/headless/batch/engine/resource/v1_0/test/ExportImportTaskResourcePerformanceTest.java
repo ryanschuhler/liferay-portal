@@ -157,14 +157,22 @@ public class ExportImportTaskResourcePerformanceTest {
 
 	@Test
 	public void testPostExportTaskWithTestEntity() throws Exception {
-		TestEntityBatchEngineTaskItemDelegate
-			testEntityBatchEngineTaskItemDelegate =
-				_getTestEntityBatchEngineTaskItemDelegate();
-
 		int count = GetterUtil.getInteger(
 			_properties.getProperty("test.entities.count"));
 
-		testEntityBatchEngineTaskItemDelegate.generate(count);
+		_batchEngineTaskItemDelegateRegistry.withBatchEngineTaskItemDelegate(
+			0, "com.liferay.headless.batch.engine.entity.TestEntity",
+			"export-import-task-resource-performance-test-entities",
+			batchEngineTaskItemDelegate -> {
+				TestEntityBatchEngineTaskItemDelegate
+					testEntityBatchEngineTaskItemDelegate =
+						(TestEntityBatchEngineTaskItemDelegate)
+							batchEngineTaskItemDelegate;
+
+				testEntityBatchEngineTaskItemDelegate.generate(count);
+
+				return null;
+			});
 
 		_testPostExportTask(
 			"com.liferay.headless.batch.engine.entity.TestEntity#" +
@@ -262,15 +270,6 @@ public class ExportImportTaskResourcePerformanceTest {
 		sb.append(StringPool.CLOSE_BRACKET);
 
 		return sb.toString();
-	}
-
-	private TestEntityBatchEngineTaskItemDelegate
-		_getTestEntityBatchEngineTaskItemDelegate() {
-
-		return (TestEntityBatchEngineTaskItemDelegate)
-			_batchEngineTaskItemDelegateRegistry.getBatchEngineTaskItemDelegate(
-				0, "com.liferay.headless.batch.engine.entity.TestEntity",
-				"export-import-task-resource-performance-test-entities");
 	}
 
 	private Map<String, String> _splitClassName(String className) {

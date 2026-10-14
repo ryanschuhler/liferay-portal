@@ -226,23 +226,19 @@ public class BatchEngineExportTaskExecutorImpl
 	}
 
 	private InputStream _exportItems(
-			BatchEngineExportTask batchEngineExportTask, Settings settings)
+			BatchEngineExportTask batchEngineExportTask,
+			BatchEngineTaskItemDelegate<?> batchEngineTaskItemDelegate,
+			Settings settings)
 		throws Exception {
-
-		Map<String, Serializable> parameters = _getParameters(
-			batchEngineExportTask);
-
-		BatchEngineTaskItemDelegate<?> batchEngineTaskItemDelegate =
-			_batchEngineTaskItemDelegateRegistry.getBatchEngineTaskItemDelegate(
-				batchEngineExportTask.getCompanyId(),
-				batchEngineExportTask.getClassName(),
-				batchEngineExportTask.getTaskItemDelegateName());
 
 		if (batchEngineTaskItemDelegate == null) {
 			throw new IllegalStateException(
 				"No batch engine delegate available for class name " +
 					batchEngineExportTask.getClassName());
 		}
+
+		Map<String, Serializable> parameters = _getParameters(
+			batchEngineExportTask);
 
 		UnsyncByteArrayOutputStream unsyncByteArrayOutputStream =
 			new UnsyncByteArrayOutputStream();
@@ -383,6 +379,20 @@ public class BatchEngineExportTaskExecutorImpl
 		}
 
 		return new ByteArrayInputStream(content);
+	}
+
+	private InputStream _exportItems(
+			BatchEngineExportTask batchEngineExportTask, Settings settings)
+		throws Exception {
+
+		return _batchEngineTaskItemDelegateRegistry.
+			withBatchEngineTaskItemDelegate(
+				batchEngineExportTask.getCompanyId(),
+				batchEngineExportTask.getClassName(),
+				batchEngineExportTask.getTaskItemDelegateName(),
+				batchEngineTaskItemDelegate -> _exportItems(
+					batchEngineExportTask, batchEngineTaskItemDelegate,
+					settings));
 	}
 
 	private BatchEngineExportTaskItemWriter _getBatchEngineExportTaskItemWriter(

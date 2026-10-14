@@ -90,13 +90,16 @@ public class BatchEngineImportTaskExecutorImpl
 
 	@Override
 	public void execute(BatchEngineImportTask batchEngineImportTask) {
-		BatchEngineTaskItemDelegate<?> batchEngineTaskItemDelegate =
-			_batchEngineTaskItemDelegateRegistry.getBatchEngineTaskItemDelegate(
-				batchEngineImportTask.getCompanyId(),
-				batchEngineImportTask.getClassName(),
-				batchEngineImportTask.getTaskItemDelegateName());
+		_batchEngineTaskItemDelegateRegistry.withBatchEngineTaskItemDelegate(
+			batchEngineImportTask.getCompanyId(),
+			batchEngineImportTask.getClassName(),
+			batchEngineImportTask.getTaskItemDelegateName(),
+			batchEngineTaskItemDelegate -> {
+				execute(
+					batchEngineImportTask, batchEngineTaskItemDelegate, true);
 
-		execute(batchEngineImportTask, batchEngineTaskItemDelegate, true);
+				return null;
+			});
 	}
 
 	@Override

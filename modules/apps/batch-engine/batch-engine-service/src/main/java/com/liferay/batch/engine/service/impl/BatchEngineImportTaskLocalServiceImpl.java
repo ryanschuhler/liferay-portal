@@ -52,15 +52,14 @@ public class BatchEngineImportTaskLocalServiceImpl
 			String taskItemDelegateName)
 		throws PortalException {
 
-		BatchEngineTaskItemDelegate<?> batchEngineTaskItemDelegate =
-			_batchEngineTaskItemDelegateRegistry.getBatchEngineTaskItemDelegate(
-				companyId, className, taskItemDelegateName);
-
-		return addBatchEngineImportTask(
-			externalReferenceCode, companyId, userId, batchSize, callbackURL,
-			className, content, contentType, executeStatus, fieldNameMappingMap,
-			importStrategy, operation, parameters, taskItemDelegateName,
-			batchEngineTaskItemDelegate);
+		return _batchEngineTaskItemDelegateRegistry.
+			withBatchEngineTaskItemDelegate(
+				companyId, className, taskItemDelegateName,
+				batchEngineTaskItemDelegate -> addBatchEngineImportTask(
+					externalReferenceCode, companyId, userId, batchSize,
+					callbackURL, className, content, contentType, executeStatus,
+					fieldNameMappingMap, importStrategy, operation, parameters,
+					taskItemDelegateName, batchEngineTaskItemDelegate));
 	}
 
 	@Override
