@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/courspectra",
+	"hidden": false,
+	"name": "Courspectra",
+	"name_i18n": {
+		"en_US": "Courspectra"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

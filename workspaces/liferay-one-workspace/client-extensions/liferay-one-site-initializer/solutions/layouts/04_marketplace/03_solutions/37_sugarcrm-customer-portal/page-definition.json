@@ -1,0 +1,2241 @@
+{
+	"pageElement": {
+		"pageElements": [
+			{
+				"definition": {
+					"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}\n@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-0,0rem) !important;\npadding-right: var(--spacer-0,0rem) !important;\n}\n}",
+					"indexed": true,
+					"layout": {
+					}
+				},
+				"pageElements": [
+					{
+						"definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: #F4F6F9 !important;\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}\n@media screen and (max-width: 767px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-4,1.5rem) !important;\npadding-right: var(--spacer-4,1.5rem) !important;\n}\n}",
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"cssClasses": [
+										"light",
+										"border-radius-none",
+										"container",
+										"p-0"
+									],
+									"customCSS": "@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+									"indexed": true,
+									"layout": {
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"customCSS": ".[$FRAGMENT_CLASS$] {\ndisplay: none !important;\npadding-bottom: var(--spacer-4,1.5rem) !important;\npadding-top: var(--spacer-4,1.5rem) !important;\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+										],
+										"type": "Section"
+									},
+									{
+										"definition": {
+											"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-4,1.5rem) !important;\npadding-top: var(--spacer-4,1.5rem) !important;\n}",
+											"indexed": true,
+											"widgetInstance": {
+												"widgetConfig": {
+												},
+												"widgetName": "com_liferay_site_navigation_breadcrumb_web_portlet_SiteNavigationBreadcrumbPortlet"
+											}
+										},
+										"type": "Widget"
+									},
+									{
+										"definition": {
+											"gutters": true,
+											"indexed": true,
+											"modulesPerRow": 2,
+											"numberOfColumns": 2,
+											"reverseOrder": false,
+											"rowViewports": [
+												{
+													"id": "landscapeMobile",
+													"rowViewportDefinition": {
+														"modulesPerRow": 1,
+														"reverseOrder": false,
+														"verticalAlignment": "top"
+													}
+												},
+												{
+													"id": "portraitMobile",
+													"rowViewportDefinition": {
+														"modulesPerRow": 1,
+														"reverseOrder": false,
+														"verticalAlignment": "top"
+													}
+												},
+												{
+													"id": "tablet",
+													"rowViewportDefinition": {
+														"modulesPerRow": 2,
+														"reverseOrder": false,
+														"verticalAlignment": "top"
+													}
+												}
+											],
+											"verticalAlignment": "top"
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"columnViewports": [
+														{
+															"columnViewportDefinition": {
+																"size": 12
+															},
+															"id": "landscapeMobile"
+														},
+														{
+															"columnViewportDefinition": {
+																"size": 12
+															},
+															"id": "portraitMobile"
+														},
+														{
+															"columnViewportDefinition": {
+																"size": 9
+															},
+															"id": "tablet"
+														}
+													],
+													"size": 9
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"cssClasses": [
+																"component-flex",
+																"d-flex",
+																"align-items-start",
+																"justify-content-start"
+															],
+															"customCSS": "@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\ndisplay: block !important;\n}\n}",
+															"indexed": true,
+															"layout": {
+															}
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																	{
+																		"definition": {
+																			"customCSS": ".[$FRAGMENT_CLASS$] {\nheight: 80px !important;\nmargin-right: var(--spacer-3,1rem) !important;\nmargin-top: var(--spacer-2,0.5rem) !important;\nwidth: 100px !important;\n}",
+																			"fragment": {
+																				"key": "BASIC_COMPONENT-image"
+																			},
+																			"fragmentConfig": {
+																			},
+																			"fragmentFields": [
+																				{
+																					"id": "image-square",
+																					"value": {
+																						"fragmentImage": {
+																							"description": {
+																								"value_i18n": {
+																									"en_US": ""
+																								}
+																							},
+																							"url": {
+																								"value_i18n": {
+																									"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/sugarcrm-customer-portal/001.jpg$]"
+																								}
+																							}
+																						},
+																						"fragmentLink": {
+																						}
+																					}
+																				}
+																			],
+																			"indexed": true
+																		},
+																		"type": "Fragment"
+																	}
+																],
+																"type": "Section"
+															},
+															{
+																"definition": {
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																	{
+																		"definition": {
+																			"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-bolder) !important;\ncolor: var(--body-color) !important;\n}",
+																			"fragment": {
+																				"key": "text",
+																				"siteKey": "[$GROUP_KEY$]"
+																			},
+																			"fragmentConfig": {
+																				"fontSize": "font-size-heading-f1",
+																				"smallCaps": false,
+																				"tabletScreenCenter": false
+																			},
+																			"fragmentFields": [
+																				{
+																					"id": "text",
+																					"value": {
+																						"fragmentLink": {
+																						},
+																						"text": {
+																							"value_i18n": {
+																								"en_US": "SugarCRM Customer Portal"
+																							}
+																						}
+																					}
+																				}
+																			],
+																			"indexed": true
+																		},
+																		"type": "Fragment"
+																	},
+																	{
+																		"definition": {
+																			"cssClasses": [
+																				"component-flex",
+																				"d-flex",
+																				"align-items-start",
+																				"justify-content-start"
+																			],
+																			"indexed": true,
+																			"layout": {
+																			}
+																		},
+																		"pageElements": [
+																			{
+																				"definition": {
+																					"indexed": true,
+																					"layout": {
+																					}
+																				},
+																				"pageElements": [
+																					{
+																						"definition": {
+																							"customCSS": ".[$FRAGMENT_CLASS$] {\nwidth: 100px !important;\n}",
+																							"fragment": {
+																								"key": "BASIC_COMPONENT-image"
+																							},
+																							"fragmentConfig": {
+																							},
+																							"fragmentFields": [
+																								{
+																									"id": "image-square",
+																									"value": {
+																										"fragmentImage": {
+																											"description": {
+																												"value_i18n": {
+																													"en_US": ""
+																												}
+																											},
+																											"url": {
+																												"value_i18n": {
+																													"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/sugarcrm-customer-portal/002.png$]"
+																												}
+																											}
+																										},
+																										"fragmentLink": {
+																										}
+																									}
+																								}
+																							],
+																							"indexed": true
+																						},
+																						"type": "Fragment"
+																					}
+																				],
+																				"type": "Section"
+																			}
+																		],
+																		"type": "Section"
+																	}
+																],
+																"type": "Section"
+															}
+														],
+														"type": "Section"
+													}
+												],
+												"type": "Column"
+											},
+											{
+												"definition": {
+													"columnViewports": [
+														{
+															"columnViewportDefinition": {
+																"size": 12
+															},
+															"id": "landscapeMobile"
+														},
+														{
+															"columnViewportDefinition": {
+																"size": 12
+															},
+															"id": "portraitMobile"
+														},
+														{
+															"columnViewportDefinition": {
+																"size": 3
+															},
+															"id": "tablet"
+														}
+													],
+													"size": 3
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"cssClasses": [
+																"d-flex",
+																"justify-content-end"
+															],
+															"customCSS": "@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\ndisplay: none !important;\n}\n}\n@media screen and (max-width: 767px) {\n.[$FRAGMENT_CLASS$] {\ndisplay: none !important;\n}\n}",
+															"fragment": {
+																"key": "BASIC_COMPONENT-button"
+															},
+															"fragmentConfig": {
+															},
+															"fragmentFields": [
+																{
+																	"id": "link",
+																	"value": {
+																		"fragmentLink": {
+																			"value": {
+																				"href": {
+																					"value_i18n": {
+																						"en_US": "#solutions-details-form"
+																					}
+																				},
+																				"target": "Self"
+																			}
+																		},
+																		"text": {
+																			"value_i18n": {
+																				"en_US": "Contact Partner"
+																			}
+																		}
+																	}
+																}
+															],
+															"indexed": true
+														},
+														"type": "Fragment"
+													}
+												],
+												"type": "Column"
+											}
+										],
+										"type": "Row"
+									},
+									{
+										"definition": {
+											"fragment": {
+												"key": "BASIC_COMPONENT-spacer"
+											},
+											"fragmentConfig": {
+											},
+											"fragmentFields": [
+											],
+											"indexed": true
+										},
+										"type": "Fragment"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: #0B5FFF !important;\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}\n@media screen and (max-width: 767px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-4,1.5rem) !important;\npadding-right: var(--spacer-4,1.5rem) !important;\n}\n}",
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+									"indexed": true,
+									"layout": {
+										"widthType": "Fixed"
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"cssClasses": [
+												"dark",
+												"border-radius-none",
+												"p-0"
+											],
+											"customCSS": "@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"gutters": true,
+													"indexed": true,
+													"modulesPerRow": 2,
+													"numberOfColumns": 2,
+													"reverseOrder": false,
+													"rowViewports": [
+														{
+															"id": "landscapeMobile",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": true,
+																"verticalAlignment": "top"
+															}
+														},
+														{
+															"id": "portraitMobile",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": true,
+																"verticalAlignment": "top"
+															}
+														},
+														{
+															"id": "tablet",
+															"rowViewportDefinition": {
+																"modulesPerRow": 2,
+																"reverseOrder": false,
+																"verticalAlignment": "top"
+															}
+														}
+													],
+													"verticalAlignment": "top"
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"columnViewports": [
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "landscapeMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "portraitMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 6
+																	},
+																	"id": "tablet"
+																}
+															],
+															"size": 6
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-5,3rem) !important;\npadding-top: var(--spacer-5,3rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																],
+																"type": "Section"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-bolder) !important;\ncolor: var(--white) !important;\n}",
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-heading-f1",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "<h1><b id=\"docs-internal-guid-ceaa6563-7fff-61fd-8e79-0635070d0703\">The Perfect Customer Portal to complement your SugarCRM Solution</b></h1>"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-5,3rem) !important;\npadding-top: var(--spacer-5,3rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																],
+																"type": "Section"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\ncolor: var(--white) !important;\n}",
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-paragraph-large",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "<p>With our Customer Portal that is custom built to integrate perfectly with SugarCRM, you can create personalized and custom experiences to streamline and accelerate your business needs and increase self-services for your customers.&nbsp; All the data syncs seamlessly between your Customer Portal and SugarCRM for a unified solution.</p>"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-5,3rem) !important;\npadding-top: var(--spacer-5,3rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																],
+																"type": "Section"
+															}
+														],
+														"type": "Column"
+													},
+													{
+														"definition": {
+															"columnViewports": [
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "landscapeMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "portraitMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 6
+																	},
+																	"id": "tablet"
+																}
+															],
+															"size": 6
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-5,3rem) !important;\npadding-top: var(--spacer-5,3rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																],
+																"type": "Section"
+															},
+															{
+																"definition": {
+																	"fragment": {
+																		"key": "solutions-image-carousel",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"colorScheme": "dark",
+																		"imageAspectRatio": "aspect-ratio-4-to-3",
+																		"imageCarouselMaxWidth": "517px",
+																		"lazyLoadingImage": true,
+																		"numberOfImages": "4"
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "imageCarousel0",
+																			"value": {
+																				"fragmentImage": {
+																					"description": {
+																						"value_i18n": {
+																							"en_US": ""
+																						}
+																					},
+																					"url": {
+																						"value_i18n": {
+																							"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/sugarcrm-customer-portal/003.png$]"
+																						}
+																					}
+																				},
+																				"fragmentLink": {
+																				}
+																			}
+																		},
+																		{
+																			"id": "imageCarousel1",
+																			"value": {
+																				"fragmentImage": {
+																					"description": {
+																						"value_i18n": {
+																							"en_US": ""
+																						}
+																					},
+																					"url": {
+																						"value_i18n": {
+																							"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/sugarcrm-customer-portal/004.png$]"
+																						}
+																					}
+																				},
+																				"fragmentLink": {
+																				}
+																			}
+																		},
+																		{
+																			"id": "imageCarousel2",
+																			"value": {
+																				"fragmentImage": {
+																					"description": {
+																						"value_i18n": {
+																							"en_US": ""
+																						}
+																					},
+																					"url": {
+																						"value_i18n": {
+																							"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/sugarcrm-customer-portal/005.png$]"
+																						}
+																					}
+																				},
+																				"fragmentLink": {
+																				}
+																			}
+																		},
+																		{
+																			"id": "imageCarousel3",
+																			"value": {
+																				"fragmentImage": {
+																					"description": {
+																						"value_i18n": {
+																							"en_US": ""
+																						}
+																					},
+																					"url": {
+																						"value_i18n": {
+																							"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/sugarcrm-customer-portal/006.png$]"
+																						}
+																					}
+																				},
+																				"fragmentLink": {
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															}
+														],
+														"type": "Column"
+													}
+												],
+												"type": "Row"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: #f7f8f9 !important;\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+									"indexed": true,
+									"layout": {
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"cssClasses": [
+												"light",
+												"border-radius-none",
+												"container",
+												"p-0"
+											],
+											"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-9,9rem) !important;\npadding-top: var(--spacer-9,9rem) !important;\n}\n@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"gutters": true,
+													"indexed": true,
+													"modulesPerRow": 1,
+													"numberOfColumns": 1,
+													"reverseOrder": false,
+													"rowViewports": [
+														{
+															"id": "landscapeMobile",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": true,
+																"verticalAlignment": "top"
+															}
+														},
+														{
+															"id": "portraitMobile",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": true,
+																"verticalAlignment": "top"
+															}
+														},
+														{
+															"id": "tablet",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": false,
+																"verticalAlignment": "top"
+															}
+														}
+													],
+													"verticalAlignment": "top"
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"columnViewports": [
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "landscapeMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "portraitMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "tablet"
+																}
+															],
+															"size": 12
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-top: var(--spacer-4,1.5rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																],
+																"type": "Section"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-bolder) !important;\n}",
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-heading-f1",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "<span class=\"text-gray-dark\">Description:</span>"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-2,0.5rem) !important;\npadding-top: var(--spacer-2,0.5rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																],
+																"type": "Section"
+															},
+															{
+																"definition": {
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-paragraph-large",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "<p><span class=\"text-gray-dark\">SugarCRM is how marketing, sales, and service teams finally get a clear picture of each customer to help businesses reach new levels of performance and predictability. Sugar is the CRM platform that makes the hard things easier.<br>\n<br>\nThousands of companies in over 120 countries rely on Sugar to achieve high-definition CX by letting the platform do the work. Headquartered in the San Francisco Bay Area, Sugar is backed by Accel-KKR.&nbsp;<br>\n<br>\nLiferay’s Customer Portal marketplace solution will enable your customers via a user-friendly portal to communicate and receive real-time support from your SugarCRM stakeholders.&nbsp; Based on Liferay's powerful platform features, it has a continuously scalable architecture that is built around SugarCRM's framework and protocols, and enjoys a world-class enterprise solution with a high return on investment.</span></p>"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-2,0.5rem) !important;\npadding-top: var(--spacer-9,9rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																],
+																"type": "Section"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: var(--gray-200) !important;\ntext-align: center !important;\n}",
+																	"fragment": {
+																		"key": "BASIC_COMPONENT-image"
+																	},
+																	"fragmentConfig": {
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "image-square",
+																			"value": {
+																				"fragmentImage": {
+																					"description": {
+																						"value_i18n": {
+																							"en_US": ""
+																						}
+																					},
+																					"url": {
+																						"value_i18n": {
+																							"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/sugarcrm-customer-portal/007.png$]"
+																						}
+																					}
+																				},
+																				"fragmentLink": {
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-7,6rem) !important;\npadding-top: var(--spacer-7,6rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																],
+																"type": "Section"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-bolder) !important;\nmargin-bottom: var(--spacer-7,6rem) !important;\n}",
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-heading-f1",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "<span class=\"text-gray-dark\">Help You Customers Help Themselves with Liferay's SugarCRM Customer Portal</span>"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-bottom: var(--spacer-7,6rem) !important;\n}",
+																	"gutters": true,
+																	"indexed": true,
+																	"modulesPerRow": 3,
+																	"numberOfColumns": 3,
+																	"reverseOrder": false,
+																	"rowViewports": [
+																		{
+																			"id": "landscapeMobile",
+																			"rowViewportDefinition": {
+																				"modulesPerRow": 1,
+																				"reverseOrder": false,
+																				"verticalAlignment": "top"
+																			}
+																		},
+																		{
+																			"id": "portraitMobile",
+																			"rowViewportDefinition": {
+																				"modulesPerRow": 1,
+																				"reverseOrder": false,
+																				"verticalAlignment": "top"
+																			}
+																		},
+																		{
+																			"id": "tablet",
+																			"rowViewportDefinition": {
+																				"modulesPerRow": 3,
+																				"reverseOrder": false,
+																				"verticalAlignment": "top"
+																			}
+																		}
+																	],
+																	"verticalAlignment": "top"
+																},
+																"pageElements": [
+																	{
+																		"definition": {
+																			"columnViewports": [
+																				{
+																					"columnViewportDefinition": {
+																						"size": 12
+																					},
+																					"id": "landscapeMobile"
+																				},
+																				{
+																					"columnViewportDefinition": {
+																						"size": 12
+																					},
+																					"id": "portraitMobile"
+																				},
+																				{
+																					"columnViewportDefinition": {
+																						"size": 4
+																					},
+																					"id": "tablet"
+																				}
+																			],
+																			"size": 4
+																		},
+																		"pageElements": [
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-size: 12px !important;\nheight: 80px !important;\nmargin-bottom: var(--spacer-4,1.5rem) !important;\nmargin-left: var(--spacer-10,10rem) !important;\nmargin-right: var(--spacer-10,10rem) !important;\nmargin-top: var(--spacer-4,1.5rem) !important;\nwidth: 80px !important;\n}",
+																					"fragment": {
+																						"key": "BASIC_COMPONENT-image"
+																					},
+																					"fragmentConfig": {
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "image-square",
+																							"value": {
+																								"fragmentImage": {
+																									"description": {
+																										"value_i18n": {
+																											"en_US": ""
+																										}
+																									},
+																									"url": {
+																										"value_i18n": {
+																											"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/sugarcrm-customer-portal/008.png$]"
+																										}
+																									}
+																								},
+																								"fragmentLink": {
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			},
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-4,1.5rem) !important;\npadding-right: var(--spacer-4,1.5rem) !important;\n}",
+																					"indexed": true,
+																					"layout": {
+																					}
+																				},
+																				"pageElements": [
+																					{
+																						"definition": {
+																							"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-normal) !important;\nmargin-bottom: var(--spacer-4,1.5rem) !important;\nmargin-top: var(--spacer-2,0.5rem) !important;\npadding-left: var(--spacer-2,0.5rem) !important;\npadding-right: var(--spacer-2,0.5rem) !important;\ntext-align: center !important;\ncolor: var(--body-color) !important;\n}",
+																							"fragment": {
+																								"key": "text",
+																								"siteKey": "[$GROUP_KEY$]"
+																							},
+																							"fragmentConfig": {
+																								"fontSize": "font-size-heading-f2",
+																								"smallCaps": false,
+																								"tabletScreenCenter": false
+																							},
+																							"fragmentFields": [
+																								{
+																									"id": "text",
+																									"value": {
+																										"fragmentLink": {
+																										},
+																										"text": {
+																											"value_i18n": {
+																												"en_US": "Empower Customers to Find Their Own Answers"
+																											}
+																										}
+																									}
+																								}
+																							],
+																							"indexed": true
+																						},
+																						"type": "Fragment"
+																					},
+																					{
+																						"definition": {
+																							"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-normal) !important;\ntext-align: center !important;\ncolor: var(--body-color) !important;\n}",
+																							"fragment": {
+																								"key": "text",
+																								"siteKey": "[$GROUP_KEY$]"
+																							},
+																							"fragmentConfig": {
+																								"fontSize": "font-size-paragraph-base",
+																								"smallCaps": false,
+																								"tabletScreenCenter": false
+																							},
+																							"fragmentFields": [
+																								{
+																									"id": "text",
+																									"value": {
+																										"fragmentLink": {
+																										},
+																										"text": {
+																											"value_i18n": {
+																												"en_US": "<p dir=\"ltr\">Customer CRM portals are a great way to address common needs of your clients. These resources can include community forums, a FAQ section, or troubleshooting guides. Today, a significant number of customers, particularly those in younger age groups, have a preference for self-service. The younger generation is more likely to make use of FAQ pages to try and find solutions to their problems before they get in touch with customer service. As a result, self-service portals will be of particular appeal to this demographic.</p>\n\n<p dir=\"ltr\">Customers who are particularly impressed are also much more likely to leave positive reviews, discuss a company, and recommend it to the people they know.</p>"
+																											}
+																										}
+																									}
+																								}
+																							],
+																							"indexed": true
+																						},
+																						"type": "Fragment"
+																					}
+																				],
+																				"type": "Section"
+																			}
+																		],
+																		"type": "Column"
+																	},
+																	{
+																		"definition": {
+																			"columnViewports": [
+																				{
+																					"columnViewportDefinition": {
+																						"size": 12
+																					},
+																					"id": "landscapeMobile"
+																				},
+																				{
+																					"columnViewportDefinition": {
+																						"size": 12
+																					},
+																					"id": "portraitMobile"
+																				},
+																				{
+																					"columnViewportDefinition": {
+																						"size": 4
+																					},
+																					"id": "tablet"
+																				}
+																			],
+																			"size": 4
+																		},
+																		"pageElements": [
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-size: 12px !important;\nheight: 80px !important;\nmargin-bottom: var(--spacer-4,1.5rem) !important;\nmargin-left: var(--spacer-10,10rem) !important;\nmargin-right: var(--spacer-10,10rem) !important;\nmargin-top: var(--spacer-4,1.5rem) !important;\nwidth: 80px !important;\n}",
+																					"fragment": {
+																						"key": "BASIC_COMPONENT-image"
+																					},
+																					"fragmentConfig": {
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "image-square",
+																							"value": {
+																								"fragmentImage": {
+																									"description": {
+																										"value_i18n": {
+																											"en_US": ""
+																										}
+																									},
+																									"url": {
+																										"value_i18n": {
+																											"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/sugarcrm-customer-portal/009.png$]"
+																										}
+																									}
+																								},
+																								"fragmentLink": {
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			},
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-4,1.5rem) !important;\npadding-right: var(--spacer-4,1.5rem) !important;\n}",
+																					"indexed": true,
+																					"layout": {
+																					}
+																				},
+																				"pageElements": [
+																					{
+																						"definition": {
+																							"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-normal) !important;\nmargin-bottom: var(--spacer-4,1.5rem) !important;\nmargin-top: var(--spacer-2,0.5rem) !important;\npadding-left: var(--spacer-2,0.5rem) !important;\npadding-right: var(--spacer-2,0.5rem) !important;\ntext-align: center !important;\ncolor: var(--body-color) !important;\n}",
+																							"fragment": {
+																								"key": "text",
+																								"siteKey": "[$GROUP_KEY$]"
+																							},
+																							"fragmentConfig": {
+																								"fontSize": "font-size-heading-f2",
+																								"smallCaps": false,
+																								"tabletScreenCenter": false
+																							},
+																							"fragmentFields": [
+																								{
+																									"id": "text",
+																									"value": {
+																										"fragmentLink": {
+																										},
+																										"text": {
+																											"value_i18n": {
+																												"en_US": "Reduce the Number of Customer Service Tickets"
+																											}
+																										}
+																									}
+																								}
+																							],
+																							"indexed": true
+																						},
+																						"type": "Fragment"
+																					},
+																					{
+																						"definition": {
+																							"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-normal) !important;\ntext-align: center !important;\n}",
+																							"fragment": {
+																								"key": "text",
+																								"siteKey": "[$GROUP_KEY$]"
+																							},
+																							"fragmentConfig": {
+																								"fontSize": "font-size-paragraph-base",
+																								"smallCaps": false,
+																								"tabletScreenCenter": false
+																							},
+																							"fragmentFields": [
+																								{
+																									"id": "text",
+																									"value": {
+																										"fragmentLink": {
+																										},
+																										"text": {
+																											"value_i18n": {
+																												"en_US": "<p>Each time a customer interacts 1:1 with an employee, your business spends both time and money on that interaction. Our portals allow the customer to immediately address their challenges, helping to reduce significant investments of time from your employees.</p>"
+																											}
+																										}
+																									}
+																								}
+																							],
+																							"indexed": true
+																						},
+																						"type": "Fragment"
+																					}
+																				],
+																				"type": "Section"
+																			}
+																		],
+																		"type": "Column"
+																	},
+																	{
+																		"definition": {
+																			"columnViewports": [
+																				{
+																					"columnViewportDefinition": {
+																						"size": 12
+																					},
+																					"id": "landscapeMobile"
+																				},
+																				{
+																					"columnViewportDefinition": {
+																						"size": 12
+																					},
+																					"id": "portraitMobile"
+																				},
+																				{
+																					"columnViewportDefinition": {
+																						"size": 4
+																					},
+																					"id": "tablet"
+																				}
+																			],
+																			"size": 4
+																		},
+																		"pageElements": [
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-size: 12px !important;\nheight: 80px !important;\nmargin-bottom: var(--spacer-4,1.5rem) !important;\nmargin-left: var(--spacer-10,10rem) !important;\nmargin-right: var(--spacer-10,10rem) !important;\nmargin-top: var(--spacer-4,1.5rem) !important;\nwidth: 80px !important;\n}",
+																					"fragment": {
+																						"key": "BASIC_COMPONENT-image"
+																					},
+																					"fragmentConfig": {
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "image-square",
+																							"value": {
+																								"fragmentImage": {
+																									"description": {
+																										"value_i18n": {
+																											"en_US": ""
+																										}
+																									},
+																									"url": {
+																										"value_i18n": {
+																											"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/sugarcrm-customer-portal/010.png$]"
+																										}
+																									}
+																								},
+																								"fragmentLink": {
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			},
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-4,1.5rem) !important;\npadding-right: var(--spacer-4,1.5rem) !important;\n}",
+																					"indexed": true,
+																					"layout": {
+																					}
+																				},
+																				"pageElements": [
+																					{
+																						"definition": {
+																							"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-normal) !important;\nmargin-bottom: var(--spacer-4,1.5rem) !important;\nmargin-top: var(--spacer-2,0.5rem) !important;\npadding-left: var(--spacer-2,0.5rem) !important;\npadding-right: var(--spacer-2,0.5rem) !important;\ntext-align: center !important;\ncolor: var(--body-color) !important;\n}",
+																							"fragment": {
+																								"key": "text",
+																								"siteKey": "[$GROUP_KEY$]"
+																							},
+																							"fragmentConfig": {
+																								"fontSize": "font-size-heading-f2",
+																								"smallCaps": false,
+																								"tabletScreenCenter": false
+																							},
+																							"fragmentFields": [
+																								{
+																									"id": "text",
+																									"value": {
+																										"fragmentLink": {
+																										},
+																										"text": {
+																											"value_i18n": {
+																												"en_US": "Give Customers Visibility to Account Information"
+																											}
+																										}
+																									}
+																								}
+																							],
+																							"indexed": true
+																						},
+																						"type": "Fragment"
+																					},
+																					{
+																						"definition": {
+																							"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-normal) !important;\ntext-align: center !important;\n}",
+																							"fragment": {
+																								"key": "text",
+																								"siteKey": "[$GROUP_KEY$]"
+																							},
+																							"fragmentConfig": {
+																								"fontSize": "font-size-paragraph-base",
+																								"smallCaps": false,
+																								"tabletScreenCenter": false
+																							},
+																							"fragmentFields": [
+																								{
+																									"id": "text",
+																									"value": {
+																										"fragmentLink": {
+																										},
+																										"text": {
+																											"value_i18n": {
+																												"en_US": "<p>Customers can keep track of their historical interactions and receive automated updates on tickets they’ve logged to their account. They can also retrieve past information about products or services they have purchased. With account visibility, they’re able to simply log in and check the status of an item at their convenience whilst also having access to other important account features such as contact details, password resets, and more.</p>"
+																											}
+																										}
+																									}
+																								}
+																							],
+																							"indexed": true
+																						},
+																						"type": "Fragment"
+																					}
+																				],
+																				"type": "Section"
+																			}
+																		],
+																		"type": "Column"
+																	}
+																],
+																"type": "Row"
+															},
+															{
+																"definition": {
+																	"gutters": true,
+																	"indexed": true,
+																	"modulesPerRow": 2,
+																	"numberOfColumns": 2,
+																	"reverseOrder": false,
+																	"rowViewports": [
+																		{
+																			"id": "landscapeMobile",
+																			"rowViewportDefinition": {
+																				"modulesPerRow": 1,
+																				"reverseOrder": false,
+																				"verticalAlignment": "top"
+																			}
+																		},
+																		{
+																			"id": "portraitMobile",
+																			"rowViewportDefinition": {
+																				"modulesPerRow": 1,
+																				"reverseOrder": false,
+																				"verticalAlignment": "top"
+																			}
+																		},
+																		{
+																			"id": "tablet",
+																			"rowViewportDefinition": {
+																				"modulesPerRow": 2,
+																				"reverseOrder": false,
+																				"verticalAlignment": "top"
+																			}
+																		}
+																	],
+																	"verticalAlignment": "top"
+																},
+																"pageElements": [
+																	{
+																		"definition": {
+																			"columnViewports": [
+																				{
+																					"columnViewportDefinition": {
+																						"size": 12
+																					},
+																					"id": "landscapeMobile"
+																				},
+																				{
+																					"columnViewportDefinition": {
+																						"size": 12
+																					},
+																					"id": "portraitMobile"
+																				},
+																				{
+																					"columnViewportDefinition": {
+																						"size": 6
+																					},
+																					"id": "tablet"
+																				}
+																			],
+																			"size": 6
+																		},
+																		"pageElements": [
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-size: 12px !important;\nheight: 80px !important;\nmargin-bottom: var(--spacer-4,1.5rem) !important;\nmargin-left: var(--spacer-10,10rem) !important;\nmargin-right: var(--spacer-10,10rem) !important;\nmargin-top: var(--spacer-4,1.5rem) !important;\nwidth: 80px !important;\n}",
+																					"fragment": {
+																						"key": "BASIC_COMPONENT-image"
+																					},
+																					"fragmentConfig": {
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "image-square",
+																							"value": {
+																								"fragmentImage": {
+																									"description": {
+																										"value_i18n": {
+																											"en_US": ""
+																										}
+																									},
+																									"url": {
+																										"value_i18n": {
+																											"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/sugarcrm-customer-portal/011.png$]"
+																										}
+																									}
+																								},
+																								"fragmentLink": {
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			},
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-4,1.5rem) !important;\npadding-right: var(--spacer-4,1.5rem) !important;\n}",
+																					"indexed": true,
+																					"layout": {
+																					}
+																				},
+																				"pageElements": [
+																					{
+																						"definition": {
+																							"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-normal) !important;\nmargin-bottom: var(--spacer-4,1.5rem) !important;\nmargin-top: var(--spacer-2,0.5rem) !important;\npadding-left: var(--spacer-2,0.5rem) !important;\npadding-right: var(--spacer-2,0.5rem) !important;\ntext-align: center !important;\ncolor: var(--body-color) !important;\n}",
+																							"fragment": {
+																								"key": "text",
+																								"siteKey": "[$GROUP_KEY$]"
+																							},
+																							"fragmentConfig": {
+																								"fontSize": "font-size-heading-f2",
+																								"smallCaps": false,
+																								"tabletScreenCenter": false
+																							},
+																							"fragmentFields": [
+																								{
+																									"id": "text",
+																									"value": {
+																										"fragmentLink": {
+																										},
+																										"text": {
+																											"value_i18n": {
+																												"en_US": "Provide 24-Hour Customer Service"
+																											}
+																										}
+																									}
+																								}
+																							],
+																							"indexed": true
+																						},
+																						"type": "Fragment"
+																					},
+																					{
+																						"definition": {
+																							"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-normal) !important;\ntext-align: center !important;\n}",
+																							"fragment": {
+																								"key": "text",
+																								"siteKey": "[$GROUP_KEY$]"
+																							},
+																							"fragmentConfig": {
+																								"fontSize": "font-size-paragraph-base",
+																								"smallCaps": false,
+																								"tabletScreenCenter": false
+																							},
+																							"fragmentFields": [
+																								{
+																									"id": "text",
+																									"value": {
+																										"fragmentLink": {
+																										},
+																										"text": {
+																											"value_i18n": {
+																												"en_US": "<p>Even when your business is technically offline, a customer CRM portal can be accessible at any moment. This allows customers to get the answers and resolutions in urgent situations at a time that’s most convenient for them.</p>"
+																											}
+																										}
+																									}
+																								}
+																							],
+																							"indexed": true
+																						},
+																						"type": "Fragment"
+																					}
+																				],
+																				"type": "Section"
+																			}
+																		],
+																		"type": "Column"
+																	},
+																	{
+																		"definition": {
+																			"columnViewports": [
+																				{
+																					"columnViewportDefinition": {
+																						"size": 12
+																					},
+																					"id": "landscapeMobile"
+																				},
+																				{
+																					"columnViewportDefinition": {
+																						"size": 12
+																					},
+																					"id": "portraitMobile"
+																				},
+																				{
+																					"columnViewportDefinition": {
+																						"size": 6
+																					},
+																					"id": "tablet"
+																				}
+																			],
+																			"size": 6
+																		},
+																		"pageElements": [
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-size: 12px !important;\nheight: 80px !important;\nmargin-bottom: var(--spacer-4,1.5rem) !important;\nmargin-left: var(--spacer-10,10rem) !important;\nmargin-right: var(--spacer-10,10rem) !important;\nmargin-top: var(--spacer-4,1.5rem) !important;\nwidth: 80px !important;\n}",
+																					"fragment": {
+																						"key": "BASIC_COMPONENT-image"
+																					},
+																					"fragmentConfig": {
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "image-square",
+																							"value": {
+																								"fragmentImage": {
+																									"description": {
+																										"value_i18n": {
+																											"en_US": ""
+																										}
+																									},
+																									"url": {
+																										"value_i18n": {
+																											"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/sugarcrm-customer-portal/012.png$]"
+																										}
+																									}
+																								},
+																								"fragmentLink": {
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			},
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-4,1.5rem) !important;\npadding-right: var(--spacer-4,1.5rem) !important;\n}",
+																					"indexed": true,
+																					"layout": {
+																					}
+																				},
+																				"pageElements": [
+																					{
+																						"definition": {
+																							"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-normal) !important;\nmargin-bottom: var(--spacer-4,1.5rem) !important;\nmargin-top: var(--spacer-2,0.5rem) !important;\npadding-left: var(--spacer-2,0.5rem) !important;\npadding-right: var(--spacer-2,0.5rem) !important;\ntext-align: center !important;\ncolor: var(--body-color) !important;\n}",
+																							"fragment": {
+																								"key": "text",
+																								"siteKey": "[$GROUP_KEY$]"
+																							},
+																							"fragmentConfig": {
+																								"fontSize": "font-size-heading-f2",
+																								"smallCaps": false,
+																								"tabletScreenCenter": false
+																							},
+																							"fragmentFields": [
+																								{
+																									"id": "text",
+																									"value": {
+																										"fragmentLink": {
+																										},
+																										"text": {
+																											"value_i18n": {
+																												"en_US": "Consistently Deliver Content For Customers"
+																											}
+																										}
+																									}
+																								}
+																							],
+																							"indexed": true
+																						},
+																						"type": "Fragment"
+																					},
+																					{
+																						"definition": {
+																							"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-normal) !important;\ntext-align: center !important;\n}",
+																							"fragment": {
+																								"key": "text",
+																								"siteKey": "[$GROUP_KEY$]"
+																							},
+																							"fragmentConfig": {
+																								"fontSize": "font-size-paragraph-base",
+																								"smallCaps": false,
+																								"tabletScreenCenter": false
+																							},
+																							"fragmentFields": [
+																								{
+																									"id": "text",
+																									"value": {
+																										"fragmentLink": {
+																										},
+																										"text": {
+																											"value_i18n": {
+																												"en_US": "<p>One of the key benefits of our customer portals is having a unified channel to deliver content, ensuring customers know exactly where to go when looking for useful content. When customers are able to easily navigate and find the content that solves their issue or answers their question, it will encourage greater levels of interaction with your business and help them to gain a greater understanding of the nature of the products and services that your company provides.</p>"
+																											}
+																										}
+																									}
+																								}
+																							],
+																							"indexed": true
+																						},
+																						"type": "Fragment"
+																					}
+																				],
+																				"type": "Section"
+																			}
+																		],
+																		"type": "Column"
+																	}
+																],
+																"type": "Row"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-top: var(--spacer-7,6rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																],
+																"type": "Section"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-5,3rem) !important;\npadding-top: var(--spacer-5,3rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																],
+																"type": "Section"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-bolder) !important;\n}",
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-heading-f1",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "Features"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-4,1.5rem) !important;\npadding-top: var(--spacer-4,1.5rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																],
+																"type": "Section"
+															},
+															{
+																"definition": {
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-paragraph-large",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "<ul>\n\t<li><b id=\"docs-internal-guid-771e1c79-7fff-26c1-bcdb-3faca4dd8be3\">Quote Management Systems</b><br>\n\tCreate quotes quickly and easily streamline your sales cycle and increase deal velocity with our CRM quotation software for small and large businesses.<br>\n\t </li>\n\t<li><b id=\"docs-internal-guid-771e1c79-7fff-26c1-bcdb-3faca4dd8be3\">CRM Reporting &amp; Dashboards</b><br>\n\tMonitor your marketing, sales and customer support metrics with Sugar’s Dashboards. Use Sugar Reports to turn your data into insights. Manage existing relationships better and build new ones – one customer at a time.<br>\n\t </li>\n\t<li><b id=\"docs-internal-guid-771e1c79-7fff-26c1-bcdb-3faca4dd8be3\">Case Management and Bug Tracking Solution</b><br>\n\tMake it easy for your users to present a unified view of your organization to your customers. Empower your support team to better manage customer support requests through our case management system that facilitates streamlined information sharing and case routing.<br>\n\t </li>\n\t<li><b id=\"docs-internal-guid-771e1c79-7fff-26c1-bcdb-3faca4dd8be3\">Activity Streams</b><br>\n\tImprove social collaboration among CRM users with personalized updates. CRM Activity Streams are available on the home page or at the module and record level so each user can learn and act on the most relevant information.<br>\n\t </li>\n\t<li><b id=\"docs-internal-guid-771e1c79-7fff-26c1-bcdb-3faca4dd8be3\">Search, Filters and Tagging</b><br>\n\tSugar makes finding the information you need easy so that you can spend more time acting on information and less time looking for information.<br>\n\t </li>\n\t<li><b id=\"docs-internal-guid-771e1c79-7fff-26c1-bcdb-3faca4dd8be3\">Connect On Customer Terms</b><br>\n\tReply to customer emails and customer support queries with ease. Embed omnichannel customer communications seamlessly into a single service console UI to streamline support, improve customer service experience, and reduce costs.<br>\n\t </li>\n\t<li><b id=\"docs-internal-guid-771e1c79-7fff-26c1-bcdb-3faca4dd8be3\">See Every Issue At A Glance</b><br>\n\tEmpower your customer service team to be more productive with a powerful console that intelligently prioritizes customer issues by SLA, priority, and severity. Our customer support software puts all the information and tools needed to resolve cases at their fingertips.<br>\n\t </li>\n\t<li><b id=\"docs-internal-guid-771e1c79-7fff-26c1-bcdb-3faca4dd8be3\">Take Your Customer’s Temperature</b><br>\n\tKnow your customer relationships, including their outlook and attitude towards you, while understanding your agents’ demeanor with your customers by using SugarPredict-powered sentiment analysis.<br>\n\t </li>\n\t<li><b id=\"docs-internal-guid-771e1c79-7fff-26c1-bcdb-3faca4dd8be3\">Let The Platform Route The Cases</b><br>\n\tRoute inbound customer requests to the right person automatically. Whether you need to escalate a case or reassign it when too much time has passed, SugarBPM™ ensures no customer gets left behind.</li>\n</ul>"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-5,3rem) !important;\npadding-top: var(--spacer-5,3rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																],
+																"type": "Section"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-bolder) !important;\n}",
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-heading-f4",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "Company Profile"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															},
+															{
+																"definition": {
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-paragraph-large",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "<p dir=\"ltr\"><strong>Liferay&nbsp;</strong>helps organizations meet their unique challenges by creating innovative, customer-centered experiences on our cloud-powered digital experience platform (DXP). Our platform is open source, which makes it more reliable and secure. Over a thousand organizations in financial services, insurance, manufacturing, healthcare and government use Liferay worldwide.<br>\n<br>\nOur goal is to help companies reach their full potential to serve others, and we try to leave a positive mark on the world through our business and technology.</p>\nWebsite<br>\n<a href=\"https://www.liferay.com/\">https://www.liferay.com</a>&nbsp;<br>\n<br>\nEmail<br>\n<b id=\"docs-internal-guid-5fb90018-7fff-2d4e-097d-84002448e79a\"><a href=\"mailto:sales@liferay.com\">sales@liferay.com</a></b>"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															}
+														],
+														"type": "Column"
+													}
+												],
+												"type": "Row"
+											},
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-2,0.5rem) !important;\npadding-top: var(--spacer-3,1rem) !important;\n}",
+													"indexed": true,
+													"layout": {
+													}
+												},
+												"pageElements": [
+												],
+												"type": "Section"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\nmargin-bottom: var(--spacer-6,4.5rem) !important;\nmargin-top: var(--spacer-6,4.5rem) !important;\n}\n@media screen and (max-width: 767px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-4,1.5rem) !important;\npadding-right: var(--spacer-4,1.5rem) !important;\n}\n}",
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+									"indexed": true,
+									"layout": {
+										"widthType": "Fixed"
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"cssClasses": [
+												"dark",
+												"border-radius-none",
+												"p-0"
+											],
+											"customCSS": "@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-7,6rem) !important;\npadding-top: var(--spacer-7,6rem) !important;\n}",
+													"gutters": true,
+													"indexed": true,
+													"modulesPerRow": 2,
+													"numberOfColumns": 2,
+													"reverseOrder": false,
+													"rowViewports": [
+														{
+															"id": "landscapeMobile",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": true,
+																"verticalAlignment": "top"
+															}
+														},
+														{
+															"id": "portraitMobile",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": true,
+																"verticalAlignment": "top"
+															}
+														},
+														{
+															"id": "tablet",
+															"rowViewportDefinition": {
+																"modulesPerRow": 2,
+																"reverseOrder": false,
+																"verticalAlignment": "top"
+															}
+														}
+													],
+													"verticalAlignment": "top"
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"columnViewports": [
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "landscapeMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "portraitMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 6
+																	},
+																	"id": "tablet"
+																}
+															],
+															"size": 6
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-7,6rem) !important;\n}",
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-paragraph-base",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "<h1><span class=\"text-gray-dark\">Boost sales and customer satisfaction with Liferay and SugarCRM</span></h1>"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\ncolor: var(--white) !important;\n}",
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-paragraph-large",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "<p><span class=\"text-gray-dark\">Discover how Liferay and SugarCRM can transform your business. Together, we unlock the full potential of your customer data, delivering personalized experiences that drive loyalty.</span></p>"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															}
+														],
+														"type": "Column"
+													},
+													{
+														"definition": {
+															"columnViewports": [
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "landscapeMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "portraitMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 6
+																	},
+																	"id": "tablet"
+																}
+															],
+															"size": 6
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-radius: 10px !important;\noverflow: hidden !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																	{
+																		"definition": {
+																			"fragment": {
+																				"key": "BASIC_COMPONENT-external-video"
+																			},
+																			"fragmentConfig": {
+																				"align": "flex-start",
+																				"video": "{\"html\":\"<iframe allow=\\\"autoplay; encrypted-media\\\" allowfullscreen height=\\\"315\\\" frameborder=\\\"0\\\" src=\\\"https://www.youtube.com/embed/5YnG-5uDSzU?rel=0\\\" width=\\\"560\\\"></iframe>\",\"title\":\"Boost Sales and Customer Satisfaction with Liferay and SugarCRM\",\"type\":\"com.liferay.item.selector.criteria.VideoEmbeddableHTMLItemSelectorReturnType\"}",
+																				"videoHeight": "",
+																				"videoWidth": ""
+																			},
+																			"fragmentFields": [
+																			],
+																			"indexed": true
+																		},
+																		"type": "Fragment"
+																	}
+																],
+																"type": "Section"
+															}
+														],
+														"type": "Column"
+													}
+												],
+												"type": "Row"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: #f7f8f9 !important;\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+									"indexed": true,
+									"layout": {
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"cssClasses": [
+												"light",
+												"border-radius-none",
+												"container",
+												"p-0"
+											],
+											"customCSS": ".[$FRAGMENT_CLASS$] {background-position: center; background-repeat: no-repeat; background-size: cover;}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-2,0.5rem) !important;\npadding-top: var(--spacer-9,9rem) !important;\n}",
+													"indexed": true,
+													"layout": {
+													}
+												},
+												"pageElements": [
+												],
+												"type": "Section"
+											},
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-bolder) !important;\ncolor: var(--brand-color-4) !important;\n}\n@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+													"fragment": {
+														"key": "text",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"fontSize": "font-size-heading-f1",
+														"smallCaps": false,
+														"tabletScreenCenter": false
+													},
+													"fragmentFields": [
+														{
+															"id": "text",
+															"value": {
+																"fragmentLink": {
+																},
+																"text": {
+																	"value_i18n": {
+																		"en_US": "Contact Us"
+																	}
+																}
+															}
+														}
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											},
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-2,0.5rem) !important;\npadding-top: var(--spacer-2,0.5rem) !important;\n}",
+													"indexed": true,
+													"layout": {
+													}
+												},
+												"pageElements": [
+												],
+												"type": "Section"
+											},
+											{
+												"definition": {
+													"fragment": {
+														"key": "marketo-form",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"formId": "2786",
+														"munchkinId": "212-DQY-814",
+														"podId": "//pages.liferay.com",
+														"redirectUrl": "https://marketplace.liferay.com/solutions-thank-you",
+														"submitButtonText": "Submit"
+													},
+													"fragmentFields": [
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											},
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-2,0.5rem) !important;\npadding-top: var(--spacer-9,9rem) !important;\n}",
+													"indexed": true,
+													"layout": {
+													}
+												},
+												"pageElements": [
+												],
+												"type": "Section"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					}
+				],
+				"type": "Section"
+			}
+		],
+		"type": "Root"
+	},
+	"settings": {
+		"masterPage": {
+			"key": "liferay-one"
+		}
+	},
+	"version": 1.1
+}

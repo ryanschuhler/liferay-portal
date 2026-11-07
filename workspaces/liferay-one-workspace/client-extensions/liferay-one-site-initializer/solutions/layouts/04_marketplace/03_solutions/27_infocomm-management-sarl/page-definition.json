@@ -1,0 +1,1287 @@
+{
+	"pageElement": {
+		"pageElements": [
+			{
+				"definition": {
+					"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}\n@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-0,0rem) !important;\npadding-right: var(--spacer-0,0rem) !important;\n}\n}",
+					"indexed": true,
+					"layout": {
+					}
+				},
+				"pageElements": [
+					{
+						"definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: #F4F6F9 !important;\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}\n@media screen and (max-width: 767px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-4,1.5rem) !important;\npadding-right: var(--spacer-4,1.5rem) !important;\n}\n}",
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"cssClasses": [
+										"light",
+										"border-radius-none",
+										"container",
+										"p-0"
+									],
+									"customCSS": "@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+									"indexed": true,
+									"layout": {
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"customCSS": ".[$FRAGMENT_CLASS$] {\ndisplay: none !important;\npadding-bottom: var(--spacer-4,1.5rem) !important;\npadding-top: var(--spacer-4,1.5rem) !important;\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+										],
+										"type": "Section"
+									},
+									{
+										"definition": {
+											"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-4,1.5rem) !important;\npadding-top: var(--spacer-4,1.5rem) !important;\n}",
+											"indexed": true,
+											"widgetInstance": {
+												"widgetConfig": {
+												},
+												"widgetName": "com_liferay_site_navigation_breadcrumb_web_portlet_SiteNavigationBreadcrumbPortlet"
+											}
+										},
+										"type": "Widget"
+									},
+									{
+										"definition": {
+											"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-9,9rem) !important;\n}",
+											"gutters": true,
+											"indexed": true,
+											"modulesPerRow": 2,
+											"numberOfColumns": 2,
+											"reverseOrder": false,
+											"rowViewports": [
+												{
+													"id": "landscapeMobile",
+													"rowViewportDefinition": {
+														"modulesPerRow": 1,
+														"reverseOrder": false,
+														"verticalAlignment": "top"
+													}
+												},
+												{
+													"id": "portraitMobile",
+													"rowViewportDefinition": {
+														"modulesPerRow": 1,
+														"reverseOrder": false,
+														"verticalAlignment": "top"
+													}
+												},
+												{
+													"id": "tablet",
+													"rowViewportDefinition": {
+														"modulesPerRow": 2,
+														"reverseOrder": false,
+														"verticalAlignment": "top"
+													}
+												}
+											],
+											"verticalAlignment": "top"
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"columnViewports": [
+														{
+															"columnViewportDefinition": {
+																"size": 12
+															},
+															"id": "landscapeMobile"
+														},
+														{
+															"columnViewportDefinition": {
+																"size": 12
+															},
+															"id": "portraitMobile"
+														},
+														{
+															"columnViewportDefinition": {
+																"size": 8
+															},
+															"id": "tablet"
+														}
+													],
+													"size": 8
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"cssClasses": [
+																"component-flex",
+																"d-flex",
+																"align-items-start",
+																"justify-content-start"
+															],
+															"customCSS": "@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\ndisplay: block !important;\n}\n}",
+															"indexed": true,
+															"layout": {
+															}
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																	{
+																		"definition": {
+																			"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-right: var(--spacer-3,1rem) !important;\nmargin-top: var(--spacer-2,0.5rem) !important;\nwidth: 110px !important;\n}",
+																			"fragment": {
+																				"key": "BASIC_COMPONENT-image"
+																			},
+																			"fragmentConfig": {
+																			},
+																			"fragmentFields": [
+																				{
+																					"id": "image-square",
+																					"value": {
+																						"fragmentImage": {
+																							"description": {
+																								"value_i18n": {
+																									"en_US": ""
+																								}
+																							},
+																							"url": {
+																								"value_i18n": {
+																									"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/infocomm-management-sarl/001.png$]"
+																								}
+																							}
+																						},
+																						"fragmentLink": {
+																						}
+																					}
+																				}
+																			],
+																			"indexed": true
+																		},
+																		"type": "Fragment"
+																	}
+																],
+																"type": "Section"
+															},
+															{
+																"definition": {
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																	{
+																		"definition": {
+																			"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-bolder) !important;\ncolor: var(--body-color) !important;\n}",
+																			"fragment": {
+																				"key": "text",
+																				"siteKey": "[$GROUP_KEY$]"
+																			},
+																			"fragmentConfig": {
+																				"fontSize": "font-size-heading-f1",
+																				"smallCaps": false,
+																				"tabletScreenCenter": false
+																			},
+																			"fragmentFields": [
+																				{
+																					"id": "text",
+																					"value": {
+																						"fragmentLink": {
+																						},
+																						"text": {
+																							"value_i18n": {
+																								"en_US": "<p><strong data-renderer-mark=\"true\">Microsoft Power BI connector for Liferay</strong></p>"
+																							}
+																						}
+																					}
+																				}
+																			],
+																			"indexed": true
+																		},
+																		"type": "Fragment"
+																	},
+																	{
+																		"definition": {
+																			"cssClasses": [
+																				"component-flex",
+																				"d-flex",
+																				"align-items-start",
+																				"justify-content-start"
+																			],
+																			"indexed": true,
+																			"layout": {
+																			}
+																		},
+																		"pageElements": [
+																			{
+																				"definition": {
+																					"indexed": true,
+																					"layout": {
+																					}
+																				},
+																				"pageElements": [
+																					{
+																						"definition": {
+																							"customCSS": ".[$FRAGMENT_CLASS$] {\nwidth: 130px !important;\n}",
+																							"fragment": {
+																								"key": "BASIC_COMPONENT-image"
+																							},
+																							"fragmentConfig": {
+																							},
+																							"fragmentFields": [
+																								{
+																									"id": "image-square",
+																									"value": {
+																										"fragmentImage": {
+																											"description": {
+																												"value_i18n": {
+																													"en_US": ""
+																												}
+																											},
+																											"url": {
+																												"value_i18n": {
+																													"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/infocomm-management-sarl/002.jpg$]"
+																												}
+																											}
+																										},
+																										"fragmentLink": {
+																										}
+																									}
+																								}
+																							],
+																							"indexed": true
+																						},
+																						"type": "Fragment"
+																					}
+																				],
+																				"type": "Section"
+																			}
+																		],
+																		"type": "Section"
+																	}
+																],
+																"type": "Section"
+															}
+														],
+														"type": "Section"
+													}
+												],
+												"type": "Column"
+											},
+											{
+												"definition": {
+													"columnViewports": [
+														{
+															"columnViewportDefinition": {
+																"size": 12
+															},
+															"id": "landscapeMobile"
+														},
+														{
+															"columnViewportDefinition": {
+																"size": 12
+															},
+															"id": "portraitMobile"
+														},
+														{
+															"columnViewportDefinition": {
+																"size": 4
+															},
+															"id": "tablet"
+														}
+													],
+													"size": 4
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"cssClasses": [
+																"component-flex",
+																"d-flex",
+																"align-items-center",
+																"justify-content-end"
+															],
+															"customCSS": "@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\ndisplay: none !important;\n}\n}",
+															"indexed": true,
+															"layout": {
+															}
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																	{
+																		"definition": {
+																			"customCSS": ".[$FRAGMENT_CLASS$] p {\nmargin: 0;\npadding: 0\n}",
+																			"fragment": {
+																				"key": "BASIC_COMPONENT-button"
+																			},
+																			"fragmentConfig": {
+																			},
+																			"fragmentFields": [
+																				{
+																					"id": "link",
+																					"value": {
+																						"fragmentLink": {
+																							"value": {
+																								"href": {
+																									"value_i18n": {
+																										"en_US": "#solutions-details-form"
+																									}
+																								},
+																								"target": "Self"
+																							}
+																						},
+																						"text": {
+																							"value_i18n": {
+																								"en_US": "Contact Partner"
+																							}
+																						}
+																					}
+																				}
+																			],
+																			"indexed": true
+																		},
+																		"type": "Fragment"
+																	}
+																],
+																"type": "Section"
+															}
+														],
+														"type": "Section"
+													}
+												],
+												"type": "Column"
+											}
+										],
+										"type": "Row"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: #0B5FFF !important;\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\npadding-bottom: var(--spacer-9,9rem) !important;\npadding-top: var(--spacer-9,9rem) !important;\n}\n@media screen and (max-width: 767px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-4,1.5rem) !important;\npadding-right: var(--spacer-4,1.5rem) !important;\n}\n}",
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+									"indexed": true,
+									"layout": {
+										"widthType": "Fixed"
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"cssClasses": [
+												"dark",
+												"border-radius-none",
+												"p-0"
+											],
+											"customCSS": "@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-size: 20px !important;\n}",
+													"gutters": true,
+													"indexed": true,
+													"modulesPerRow": 2,
+													"numberOfColumns": 2,
+													"reverseOrder": false,
+													"rowViewports": [
+														{
+															"id": "landscapeMobile",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": true,
+																"verticalAlignment": "middle"
+															}
+														},
+														{
+															"id": "portraitMobile",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": false,
+																"verticalAlignment": "middle"
+															}
+														},
+														{
+															"id": "tablet",
+															"rowViewportDefinition": {
+																"modulesPerRow": 2,
+																"reverseOrder": false,
+																"verticalAlignment": "middle"
+															}
+														}
+													],
+													"verticalAlignment": "middle"
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"columnViewports": [
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "landscapeMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "portraitMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 7
+																	},
+																	"id": "tablet"
+																}
+															],
+															"size": 7
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-size: 32px !important;\nfont-weight: var(--font-weight-bolder) !important;\nmargin-bottom: var(--spacer-4,1.5rem) !important;\ntext-align: justify !important;\ncolor: var(--white) !important;\n}",
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-paragraph-base",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "<p><b data-stringify-type=\"bold\">Application for publishing Microsoft Power BI reports</b></p>"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\ncolor: var(--white) !important;\n}",
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-paragraph-large",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "<p>Publication of reports created and managed with Microsoft Fabric Power BI and made available on the Internet/intranet/extranet via Liferay DXP/Portal.</p>\n\n<p><br>\nWe provide the standalone application to be installed on your Liferay DXP/Portal up to the complete setup of the website/mobile to show your Microsoft Power BI reports.</p>\n\n<p><br>\nWe can also manage the online publication service of your Power BI reports for you.</p>\n\n<p><br>\nThe platform has been certified and published also on the Microsoft AppSource marketplace.</p>"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															}
+														],
+														"type": "Column"
+													},
+													{
+														"definition": {
+															"columnViewports": [
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "landscapeMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "portraitMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 5
+																	},
+																	"id": "tablet"
+																}
+															],
+															"size": 5
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-left: var(--spacer-10,10rem) !important;\nmargin-right: var(--spacer-10,10rem) !important;\nwidth: 517px !important;\n}",
+																	"fragment": {
+																		"key": "solutions-image-carousel",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"colorScheme": "dark",
+																		"imageAspectRatio": "aspect-ratio-4-to-3",
+																		"imageCarouselMaxWidth": "517px",
+																		"lazyLoadingImage": true,
+																		"numberOfImages": "5"
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "imageCarousel0",
+																			"value": {
+																				"fragmentImage": {
+																					"description": {
+																						"value_i18n": {
+																							"en_US": ""
+																						}
+																					},
+																					"url": {
+																						"value_i18n": {
+																							"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/infocomm-management-sarl/003.png$]"
+																						}
+																					}
+																				},
+																				"fragmentLink": {
+																				}
+																			}
+																		},
+																		{
+																			"id": "imageCarousel1",
+																			"value": {
+																				"fragmentImage": {
+																					"description": {
+																						"value_i18n": {
+																							"en_US": ""
+																						}
+																					},
+																					"url": {
+																						"value_i18n": {
+																							"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/infocomm-management-sarl/004.png$]"
+																						}
+																					}
+																				},
+																				"fragmentLink": {
+																				}
+																			}
+																		},
+																		{
+																			"id": "imageCarousel2",
+																			"value": {
+																				"fragmentImage": {
+																					"description": {
+																						"value_i18n": {
+																							"en_US": ""
+																						}
+																					},
+																					"url": {
+																						"value_i18n": {
+																							"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/infocomm-management-sarl/005.png$]"
+																						}
+																					}
+																				},
+																				"fragmentLink": {
+																				}
+																			}
+																		},
+																		{
+																			"id": "imageCarousel3",
+																			"value": {
+																				"fragmentImage": {
+																					"description": {
+																						"value_i18n": {
+																							"en_US": ""
+																						}
+																					},
+																					"url": {
+																						"value_i18n": {
+																							"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/infocomm-management-sarl/006.png$]"
+																						}
+																					}
+																				},
+																				"fragmentLink": {
+																				}
+																			}
+																		},
+																		{
+																			"id": "imageCarousel4",
+																			"value": {
+																				"fragmentImage": {
+																					"description": {
+																						"value_i18n": {
+																							"en_US": ""
+																						}
+																					},
+																					"url": {
+																						"value_i18n": {
+																							"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/infocomm-management-sarl/001.png$]"
+																						}
+																					}
+																				},
+																				"fragmentLink": {
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															}
+														],
+														"type": "Column"
+													}
+												],
+												"type": "Row"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+									"indexed": true,
+									"layout": {
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"cssClasses": [
+												"light",
+												"border-radius-none",
+												"p-0"
+											],
+											"customCSS": "@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-0,0rem) !important;\npadding-right: var(--spacer-0,0rem) !important;\n}\n}\n@media screen and (max-width: 575px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-0,0rem) !important;\n}\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\nfont-size: 20px !important;\npadding-bottom: var(--spacer-9,9rem) !important;\npadding-top: var(--spacer-9,9rem) !important;\n}\n@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+													"indexed": true,
+													"layout": {
+													}
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+															"indexed": true,
+															"layout": {
+																"widthType": "Fixed"
+															}
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"gutters": true,
+																	"indexed": true,
+																	"modulesPerRow": 2,
+																	"numberOfColumns": 2,
+																	"reverseOrder": false,
+																	"rowViewports": [
+																		{
+																			"id": "landscapeMobile",
+																			"rowViewportDefinition": {
+																				"modulesPerRow": 1,
+																				"reverseOrder": false,
+																				"verticalAlignment": "middle"
+																			}
+																		},
+																		{
+																			"id": "portraitMobile",
+																			"rowViewportDefinition": {
+																				"modulesPerRow": 1,
+																				"reverseOrder": false,
+																				"verticalAlignment": "middle"
+																			}
+																		},
+																		{
+																			"id": "tablet",
+																			"rowViewportDefinition": {
+																				"modulesPerRow": 2,
+																				"reverseOrder": false,
+																				"verticalAlignment": "middle"
+																			}
+																		}
+																	],
+																	"verticalAlignment": "middle"
+																},
+																"pageElements": [
+																	{
+																		"definition": {
+																			"columnViewports": [
+																				{
+																					"columnViewportDefinition": {
+																						"size": 12
+																					},
+																					"id": "landscapeMobile"
+																				},
+																				{
+																					"columnViewportDefinition": {
+																						"size": 12
+																					},
+																					"id": "portraitMobile"
+																				},
+																				{
+																					"columnViewportDefinition": {
+																						"size": 6
+																					},
+																					"id": "tablet"
+																				}
+																			],
+																			"size": 6
+																		},
+																		"pageElements": [
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-size: 32px !important;\nfont-weight: var(--font-weight-bolder) !important;\nmargin-bottom: var(--spacer-4,1.5rem) !important;\ncolor: var(--dark) !important;\n}\n@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-0,0rem) !important;\n}\n}\n@media screen and (max-width: 575px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-0,0rem) !important;\npadding-right: var(--spacer-0,0rem) !important;\n}\n}",
+																					"fragment": {
+																						"key": "text",
+																						"siteKey": "[$GROUP_KEY$]"
+																					},
+																					"fragmentConfig": {
+																						"fontSize": "font-size-paragraph-base",
+																						"smallCaps": false,
+																						"tabletScreenCenter": false
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "text",
+																							"value": {
+																								"fragmentLink": {
+																								},
+																								"text": {
+																									"value_i18n": {
+																										"en_US": "<p><b data-stringify-type=\"bold\">Flexible and customizable</b></p>"
+																									}
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			},
+																			{
+																				"definition": {
+																					"fragment": {
+																						"key": "text",
+																						"siteKey": "[$GROUP_KEY$]"
+																					},
+																					"fragmentConfig": {
+																						"fontSize": "font-size-paragraph-base",
+																						"smallCaps": false,
+																						"tabletScreenCenter": false
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "text",
+																							"value": {
+																								"fragmentLink": {
+																								},
+																								"text": {
+																									"value_i18n": {
+																										"en_US": "<p data-renderer-start-pos=\"611\">Platform for publishing Microsoft Power BI reports for online viewing on public and private and mobile websites built with Liferay DXP/Portal.</p>\n\n<p data-renderer-start-pos=\"755\">Access to Azure Entra is configurable per Portal Instance and also per individual Sites/Organizations active in the Portal instance.</p>\n\n<p data-renderer-start-pos=\"889\">The same configuration granularity is available for Power BI workspaces that can be associated with the portal Instance and also with individual Sites/Organizations.</p>\n\n<p data-renderer-start-pos=\"1056\">The widget is positioned on each page of the Site/Organization and, from the Configuration panel, it is possible to browse the Power BI workspace and choose which report to publish in that widget.</p>\n\n<p data-renderer-start-pos=\"1254\">The platform was built and certified for use with Liferay Portal/DXP version 7.4 and can be back ported to older versions of Liferay Portal/DXP.</p>"
+																									}
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			}
+																		],
+																		"type": "Column"
+																	},
+																	{
+																		"definition": {
+																			"columnViewports": [
+																				{
+																					"columnViewportDefinition": {
+																						"size": 12
+																					},
+																					"id": "landscapeMobile"
+																				},
+																				{
+																					"columnViewportDefinition": {
+																						"size": 12
+																					},
+																					"id": "portraitMobile"
+																				},
+																				{
+																					"columnViewportDefinition": {
+																						"size": 6
+																					},
+																					"id": "tablet"
+																				}
+																			],
+																			"size": 6
+																		},
+																		"pageElements": [
+																			{
+																				"definition": {
+																					"cssClasses": [
+																						"d-flex",
+																						"flex-column",
+																						"align-items-center",
+																						"justify-content-center"
+																					],
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nheight: 100% !important;\n}",
+																					"indexed": true,
+																					"layout": {
+																						"widthType": "Fixed"
+																					}
+																				},
+																				"pageElements": [
+																				],
+																				"type": "Section"
+																			},
+																			{
+																				"definition": {
+																					"fragment": {
+																						"key": "BASIC_COMPONENT-external-video"
+																					},
+																					"fragmentConfig": {
+																						"align": "center",
+																						"video": "{\"html\":\"<iframe data-video-liferay height=\\\"315\\\" frameborder=\\\"0\\\" src=\\\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/infocomm-management-sarl/007.mp4$]?videoEmbed=true\\\" width=\\\"560\\\"></iframe>\",\"title\":\"99-powerbi-connector-for-liferay\",\"type\":\"com.liferay.item.selector.criteria.VideoEmbeddableHTMLItemSelectorReturnType\"}",
+																						"videoHeight": "",
+																						"videoWidth": ""
+																					},
+																					"fragmentFields": [
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			}
+																		],
+																		"type": "Column"
+																	}
+																],
+																"type": "Row"
+															}
+														],
+														"type": "Section"
+													}
+												],
+												"type": "Section"
+											},
+											{
+												"definition": {
+													"gutters": true,
+													"indexed": true,
+													"modulesPerRow": 1,
+													"numberOfColumns": 1,
+													"reverseOrder": false,
+													"rowViewports": [
+														{
+															"id": "landscapeMobile",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": true,
+																"verticalAlignment": "top"
+															}
+														},
+														{
+															"id": "portraitMobile",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": true,
+																"verticalAlignment": "top"
+															}
+														},
+														{
+															"id": "tablet",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": false,
+																"verticalAlignment": "top"
+															}
+														}
+													],
+													"verticalAlignment": "top"
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"columnViewports": [
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "landscapeMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "portraitMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "tablet"
+																}
+															],
+															"size": 12
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: var(--gray-100) !important;\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\nfont-size: 20px !important;\npadding-bottom: var(--spacer-9,9rem) !important;\npadding-top: var(--spacer-9,9rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																	{
+																		"definition": {
+																			"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}\n@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+																			"indexed": true,
+																			"layout": {
+																				"widthType": "Fixed"
+																			}
+																		},
+																		"pageElements": [
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-size: 32px !important;\nfont-weight: var(--font-weight-bolder) !important;\n}\n@media screen and (max-width: 575px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-0,0rem) !important;\npadding-right: var(--spacer-0,0rem) !important;\n}\n}",
+																					"fragment": {
+																						"key": "text",
+																						"siteKey": "[$GROUP_KEY$]"
+																					},
+																					"fragmentConfig": {
+																						"fontSize": "font-size-paragraph-base",
+																						"smallCaps": false,
+																						"tabletScreenCenter": false
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "text",
+																							"value": {
+																								"fragmentLink": {
+																								},
+																								"text": {
+																									"value_i18n": {
+																										"en_US": "<p><strong>Contact Information</strong></p>"
+																									}
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			},
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-bottom: var(--spacer-4,1.5rem) !important;\n}",
+																					"fragment": {
+																						"key": "text",
+																						"siteKey": "[$GROUP_KEY$]"
+																					},
+																					"fragmentConfig": {
+																						"fontSize": "font-size-paragraph-large",
+																						"smallCaps": false,
+																						"tabletScreenCenter": false
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "text",
+																							"value": {
+																								"fragmentLink": {
+																								},
+																								"text": {
+																									"value_i18n": {
+																										"en_US": "<p>Company profile: Thirty years of activity in the information systems sector are the best reference to entrust your company to.</p>\n\n<p>We have integrated a large amount of technologies to model Internet and intranet systems.</p>\n\n<p>We have a unique expertise on the Liferay platform, which we have been using as the foundation of our projects since 2004.</p>\n\n<p>Today, the powerful and modern Liferay platform allows us to design complex future-oriented and secure integration systems and intranet portals.</p>"
+																									}
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			},
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-top: var(--spacer-4,1.5rem) !important;\n}\n@media screen and (max-width: 575px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-0,0rem) !important;\npadding-right: var(--spacer-0,0rem) !important;\n}\n}",
+																					"fragment": {
+																						"key": "text",
+																						"siteKey": "[$GROUP_KEY$]"
+																					},
+																					"fragmentConfig": {
+																						"fontSize": "font-size-paragraph-large",
+																						"smallCaps": false,
+																						"tabletScreenCenter": false
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "text",
+																							"value": {
+																								"fragmentLink": {
+																								},
+																								"text": {
+																									"value_i18n": {
+																										"en_US": "<p>Website: <a data-card-data=\"\" data-inline-card=\"\" href=\"https://www.infocomm.mc\">https://www.infocomm.mc</a></p>\n\n<p>Email: <a href=\"mailto:info@infocomm.mc\">info@infocomm.mc</a></p>\n\n<p>Phone: +377 9777 1457</p>\n\n<p>&nbsp;</p>"
+																									}
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			}
+																		],
+																		"type": "Section"
+																	}
+																],
+																"type": "Section"
+															}
+														],
+														"type": "Column"
+													}
+												],
+												"type": "Row"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: #f7f8f9 !important;\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"cssClasses": [
+										"#solutions-details-form"
+									],
+									"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+									"indexed": true,
+									"layout": {
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"cssClasses": [
+												"light",
+												"border-radius-none",
+												"container",
+												"p-0"
+											],
+											"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: var(--gray-200) !important;\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"fragment": {
+														"key": "BASIC_COMPONENT-spacer"
+													},
+													"fragmentConfig": {
+													},
+													"fragmentFields": [
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											},
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-bolder) !important;\ncolor: var(--brand-color-4) !important;\n}\n@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+													"fragment": {
+														"key": "text",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"fontSize": "font-size-heading-f1",
+														"smallCaps": false,
+														"tabletScreenCenter": false
+													},
+													"fragmentFields": [
+														{
+															"id": "text",
+															"value": {
+																"fragmentLink": {
+																},
+																"text": {
+																	"value_i18n": {
+																		"en_US": "Contact Us"
+																	}
+																}
+															}
+														}
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											},
+											{
+												"definition": {
+													"customCSS": "@media screen and (max-width: 575px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+													"fragment": {
+														"key": "text",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"fontSize": "font-size-paragraph-base",
+														"smallCaps": false,
+														"tabletScreenCenter": false
+													},
+													"fragmentFields": [
+														{
+															"id": "text",
+															"value": {
+																"fragmentLink": {
+																},
+																"text": {
+																	"value_i18n": {
+																		"en_US": "<p>Find out more about Microsoft Power BI connector for Liferay</p>"
+																	}
+																}
+															}
+														}
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											},
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-2,0.5rem) !important;\npadding-top: var(--spacer-2,0.5rem) !important;\n}",
+													"indexed": true,
+													"layout": {
+													}
+												},
+												"pageElements": [
+												],
+												"type": "Section"
+											},
+											{
+												"definition": {
+													"fragment": {
+														"key": "marketo-form",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"formId": "2786",
+														"munchkinId": "212-DQY-814",
+														"podId": "//pages.liferay.com",
+														"redirectUrl": "https://marketplace.liferay.com/solutions-thank-you",
+														"submitButtonText": "Submit"
+													},
+													"fragmentFields": [
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											},
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-2,0.5rem) !important;\npadding-top: var(--spacer-9,9rem) !important;\n}",
+													"indexed": true,
+													"layout": {
+													}
+												},
+												"pageElements": [
+												],
+												"type": "Section"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					}
+				],
+				"type": "Section"
+			}
+		],
+		"type": "Root"
+	},
+	"settings": {
+		"masterPage": {
+			"key": "liferay-one"
+		}
+	},
+	"version": 1.1
+}

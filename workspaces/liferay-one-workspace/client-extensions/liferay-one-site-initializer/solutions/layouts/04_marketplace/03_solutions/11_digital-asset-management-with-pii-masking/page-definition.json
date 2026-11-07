@@ -1,0 +1,547 @@
+{
+	"pageElement": {
+		"pageElements": [
+			{
+				"definition": {
+					"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: #F4F6F9 !important;\nmin-height: 100vh !important;\n}",
+					"indexed": true,
+					"layout": {
+					}
+				},
+				"pageElements": [
+					{
+						"definition": {
+							"indexed": true,
+							"layout": {
+								"widthType": "Fixed"
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"indexed": true,
+									"layout": {
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-top: var(--spacer-4,1.5rem) !important;\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"indexed": true,
+													"widgetInstance": {
+														"widgetConfig": {
+														},
+														"widgetName": "com_liferay_site_navigation_breadcrumb_web_portlet_SiteNavigationBreadcrumbPortlet"
+													}
+												},
+												"type": "Widget"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							},
+							{
+								"definition": {
+									"cssClasses": [
+										"d-flex",
+										"flex-row"
+									],
+									"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-bottom: var(--spacer-4,1.5rem) !important;\n}",
+									"indexed": true,
+									"layout": {
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-radius: 8px !important;\nheight: 96px !important;\noverflow: hidden !important;\nwidth: 104px !important;\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] #product-icon-img {\nobject-fit: contain;\nwidth: 104px;\nheight: 96px;\n}",
+													"fragment": {
+														"key": "image",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"imageSize": "w-100"
+													},
+													"fragmentFields": [
+														{
+															"id": "icon",
+															"value": {
+																"fragmentLink": {
+																},
+																"text": {
+																	"value_i18n": {
+																		"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/digital-asset-management-with-pii-masking/001.png$]"
+																	}
+																}
+															}
+														}
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											}
+										],
+										"type": "Section"
+									},
+									{
+										"definition": {
+											"cssClasses": [
+												"d-flex",
+												"flex-row",
+												"justify-content-between"
+											],
+											"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-left: var(--spacer-5,3rem) !important;\nwidth: 100% !important;\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"cssClasses": [
+														"d-flex",
+														"flex-column",
+														"justify-content-between"
+													],
+													"indexed": true,
+													"layout": {
+													}
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-size: 32px !important;\nfont-weight: var(--font-weight-bold) !important;\n}\n.[$FRAGMENT_CLASS$] {\nline-height: 32px;\n}",
+															"fragment": {
+																"key": "text",
+																"siteKey": "[$GROUP_KEY$]"
+															},
+															"fragmentConfig": {
+																"fontSize": "font-size-paragraph-base",
+																"smallCaps": false,
+																"tabletScreenCenter": false
+															},
+															"fragmentFields": [
+																{
+																	"id": "text",
+																	"value": {
+																		"fragmentLink": {
+																		},
+																		"text": {
+																			"value_i18n": {
+																				"en_US": "Digital Asset Management with PII Masking"
+																			}
+																		}
+																	}
+																}
+															],
+															"indexed": true
+														},
+														"type": "Fragment"
+													},
+													{
+														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-bottom: 0px !important;\npadding-bottom: var(--spacer-2,0.5rem) !important;\n}",
+															"fragment": {
+																"key": "text",
+																"siteKey": "[$GROUP_KEY$]"
+															},
+															"fragmentConfig": {
+																"fontSize": "font-size-paragraph-base",
+																"smallCaps": false,
+																"tabletScreenCenter": false
+															},
+															"fragmentFields": [
+																{
+																	"id": "text",
+																	"value": {
+																		"fragmentLink": {
+																		},
+																		"text": {
+																			"value_i18n": {
+																				"en_US": "<div>\n\tSurekha Technologies\n</div>"
+																			}
+																		}
+																	}
+																}
+															],
+															"indexed": true
+														},
+														"type": "Fragment"
+													},
+													{
+														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-bottom: var(--spacer-4,1.5rem) !important;\n}",
+															"fragment": {
+																"key": "BASIC_COMPONENT-html"
+															},
+															"fragmentConfig": {
+															},
+															"fragmentFields": [
+																{
+																	"id": "element-html",
+																	"value": {
+																		"html": {
+																			"value_i18n": {
+																				"en_US": "<div class=\"f-text font-size-paragraph-base\"><style>\n\t.app-container {\n\t\tborder-color: #2e5aac !important;\n\t\tcolor: #2e5aac;\n\t\tfont-size: MEDIUM;\n\t}\n\n\t.app-category {\n\t\tflex: 1;\n\t\tfont-size: 11px;\n\t\ttext-overflow: ellipsis;\n\t\twhite-space: nowrap;\n\t}\n\n\t.app-container .app-category {\n\t\tbackground-color: #e6ebf5;\n\t\tcolor: #1c3667;\n\t\tfont-weight: 600;\n\t\theight: 20px;\n\t\tpadding: 3px 8px;\n\t}\n\n\t.app-container .app-product-type {\n\t\tfont-size: 11px;\n\t\tfont-weight: 600;\n\t\theight: 20px;\n\t\tmin-width: 0;\n\t\toverflow: hidden;\n\t\ttext-overflow: ellipsis;\n\t\twhite-space: nowrap;\n\t}\n\n\t.app-details-category-badge .app-type-badge {\n\t\tright: 2px !important;\n\t\ttop: 0px !important;\n\t\tposition: relative !important;\n\t}\n\n\t.diamond-icon-container {\n\t\tcolor: #C9C9CF;\n\t\theight: 4px;\n\t\twidth: 4px;\n\t}\n\n\t@media screen and (max-width: 768px) {\n\t\t.app-container {\n\t\t\tfont-size: small;\n\t\t}\n\t}\n\n\t@media screen and (max-width: 576px) {\n\t\t.app-container {\n\t\t\tfont-size: x-small;\n\t\t}\n\n\t\t.app-container .app-category,\n\t\t.app-container .app-product-type {\n\t\t\tpadding: 2px 4px;\n\t\t}\n\t}\n</style>\n\n\n\n\n\n\n\n\n<div class=\"app-container color-neutral-3 d-flex flex-wrap font-size-paragraph-small justify-content-between w-100\">\n\t<div class=\"app-details-category-badge d-flex\">\n\n\t</div>\n</div></div>"
+																			}
+																		}
+																	}
+																}
+															],
+															"indexed": true
+														},
+														"type": "Fragment"
+													}
+												],
+												"type": "Section"
+											},
+											{
+												"definition": {
+													"indexed": true,
+													"layout": {
+													}
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"cssClasses": [
+																"text-nowrap"
+															],
+															"customCSS": ".[$FRAGMENT_CLASS$] {\ndisplay: none !important;\n}",
+															"fragment": {
+																"key": "BASIC_COMPONENT-button"
+															},
+															"fragmentConfig": {
+															},
+															"fragmentFields": [
+																{
+																	"id": "link",
+																	"value": {
+																		"fragmentLink": {
+																			"value": {
+																				"href": {
+																					"value_i18n": {
+																						"en_US": "{\"en_US\": \"\"}"
+																					}
+																				},
+																				"target": "Self"
+																			}
+																		},
+																		"text": {
+																			"value_i18n": {
+																				"en_US": "Contact Publisher"
+																			}
+																		}
+																	}
+																}
+															],
+															"indexed": true
+														},
+														"type": "Fragment"
+													}
+												],
+												"type": "Section"
+											},
+											{
+												"definition": {
+													"cssClasses": [
+														"text-nowrap"
+													],
+													"fragment": {
+														"key": "BASIC_COMPONENT-html"
+													},
+													"fragmentConfig": {
+													},
+													"fragmentFields": [
+														{
+															"id": "element-html",
+															"value": {
+																"html": {
+																	"value_i18n": {
+																		"en_US": "  <button class=\"btn btn-primary\" onclick=\"document.querySelector('.marketo-form').scrollIntoView({ behavior: 'smooth' })\">\nContact Publisher  \n</button>"
+																	}
+																}
+															}
+														}
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"fragment": {
+										"key": "BASIC_COMPONENT-html"
+									},
+									"fragmentConfig": {
+									},
+									"fragmentFields": [
+										{
+											"id": "element-html",
+											"value": {
+												"html": {
+													"value_i18n": {
+														"en_US": "<div class=\"f-text font-size-paragraph-base\"><style>\n    .carousel-inner {\n        border-radius: 10px;\n        height: 600px !important;\n        overflow: hidden;\n        width: 682.99px;\n    }\n\n    .carousel.slide {\n        height: 600px !important;\n    }\n\n\n    .carousel-image {\n        object-fit: contain;\n        height: 600px;\n    }\n\n    .carousel-indicators {\n        border-radius: 50% !important;\n        bottom: -50px;\n    }\n\n    .carousel-indicators li {\n        border-radius: 50%;\n        height: 10px;\n        width: 10px;\n    }\n\n    .video-preview {\n        border-radius: 10px;\n        overflow: hidden;\n    }\n\n    .video-thumbnail {\n        border-radius: 4px;\n        cursor: pointer;\n        height: 600px;\n        object-fit: cover;\n        transition: all 0.3s ease-in-out;\n        width: 682.99px;\n    }\n\n    .video-thumbnail:hover+.video-thumbnail-play-symbol {\n        opacity: 0.7;\n        transform: scale(110%);\n    }\n\n    .video-thumbnail-play-symbol {\n        color: #fff;\n        font-size: 70px;\n        opacity: 1;\n        position: absolute;\n        transition: all 0.3s ease-in-out;\n    }\n\n    .video-thumbnail-play-symbol:hover {\n        opacity: 0.7;\n        transform: scale(110%);\n    }\n\n    .video-embedded {\n        border: 0;\n        border-radius: 4px;\n        height: 600px;\n        width: 682.99px;\n    }\n</style>\n\n\n\n\n\n\n\n\n\n\n\n\n\n    <div class=\"header-content\">\n        <div class=\"container d-flex\">\n            <div class=\"mr-5\">\n                    <h1 class=\"mb-8\">\n                        Digital Asset Management with PII Masking\n                    </h1>\n\n                    <p>Protect, govern, and manage sensitive enterprise documents through intelligent PII and Aadhaar masking; enhance data security, streamline document classification, and optimize <a href=\"https://www.surekhatech.com/digital-asset-management\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"color: rgb(128, 0, 128);\"><strong><u>digital asset management</u></strong></a>&nbsp;with AI-accelerated Liferay DXP solution.</p><p>Using Liferay DXP’s advanced functionalities, combined with our comprehensive PII <a href=\"https://www.surekhatech.com/data-masking-solutions\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"color: rgb(70, 120, 134);\"><strong><u>Data Masking</u></strong></a><strong>&nbsp;</strong>capabilities, you can kickstart to create a next-generation Digital Asset Management Portal and get it customized to meet your business and team’s specific requirements.</p>\n            </div>\n\n            <div>\n\n\n                    <div id=\"headerCarousel\" class=\"carousel slide\" data-ride=\"carousel\">\n\n                        <ol class=\"carousel-indicators\">\n                                <li data-target=\"#headerCarousel\" data-slide-to=\"0\" class=\"active\">\n                                </li>\n                                <li data-target=\"#headerCarousel\" data-slide-to=\"1\" class=\"\">\n                                </li>\n                                <li data-target=\"#headerCarousel\" data-slide-to=\"2\" class=\"\">\n                                </li>\n                                <li data-target=\"#headerCarousel\" data-slide-to=\"3\" class=\"\">\n                                </li>\n                                <li data-target=\"#headerCarousel\" data-slide-to=\"4\" class=\"\">\n                                </li>\n                        </ol>\n\n                        <div class=\"align-items-center carousel-inner d-flex\">\n\n\n\n\n                                    <div class=\"carousel-item active\">\n                                        <img alt=\"Slide 0\" class=\"d-block w-100 carousel-image\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/digital-asset-management-with-pii-masking/002.png$]\">\n                                    </div>\n\n\n\n\n\n\n                                    <div class=\"carousel-item\">\n                                        <img alt=\"Slide 1\" class=\"d-block w-100 carousel-image\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/digital-asset-management-with-pii-masking/003.png$]\">\n                                    </div>\n\n\n\n\n\n\n                                    <div class=\"carousel-item\">\n                                        <img alt=\"Slide 2\" class=\"d-block w-100 carousel-image\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/digital-asset-management-with-pii-masking/004.png$]\">\n                                    </div>\n\n\n\n\n\n\n                                    <div class=\"carousel-item\">\n                                        <img alt=\"Slide 3\" class=\"d-block w-100 carousel-image\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/digital-asset-management-with-pii-masking/005.png$]\">\n                                    </div>\n\n\n\n\n\n\n                                    <div class=\"carousel-item\">\n                                        <img alt=\"Slide 4\" class=\"d-block w-100 carousel-image\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/digital-asset-management-with-pii-masking/006.png$]\">\n                                    </div>\n\n\n                        </div>\n\n                        <a class=\"carousel-control-prev\" href=\"#headerCarousel\" role=\"button\" data-slide=\"prev\">\n                            <span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"></span>\n                            <span class=\"sr-only\">Previous</span>\n                        </a>\n\n                        <a class=\"carousel-control-next\" href=\"#headerCarousel\" role=\"button\" data-slide=\"next\">\n                            <span class=\"carousel-control-next-icon\" aria-hidden=\"true\"></span>\n                            <span class=\"sr-only\">Next</span>\n                        </a>\n                    </div>\n            </div>\n        </div>\n    </div></div>"
+													}
+												}
+											}
+										}
+									],
+									"indexed": true
+								},
+								"type": "Fragment"
+							},
+							{
+								"definition": {
+									"fragment": {
+										"key": "BASIC_COMPONENT-html"
+									},
+									"fragmentConfig": {
+									},
+									"fragmentFields": [
+										{
+											"id": "element-html",
+											"value": {
+												"html": {
+													"value_i18n": {
+														"en_US": "<div class=\"f-text font-size-paragraph-base\"><style>\n\t.company-description-container {\n\t\twidth: 846px;\n\t}\n\n\t.company-description-icons-container {\n\t\tborder-radius: 10px;\n\t\tborder: solid 1.5px #E2E2E4;\n\t\twidth: 846px;\n\t}\n\n\t.company-icon {\n\t\theight: 48px;\n\t\twidth: 48px;\n\t}\n\n\t.carousel-inner {\n\t\tborder-radius: 10px;\n\t\theight: 353px;\n\t\toverflow: hidden;\n\t\twidth: 682.99px;\n\t}\n\n\t.carousel-control-next, .carousel-control-prev {\n\t\tborder-radius: 10px;\n\t\ttransition: all .3s ease-in-out;\n\t}\n\n\t.carousel-control-next:hover, .carousel-control-prev:hover {\n\t\tbackground: rgb(0, 0, 0);\n\t}\n\n\t.carousel-control-prev:hover {\n\t\tbackground: linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(255, 255, 255, 0) 90%);\n\t\tborder-radius: 10px;\n\t\ttransition: all .3s ease-in-out;\n\t}\n\n\t.carousel-control-next:hover {\n\t\tbackground: linear-gradient(-90deg, rgba(0, 0, 0, 0.3) 0%, rgba(255, 255, 255, 0) 90%);\n\t\tborder-radius: 10px;\n\t\ttransition: all .3s ease-in-out;\n\t}\n\n\t.carousel-indicators li {\n\t\tborder-radius: 50%;\n\t\tborder: solid 1px rgba(0, 0, 0, 0.5) !important;\n\t\theight: 10px !important;\n\t\twidth: 10px !important;\n\t}\n</style>\n\n\n\n\n\n\n\n\n\n\t\t<div class=\"block-container\">\n\t\t\t<div class=\"block-content\">\n\t\t\t\t<div class=\"align-items-center container d-flex flex-column\">\n\t<div>\n\t\t<h2>\n\t\t\tFortify Your Data Security &amp; Compliance\n\t\t</h2>\n\n\t\t<p>\n\t\t\t</p><h4><em>1.&nbsp;Strengthen Compliance Readiness</em></h4><p class=\"ql-align-justify\">Support regulatory and organizational compliance initiatives through secure handling, masking, storage, and governance of sensitive digital assets.</p><h4><em>2.&nbsp;Automate Document Intelligence</em></h4><p class=\"ql-align-justify\">Eliminate manual document verification by automatically identifying, classifying, and organizing masked, non-masked, and exception-based records.</p><h4><em>3.&nbsp;Improve Document Governance</em></h4><p class=\"ql-align-justify\">Centralize enterprise documents and digital assets within a secure repository while maintaining visibility, accessibility, and governance controls.</p><h4><em>4.&nbsp;Accelerate Operational Efficiency</em></h4><p class=\"ql-align-justify\">Reduce manual intervention through automated processing, classification, and validation of workflows that streamline enterprise document operations.</p><h4><em>5.&nbsp;Enhance Secure Collaboration</em></h4><p class=\"ql-align-justify\">Enable employees to securely access, manage, review, and share documents while maintaining strict privacy and document governance standards.</p><h4 class=\"ql-align-justify\"><em>6.&nbsp;Reduce Compliance Risks</em></h4><p class=\"ql-align-justify\">Minimize exposure to sensitive information through automated masking, document validation, and governance controls that support secure enterprise operations.</p>\n\t\t<p></p>\n\t</div>\n\n\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t\t<div class=\"block-container\">\n\t\t\t<div class=\"block-content\">\n\t\t\t\t<div class=\"align-items-center container d-flex flex-column\">\n\t<div>\n\t\t<h2>\n\t\t\tCore Features of Surekha Technologies' Digital Asset Management with PII Masking\n\t\t</h2>\n\n\t\t<p>\n\t\t\t</p><h4 class=\"ql-align-justify\"><em>1.&nbsp;Centralized Asset Repository</em></h4><p class=\"ql-align-justify\">Store, organize, and manage enterprise documents and digital assets securely within a centralized Liferay DXP environment.</p><h4 class=\"ql-align-justify\"><em>2.&nbsp;Automated PII Detection</em></h4><p class=\"ql-align-justify\">Identify sensitive personal information across documents automatically to improve data security and reduce compliance risks.</p><h4 class=\"ql-align-justify\"><em>3.&nbsp;Aadhaar Data Masking</em></h4><p class=\"ql-align-justify\">Detect and mask Aadhaar information within documents to protect sensitive data and support privacy compliance requirements.</p><h4 class=\"ql-align-justify\"><em>4.&nbsp;Smart Document Classification</em></h4><p class=\"ql-align-justify\">Automatically classify documents into masked, non-masked, and exception categories to simplify validation and governance processes.</p><h4 class=\"ql-align-justify\"><em>5.&nbsp;Advanced File Preview</em></h4><p class=\"ql-align-justify\">Preview ZIP, DOCX, XLSX, XLS, and EML files directly within Liferay DXP without downloading or extracting documents.</p><h4 class=\"ql-align-justify\"><em>6.&nbsp;Automated Document Workflows</em></h4><p class=\"ql-align-justify\">Streamline document review, validation, masking, and approval processes through automated workflows and reduced manual effort.</p><h4 class=\"ql-align-justify\"><em>7.&nbsp;Compliance &amp; Governance Controls</em></h4><p class=\"ql-align-justify\">Strengthen document security with controlled access, audit visibility, and governance policies for managing sensitive enterprise information.</p>\n\t\t<p></p>\n\t</div>\n\n\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div></div>"
+													}
+												}
+											}
+										}
+									],
+									"indexed": true
+								},
+								"type": "Fragment"
+							},
+							{
+								"definition": {
+									"fragment": {
+										"key": "BASIC_COMPONENT-html"
+									},
+									"fragmentConfig": {
+									},
+									"fragmentFields": [
+										{
+											"id": "element-html",
+											"value": {
+												"html": {
+													"value_i18n": {
+														"en_US": "<div class=\"f-text font-size-paragraph-base\"><style>\n\t.catalog-icon {\n\t\twidth: 90px;\n\t}\n\n\t.company-description-container {\n\t\twidth: 846px;\n\t}\n\n\t.company-description-icons-container {\n\t\tborder-radius: 10px;\n\t\tborder: solid 1.5px #E2E2E4;\n\t\twidth: 846px;\n\t}\n\n\t.company-icon {\n\t\theight: 48px;\n\t\twidth: 48px;\n\t}\n</style>\n\n\n\n\n\n\n\n\n\n\t<div class=\"block-container\">\n\t\t<div class=\"align-items-center container d-flex flex-column\">\n\n\n\t\t\t\t\t\t<img alt=\"Slide 0\" class=\"catalog-icon mb-8\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/digital-asset-management-with-pii-masking/007.png$]\">\n\n\t\t\t<h1 class=\"mb-6\">\n\t\t\t\tSurekha Technologies\n\t\t\t</h1>\n\n\t\t\t<div class=\"company-description-container mb-6\">\n\t\t\t\t<p class=\"ql-align-justify\">Incorporated in 2011, Surekha Technologies is an ISO-certified, official Liferay Silver Partner with a dual presence in the US and India. With over 15 years of profound experience, our dedicated teams provide round-the-clock, 24/7 support availability to ensure seamless enterprise portal operations.</p><p class=\"ql-align-justify\">Our elite talent pool boasts 50+ certified Liferay developers who have successfully delivered more than 250+ global projects. As an active ecosystem contributor, we have published over 20+ high-performance applications on the official Liferay Marketplace to handle complex organizational and functional demands.</p><p>We focus entirely on delivering a specialized core suite of <a href=\"https://www.surekhatech.com/liferay-development-services\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"color: rgb(70, 120, 134);\"><strong><u>Liferay development services</u></strong></a>, custom DXP solutions architecture, and enterprise-grade platform upgrade &amp; migration management.</p>\n\t\t\t</div>\n\n\t\t\t<div class=\"bg-white company-description-icons-container d-flex justify-content-between px-8 py-7\">\n\t\t\t\t\t<div class=\"d-flex flex-row\">\n\t\t\t\t\t\t<div class=\"align-items-center d-flex mr-2\">\n\t\t\t\t\t\t\t<img class=\"company-icon\" aria-label=\"video-thumbnail\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/digital-asset-management-with-pii-masking/008.png$]\">\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"d-flex flex-column\">\n\t\t\t\t\t\t<h2 class=\"m-0\">Website</h2>\n\t\t\t\t\t\t\t<a class=\"font-weight-bold\" href=\"https://www.surekhatech.com/digital-asset-management\" target=\"_blank\">\n\t\t\t\t\t\t\t\twww.surekhatech.com/digital-asset-management\n\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"d-flex flex-row\">\n\t\t\t\t\t\t<div class=\"align-items-center d-flex mr-2\">\n\t\t\t\t\t\t\t<img class=\"company-icon\" aria-label=\"video-thumbnail\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/digital-asset-management-with-pii-masking/009.png$]\">\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"d-flex flex-column\">\n\t\t\t\t\t\t\t<h2 class=\"m-0\">Email</h2>\n\n\t\t\t\t\t\t\t<a class=\"font-weight-bold\" href=\"mailto:sales@surekhatech.com\" target=\"_blank\">\n\t\t\t\t\t\t\t\tsales@surekhatech.com\n\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"d-flex flex-row\">\n\t\t\t\t\t\t<div class=\"align-items-center d-flex mr-2\">\n\t\t\t\t\t\t\t<img class=\"company-icon\" aria-label=\"video-thumbnail\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/digital-asset-management-with-pii-masking/010.png$]\">\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"d-flex flex-column\">\n\t\t\t\t\t\t\t<h2 class=\"m-0\">Phone</h2>\n\n\t\t\t\t\t\t\t<a class=\"font-weight-bold\" href=\"tel:+14089142737\" target=\"_blank\">\n\t\t\t\t\t\t\t\t+14089142737\n\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div></div>"
+													}
+												}
+											}
+										}
+									],
+									"indexed": true
+								},
+								"type": "Fragment"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"cssClasses": [
+								"block-container"
+							],
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"indexed": true,
+									"layout": {
+										"widthType": "Fixed"
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-bottom: var(--spacer-5,3rem) !important;\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"cssClasses": [
+														"marketo-form"
+													],
+													"fragment": {
+														"key": "text",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"fontSize": "font-size-heading-f1",
+														"smallCaps": false,
+														"tabletScreenCenter": false
+													},
+													"fragmentFields": [
+														{
+															"id": "text",
+															"value": {
+																"fragmentLink": {
+																},
+																"text": {
+																	"value_i18n": {
+																		"en_US": "Contact Us"
+																	}
+																}
+															}
+														}
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											},
+											{
+												"definition": {
+													"fragment": {
+														"key": "text",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"fontSize": "font-size-paragraph-base",
+														"smallCaps": false,
+														"tabletScreenCenter": false
+													},
+													"fragmentFields": [
+														{
+															"id": "text",
+															"value": {
+																"fragmentLink": {
+																},
+																"text": {
+																	"value_i18n": {
+																		"en_US": "Find out more about Solution Long Name Example"
+																	}
+																}
+															}
+														}
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											}
+										],
+										"type": "Section"
+									},
+									{
+										"definition": {
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"fragment": {
+														"key": "marketo-form",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"formId": "2786",
+														"munchkinId": "212-DQY-814",
+														"podId": "//pages.liferay.com",
+														"redirectUrl": "https://marketplace.liferay.com/solutions-thank-you",
+														"submitButtonText": "Submit"
+													},
+													"fragmentFields": [
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"indexed": true,
+							"layout": {
+								"widthType": "Fixed"
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"fragment": {
+										"key": "BASIC_COMPONENT-html"
+									},
+									"fragmentConfig": {
+									},
+									"fragmentFields": [
+										{
+											"id": "element-html",
+											"value": {
+												"html": {
+													"value_i18n": {
+														"en_US": "<style>\n  .block-container{\n  padding:6rem 0;\n  background:#fff;\n  color:#000;\n  }\n  \n  .header-content{\n      padding:6rem 0;\n  background:#0B5FFF;\n  color:#fff;\n  }\n</style>\n\n<script type=\"\">\n  document.querySelectorAll(\".block-container\").forEach((item,index)=>{\n    if(index%2 === 0){\n        item.style.background = \"#F7F7F8\"\n    }\n})\n</script>\n\n<script src=\"https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js\" integrity=\"sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj\" crossorigin=\"anonymous\"></script>\n<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct\" crossorigin=\"anonymous\"></script>"
+													}
+												}
+											}
+										}
+									],
+									"indexed": true
+								},
+								"type": "Fragment"
+							}
+						],
+						"type": "Section"
+					}
+				],
+				"type": "Section"
+			}
+		],
+		"type": "Root"
+	},
+	"settings": {
+		"masterPage": {
+			"key": "liferay-one"
+		}
+	},
+	"version": 1.1
+}

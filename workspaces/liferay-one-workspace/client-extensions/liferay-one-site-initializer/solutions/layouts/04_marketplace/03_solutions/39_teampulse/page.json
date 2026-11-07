@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/teampulse",
+	"hidden": false,
+	"name": "TeamPulse",
+	"name_i18n": {
+		"en_US": "TeamPulse"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/digital-agent",
+	"hidden": false,
+	"name": "Digital Agent",
+	"name_i18n": {
+		"en_US": "Digital Agent"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

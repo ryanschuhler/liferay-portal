@@ -1,0 +1,547 @@
+{
+	"pageElement": {
+		"pageElements": [
+			{
+				"definition": {
+					"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: #F4F6F9 !important;\nmin-height: 100vh !important;\n}",
+					"indexed": true,
+					"layout": {
+					}
+				},
+				"pageElements": [
+					{
+						"definition": {
+							"indexed": true,
+							"layout": {
+								"widthType": "Fixed"
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"indexed": true,
+									"layout": {
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-top: var(--spacer-4,1.5rem) !important;\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"indexed": true,
+													"widgetInstance": {
+														"widgetConfig": {
+														},
+														"widgetName": "com_liferay_site_navigation_breadcrumb_web_portlet_SiteNavigationBreadcrumbPortlet"
+													}
+												},
+												"type": "Widget"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							},
+							{
+								"definition": {
+									"cssClasses": [
+										"d-flex",
+										"flex-row"
+									],
+									"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-bottom: var(--spacer-4,1.5rem) !important;\n}",
+									"indexed": true,
+									"layout": {
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-radius: 8px !important;\nheight: 96px !important;\noverflow: hidden !important;\nwidth: 104px !important;\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] #product-icon-img {\nobject-fit: contain;\nwidth: 104px;\nheight: 96px;\n}",
+													"fragment": {
+														"key": "image",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"imageSize": "w-100"
+													},
+													"fragmentFields": [
+														{
+															"id": "icon",
+															"value": {
+																"fragmentLink": {
+																},
+																"text": {
+																	"value_i18n": {
+																		"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/teampulse/001.png$]"
+																	}
+																}
+															}
+														}
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											}
+										],
+										"type": "Section"
+									},
+									{
+										"definition": {
+											"cssClasses": [
+												"d-flex",
+												"flex-row",
+												"justify-content-between"
+											],
+											"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-left: var(--spacer-5,3rem) !important;\nwidth: 100% !important;\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"cssClasses": [
+														"d-flex",
+														"flex-column",
+														"justify-content-between"
+													],
+													"indexed": true,
+													"layout": {
+													}
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-size: 32px !important;\nfont-weight: var(--font-weight-bold) !important;\n}\n.[$FRAGMENT_CLASS$] {\nline-height: 32px;\n}",
+															"fragment": {
+																"key": "text",
+																"siteKey": "[$GROUP_KEY$]"
+															},
+															"fragmentConfig": {
+																"fontSize": "font-size-paragraph-base",
+																"smallCaps": false,
+																"tabletScreenCenter": false
+															},
+															"fragmentFields": [
+																{
+																	"id": "text",
+																	"value": {
+																		"fragmentLink": {
+																		},
+																		"text": {
+																			"value_i18n": {
+																				"en_US": "TeamPulse"
+																			}
+																		}
+																	}
+																}
+															],
+															"indexed": true
+														},
+														"type": "Fragment"
+													},
+													{
+														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-bottom: 0px !important;\npadding-bottom: var(--spacer-2,0.5rem) !important;\n}",
+															"fragment": {
+																"key": "text",
+																"siteKey": "[$GROUP_KEY$]"
+															},
+															"fragmentConfig": {
+																"fontSize": "font-size-paragraph-base",
+																"smallCaps": false,
+																"tabletScreenCenter": false
+															},
+															"fragmentFields": [
+																{
+																	"id": "text",
+																	"value": {
+																		"fragmentLink": {
+																		},
+																		"text": {
+																			"value_i18n": {
+																				"en_US": "<div>\n\tIGNEK - Liferay Boutique Company\n</div>"
+																			}
+																		}
+																	}
+																}
+															],
+															"indexed": true
+														},
+														"type": "Fragment"
+													},
+													{
+														"definition": {
+															"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-bottom: var(--spacer-4,1.5rem) !important;\n}",
+															"fragment": {
+																"key": "BASIC_COMPONENT-html"
+															},
+															"fragmentConfig": {
+															},
+															"fragmentFields": [
+																{
+																	"id": "element-html",
+																	"value": {
+																		"html": {
+																			"value_i18n": {
+																				"en_US": "<div class=\"f-text font-size-paragraph-base\"><style>\n\t.app-container {\n\t\tborder-color: #2e5aac !important;\n\t\tcolor: #2e5aac;\n\t\tfont-size: MEDIUM;\n\t}\n\n\t.app-category {\n\t\tflex: 1;\n\t\tfont-size: 11px;\n\t\ttext-overflow: ellipsis;\n\t\twhite-space: nowrap;\n\t}\n\n\t.app-container .app-category {\n\t\tbackground-color: #e6ebf5;\n\t\tcolor: #1c3667;\n\t\tfont-weight: 600;\n\t\theight: 20px;\n\t\tpadding: 3px 8px;\n\t}\n\n\t.app-container .app-product-type {\n\t\tfont-size: 11px;\n\t\tfont-weight: 600;\n\t\theight: 20px;\n\t\tmin-width: 0;\n\t\toverflow: hidden;\n\t\ttext-overflow: ellipsis;\n\t\twhite-space: nowrap;\n\t}\n\n\t.app-details-category-badge .app-type-badge {\n\t\tright: 2px !important;\n\t\ttop: 0px !important;\n\t\tposition: relative !important;\n\t}\n\n\t.diamond-icon-container {\n\t\tcolor: #C9C9CF;\n\t\theight: 4px;\n\t\twidth: 4px;\n\t}\n\n\t@media screen and (max-width: 768px) {\n\t\t.app-container {\n\t\t\tfont-size: small;\n\t\t}\n\t}\n\n\t@media screen and (max-width: 576px) {\n\t\t.app-container {\n\t\t\tfont-size: x-small;\n\t\t}\n\n\t\t.app-container .app-category,\n\t\t.app-container .app-product-type {\n\t\t\tpadding: 2px 4px;\n\t\t}\n\t}\n</style>\n\n\n\n\n\n\n\n\n<div class=\"app-container color-neutral-3 d-flex flex-wrap font-size-paragraph-small justify-content-between w-100\">\n\t<div class=\"app-details-category-badge d-flex\">\n\n\t</div>\n</div></div>"
+																			}
+																		}
+																	}
+																}
+															],
+															"indexed": true
+														},
+														"type": "Fragment"
+													}
+												],
+												"type": "Section"
+											},
+											{
+												"definition": {
+													"indexed": true,
+													"layout": {
+													}
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"cssClasses": [
+																"text-nowrap"
+															],
+															"customCSS": ".[$FRAGMENT_CLASS$] {\ndisplay: none !important;\n}",
+															"fragment": {
+																"key": "BASIC_COMPONENT-button"
+															},
+															"fragmentConfig": {
+															},
+															"fragmentFields": [
+																{
+																	"id": "link",
+																	"value": {
+																		"fragmentLink": {
+																			"value": {
+																				"href": {
+																					"value_i18n": {
+																						"en_US": "{\"en_US\": \"\"}"
+																					}
+																				},
+																				"target": "Self"
+																			}
+																		},
+																		"text": {
+																			"value_i18n": {
+																				"en_US": "Contact Publisher"
+																			}
+																		}
+																	}
+																}
+															],
+															"indexed": true
+														},
+														"type": "Fragment"
+													}
+												],
+												"type": "Section"
+											},
+											{
+												"definition": {
+													"cssClasses": [
+														"text-nowrap"
+													],
+													"fragment": {
+														"key": "BASIC_COMPONENT-html"
+													},
+													"fragmentConfig": {
+													},
+													"fragmentFields": [
+														{
+															"id": "element-html",
+															"value": {
+																"html": {
+																	"value_i18n": {
+																		"en_US": "  <button class=\"btn btn-primary\" onclick=\"document.querySelector('.marketo-form').scrollIntoView({ behavior: 'smooth' })\">\nContact Publisher  \n</button>"
+																	}
+																}
+															}
+														}
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"fragment": {
+										"key": "BASIC_COMPONENT-html"
+									},
+									"fragmentConfig": {
+									},
+									"fragmentFields": [
+										{
+											"id": "element-html",
+											"value": {
+												"html": {
+													"value_i18n": {
+														"en_US": "<div class=\"f-text font-size-paragraph-base\"><style>\n    .carousel-inner {\n        border-radius: 10px;\n        height: 600px !important;\n        overflow: hidden;\n        width: 682.99px;\n    }\n\n    .carousel.slide {\n        height: 600px !important;\n    }\n\n\n    .carousel-image {\n        object-fit: contain;\n        height: 600px;\n    }\n\n    .carousel-indicators {\n        border-radius: 50% !important;\n        bottom: -50px;\n    }\n\n    .carousel-indicators li {\n        border-radius: 50%;\n        height: 10px;\n        width: 10px;\n    }\n\n    .video-preview {\n        border-radius: 10px;\n        overflow: hidden;\n    }\n\n    .video-thumbnail {\n        border-radius: 4px;\n        cursor: pointer;\n        height: 600px;\n        object-fit: cover;\n        transition: all 0.3s ease-in-out;\n        width: 682.99px;\n    }\n\n    .video-thumbnail:hover+.video-thumbnail-play-symbol {\n        opacity: 0.7;\n        transform: scale(110%);\n    }\n\n    .video-thumbnail-play-symbol {\n        color: #fff;\n        font-size: 70px;\n        opacity: 1;\n        position: absolute;\n        transition: all 0.3s ease-in-out;\n    }\n\n    .video-thumbnail-play-symbol:hover {\n        opacity: 0.7;\n        transform: scale(110%);\n    }\n\n    .video-embedded {\n        border: 0;\n        border-radius: 4px;\n        height: 600px;\n        width: 682.99px;\n    }\n</style>\n\n\n\n\n\n\n\n\n\n\n\n\n\n    <div class=\"header-content\">\n        <div class=\"container d-flex\">\n            <div class=\"mr-5\">\n                    <h1 class=\"mb-8\">\n                        TeamPulse - Modernize Digital Experience For Your Employee\n                    </h1>\n\n                    <p>Establish an intranet experience that brings clarity, connection, and efficiency to everyday work. Enable employees to collaborate, access information, and stay informed through a unified digital workplace.</p>  <p><b><a href=\"https://www.ignek.com/marketplace/team-pulse\" style=\"color: #fff;\">TeamPulse</a></b> empowers leadership teams to build a more connected and productive workforce by centralizing communication, knowledge, workflows, and employee services into a single intelligent platform.</p>  <p>Designed to reduce operational silos and improve organizational alignment, TeamPulse helps enterprises accelerate digital adoption while improving employee engagement and workplace productivity across departments.</p>  <h2>Business Outcomes</h2>  <ul>     <li>Improve workforce productivity and operational efficiency</li>     <li>Strengthen cross-functional collaboration and communication</li>     <li>Centralize enterprise knowledge and employee resources</li>     <li>Accelerate decision-making with connected information access</li>     <li>Enhance employee engagement, experience, and retention</li>     <li>Reduce dependency on fragmented tools and disconnected systems</li>     <li>Enable scalable digital workplace transformation initiatives</li> </ul>\n            </div>\n\n            <div>\n\n\n\n\n\n                    <div class=\"video-preview\">\n                        <iframe class=\"video-embedded\" src=\"https://www.youtube.com/embed/3p-V99VCxtQ\" title=\"YouTube video player\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen>\n                        </iframe>\n                    </div>\n\n\n            </div>\n        </div>\n    </div></div>"
+													}
+												}
+											}
+										}
+									],
+									"indexed": true
+								},
+								"type": "Fragment"
+							},
+							{
+								"definition": {
+									"fragment": {
+										"key": "BASIC_COMPONENT-html"
+									},
+									"fragmentConfig": {
+									},
+									"fragmentFields": [
+										{
+											"id": "element-html",
+											"value": {
+												"html": {
+													"value_i18n": {
+														"en_US": "<div class=\"f-text font-size-paragraph-base\"><style>\n\t.company-description-container {\n\t\twidth: 846px;\n\t}\n\n\t.company-description-icons-container {\n\t\tborder-radius: 10px;\n\t\tborder: solid 1.5px #E2E2E4;\n\t\twidth: 846px;\n\t}\n\n\t.company-icon {\n\t\theight: 48px;\n\t\twidth: 48px;\n\t}\n\n\t.carousel-inner {\n\t\tborder-radius: 10px;\n\t\theight: 353px;\n\t\toverflow: hidden;\n\t\twidth: 682.99px;\n\t}\n\n\t.carousel-control-next, .carousel-control-prev {\n\t\tborder-radius: 10px;\n\t\ttransition: all .3s ease-in-out;\n\t}\n\n\t.carousel-control-next:hover, .carousel-control-prev:hover {\n\t\tbackground: rgb(0, 0, 0);\n\t}\n\n\t.carousel-control-prev:hover {\n\t\tbackground: linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(255, 255, 255, 0) 90%);\n\t\tborder-radius: 10px;\n\t\ttransition: all .3s ease-in-out;\n\t}\n\n\t.carousel-control-next:hover {\n\t\tbackground: linear-gradient(-90deg, rgba(0, 0, 0, 0.3) 0%, rgba(255, 255, 255, 0) 90%);\n\t\tborder-radius: 10px;\n\t\ttransition: all .3s ease-in-out;\n\t}\n\n\t.carousel-indicators li {\n\t\tborder-radius: 50%;\n\t\tborder: solid 1px rgba(0, 0, 0, 0.5) !important;\n\t\theight: 10px !important;\n\t\twidth: 10px !important;\n\t}\n</style>\n\n\n\n\n\n\n\n\n\n\t\t<div class=\"block-container\">\n\t\t\t<div class=\"block-content\">\n\t\t\t\t<div class=\"align-items-center container d-flex flex-column\">\n\n\t\t\t\t\t\t<div class=\"d-flex\">\n\t\t\t\t\t\t\t<div class=\"mr-5\">\n\t<div>\n\t\t<h2>\n\t\t\tMore Than an Out-of-the-Box Intranet\n\t\t</h2>\n\n\t\t<p>\n\t\t\t</p><p>Unlike traditional intranet implementations that take months to deploy, TeamPulse is designed for rapid rollout and enterprise scalability, allowing organizations to launch a modern digital workplace within weeks.</p><br><br> <p>For organizations using Liferay DXP, TeamPulse becomes even more valuable through:</p> <ul> <li><strong>Adapt:</strong> Support growth across departments, workflows, communication models, and employee experience initiatives as business needs evolve.</li> <li><strong>Expand:</strong> Add new modules, workflows, and dashboards as your needs evolve.</li> <li><strong>Integrate:</strong> Connect with your existing ERP, HRMS, or legacy systems through APIs and webhooks.</li> <li><strong>Customize:</strong> Match your brand, navigation, and features to your corporate identity.</li> <li><strong>Scale:</strong> Built to handle hundreds to thousands of employees without breaking a sweat.</li> <li>Modernize: Empower employees with a collaborative, engaging, and efficient digital workplace.</li> </ul> \n\t\t<p></p>\n\t</div>\n\t\t\t\t\t\t\t</div>\n\n\n\t\t<div id=\"text-images-block0\" class=\"carousel slide\" data-ride=\"carousel\">\n\t\t\t<ol class=\"carousel-indicators\">\n\t\t\t\t\t<li data-target=\"#carouselExampleIndicators\" data-slide-to=\"0\" class=\"active border mx-1\"></li>\n\t\t\t\t\t<li data-target=\"#carouselExampleIndicators\" data-slide-to=\"1\" class=\" border mx-1\"></li>\n\t\t\t\t\t<li data-target=\"#carouselExampleIndicators\" data-slide-to=\"2\" class=\" border mx-1\"></li>\n\t\t\t\t\t<li data-target=\"#carouselExampleIndicators\" data-slide-to=\"3\" class=\" border mx-1\"></li>\n\t\t\t\t\t<li data-target=\"#carouselExampleIndicators\" data-slide-to=\"4\" class=\" border mx-1\"></li>\n\t\t\t</ol>\n\n\t\t\t<div class=\"align-items-center carousel-inner d-flex\">\n\n\n\t\t\t\t\t\t<div class=\"carousel-item active\">\n\t\t\t\t\t\t\t<img alt=\"Slide 0\" class=\"d-block w-100\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/teampulse/002.png$]\">\n\t\t\t\t\t\t</div>\n\n\n\t\t\t\t\t\t<div class=\"carousel-item\">\n\t\t\t\t\t\t\t<img alt=\"Slide 1\" class=\"d-block w-100\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/teampulse/003.png$]\">\n\t\t\t\t\t\t</div>\n\n\n\t\t\t\t\t\t<div class=\"carousel-item\">\n\t\t\t\t\t\t\t<img alt=\"Slide 2\" class=\"d-block w-100\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/teampulse/004.png$]\">\n\t\t\t\t\t\t</div>\n\n\n\t\t\t\t\t\t<div class=\"carousel-item\">\n\t\t\t\t\t\t\t<img alt=\"Slide 3\" class=\"d-block w-100\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/teampulse/005.png$]\">\n\t\t\t\t\t\t</div>\n\n\n\t\t\t\t\t\t<div class=\"carousel-item\">\n\t\t\t\t\t\t\t<img alt=\"Slide 4\" class=\"d-block w-100\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/teampulse/006.png$]\">\n\t\t\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t\t<a class=\"carousel-control-prev\" href=\"#text-images-block0\" role=\"button\" data-slide=\"prev\">\n\t\t\t\t<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"></span>\n\t\t\t\t<span class=\"sr-only\">Previous</span>\n\t\t\t</a>\n\n\t\t\t<a class=\"carousel-control-next\" href=\"#text-images-block0\" role=\"button\" data-slide=\"next\">\n\t\t\t\t<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"></span>\n\t\t\t\t<span class=\"sr-only\">Next</span>\n\t\t\t</a>\n\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t\t<div class=\"block-container\">\n\t\t\t<div class=\"block-content\">\n\t\t\t\t<div class=\"align-items-center container d-flex flex-column\">\n\t<div>\n\t\t<h2>\n\t\t\tWhat the Platform Delivers\n\t\t</h2>\n\n\t\t<p>\n\t\t\t</p><p><a href=\"https://www.ignek.com/solutions/employee-experience\" rel=\"noopener noreferrer\" target=\"_blank\">A         modern employee experience</a> platform that empowers teams with the tools, communication, and access they need     to work more efficiently, stay aligned, and contribute effectively across the organization.</p><br> <p><strong>Unified Workspace</strong>: Centralize announcements, updates, applications, and workplace resources into a     single digital workspace - reducing information fragmentation and improving everyday productivity.</p> <p><strong>Organizational Communication</strong>: Deliver targeted communication and important updates more effectively     across departments, improving organizational transparency and workforce alignment.</p> <p><strong>Employee Engagement &amp; Collaboration</strong>: Create a more connected workplace where employees can     collaborate, share ideas, participate in discussions, and contribute to organizational culture.</p> <p><strong>Event &amp; Activity Management</strong>: Simplify internal event planning, participation, and communication to     strengthen engagement and improve workforce interaction.</p> <p><strong>Knowledge &amp; Resource Hub</strong>: Provide employees with centralized access to policies, documents, media,     and operational resources — enabling faster access to business-critical information.</p> <p><strong>Work &amp; Task Visibility</strong>: Improve execution and accountability by enabling teams to manage activities,     track progress, and stay aligned on organizational priorities.</p> <p><strong>Organizational Clarity</strong>: Help employees better understand team structures, departments, and reporting     hierarchies through a clear and accessible organizational experience.</p> <p><strong>Employee-Centric Experience</strong>: Enable personalized experiences where employees can easily access     relevant tasks, updates, information, and workplace activities from a single platform.</p> <p><strong>Secure &amp; Controlled Access</strong>: Protect enterprise information through role-based access controls and     governed access management aligned with organizational security policies.</p> <p><strong>Anytime, Anywhere Access</strong>: Support modern work environments with a seamless digital experience     accessible across desktop, tablet, and mobile devices.</p>\n\t\t<p></p>\n\t</div>\n\n\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div></div>"
+													}
+												}
+											}
+										}
+									],
+									"indexed": true
+								},
+								"type": "Fragment"
+							},
+							{
+								"definition": {
+									"fragment": {
+										"key": "BASIC_COMPONENT-html"
+									},
+									"fragmentConfig": {
+									},
+									"fragmentFields": [
+										{
+											"id": "element-html",
+											"value": {
+												"html": {
+													"value_i18n": {
+														"en_US": "<div class=\"f-text font-size-paragraph-base\"><style>\n\t.catalog-icon {\n\t\twidth: 90px;\n\t}\n\n\t.company-description-container {\n\t\twidth: 846px;\n\t}\n\n\t.company-description-icons-container {\n\t\tborder-radius: 10px;\n\t\tborder: solid 1.5px #E2E2E4;\n\t\twidth: 846px;\n\t}\n\n\t.company-icon {\n\t\theight: 48px;\n\t\twidth: 48px;\n\t}\n</style>\n\n\n\n\n\n\n\n\n\n\t<div class=\"block-container\">\n\t\t<div class=\"align-items-center container d-flex flex-column\">\n\n\n\t\t\t\t\t\t<img alt=\"Slide 0\" class=\"catalog-icon mb-8\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/teampulse/007.jpg$]\">\n\n\t\t\t<h1 class=\"mb-6\">\n\t\t\t\tIGNEK - Liferay Boutique Company\n\t\t\t</h1>\n\n\t\t\t<div class=\"company-description-container mb-6\">\n\t\t\t\t<p><a href=\"https://www.ignek.com/\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"color: rgb(0, 0, 0); background-color: transparent;\"><strong>IGNEK</strong></a><span style=\"color: rgb(0, 0, 0); background-color: transparent;\"> is a Liferay boutique company and an official Liferay Solution Partner, specializing in designing and implementing digital experiences with Liferay DXP.</span></p>\n\t\t\t</div>\n\n\t\t\t<div class=\"bg-white company-description-icons-container d-flex justify-content-between px-8 py-7\">\n\t\t\t\t\t<div class=\"d-flex flex-row\">\n\t\t\t\t\t\t<div class=\"align-items-center d-flex mr-2\">\n\t\t\t\t\t\t\t<img class=\"company-icon\" aria-label=\"video-thumbnail\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/teampulse/008.png$]\">\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"d-flex flex-column\">\n\t\t\t\t\t\t<h2 class=\"m-0\">Website</h2>\n\t\t\t\t\t\t\t<a class=\"font-weight-bold\" href=\"https://www.ignek.com\" target=\"_blank\">\n\t\t\t\t\t\t\t\twww.ignek.com\n\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"d-flex flex-row\">\n\t\t\t\t\t\t<div class=\"align-items-center d-flex mr-2\">\n\t\t\t\t\t\t\t<img class=\"company-icon\" aria-label=\"video-thumbnail\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/teampulse/009.png$]\">\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"d-flex flex-column\">\n\t\t\t\t\t\t\t<h2 class=\"m-0\">Email</h2>\n\n\t\t\t\t\t\t\t<a class=\"font-weight-bold\" href=\"mailto:connect@ignek.com\" target=\"_blank\">\n\t\t\t\t\t\t\t\tconnect@ignek.com\n\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"d-flex flex-row\">\n\t\t\t\t\t\t<div class=\"align-items-center d-flex mr-2\">\n\t\t\t\t\t\t\t<img class=\"company-icon\" aria-label=\"video-thumbnail\" src=\"[$DOCUMENT_URL:/site-initializer/documents/group/solutions/teampulse/010.png$]\">\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"d-flex flex-column\">\n\t\t\t\t\t\t\t<h2 class=\"m-0\">Phone</h2>\n\n\t\t\t\t\t\t\t<a class=\"font-weight-bold\" href=\"tel:+91 63515 76580\" target=\"_blank\">\n\t\t\t\t\t\t\t\t+91 63515 76580\n\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div></div>"
+													}
+												}
+											}
+										}
+									],
+									"indexed": true
+								},
+								"type": "Fragment"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"cssClasses": [
+								"block-container"
+							],
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"indexed": true,
+									"layout": {
+										"widthType": "Fixed"
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-bottom: var(--spacer-5,3rem) !important;\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"cssClasses": [
+														"marketo-form"
+													],
+													"fragment": {
+														"key": "text",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"fontSize": "font-size-heading-f1",
+														"smallCaps": false,
+														"tabletScreenCenter": false
+													},
+													"fragmentFields": [
+														{
+															"id": "text",
+															"value": {
+																"fragmentLink": {
+																},
+																"text": {
+																	"value_i18n": {
+																		"en_US": "Contact Us"
+																	}
+																}
+															}
+														}
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											},
+											{
+												"definition": {
+													"fragment": {
+														"key": "text",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"fontSize": "font-size-paragraph-base",
+														"smallCaps": false,
+														"tabletScreenCenter": false
+													},
+													"fragmentFields": [
+														{
+															"id": "text",
+															"value": {
+																"fragmentLink": {
+																},
+																"text": {
+																	"value_i18n": {
+																		"en_US": "Find out more about Solution Long Name Example"
+																	}
+																}
+															}
+														}
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											}
+										],
+										"type": "Section"
+									},
+									{
+										"definition": {
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"fragment": {
+														"key": "marketo-form",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"formId": "2786",
+														"munchkinId": "212-DQY-814",
+														"podId": "//pages.liferay.com",
+														"redirectUrl": "https://marketplace.liferay.com/solutions-thank-you",
+														"submitButtonText": "Submit"
+													},
+													"fragmentFields": [
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"indexed": true,
+							"layout": {
+								"widthType": "Fixed"
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"fragment": {
+										"key": "BASIC_COMPONENT-html"
+									},
+									"fragmentConfig": {
+									},
+									"fragmentFields": [
+										{
+											"id": "element-html",
+											"value": {
+												"html": {
+													"value_i18n": {
+														"en_US": "<style>\n  .block-container{\n  padding:6rem 0;\n  background:#fff;\n  color:#000;\n  }\n  \n  .header-content{\n      padding:6rem 0;\n  background:#0B5FFF;\n  color:#fff;\n  }\n</style>\n\n<script type=\"\">\n  document.querySelectorAll(\".block-container\").forEach((item,index)=>{\n    if(index%2 === 0){\n        item.style.background = \"#F7F7F8\"\n    }\n})\n</script>\n\n<script src=\"https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js\" integrity=\"sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj\" crossorigin=\"anonymous\"></script>\n<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct\" crossorigin=\"anonymous\"></script>"
+													}
+												}
+											}
+										}
+									],
+									"indexed": true
+								},
+								"type": "Fragment"
+							}
+						],
+						"type": "Section"
+					}
+				],
+				"type": "Section"
+			}
+		],
+		"type": "Root"
+	},
+	"settings": {
+		"masterPage": {
+			"key": "liferay-one"
+		}
+	},
+	"version": 1.1
+}

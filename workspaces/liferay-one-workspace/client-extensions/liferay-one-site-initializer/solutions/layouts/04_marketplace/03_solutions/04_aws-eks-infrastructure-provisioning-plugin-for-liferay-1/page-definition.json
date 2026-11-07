@@ -1,0 +1,1114 @@
+{
+	"pageElement": {
+		"pageElements": [
+			{
+				"definition": {
+					"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}\n@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-0,0rem) !important;\npadding-right: var(--spacer-0,0rem) !important;\n}\n}",
+					"indexed": true,
+					"layout": {
+					}
+				},
+				"pageElements": [
+					{
+						"definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: #F4F6F9 !important;\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}\n@media screen and (max-width: 767px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-4,1.5rem) !important;\npadding-right: var(--spacer-4,1.5rem) !important;\n}\n}",
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"cssClasses": [
+								"light",
+								"border-radius-none",
+								"container",
+								"p-0"
+							],
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-radius: 10px !important;\noverflow: hidden !important;\n}\n@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"customCSS": ".[$FRAGMENT_CLASS$] {\ndisplay: none !important;\npadding-bottom: var(--spacer-4,1.5rem) !important;\npadding-top: var(--spacer-4,1.5rem) !important;\n}",
+									"indexed": true,
+									"layout": {
+									}
+								},
+								"pageElements": [
+								],
+								"type": "Section"
+							},
+							{
+								"definition": {
+									"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-4,1.5rem) !important;\npadding-top: var(--spacer-4,1.5rem) !important;\n}",
+									"indexed": true,
+									"widgetInstance": {
+										"widgetConfig": {
+										},
+										"widgetName": "com_liferay_site_navigation_breadcrumb_web_portlet_SiteNavigationBreadcrumbPortlet"
+									}
+								},
+								"type": "Widget"
+							},
+							{
+								"definition": {
+									"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-9,9rem) !important;\n}",
+									"gutters": true,
+									"indexed": true,
+									"modulesPerRow": 2,
+									"numberOfColumns": 2,
+									"reverseOrder": false,
+									"rowViewports": [
+										{
+											"id": "landscapeMobile",
+											"rowViewportDefinition": {
+												"modulesPerRow": 1,
+												"reverseOrder": false,
+												"verticalAlignment": "top"
+											}
+										},
+										{
+											"id": "portraitMobile",
+											"rowViewportDefinition": {
+												"modulesPerRow": 1,
+												"reverseOrder": false,
+												"verticalAlignment": "top"
+											}
+										},
+										{
+											"id": "tablet",
+											"rowViewportDefinition": {
+												"modulesPerRow": 2,
+												"reverseOrder": false,
+												"verticalAlignment": "top"
+											}
+										}
+									],
+									"verticalAlignment": "top"
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"columnViewports": [
+												{
+													"columnViewportDefinition": {
+														"size": 12
+													},
+													"id": "landscapeMobile"
+												},
+												{
+													"columnViewportDefinition": {
+														"size": 12
+													},
+													"id": "portraitMobile"
+												},
+												{
+													"columnViewportDefinition": {
+														"size": 8
+													},
+													"id": "tablet"
+												}
+											],
+											"size": 8
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"cssClasses": [
+														"component-flex",
+														"d-flex",
+														"align-items-start",
+														"justify-content-start"
+													],
+													"customCSS": "@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\ndisplay: block !important;\n}\n}",
+													"indexed": true,
+													"layout": {
+													}
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"indexed": true,
+															"layout": {
+															}
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-radius: 10px !important;\nheight: 104px !important;\noverflow: hidden !important;\nwidth: 148px !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																	{
+																		"definition": {
+																			"fragment": {
+																				"key": "BASIC_COMPONENT-image"
+																			},
+																			"fragmentConfig": {
+																			},
+																			"fragmentFields": [
+																				{
+																					"id": "image-square",
+																					"value": {
+																						"fragmentImage": {
+																							"description": {
+																								"value_i18n": {
+																									"en_US": ""
+																								}
+																							},
+																							"url": {
+																								"value_i18n": {
+																									"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/aws-eks-infrastructure-provisioning-plugin-for-liferay-1/001.png$]"
+																								}
+																							}
+																						},
+																						"fragmentLink": {
+																						}
+																					}
+																				}
+																			],
+																			"indexed": true
+																		},
+																		"type": "Fragment"
+																	}
+																],
+																"type": "Section"
+															}
+														],
+														"type": "Section"
+													},
+													{
+														"definition": {
+															"indexed": true,
+															"layout": {
+															}
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"cssClasses": [
+																		"mb-0"
+																	],
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-bolder) !important;\nmargin-bottom: 0px !important;\nmargin-left: var(--spacer-3,1rem) !important;\ncolor: var(--body-color) !important;\n}",
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-heading-f1",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "AWS EKS Infrastructure Provisioning Plugin for Liferay"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															},
+															{
+																"definition": {
+																	"cssClasses": [
+																		"component-flex",
+																		"d-flex",
+																		"align-items-start",
+																		"justify-content-start"
+																	],
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-left: var(--spacer-3,1rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																	{
+																		"definition": {
+																			"indexed": true,
+																			"layout": {
+																			}
+																		},
+																		"pageElements": [
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nwidth: 100px !important;\n}",
+																					"fragment": {
+																						"key": "BASIC_COMPONENT-image"
+																					},
+																					"fragmentConfig": {
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "image-square",
+																							"value": {
+																								"fragmentImage": {
+																									"description": {
+																										"value_i18n": {
+																											"en_US": ""
+																										}
+																									},
+																									"url": {
+																										"value_i18n": {
+																											"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/aws-eks-infrastructure-provisioning-plugin-for-liferay-1/002.png$]"
+																										}
+																									}
+																								},
+																								"fragmentLink": {
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			}
+																		],
+																		"type": "Section"
+																	}
+																],
+																"type": "Section"
+															}
+														],
+														"type": "Section"
+													}
+												],
+												"type": "Section"
+											}
+										],
+										"type": "Column"
+									},
+									{
+										"definition": {
+											"columnViewports": [
+												{
+													"columnViewportDefinition": {
+														"size": 12
+													},
+													"id": "landscapeMobile"
+												},
+												{
+													"columnViewportDefinition": {
+														"size": 12
+													},
+													"id": "portraitMobile"
+												},
+												{
+													"columnViewportDefinition": {
+														"size": 4
+													},
+													"id": "tablet"
+												}
+											],
+											"size": 4
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"cssClasses": [
+														"component-flex",
+														"d-flex",
+														"align-items-center",
+														"justify-content-end"
+													],
+													"customCSS": "@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\ndisplay: none !important;\n}\n}",
+													"indexed": true,
+													"layout": {
+													}
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"indexed": true,
+															"layout": {
+															}
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] p {\nmargin: 0;\npadding: 0\n}",
+																	"fragment": {
+																		"key": "BASIC_COMPONENT-button"
+																	},
+																	"fragmentConfig": {
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "link",
+																			"value": {
+																				"fragmentLink": {
+																					"value": {
+																						"href": {
+																							"value_i18n": {
+																								"en_US": "#solutions-details-form"
+																							}
+																						},
+																						"target": "Self"
+																					}
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "Contact Partner"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															}
+														],
+														"type": "Section"
+													}
+												],
+												"type": "Section"
+											}
+										],
+										"type": "Column"
+									}
+								],
+								"type": "Row"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: #0B5FFF !important;\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\npadding-bottom: var(--spacer-9,9rem) !important;\npadding-top: var(--spacer-9,9rem) !important;\n}\n@media screen and (max-width: 767px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-4,1.5rem) !important;\npadding-right: var(--spacer-4,1.5rem) !important;\n}\n}",
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+									"indexed": true,
+									"layout": {
+										"widthType": "Fixed"
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"cssClasses": [
+												"dark",
+												"border-radius-none",
+												"p-0"
+											],
+											"customCSS": "@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-size: 20px !important;\n}",
+													"gutters": true,
+													"indexed": true,
+													"modulesPerRow": 2,
+													"numberOfColumns": 2,
+													"reverseOrder": false,
+													"rowViewports": [
+														{
+															"id": "landscapeMobile",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": true,
+																"verticalAlignment": "middle"
+															}
+														},
+														{
+															"id": "portraitMobile",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": false,
+																"verticalAlignment": "middle"
+															}
+														},
+														{
+															"id": "tablet",
+															"rowViewportDefinition": {
+																"modulesPerRow": 2,
+																"reverseOrder": false,
+																"verticalAlignment": "middle"
+															}
+														}
+													],
+													"verticalAlignment": "middle"
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"columnViewports": [
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "landscapeMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "portraitMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 7
+																	},
+																	"id": "tablet"
+																}
+															],
+															"size": 7
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-size: 32px !important;\nfont-weight: var(--font-weight-bolder) !important;\nmargin-bottom: var(--spacer-4,1.5rem) !important;\ntext-align: justify !important;\ncolor: var(--white) !important;\n}",
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-paragraph-base",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "<p style=\"text-align:left\">Streamline your Liferay experience with our groundbreaking AWS EKS Infrastructure Provisioning Plugin</p>"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\ncolor: var(--white) !important;\n}",
+																	"fragment": {
+																		"key": "text",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"fontSize": "font-size-paragraph-large",
+																		"smallCaps": false,
+																		"tabletScreenCenter": false
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "text",
+																			"value": {
+																				"fragmentLink": {
+																				},
+																				"text": {
+																					"value_i18n": {
+																						"en_US": "<p>Seamlessly integrated with Liferay, this innovative experience with our groundbreaking AWS EKS Infrastructure Provisioning Plugin. Seamlessly integrated with Liferay, this innovative solution revolutionizes the way you manage your infrastructure, saving you time, resources, and headaches.</p>\n\n<p>With just a few clicks, our plugin empowers you to effortlessly set up a robust AWS EKS (Elastic Kubernetes Service) infrastructure tailored specifically for your Liferay instance. No more manual configuration or complex setup processes—our plugin automates the entire deployment process, ensuring a hassle-free experience from start to finish.</p>\n\n<p>Harnessing the power of AWS EKS, our plugin provisions a highly scalable and resilient infrastructure, complete with a state-of-the-art web server, a high-performance database, and a blazing-fast Elasticsearch cluster. Whether you're launching a new Liferay instance or scaling an existing one, our plugin dynamically adapts to your needs, ensuring optimal performance and reliability at all times.</p>\n\n<ul>\n</ul>"
+																					}
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															}
+														],
+														"type": "Column"
+													},
+													{
+														"definition": {
+															"columnViewports": [
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "landscapeMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "portraitMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 5
+																	},
+																	"id": "tablet"
+																}
+															],
+															"size": 5
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"fragment": {
+																		"key": "solutions-image-carousel",
+																		"siteKey": "[$GROUP_KEY$]"
+																	},
+																	"fragmentConfig": {
+																		"colorScheme": "",
+																		"imageAspectRatio": "auto",
+																		"imageCarouselMaxWidth": "669px",
+																		"lazyLoadingImage": true,
+																		"numberOfImages": "2"
+																	},
+																	"fragmentFields": [
+																		{
+																			"id": "imageCarousel0",
+																			"value": {
+																				"fragmentImage": {
+																					"description": {
+																						"value_i18n": {
+																							"en_US": ""
+																						}
+																					},
+																					"url": {
+																						"value_i18n": {
+																							"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/aws-eks-infrastructure-provisioning-plugin-for-liferay-1/001.png$]"
+																						}
+																					}
+																				},
+																				"fragmentLink": {
+																				}
+																			}
+																		},
+																		{
+																			"id": "imageCarousel1",
+																			"value": {
+																				"fragmentImage": {
+																					"description": {
+																						"value_i18n": {
+																							"en_US": ""
+																						}
+																					},
+																					"url": {
+																						"value_i18n": {
+																							"en_US": "[$DOCUMENT_URL:/site-initializer/documents/group/solutions/aws-eks-infrastructure-provisioning-plugin-for-liferay-1/003.png$]"
+																						}
+																					}
+																				},
+																				"fragmentLink": {
+																				}
+																			}
+																		}
+																	],
+																	"indexed": true
+																},
+																"type": "Fragment"
+															}
+														],
+														"type": "Column"
+													}
+												],
+												"type": "Row"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+									"indexed": true,
+									"layout": {
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"cssClasses": [
+												"light",
+												"border-radius-none",
+												"p-0"
+											],
+											"customCSS": "@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-0,0rem) !important;\npadding-right: var(--spacer-0,0rem) !important;\n}\n}\n@media screen and (max-width: 575px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-0,0rem) !important;\n}\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"gutters": true,
+													"indexed": true,
+													"modulesPerRow": 1,
+													"numberOfColumns": 1,
+													"reverseOrder": false,
+													"rowViewports": [
+														{
+															"id": "landscapeMobile",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": true,
+																"verticalAlignment": "top"
+															}
+														},
+														{
+															"id": "portraitMobile",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": true,
+																"verticalAlignment": "top"
+															}
+														},
+														{
+															"id": "tablet",
+															"rowViewportDefinition": {
+																"modulesPerRow": 1,
+																"reverseOrder": false,
+																"verticalAlignment": "top"
+															}
+														}
+													],
+													"verticalAlignment": "top"
+												},
+												"pageElements": [
+													{
+														"definition": {
+															"columnViewports": [
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "landscapeMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "portraitMobile"
+																},
+																{
+																	"columnViewportDefinition": {
+																		"size": 12
+																	},
+																	"id": "tablet"
+																}
+															],
+															"size": 12
+														},
+														"pageElements": [
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: var(--white) !important;\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\nfont-size: 20px !important;\npadding-bottom: var(--spacer-9,9rem) !important;\npadding-top: var(--spacer-9,9rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																	{
+																		"definition": {
+																			"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}\n@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+																			"indexed": true,
+																			"layout": {
+																				"widthType": "Fixed"
+																			}
+																		},
+																		"pageElements": [
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-size: 32px !important;\nfont-weight: var(--font-weight-bolder) !important;\n}\n@media screen and (max-width: 575px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-0,0rem) !important;\npadding-right: var(--spacer-0,0rem) !important;\n}\n}",
+																					"fragment": {
+																						"key": "text",
+																						"siteKey": "[$GROUP_KEY$]"
+																					},
+																					"fragmentConfig": {
+																						"fontSize": "font-size-paragraph-base",
+																						"smallCaps": false,
+																						"tabletScreenCenter": false
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "text",
+																							"value": {
+																								"fragmentLink": {
+																								},
+																								"text": {
+																									"value_i18n": {
+																										"en_US": "<p>Key Features:</p>"
+																									}
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			},
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-bottom: var(--spacer-5,3rem) !important;\n}",
+																					"fragment": {
+																						"key": "text",
+																						"siteKey": "[$GROUP_KEY$]"
+																					},
+																					"fragmentConfig": {
+																						"fontSize": "font-size-paragraph-large",
+																						"smallCaps": false,
+																						"tabletScreenCenter": false
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "text",
+																							"value": {
+																								"fragmentLink": {
+																								},
+																								"text": {
+																									"value_i18n": {
+																										"en_US": "<ul>\n\t<li>Automated Deployment: Say goodbye to tedious manual setup processes. Our plugin automates the provisioning of your AWS EKS infrastructure, saving you valuable time and effort.<br>\n\t&nbsp;</li>\n\t<li>Scalability: Built on AWS EKS, our solution scales seamlessly to accommodate your growing user base and evolving business needs. Whether you're serving hundreds or millions of users, our infrastructure can handle the load with ease.<br>\n\t&nbsp;</li>\n\t<li>Reliability: Rest easy knowing that your Liferay instance is backed by a robust and resilient infrastructure. With redundant components and built-in failover mechanisms, downtime is a thing of the past.<br>\n\t&nbsp;</li>\n\t<li>Performance: Experience lightning-fast performance thanks to our optimized infrastructure setup. From rapid content delivery to near-instantaneous search results, your users will love the speed and responsiveness of your Liferay instance.<br>\n\t&nbsp;</li>\n\t<li>Security: Leverage AWS's industry-leading security features to protect your data and ensure compliance with regulations. With encrypted communication, fine-grained access controls, and regular security updates, your infrastructure is locked down tight.<br>\n\t&nbsp;</li>\n\t<li>Cost Efficiency: Optimize your infrastructure costs with our plugin's intelligent resource management capabilities. Pay only for what you use, and eliminate wasteful spending on idle resources. Unlock the full potential of Liferay with our AWS EKS Infrastructure Provisioning Plugin. Streamline your operations, enhance your performance, and elevate your user experience—all with just a few clicks. Try it today and see the difference for yourself.</li>\n</ul>"
+																									}
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			},
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-bottom: var(--spacer-4,1.5rem) !important;\n}",
+																					"fragment": {
+																						"key": "text",
+																						"siteKey": "[$GROUP_KEY$]"
+																					},
+																					"fragmentConfig": {
+																						"fontSize": "font-size-paragraph-large",
+																						"smallCaps": false,
+																						"tabletScreenCenter": false
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "text",
+																							"value": {
+																								"fragmentLink": {
+																								},
+																								"text": {
+																									"value_i18n": {
+																										"en_US": "<p>Unlock the full potential of Liferay with our AWS EKS Infrastructure Provisioning Plugin. Streamline your operations, enhance your performance, and elevate your user experience—all with just a few clicks. Try it today and see the difference for yourself.</p>"
+																									}
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			}
+																		],
+																		"type": "Section"
+																	}
+																],
+																"type": "Section"
+															},
+															{
+																"definition": {
+																	"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: var(--gray-100) !important;\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\nfont-size: 20px !important;\npadding-bottom: var(--spacer-9,9rem) !important;\npadding-top: var(--spacer-9,9rem) !important;\n}",
+																	"indexed": true,
+																	"layout": {
+																	}
+																},
+																"pageElements": [
+																	{
+																		"definition": {
+																			"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}\n@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+																			"indexed": true,
+																			"layout": {
+																				"widthType": "Fixed"
+																			}
+																		},
+																		"pageElements": [
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-size: 32px !important;\nfont-weight: var(--font-weight-bolder) !important;\n}\n@media screen and (max-width: 575px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-0,0rem) !important;\npadding-right: var(--spacer-0,0rem) !important;\n}\n}",
+																					"fragment": {
+																						"key": "text",
+																						"siteKey": "[$GROUP_KEY$]"
+																					},
+																					"fragmentConfig": {
+																						"fontSize": "font-size-paragraph-base",
+																						"smallCaps": false,
+																						"tabletScreenCenter": false
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "text",
+																							"value": {
+																								"fragmentLink": {
+																								},
+																								"text": {
+																									"value_i18n": {
+																										"en_US": "<p>Contact Information:</p>"
+																									}
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			},
+																			{
+																				"definition": {
+																					"customCSS": ".[$FRAGMENT_CLASS$] {\nmargin-top: var(--spacer-4,1.5rem) !important;\n}\n@media screen and (max-width: 575px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-0,0rem) !important;\npadding-right: var(--spacer-0,0rem) !important;\n}\n}",
+																					"fragment": {
+																						"key": "text",
+																						"siteKey": "[$GROUP_KEY$]"
+																					},
+																					"fragmentConfig": {
+																						"fontSize": "font-size-paragraph-large",
+																						"smallCaps": false,
+																						"tabletScreenCenter": false
+																					},
+																					"fragmentFields": [
+																						{
+																							"id": "text",
+																							"value": {
+																								"fragmentLink": {
+																								},
+																								"text": {
+																									"value_i18n": {
+																										"en_US": "<p>Website: <a href=\"http://www.objectivegroup.com\" rel=\"noopener noreferrer\" target=\"_blank\">www.objectivegroup.com</a></p>\n\n<p data-renderer-start-pos=\"584\">Email: <a data-renderer-mark=\"true\" data-testid=\"link-with-safety\" href=\"mailto:sales@objectivegroup.com\" title=\"mailto:sales@objectivegroup.com\">sales@objectivegroup.com</a>&nbsp;</p>\n\n<p data-renderer-start-pos=\"584\">Phone Contact:</p>\n\n<ul data-indent-level=\"2\">\n\t<li>\n\t<p data-renderer-start-pos=\"620\">UK:&nbsp;+44 748 136 0088</p>\n\t</li>\n\t<li>\n\t<p data-renderer-start-pos=\"644\">US:&nbsp;+1 (872) 250-464</p>\n\t</li>\n\t<li>\n\t<p data-renderer-start-pos=\"668\">Portugal: +351 927251760</p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>"
+																									}
+																								}
+																							}
+																						}
+																					],
+																					"indexed": true
+																				},
+																				"type": "Fragment"
+																			}
+																		],
+																		"type": "Section"
+																	}
+																],
+																"type": "Section"
+															}
+														],
+														"type": "Column"
+													}
+												],
+												"type": "Row"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					},
+					{
+						"definition": {
+							"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: #f7f8f9 !important;\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+							"indexed": true,
+							"layout": {
+							}
+						},
+						"pageElements": [
+							{
+								"definition": {
+									"cssClasses": [
+										"#solutions-details-form"
+									],
+									"customCSS": ".[$FRAGMENT_CLASS$] {\nborder-style: solid; border-width: 0 !important; border-width: 0px !important;\n}",
+									"indexed": true,
+									"layout": {
+									}
+								},
+								"pageElements": [
+									{
+										"definition": {
+											"cssClasses": [
+												"light",
+												"border-radius-none",
+												"container",
+												"p-0"
+											],
+											"customCSS": ".[$FRAGMENT_CLASS$] {\nbackground-color: var(--gray-200) !important;\n}",
+											"indexed": true,
+											"layout": {
+											}
+										},
+										"pageElements": [
+											{
+												"definition": {
+													"fragment": {
+														"key": "BASIC_COMPONENT-spacer"
+													},
+													"fragmentConfig": {
+													},
+													"fragmentFields": [
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											},
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] {\nfont-weight: var(--font-weight-bolder) !important;\ncolor: var(--brand-color-4) !important;\n}\n@media screen and (max-width: 991px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+													"fragment": {
+														"key": "text",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"fontSize": "font-size-heading-f1",
+														"smallCaps": false,
+														"tabletScreenCenter": false
+													},
+													"fragmentFields": [
+														{
+															"id": "text",
+															"value": {
+																"fragmentLink": {
+																},
+																"text": {
+																	"value_i18n": {
+																		"en_US": "Contact Us"
+																	}
+																}
+															}
+														}
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											},
+											{
+												"definition": {
+													"customCSS": "@media screen and (max-width: 575px) {\n.[$FRAGMENT_CLASS$] {\npadding-left: var(--spacer-5,3rem) !important;\npadding-right: var(--spacer-5,3rem) !important;\n}\n}",
+													"fragment": {
+														"key": "text",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"fontSize": "font-size-paragraph-base",
+														"smallCaps": false,
+														"tabletScreenCenter": false
+													},
+													"fragmentFields": [
+														{
+															"id": "text",
+															"value": {
+																"fragmentLink": {
+																},
+																"text": {
+																	"value_i18n": {
+																		"en_US": "<p>Find out more about&nbsp;AWS EKS Infrastructure Provisioning Plugin for Liferay</p>"
+																	}
+																}
+															}
+														}
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											},
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-2,0.5rem) !important;\npadding-top: var(--spacer-2,0.5rem) !important;\n}",
+													"indexed": true,
+													"layout": {
+													}
+												},
+												"pageElements": [
+												],
+												"type": "Section"
+											},
+											{
+												"definition": {
+													"fragment": {
+														"key": "marketo-form",
+														"siteKey": "[$GROUP_KEY$]"
+													},
+													"fragmentConfig": {
+														"formId": "2786",
+														"munchkinId": "212-DQY-814",
+														"podId": "//pages.liferay.com",
+														"redirectUrl": "https://marketplace.liferay.com/solutions-thank-you",
+														"submitButtonText": "Submit"
+													},
+													"fragmentFields": [
+													],
+													"indexed": true
+												},
+												"type": "Fragment"
+											},
+											{
+												"definition": {
+													"customCSS": ".[$FRAGMENT_CLASS$] {\npadding-bottom: var(--spacer-2,0.5rem) !important;\npadding-top: var(--spacer-9,9rem) !important;\n}",
+													"indexed": true,
+													"layout": {
+													}
+												},
+												"pageElements": [
+												],
+												"type": "Section"
+											}
+										],
+										"type": "Section"
+									}
+								],
+								"type": "Section"
+							}
+						],
+						"type": "Section"
+					}
+				],
+				"type": "Section"
+			}
+		],
+		"type": "Root"
+	},
+	"settings": {
+		"masterPage": {
+			"key": "liferay-one"
+		}
+	},
+	"version": 1.1
+}

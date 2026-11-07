@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/cross-cms-synchronization-migration",
+	"hidden": false,
+	"name": "Cross-CMS Synchronization & Migration",
+	"name_i18n": {
+		"en_US": "Cross-CMS Synchronization & Migration"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

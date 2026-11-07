@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/live-video-and-conferencing-solution",
+	"hidden": false,
+	"name": "Live Video and Conferencing Solution",
+	"name_i18n": {
+		"en_US": "Live Video and Conferencing Solution"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

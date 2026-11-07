@@ -35,6 +35,11 @@
 					"label": "URL JS CDN",
 					"name": "URLjs",
 					"type": "text"
+				},
+				{
+					"label": "Video URL",
+					"name": "videoURL",
+					"type": "text"
 				}
 			],
 			"label": "Video Settings"

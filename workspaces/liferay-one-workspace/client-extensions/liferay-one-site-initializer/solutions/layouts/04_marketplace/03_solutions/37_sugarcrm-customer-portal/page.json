@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/sugarcrm-customer-portal",
+	"hidden": false,
+	"name": "SugarCRM Customer Portal",
+	"name_i18n": {
+		"en_US": "SugarCRM Customer Portal"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

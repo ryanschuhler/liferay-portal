@@ -14,6 +14,126 @@
 			"currencyCode": "USD",
 			"externalReferenceCode": "a1fcb2bc-7571-0ebe-4722-3547f58689ac",
 			"name": "IGNEK - Liferay Boutique Company"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-aca-it-solutions-nv",
+			"name": "ACA IT-Solutions NV"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-aimdek-technologies-pvt-ltd",
+			"name": "AIMDek Technologies Pvt. Ltd."
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-ariadne",
+			"name": "ARIADNE"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-armantec-systems-pvt-ltd",
+			"name": "Armantec Systems Pvt. Ltd."
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-asponte-technology",
+			"name": "Asponte Technology"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-base22",
+			"name": "Base22"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-code-engine-studio",
+			"name": "Code Engine Studio"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-cognizant",
+			"name": "Cognizant"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-fansysoft",
+			"name": "Fansysoft"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-iberm-tica",
+			"name": "Ibermática"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-infocomm-management",
+			"name": "Infocomm Management"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-izertis",
+			"name": "Izertis"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-khalibre",
+			"name": "Khalibre"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-link-development",
+			"name": "Link Development"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-makesea",
+			"name": "makeSEA"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-nice-ltd",
+			"name": "Nice Ltd."
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-objective-group",
+			"name": "Objective Group"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-placecube",
+			"name": "Placecube"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-prodyna",
+			"name": "PRODYNA"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-rivet-logic-corporation",
+			"name": "Rivet Logic Corporation"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-smc-treviso-s-r-l",
+			"name": "SMC Treviso S.R.L"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-surekha-technologies",
+			"name": "Surekha Technologies"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-veriday",
+			"name": "Veriday"
+		},
+		{
+			"currencyCode": "USD",
+			"externalReferenceCode": "marketplace-catalog-wipro",
+			"name": "Wipro"
 		}
 	]
 }

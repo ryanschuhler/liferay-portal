@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/intrablox",
+	"hidden": false,
+	"name": "IntraBLOX",
+	"name_i18n": {
+		"en_US": "IntraBLOX"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

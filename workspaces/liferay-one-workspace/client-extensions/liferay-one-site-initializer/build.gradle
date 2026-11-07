@@ -1,0 +1,11 @@
+// The solution pages of the old Marketplace live in their own tree. They are
+// children of the Marketplace > Solutions page, so they must be imported in the
+// same run as the One site: Liferay does not run a second site initializer on a
+// site that already exists. Package that tree into this zip, and fail the build
+// if it has a file that the One tree also has.
+
+tasks.named("buildSiteInitializerZip") {
+	from("solutions") {
+		duplicatesStrategy = DuplicatesStrategy.FAIL
+	}
+}

@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/intranet-80-20",
+	"hidden": false,
+	"name": "Intranet 80.20",
+	"name_i18n": {
+		"en_US": "Intranet 80.20"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

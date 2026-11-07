@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/teambeats",
+	"hidden": false,
+	"name": "TeamBeats",
+	"name_i18n": {
+		"en_US": "TeamBeats"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

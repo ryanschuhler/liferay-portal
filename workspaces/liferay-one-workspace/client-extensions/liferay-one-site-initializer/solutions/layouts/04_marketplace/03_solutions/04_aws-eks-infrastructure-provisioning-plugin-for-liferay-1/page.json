@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/aws-eks-infrastructure-provisioning-plugin-for-liferay-1",
+	"hidden": false,
+	"name": "AWS EKS Infrastructure Provisioning Plugin for Liferay",
+	"name_i18n": {
+		"en_US": "AWS EKS Infrastructure Provisioning Plugin for Liferay"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/infocomm-management-sarl",
+	"hidden": false,
+	"name": "Microsoft Power BI connector for Liferay",
+	"name_i18n": {
+		"en_US": "Microsoft Power BI connector for Liferay"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

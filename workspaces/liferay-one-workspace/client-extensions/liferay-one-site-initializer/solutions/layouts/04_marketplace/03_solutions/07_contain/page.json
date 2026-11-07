@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/contain",
+	"hidden": false,
+	"name": "Contain",
+	"name_i18n": {
+		"en_US": "Contain"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

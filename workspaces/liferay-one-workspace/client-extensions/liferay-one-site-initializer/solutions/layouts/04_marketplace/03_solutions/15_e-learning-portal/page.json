@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/e-learning-portal",
+	"hidden": false,
+	"name": "E-Learning Portal",
+	"name_i18n": {
+		"en_US": "E-Learning Portal"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

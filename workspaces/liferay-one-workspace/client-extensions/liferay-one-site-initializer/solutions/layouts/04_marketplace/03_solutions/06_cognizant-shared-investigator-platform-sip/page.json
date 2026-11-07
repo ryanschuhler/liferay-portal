@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/cognizant-shared-investigator-platform-sip",
+	"hidden": false,
+	"name": "Cognizant Shared Investigator Platform (SIP)",
+	"name_i18n": {
+		"en_US": "Cognizant Shared Investigator Platform (SIP)"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

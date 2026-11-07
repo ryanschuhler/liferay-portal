@@ -1,0 +1,130 @@
+{
+	"fieldSets": [
+		{
+			"fields": [
+				{
+					"dataType": "string",
+					"defaultValue": "",
+					"label": "Color Scheme",
+					"name": "colorScheme",
+					"type": "select",
+					"typeOptions": {
+						"validValues": [
+							{
+								"label": "Default",
+								"value": ""
+							},
+							{
+								"label": "Dark",
+								"value": "dark"
+							},
+							{
+								"label": "Light",
+								"value": "light"
+							}
+						]
+					}
+				},
+				{
+					"dataType": "string",
+					"defaultValue": "aspect-ratio-4-to-3",
+					"label": "Image Aspect Ratio",
+					"name": "imageAspectRatio",
+					"type": "select",
+					"typeOptions": {
+						"validValues": [
+							{
+								"label": "1:1",
+								"value": "aspect-ratio"
+							},
+							{
+								"label": "3:2",
+								"value": "aspect-ratio-3-to-2"
+							},
+							{
+								"label": "4:3",
+								"value": "aspect-ratio-4-to-3"
+							},
+							{
+								"label": "8:5",
+								"value": "aspect-ratio-8-to-5"
+							},
+							{
+								"label": "16:9",
+								"value": "aspect-ratio-16-to-9"
+							},
+							{
+								"label": "Auto",
+								"value": "auto"
+							}
+						]
+					}
+				},
+				{
+					"dataType": "string",
+					"defaultValue": "517px",
+					"label": "Maximum Width",
+					"name": "imageCarouselMaxWidth",
+					"type": "text"
+				},
+				{
+					"defaultValue": true,
+					"label": "Lazy Load the Images",
+					"name": "lazyLoadingImage",
+					"type": "checkbox"
+				},
+				{
+					"dataType": "string",
+					"defaultValue": "3",
+					"label": "Number of Images",
+					"name": "numberOfImages",
+					"type": "select",
+					"typeOptions": {
+						"validValues": [
+							{
+								"label": "1",
+								"value": "1"
+							},
+							{
+								"label": "2",
+								"value": "2"
+							},
+							{
+								"label": "3",
+								"value": "3"
+							},
+							{
+								"label": "4",
+								"value": "4"
+							},
+							{
+								"label": "5",
+								"value": "5"
+							},
+							{
+								"label": "6",
+								"value": "6"
+							},
+							{
+								"label": "7",
+								"value": "7"
+							},
+							{
+								"label": "8",
+								"value": "8"
+							},
+							{
+								"label": "9",
+								"value": "9"
+							},
+							{
+								"label": "10",
+								"value": "10"
+							}
+						]
+					}
+				}
+			]
+		}
+	]
+}

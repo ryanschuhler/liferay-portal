@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/makesea",
+	"hidden": false,
+	"name": "makeSEA",
+	"name_i18n": {
+		"en_US": "makeSEA"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

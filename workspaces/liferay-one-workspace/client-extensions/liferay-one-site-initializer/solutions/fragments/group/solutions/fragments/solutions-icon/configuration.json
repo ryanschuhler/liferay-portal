@@ -1,0 +1,44 @@
+{
+	"fieldSets": [
+		{
+			"fields": [
+				{
+					"dataType": "string",
+					"defaultValue": "",
+					"label": "Alignment",
+					"name": "alignment",
+					"type": "text"
+				},
+				{
+					"dataType": "string",
+					"defaultValue": "large",
+					"label": "Icon Type",
+					"name": "iconType",
+					"type": "select",
+					"typeOptions": {
+						"validValues": [
+							{
+								"label": "Accent",
+								"value": "accent"
+							},
+							{
+								"label": "Large",
+								"value": "large"
+							},
+							{
+								"label": "Small",
+								"value": "small"
+							}
+						]
+					}
+				},
+				{
+					"defaultValue": true,
+					"label": "Lazy Load the Image",
+					"name": "lazyLoadingImage",
+					"type": "checkbox"
+				}
+			]
+		}
+	]
+}

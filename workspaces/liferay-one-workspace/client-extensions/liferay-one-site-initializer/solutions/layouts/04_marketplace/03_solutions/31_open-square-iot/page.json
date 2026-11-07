@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/open-square-iot",
+	"hidden": false,
+	"name": "Open Square IoT",
+	"name_i18n": {
+		"en_US": "Open Square IoT"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

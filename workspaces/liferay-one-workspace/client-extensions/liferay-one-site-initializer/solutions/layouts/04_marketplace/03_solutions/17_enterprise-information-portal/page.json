@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/enterprise-information-portal",
+	"hidden": false,
+	"name": "Enterprise Information Portal",
+	"name_i18n": {
+		"en_US": "Enterprise Information Portal"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/after-sales-portal",
+	"hidden": false,
+	"name": "After Sales Portal",
+	"name_i18n": {
+		"en_US": "After Sales Portal"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

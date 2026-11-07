@@ -1,0 +1,11 @@
+{
+	"friendlyURL": "/marketplace/solutions/insureguard",
+	"hidden": false,
+	"name": "InsureGuard",
+	"name_i18n": {
+		"en_US": "InsureGuard"
+	},
+	"private": false,
+	"system": false,
+	"type": "Content"
+}

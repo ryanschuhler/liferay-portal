@@ -1,0 +1,84 @@
+[#assign numberOfImages = configuration.numberOfImages?number /]
+
+<div class="f-image-carousel f-image-carousel-slide-down glide ${configuration.colorScheme}" style="max-width: ${configuration.imageCarouselMaxWidth};">
+	<div class="glide__track" data-glide-el="track">
+		<ul class="glide__slides ${configuration.imageAspectRatio}">
+			[#if numberOfImages > 0]
+				<li class="glide__slide--active ${configuration.imageAspectRatio} glide__slide" data-step="0">
+					<div class="f-image-carousel-img">
+						<img alt="" data-lfr-editable-id="imageCarousel0" data-lfr-editable-type="image" [#if configuration.lazyLoadingImage]loading="lazy"[/#if] src="" />
+					</div>
+				</li>
+			[/#if]
+			[#if numberOfImages > 1]
+				<li class="${configuration.imageAspectRatio} glide__slide" data-step="1">
+					<div class="f-image-carousel-img">
+						<img alt="" data-lfr-editable-id="imageCarousel1" data-lfr-editable-type="image" [#if configuration.lazyLoadingImage]loading="lazy"[/#if] src="" />
+					</div>
+				</li>
+			[/#if]
+			[#if numberOfImages > 2]
+				<li class="${configuration.imageAspectRatio} glide__slide" data-step="2">
+					<div class="f-image-carousel-img">
+						<img alt="" data-lfr-editable-id="imageCarousel2" data-lfr-editable-type="image" [#if configuration.lazyLoadingImage]loading="lazy"[/#if] src="" />
+					</div>
+				</li>
+			[/#if]
+			[#if numberOfImages > 3]
+				<li class="${configuration.imageAspectRatio} glide__slide" data-step="3">
+					<div class="f-image-carousel-img">
+						<img alt="" data-lfr-editable-id="imageCarousel3" data-lfr-editable-type="image" [#if configuration.lazyLoadingImage]loading="lazy"[/#if] src="" />
+					</div>
+				</li>
+			[/#if]
+			[#if numberOfImages > 4]
+				<li class="${configuration.imageAspectRatio} glide__slide" data-step="4">
+					<div class="f-image-carousel-img">
+						<img alt="" data-lfr-editable-id="imageCarousel4" data-lfr-editable-type="image" [#if configuration.lazyLoadingImage]loading="lazy"[/#if] src="" />
+					</div>
+				</li>
+			[/#if]
+			[#if numberOfImages > 5]
+				<li class="${configuration.imageAspectRatio} glide__slide" data-step="5">
+					<div class="f-image-carousel-img">
+						<img alt="" data-lfr-editable-id="imageCarousel5" data-lfr-editable-type="image" [#if configuration.lazyLoadingImage]loading="lazy"[/#if] src="" />
+					</div>
+				</li>
+			[/#if]
+			[#if numberOfImages > 6]
+				<li class="${configuration.imageAspectRatio} glide__slide" data-step="6">
+					<div class="f-image-carousel-img">
+						<img alt="" data-lfr-editable-id="imageCarousel6" data-lfr-editable-type="image" [#if configuration.lazyLoadingImage]loading="lazy"[/#if] src="" />
+					</div>
+				</li>
+			[/#if]
+			[#if numberOfImages > 7]
+				<li class="${configuration.imageAspectRatio} glide__slide" data-step="7">
+					<div class="f-image-carousel-img">
+						<img alt="" data-lfr-editable-id="imageCarousel7" data-lfr-editable-type="image" [#if configuration.lazyLoadingImage]loading="lazy"[/#if] src="" />
+					</div>
+				</li>
+			[/#if]
+			[#if numberOfImages > 8]
+				<li class="${configuration.imageAspectRatio} glide__slide" data-step="8">
+					<div class="f-image-carousel-img">
+						<img alt="" data-lfr-editable-id="imageCarousel8" data-lfr-editable-type="image" [#if configuration.lazyLoadingImage]loading="lazy"[/#if] src="" />
+					</div>
+				</li>
+			[/#if]
+			[#if numberOfImages > 9]
+				<li class="${configuration.imageAspectRatio} glide__slide" data-step="9">
+					<div class="f-image-carousel-img">
+						<img alt="" data-lfr-editable-id="imageCarousel9" data-lfr-editable-type="image" [#if configuration.lazyLoadingImage]loading="lazy"[/#if] src="" />
+					</div>
+				</li>
+			[/#if]
+		</ul>
+	</div>
+
+	<div class="d-flex glide__bullets justify-content-center pb-3 pt-3" data-glide-el="controls[nav]">
+		[#list 0..<numberOfImages as index]
+			<a class="glide__bullet" data-glide-dir="=${index}" href="#${index}" role="button"></a>
+		[/#list]
+	</div>
+</div>
